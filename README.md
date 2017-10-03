@@ -13,4 +13,4 @@ Kevin Gilboy, Nick Petro, Kevin Le, Jennifer Patterson, Mike Kotcher, Dylan McGu
 6. **MBO** - Dylan McGuire
 
 ### Folder Structure
-'TrainSystem / ... / ... / TrackModel / Block.java'
+`TrainSystem / ... / ... / TrackModel / Block.java`
