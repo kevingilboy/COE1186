@@ -11,6 +11,7 @@ Kevin Gilboy, Nick Petro, Kevin Le, Jennifer Patterson, Mike Kotcher, Dylan McGu
 4. **Train Model** - Jennifer Patterson
 5. **Train Controller** - Mike Kotcher
 6. **MBO** - Dylan McGuire
+7. **Dynamic Display** - TBD
 
 ### Folder Structure
 `TrainSystem / ... / ... / TrackModel / Block.java`
