@@ -3,9 +3,6 @@
  * Mostly just messing with Swing and getting practice for now
  * K.Le
  */
-
-package DynamicTrainSystemViewer;
-
 import javax.swing.SwingUtilities;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
