@@ -22,4 +22,5 @@ Kevin Gilboy, Nick Petro, Kevin Le, Jennifer Patterson, Mike Kotcher, Dylan McGu
 
 ##### Swing UI Modernization with Material UI
 `Material UI for Swing / src / <component>.java`
+
 As GUI's are developed for each sub-module, components will be modified for look-and-feel (LAF) using a set of modernized components based on Google's *Material* style convention. These components are extension classes to the standard Swing JButton and container classes that should be simple to implement.
