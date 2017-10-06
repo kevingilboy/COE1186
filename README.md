@@ -18,4 +18,4 @@ Kevin Gilboy, Nick Petro, Kevin Le, Jennifer Patterson, Mike Kotcher, Dylan McGu
 `TrainSystem / src / SubSystemModules / <module> / <class>.java`
 
 ##### yUML Documentation:
-`TrainSystem / yUML / <module> / <module_diagram>.yUML`
+`TrainSystem / yUML / <module> / <module_diagram>.yuml`
