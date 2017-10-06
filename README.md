@@ -4,7 +4,7 @@ Train System Simulation Project.
 ### The Hash Slinging Slashers
 Kevin Gilboy, Nick Petro, Kevin Le, Jennifer Patterson, Mike Kotcher, Dylan McGuire
 
-### Modules
+### Sub-system Modules
 1. **CTC** - Kevin Gilboy
 2. **Track Controller** - Nick Petro
 3. **Track Model** - Kevin Le
@@ -14,4 +14,8 @@ Kevin Gilboy, Nick Petro, Kevin Le, Jennifer Patterson, Mike Kotcher, Dylan McGu
 7. **Dynamic Display** - TBD
 
 ### Folder Structure
-`TrainSystem / ... / ... / TrackModel / Block.java`
+##### Sub-System Modules:
+`TrainSystem / src / SubSystemModules / <module> / <class>.java`
+
+##### yUML Documentation:
+`TrainSystem / yUML / <module> / <module_diagram>.yUML`
