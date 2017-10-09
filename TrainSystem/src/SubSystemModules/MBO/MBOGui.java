@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Date;
 import java.util.logging.*;
 import javax.swing.*;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
@@ -22,10 +23,27 @@ public class MBOGui extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+		// create the infopanel
+        JPanel infoPanel = new JPanel();
+		JPanel schedulerPanel = new JPanel();
+        initInfoPanel(infoPanel);
+		initSchedulerPanel(schedulerPanel);
+
+		// create the tabbed pane
+		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.addTab("Train Information", null, infoPanel, "Displays information about the trains in the system");
+		tabbedPane.addTab("Scheduler", null, schedulerPanel, "Allows the user to create a train schedule for use by the CTC office");
+
+		add(tabbedPane);
+	}
+	
+	private void initInfoPanel(JPanel infoPanel) {
+		
 		// create a search bar
-		JTextField searchBar = new JTextField(40);
+		//JLabel searchBox = new JLabel("Search for a particular train: ");
+		JTextField searchBox = new JTextField("Search for a particular train...", 40);
 		JLabel timeBox = new JLabel("15:44:01");
-		searchBar.getDocument().addDocumentListener(new SearchListener());
+		//searchBar.getDocument().addDocumentListener(new SearchListener());
 
         // create a table with train info
 		String[] trainInfoColumns = {"Train Name",
@@ -45,41 +63,79 @@ public class MBOGui extends JFrame {
 		trainInfoTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		trainInfoTable.setFillsViewportHeight(true);
 		JScrollPane scrollPane = new JScrollPane(trainInfoTable);
-		// add(scrollPane);
 
 		// create the train map
 		JLabel map = new JLabel(new ImageIcon("..\\..\\Shared\\static\\dummy_map.png"));
-		//createLayout(searchBar, modeButton, map);
 		
-        // create the information panel
-		JPanel infoPanel = new JPanel();
+        // populate the information panel
 		GroupLayout infoPanelLayout = new GroupLayout(infoPanel);
 		infoPanel.setLayout(infoPanelLayout);
 		infoPanelLayout.setAutoCreateContainerGaps(true);
 		infoPanelLayout.setAutoCreateGaps(true);
 		infoPanelLayout.setHorizontalGroup(infoPanelLayout.createSequentialGroup()
-				.addGroup(infoPanelLayout.createParallelGroup()
-					.addComponent(searchBar)
-				    .addComponent(trainInfoTable))
-				.addGroup(infoPanelLayout.createParallelGroup()
-					.addComponent(searchBar)
-				    .addComponent(trainInfoTable))
-		);
-        infoPanelLayout.setVerticalGroup(infoPanelLayout.createParallelGroup()
-				.addGroup(infoPanelLayout.createSequentialGroup()
-					.addComponent(searchBar)
-					.addComponent(trainInfoTable))
-				.addGroup(infoPanelLayout.createSequentialGroup()
-					.addComponent(timeBox)
-					.addComponent(map))
-		);
+				                                          .addGroup(infoPanelLayout.createParallelGroup()
+					                                                               .addComponent(searchBox)
+				                                                                   .addComponent(scrollPane))
+				                                          .addGroup(infoPanelLayout.createParallelGroup()
+															                       .addComponent(timeBox)
+																				   .addComponent(map)));
+        infoPanelLayout.setVerticalGroup(infoPanelLayout.createSequentialGroup()
+				                                        .addGroup(infoPanelLayout.createParallelGroup()
+					                                                             .addComponent(searchBox)
+					                                                             .addComponent(timeBox))
+				                                        .addGroup(infoPanelLayout.createParallelGroup()
+															                     .addComponent(scrollPane)
+																				 .addComponent(map)));
+	}
+	
+	private void initSchedulerPanel(JPanel schedulerPanel) {
 
-		// create the tabbed pane
-		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Information", null, infoPanel, "Displays information about the trains in the system");
-		tabbedPane.addTab("Scheduler", null, scrollPane, "Allows the user to create a train schedule for use by the CTC office");
+		// create the basic components
+		JLabel trainTitle = new JLabel("Train Schedules");
+		JLabel operatorTitle = new JLabel("Operator Schedules");
+		GroupLayout layout = new GroupLayout(schedulerPanel);
 
-		add(tabbedPane);
+        // train schedule table
+		String[] trainTableHeaders = {"Train Name", "Start Time", "Stop Time"};
+		Object[][] trainTableData = {{"Red 1", new Date(), new Date()}, 
+		                             {"Red 2", new Date(), new Date()}, 
+		                             {"Red 1", new Date(), new Date()}, 
+		                             {"Green 2", new Date(), new Date()}, 
+		                             {"Green 3", new Date(), new Date()}};
+		JTable trainTable = new JTable(trainTableData, trainTableHeaders);
+		trainTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
+		trainTable.setFillsViewportHeight(true);
+		JScrollPane scrollPane = new JScrollPane(trainTable);
+
+		// operator schedule table
+		String[] operatorTableHeaders = {"Operator Name", "Start Time", "Stop Time"};
+		Object[][] operatorTableData = {{"Bob", new Date(), new Date()}, 
+		                                {"Pat", new Date(), new Date()}, 
+		                                {"Ward", new Date(), new Date()}, 
+		                                {"Sandy", new Date(), new Date()}, 
+		                                {"Eugene", new Date(), new Date()}};
+		JTable operatorTable = new JTable(operatorTableData, operatorTableHeaders);
+		operatorTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
+		operatorTable.setFillsViewportHeight(true);
+
+		// create the layout
+		layout.setAutoCreateContainerGaps(true);
+		layout.setAutoCreateGaps(true);
+		schedulerPanel.setLayout(layout);
+		layout.setHorizontalGroup(layout.createSequentialGroup()
+				                        .addGroup(layout.createParallelGroup()
+				                                        .addComponent(trainTitle)
+				                                        .addComponent(trainTable))
+										.addGroup(layout.createParallelGroup()
+											            .addComponent(operatorTitle)
+														.addComponent(operatorTable)));
+		layout.setVerticalGroup(layout.createSequentialGroup()
+				                      .addGroup(layout.createParallelGroup()
+				                                      .addComponent(trainTitle)
+				                                      .addComponent(operatorTitle))
+									  .addGroup(layout.createParallelGroup()
+											          .addComponent(trainTable)
+												      .addComponent(operatorTable)));
 	}
 
     private class SearchListener implements DocumentListener {
