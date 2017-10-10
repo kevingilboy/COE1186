@@ -13,7 +13,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
-import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.JButton;
 
@@ -22,7 +21,6 @@ public class TrackControllerGUI extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtMph;
 	private JTextField txtShadyside;
-	private JTextField txtOpen;
 
 	/**
 	 * Launch the application.
@@ -104,126 +102,89 @@ public class TrackControllerGUI extends JFrame {
 		panel.add(panel_2);
 		panel_2.setLayout(null);
 		
-		JLabel lblControllerRf = new JLabel("Controller - RF");
-		lblControllerRf.setBounds(0, 4, 502, 28);
+		JLabel lblControllerRf = new JLabel("<html><b>Controller - GA</b><html>");
+		lblControllerRf.setBounds(0, -1, 502, 32);
 		panel_2.add(lblControllerRf);
 		lblControllerRf.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		JPanel panel_6 = new JPanel();
-		panel_6.setBounds(9, 40, 487, 88);
+		panel_6.setBounds(10, 32, 487, 59);
 		panel_2.add(panel_6);
 		panel_6.setLayout(null);
 		
-		JLabel lblNewLabel_1 = new JLabel("Speed Limit");
+		JLabel lblNewLabel_1 = new JLabel("Status");
 		lblNewLabel_1.setBounds(136, 0, 73, 28);
 		panel_6.add(lblNewLabel_1);
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.TRAILING);
 		
-		JLabel lblNewLabel_2 = new JLabel("Station");
+		JLabel lblNewLabel_2 = new JLabel("Occupancy");
 		lblNewLabel_2.setBounds(135, 29, 73, 28);
 		panel_6.add(lblNewLabel_2);
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.TRAILING);
-		
-		JLabel lblStatus = new JLabel("Status");
-		lblStatus.setBounds(135, 60, 73, 28);
-		panel_6.add(lblStatus);
-		lblStatus.setHorizontalAlignment(SwingConstants.TRAILING);
 		
 		txtMph = new JTextField();
 		txtMph.setBounds(220, 0, 134, 28);
 		panel_6.add(txtMph);
 		txtMph.setHorizontalAlignment(SwingConstants.CENTER);
-		txtMph.setText("70 MPH");
+		txtMph.setText("Open");
 		txtMph.setEditable(false);
 		txtMph.setColumns(10);
 		
 		txtShadyside = new JTextField();
 		txtShadyside.setBounds(220, 29, 134, 28);
 		panel_6.add(txtShadyside);
-		txtShadyside.setText("Pioneer");
+		txtShadyside.setText("True");
 		txtShadyside.setHorizontalAlignment(SwingConstants.CENTER);
 		txtShadyside.setEditable(false);
 		txtShadyside.setColumns(10);
 		
-		txtOpen = new JTextField();
-		txtOpen.setBounds(220, 60, 134, 28);
-		panel_6.add(txtOpen);
-		txtOpen.setText("Open");
-		txtOpen.setHorizontalAlignment(SwingConstants.CENTER);
-		txtOpen.setEditable(false);
-		txtOpen.setColumns(10);
-		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBorder(null);
-		panel_3.setBounds(10, 163, 240, 123);
+		panel_3.setBounds(131, 220, 240, 66);
 		panel_2.add(panel_3);
 		panel_3.setLayout(null);
 		
-		JLabel lblOccupancy = new JLabel("Occupancy");
-		lblOccupancy.setBounds(0, 0, 88, 28);
-		panel_3.add(lblOccupancy);
-		lblOccupancy.setHorizontalAlignment(SwingConstants.TRAILING);
+		JRadioButton rdbtnB = new JRadioButton("B1");
+		rdbtnB.setBounds(153, 6, 80, 28);
+		panel_3.add(rdbtnB);
+		rdbtnB.setHorizontalAlignment(SwingConstants.LEFT);
 		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("");
-		rdbtnNewRadioButton.setBounds(100, 0, 134, 28);
-		panel_3.add(rdbtnNewRadioButton);
-		rdbtnNewRadioButton.setHorizontalAlignment(SwingConstants.CENTER);
+		JRadioButton rdbtnF = new JRadioButton("F13");
+		rdbtnF.setBounds(153, 35, 80, 28);
+		panel_3.add(rdbtnF);
+		rdbtnF.setHorizontalAlignment(SwingConstants.LEFT);
 		
-		JLabel lblHeaters = new JLabel("Heaters");
-		lblHeaters.setBounds(0, 29, 88, 28);
-		panel_3.add(lblHeaters);
-		lblHeaters.setHorizontalAlignment(SwingConstants.TRAILING);
-		
-		JRadioButton radioButton = new JRadioButton("");
-		radioButton.setBounds(100, 29, 134, 28);
-		panel_3.add(radioButton);
-		radioButton.setHorizontalAlignment(SwingConstants.CENTER);
-		
-		JRadioButton radioButton_1 = new JRadioButton("");
-		radioButton_1.setBounds(153, 57, 80, 28);
-		panel_3.add(radioButton_1);
-		radioButton_1.setHorizontalAlignment(SwingConstants.LEFT);
-		
-		JRadioButton radioButton_2 = new JRadioButton("");
-		radioButton_2.setBounds(153, 86, 80, 28);
-		panel_3.add(radioButton_2);
-		radioButton_2.setHorizontalAlignment(SwingConstants.LEFT);
-		
-		JLabel lblNewLabel_3 = new JLabel("-");
-		lblNewLabel_3.setBounds(100, 57, 55, 57);
+		JLabel lblNewLabel_3 = new JLabel("");
+		lblNewLabel_3.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/switch.png"));
+		lblNewLabel_3.setBounds(100, 17, 55, 33);
 		panel_3.add(lblNewLabel_3);
 		
 		JLabel lblSwitch = new JLabel("Switch State");
-		lblSwitch.setBounds(0, 57, 88, 57);
+		lblSwitch.setBounds(0, 6, 88, 57);
 		panel_3.add(lblSwitch);
 		lblSwitch.setHorizontalAlignment(SwingConstants.TRAILING);
 		
 		JPanel panel_4 = new JPanel();
 		panel_4.setLayout(null);
 		panel_4.setBorder(null);
-		panel_4.setBounds(256, 163, 240, 123);
+		panel_4.setBounds(131, 103, 240, 123);
 		panel_2.add(panel_4);
 		
 		JRadioButton radioButton_6 = new JRadioButton("");
 		radioButton_6.setHorizontalAlignment(SwingConstants.LEFT);
-		radioButton_6.setBounds(164, 86, 68, 28);
+		radioButton_6.setBounds(164, 89, 68, 28);
 		panel_4.add(radioButton_6);
 		
 		JPanel panel_5 = new JPanel();
-		panel_5.setBorder(new LineBorder(Color.LIGHT_GRAY, 2, true));
+		panel_5.setBorder(null);
 		panel_5.setBounds(151, 0, 35, 57);
 		panel_4.add(panel_5);
 		panel_5.setLayout(null);
 		
-		JRadioButton radioButton_7 = new JRadioButton("");
-		radioButton_7.setBounds(3, 0, 134, 28);
-		panel_5.add(radioButton_7);
-		radioButton_7.setHorizontalAlignment(SwingConstants.LEFT);
-		
-		JRadioButton radioButton_8 = new JRadioButton("");
-		radioButton_8.setBounds(3, 29, 134, 28);
-		panel_5.add(radioButton_8);
-		radioButton_8.setHorizontalAlignment(SwingConstants.LEFT);
+		JLabel label = new JLabel("");
+		label.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/light-green.png"));
+		label.setBounds(0, 0, 35, 57);
+		panel_5.add(label);
 		
 		JLabel lblLights = new JLabel("Lights");
 		lblLights.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -232,23 +193,23 @@ public class TrackControllerGUI extends JFrame {
 		
 		JLabel lblCrossing = new JLabel("Crossing");
 		lblCrossing.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblCrossing.setBounds(0, 57, 88, 57);
+		lblCrossing.setBounds(0, 60, 88, 57);
 		panel_4.add(lblCrossing);
 		
 		JRadioButton radioButton_3 = new JRadioButton("");
 		radioButton_3.setHorizontalAlignment(SwingConstants.RIGHT);
-		radioButton_3.setBounds(103, 86, 68, 28);
+		radioButton_3.setBounds(103, 89, 68, 28);
 		panel_4.add(radioButton_3);
 		
 		JLabel lblX = new JLabel("X");
 		lblX.setForeground(Color.LIGHT_GRAY);
-		lblX.setFont(new Font("Helvetica", Font.BOLD, 32));
+		lblX.setFont(new Font("Helvetica", Font.BOLD, 40));
 		lblX.setHorizontalAlignment(SwingConstants.CENTER);
-		lblX.setBounds(100, 57, 134, 46);
+		lblX.setBounds(100, 60, 134, 44);
 		panel_4.add(lblX);
 		
 		JSeparator separator_2 = new JSeparator();
-		separator_2.setBounds(6, 142, 490, 21);
+		separator_2.setBounds(0, 91, 502, 21);
 		panel_2.add(separator_2);
 		
 		JButton btnUpdate = new JButton("Update");
@@ -260,16 +221,16 @@ public class TrackControllerGUI extends JFrame {
 		panel_2.add(btnImportPlc);
 		
 		JSeparator separator_3 = new JSeparator();
-		separator_3.setBounds(9, 282, 490, 21);
+		separator_3.setBounds(0, 282, 502, 21);
 		panel_2.add(separator_3);
 		
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setBackground(Color.WHITE);
 		lblNewLabel.setBounds(0, 0, 334, 448);
 		panel.add(lblNewLabel);
-		lblNewLabel.setIcon(new ImageIcon("/Users/npetro/Desktop/track.png"));
+		lblNewLabel.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/track.png"));
 		
-		JLabel lblTrackController = new JLabel("Track Controller Interface");
+		JLabel lblTrackController = new JLabel("<html><b>Track Controller Interface</b><html>");
 		lblTrackController.setBounds(346, 0, 502, 54);
 		panel.add(lblTrackController);
 		lblTrackController.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
