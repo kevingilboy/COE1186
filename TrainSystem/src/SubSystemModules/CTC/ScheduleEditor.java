@@ -37,6 +37,7 @@ public class ScheduleEditor {
 		else {
 			currentSchedule = schedule;
 			nameInput.setText(currentSchedule.name);
+			nameInput.setEnabled(false);
 			authorityInput.setText(Integer.toString(currentSchedule.authority));
 		}		
 	}

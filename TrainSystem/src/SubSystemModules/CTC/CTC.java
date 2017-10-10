@@ -216,6 +216,46 @@ public class CTC {
 		scrollPane_4.setViewportView(queueSelectedTable);
 		
 		JButton editQueueSchedule = new JButton("Edit Schedule");
+		editQueueSchedule.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String trainName="";
+				String line = tabbedPane_1.getTitleAt(tabbedPane_1.getSelectedIndex());
+				if(line=="Red") {
+					int row = queueRedTable.getSelectedRow();
+					trainName = (String) queueRedData.getValueAt(row, 0);
+				}
+				else if(line=="Green") {
+					int row = queueGreenTable.getSelectedRow();
+					trainName = (String) queueGreenData.getValueAt(row, 0);
+				}
+				scheduleForScheduleEditor = trainsInQueue.get(trainName);
+
+				Thread scheduleEditorThread = new Thread() {
+					public void run() {
+						try {
+							SwingUtilities.invokeAndWait(openScheduleEditor);
+						}
+						catch (Exception e) {
+							e.printStackTrace();
+						}
+				         
+						while(scheduleEditor.editing==true) {
+							try {
+								Thread.sleep(200);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+						Schedule schedule = scheduleEditor.currentSchedule;
+						trainsInQueue.put(schedule.name,schedule);
+						updateQueueTable();
+						
+						System.out.println("Finished on " + Thread.currentThread());
+					}
+				};
+				scheduleEditorThread.start();				
+			}
+		});
 		editQueueSchedule.setBounds(513, 186, 171, 24);
 		frame.getContentPane().add(editQueueSchedule);
 		
@@ -227,18 +267,17 @@ public class CTC {
 		dispatchQueueSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String line = tabbedPane_1.getTitleAt(tabbedPane_1.getSelectedIndex());
+				String trainName="";
 				if(line=="Red") {
 					int row = queueRedTable.getSelectedRow();
-					String trainName = (String) queueRedData.getValueAt(row, 0);
-					Schedule schedule = trainsInQueue.remove(trainName);
-					trainsDispatched.put(trainName, schedule);
+					trainName = (String) queueRedData.getValueAt(row, 0);
 				}
 				else if(line=="Green") {
 					int row = queueGreenTable.getSelectedRow();
-					String trainName = (String) queueGreenData.getValueAt(row, 0);
-					Schedule schedule = trainsInQueue.remove(trainName);
-					trainsDispatched.put(trainName, schedule);
+					trainName = (String) queueGreenData.getValueAt(row, 0);
 				}
+				Schedule schedule = trainsInQueue.remove(trainName);
+				trainsDispatched.put(trainName, schedule);
 				updateQueueTable();
 				updateDispatchedTable();
 				
