@@ -16,26 +16,38 @@ import javax.swing.UIManager.LookAndFeelInfo;
 public class CTC {
 	private JFrame frame;
 	
-	private DefaultTableModel dispatchedGreenData;
-	private JTable dispatchedGreenTable;
-	private DefaultTableModel dispatchedRedData;
-	private JTable dispatchedRedTable;
-	private DefaultTableModel dispatchSelectedData;
-	private ScheduleJTable dispatchSelectedTable;
-	private Object[] dispatchedTrainsColumnNames = {"Train","Location","Speed","Authority","Passengers"};
-	private Object[][] dispatchedTrainsInitialData = new Object[0][dispatchedTrainsColumnNames.length];
-		
 	private Object[] selectedTrainColumnNames = {"Stop","Arrival","Departure"};
 	private Object[][] selectedTrainInitialData = new Object[9][selectedTrainColumnNames.length];
 	
-	private Object[] queueTrainColumnNames = {"Train","Departure"};
-	private Object[][] queueTrainInitialData = new Object[0][queueTrainColumnNames.length];
-	
+	/**
+	 * Dispatched train tales
+	 */
+	private Object[] dispatchedTrainsColumnNames = {"Train","Location","Speed","Authority","Passengers"};
+	private Object[][] dispatchedTrainsInitialData = new Object[0][dispatchedTrainsColumnNames.length];
+
+	private DefaultTableModel dispatchedGreenData;
+	private JTable dispatchedGreenTable;
+
+	private DefaultTableModel dispatchedRedData;
+	private JTable dispatchedRedTable;
+
+	private DefaultTableModel dispatchSelectedData;
+	private ScheduleJTable dispatchSelectedTable;
+		
+	/**
+	 * Creator tales
+	 */
 	private ScheduleJTable trainCreationTable;
 	private DefaultTableModel trainCreationData;
 	private JTextField trainCreationDepartTime;
 	private JTextField trainCreationLine;
 	
+	/**
+	 * Queue tales
+	 */
+	private Object[] queueTrainColumnNames = {"Train","Departure"};
+	private Object[][] queueTrainInitialData = new Object[0][queueTrainColumnNames.length];
+
 	private JTable queueRedTable;
 	private DefaultTableModel queueRedData;
 	
@@ -45,8 +57,17 @@ public class CTC {
 	private ScheduleJTable queueSelectedTable;
 	private DefaultTableModel queueSelectedData;
 	
+	/**
+	 * Train objects hashed by name
+	 */
 	private Map<String,Schedule> trainsInQueue = new HashMap<>();
 	private Map<String,Schedule> trainsDispatched = new HashMap<>();
+	
+	/**
+	 * Threads
+	 */
+	public ScheduleEditor scheduleEditor;
+
 
 	/**
 	 * Launch the application.
@@ -86,7 +107,7 @@ public class CTC {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		/*
+		/**
 		 * LEFT FRAME
 		 */
 		
@@ -142,7 +163,7 @@ public class CTC {
 		lblThroughputAmt.setBounds(134, 479, 89, 33);
 		frame.getContentPane().add(lblThroughputAmt);
 		
-		/*
+		/**
 		 * MID TOP
 		 */		
 		JLabel lblQueue = new JLabel("Queue");
@@ -225,7 +246,7 @@ public class CTC {
 		dispatchQueueSchedule.setBounds(512, 218, 171, 24);
 		frame.getContentPane().add(dispatchQueueSchedule);
 		
-		/*
+		/**
 		 * MID BOTTOM
 		 */
 		JLabel lblNewLabel = new JLabel("Dispatch Center");
@@ -299,8 +320,6 @@ public class CTC {
 						
 						System.out.println("Finished on " + Thread.currentThread());
 					}
-
-
 				};
 				scheduleEditorThread.start();				
 			}
@@ -317,7 +336,7 @@ public class CTC {
 		addToDispatchToQueue.setBounds(430, 459, 131, 41);
 		frame.getContentPane().add(addToDispatchToQueue);
 			
-		/*
+		/**
 		 * RIGHT SIDE
 		 */
 		JLabel lblDispatchedTrains = new JLabel("Dispatched Trains");
@@ -442,11 +461,11 @@ public class CTC {
 		queueGreenData.fireTableDataChanged();
 	}
 	
-	public ScheduleEditor scheduleEditor;
 	final Runnable openScheduleEditor = new Runnable() {
 	    public void run() {
 	        scheduleEditor = new ScheduleEditor(new Schedule());
 	        scheduleEditor.frame.setVisible(true);
+	        scheduleEditor.frame.setResizable(false);
 	    }
 	};
 }
