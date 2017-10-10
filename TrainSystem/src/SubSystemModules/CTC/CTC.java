@@ -45,7 +45,7 @@ public class CTC {
 	/**
 	 * Queue tales
 	 */
-	private Object[] queueTrainColumnNames = {"Train","Departure"};
+	private Object[] queueTrainColumnNames = {"Train","Authority","Departure"};
 	private Object[][] queueTrainInitialData = new Object[0][queueTrainColumnNames.length];
 
 	private JTable queueRedTable;
@@ -67,6 +67,7 @@ public class CTC {
 	 * Threads
 	 */
 	public ScheduleEditor scheduleEditor;
+	public Schedule scheduleForScheduleEditor = null;
 
 
 	/**
@@ -74,7 +75,7 @@ public class CTC {
 	 */
 	public static void main(String[] args) {
 		try {
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -279,6 +280,7 @@ public class CTC {
 		frame.getContentPane().add(lblDepartAt);
 		
 		trainCreationDepartTime = new JTextField();
+		trainCreationDepartTime.setEditable(false);
 		trainCreationDepartTime.setText("NA");
 		trainCreationDepartTime.setBounds(314, 408, 52, 39);
 		frame.getContentPane().add(trainCreationDepartTime);
@@ -289,6 +291,7 @@ public class CTC {
 		frame.getContentPane().add(lblLine);
 			
 		trainCreationLine = new JTextField();
+		trainCreationLine.setEditable(false);
 		trainCreationLine.setText("NA");
 		trainCreationLine.setColumns(10);
 		trainCreationLine.setBounds(314, 374, 52, 39);
@@ -297,6 +300,7 @@ public class CTC {
 		JButton editToDispatchSchedule = new JButton("<html>Create/Edit<br>Schedule</html>");
 		editToDispatchSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				scheduleForScheduleEditor = trainCreationTable.schedule;
 				Thread scheduleEditorThread = new Thread() {
 					public void run() {
 						try {
@@ -419,7 +423,7 @@ public class CTC {
 		queueGreenData.setDataVector(queueTrainInitialData, queueTrainColumnNames);
 		for(String trainName:trainsInQueue.keySet()) {
 			Schedule schedule = trainsInQueue.get(trainName);
-			Object[] row = {schedule.name,schedule.departureTime.toString()};
+			Object[] row = {schedule.name,schedule.authority,schedule.departureTime.toString()};
 			if(schedule.line=="Red") {
 				queueRedData.addRow(row);
 				queueRedData.fireTableDataChanged();
@@ -454,7 +458,7 @@ public class CTC {
 	
 	final Runnable openScheduleEditor = new Runnable() {
 	    public void run() {
-	        scheduleEditor = new ScheduleEditor(new Schedule());
+	        scheduleEditor = new ScheduleEditor(scheduleForScheduleEditor);
 	        scheduleEditor.frame.setVisible(true);
 	        scheduleEditor.frame.setResizable(false);
 	    }

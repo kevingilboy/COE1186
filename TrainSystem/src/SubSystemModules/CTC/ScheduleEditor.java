@@ -36,10 +36,10 @@ public class ScheduleEditor {
 		}
 		else {
 			currentSchedule = schedule;
-			//TODO populate table with existing schedule
+			nameInput.setText(currentSchedule.name);
+			authorityInput.setText(Integer.toString(currentSchedule.authority));
 		}		
 	}
-	
 
 	/**
 	 * Initialize the contents of the frame.
