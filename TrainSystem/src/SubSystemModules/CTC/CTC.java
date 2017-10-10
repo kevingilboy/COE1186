@@ -216,6 +216,7 @@ public class CTC {
 		scrollPane_4.setViewportView(queueSelectedTable);
 		
 		JButton editQueueSchedule = new JButton("Edit Schedule");
+		stylize(editQueueSchedule);
 		editQueueSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String trainName="";
@@ -270,6 +271,7 @@ public class CTC {
 		frame.getContentPane().add(label_2);
 		
 		JButton dispatchQueueSchedule = new JButton("Dispatch Now");
+		stylize(dispatchQueueSchedule);
 		dispatchQueueSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String line = tabbedPane_1.getTitleAt(tabbedPane_1.getSelectedIndex());
@@ -346,6 +348,7 @@ public class CTC {
 		frame.getContentPane().add(trainCreationLine);
 		
 		JButton editToDispatchSchedule = new JButton("<html>Create/Edit<br>Schedule</html>");
+		stylize(editToDispatchSchedule);
 		editToDispatchSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				scheduleForScheduleEditor = trainCreationTable.schedule;
@@ -380,6 +383,7 @@ public class CTC {
 		frame.getContentPane().add(editToDispatchSchedule);
 		
 		JButton addToDispatchToQueue = new JButton("Add To Queue");
+		stylize(addToDispatchToQueue);
 		addToDispatchToQueue.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dumpScheduleFromCreaterToQueue();
@@ -444,6 +448,7 @@ public class CTC {
 		frame.getContentPane().add(lblSelectedTrainSchedule);
 		
 		JButton editSelectedDispatchedTrainSchedule = new JButton("Edit Schedule");
+		stylize(editSelectedDispatchedTrainSchedule);
 		editSelectedDispatchedTrainSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String trainName="";
@@ -507,7 +512,7 @@ public class CTC {
 		trainsInQueue.put(schedule.name, schedule);
 		updateQueueTable();
 		
-		//Remove from the creater
+		//Remove from the creator
 		trainCreationData.setDataVector(selectedTrainInitialData,selectedTrainColumnNames);
 		openScheduleInTable(trainCreationTable,trainCreationData,null);
 	}
@@ -557,4 +562,10 @@ public class CTC {
 	        scheduleEditor.frame.setResizable(false);
 	    }
 	};
+
+	private static void stylize(JButton button){
+		button.setBackground(Color.BLACK);//new Color(59,89,182));
+		button.setForeground(Color.WHITE);
+		button.setFocusPainted(false);
+	}
 }
