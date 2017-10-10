@@ -432,16 +432,7 @@ public class CTC {
 		queueRedData.fireTableDataChanged();
 		queueGreenData.fireTableDataChanged();
 	}
-	
-	public static void setUILookAndFeel() {
-		try {
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		}
-		catch(Throwable e) {
-			e.printStackTrace();
-		}
-	}
-	
+
 	private void updateDispatchedTable(){
 		dispatchedRedData.setDataVector(dispatchedTrainsInitialData,dispatchedTrainsColumnNames);
 		dispatchedGreenData.setDataVector(dispatchedTrainsInitialData,dispatchedTrainsColumnNames);
