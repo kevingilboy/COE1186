@@ -66,7 +66,7 @@ public class TrackModelGUI extends JFrame {
 	private int selectedBlockIndex = 0;
 	private ArrayList<Block> blocks = new ArrayList<Block>();
 
-	JLabel dataBlockOccupied = new JLabel(new ImageIcon("greyStatusIcon.png"));
+	JLabel dataBlockOccupied = new JLabel(new ImageIcon("images/greyStatusIcon.png"));
 	JLabel dataBlockLength = new JLabel("<no track>");
 	JLabel dataBlockGrade = new JLabel("<no track>");
 	JLabel dataBlockElevation = new JLabel("<no track>");
@@ -210,7 +210,7 @@ public class TrackModelGUI extends JFrame {
 		labelSwitch.setBounds(664, 84, 65, 14);
 		contentPane.add(labelSwitch);
 		
-		iconswitchID.setIcon(new ImageIcon("switchID0.png"));
+		iconswitchID.setIcon(new ImageIcon("images/switchState0.png"));
 		iconswitchID.setBounds(722, 146, 46, 31);
 		contentPane.add(iconswitchID);
 
@@ -285,46 +285,46 @@ public class TrackModelGUI extends JFrame {
 		contentPane.add(labelTrackHeated);
 		
 		JLabel iconUndergroundStatus = new JLabel("");
-		iconUndergroundStatus.setIcon(new ImageIcon("greyStatusIcon.png"));
+		iconUndergroundStatus.setIcon(new ImageIcon("images/greyStatusIcon.png"));
 		iconUndergroundStatus.setBounds(646, 51, 46, 14);
 		contentPane.add(iconUndergroundStatus);
 
 		JLabel iconRailStatus = new JLabel("");
-		iconRailStatus.setIcon(new ImageIcon("greyStatusIcon.png"));
+		iconRailStatus.setIcon(new ImageIcon("images/greyStatusIcon.png"));
 		iconRailStatus.setBounds(646, 67, 46, 14);
 		contentPane.add(iconRailStatus);
 		
 		JLabel iconSwitchStatus = new JLabel("");
-		iconSwitchStatus.setIcon(new ImageIcon("greyStatusIcon.png"));
+		iconSwitchStatus.setIcon(new ImageIcon("images/greyStatusIcon.png"));
 		iconSwitchStatus.setBounds(646, 84, 46, 14);
 		contentPane.add(iconSwitchStatus);
 
 		JLabel iconStationStatus = new JLabel("");
-		iconStationStatus.setIcon(new ImageIcon("greyStatusIcon.png"));
+		iconStationStatus.setIcon(new ImageIcon("images/greyStatusIcon.png"));
 		iconStationStatus.setBounds(646, 189, 46, 14);
 		contentPane.add(iconStationStatus);
 
 		JLabel iconRailFailure = new JLabel("");
-		iconRailFailure.setIcon(new ImageIcon("greyStatusIcon.png"));
+		iconRailFailure.setIcon(new ImageIcon("images/greyStatusIcon.png"));
 		iconRailFailure.setBounds(421, 261, 46, 14);
 		contentPane.add(iconRailFailure);
 
 		JLabel iconTrackCircuitFailure = new JLabel("");
-		iconTrackCircuitFailure.setIcon(new ImageIcon("greyStatusIcon.png"));
+		iconTrackCircuitFailure.setIcon(new ImageIcon("images/greyStatusIcon.png"));
 		iconTrackCircuitFailure.setBounds(421, 276, 46, 14);
 		contentPane.add(iconTrackCircuitFailure);
 
 		JLabel iconPowerFailure = new JLabel("");
-		iconPowerFailure.setIcon(new ImageIcon("greyStatusIcon.png"));
+		iconPowerFailure.setIcon(new ImageIcon("images/greyStatusIcon.png"));
 		iconPowerFailure.setBounds(421, 292, 46, 14);
 		contentPane.add(iconPowerFailure);
 
 		JLabel iconTrackHeated = new JLabel("");
-		iconTrackHeated.setIcon(new ImageIcon("greyStatusIcon.png"));
+		iconTrackHeated.setIcon(new ImageIcon("images/greyStatusIcon.png"));
 		iconTrackHeated.setBounds(646, 317, 65, 14);
 		contentPane.add(iconTrackHeated);
 
-		JLabel logoPineapple = new JLabel(new ImageIcon("pineapple_icon.png"));
+		JLabel logoPineapple = new JLabel(new ImageIcon("images/pineapple_icon.png"));
 		logoPineapple.setBounds(GUI_WINDOW_WIDTH - 150, GUI_WINDOW_HEIGHT-12-100, 138, 76);
 		contentPane.add(logoPineapple);
 	}
@@ -481,9 +481,9 @@ public class TrackModelGUI extends JFrame {
 			System.out.println("switchID = " + b.switchID);
 			dataBlockOccupied.setText("");
 			if (selectedBlockIndex == 2){
-				dataBlockOccupied.setIcon(new ImageIcon("greenStatusIcon.png"));
+				dataBlockOccupied.setIcon(new ImageIcon("images/greenStatusIcon.png"));
 			} else {
-				dataBlockOccupied.setIcon(new ImageIcon("greyStatusIcon.png"));
+				dataBlockOccupied.setIcon(new ImageIcon("images/greyStatusIcon.png"));
 			}
 			dataBlockLength.setText(Double.toString(b.length) + " m");
 			dataBlockGrade.setText(Double.toString(b.grade) + "%");
@@ -493,12 +493,12 @@ public class TrackModelGUI extends JFrame {
 
 			try{
 				if (Character.toLowerCase(b.switchID.charAt(0)) == 's'){
-					iconswitchID.setIcon(new ImageIcon("switchID1.png"));
+					iconswitchID.setIcon(new ImageIcon("images/switchState1.png"));
 				} else {
-					iconswitchID.setIcon(new ImageIcon("switchID0.png"));
+					iconswitchID.setIcon(new ImageIcon("images/switchState0.png"));
 				}
 			} catch (StringIndexOutOfBoundsException e){
-				iconswitchID.setIcon(new ImageIcon("switchID0.png"));
+				iconswitchID.setIcon(new ImageIcon("images/switchState0.png"));
 			}
 		}
 	}
