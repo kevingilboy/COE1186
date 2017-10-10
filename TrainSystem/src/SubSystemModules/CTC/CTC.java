@@ -219,15 +219,21 @@ public class CTC {
 		editQueueSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String trainName="";
+				int row;
 				String line = tabbedPane_1.getTitleAt(tabbedPane_1.getSelectedIndex());
+				
+				//Get the train name
 				if(line=="Red") {
-					int row = queueRedTable.getSelectedRow();
+					row = queueRedTable.getSelectedRow();
+					if(row<0) return;
 					trainName = (String) queueRedData.getValueAt(row, 0);
 				}
 				else if(line=="Green") {
-					int row = queueGreenTable.getSelectedRow();
+					row = queueGreenTable.getSelectedRow();
+					if(row<0) return;
 					trainName = (String) queueGreenData.getValueAt(row, 0);
 				}
+
 				scheduleForScheduleEditor = trainsInQueue.get(trainName);
 
 				Thread scheduleEditorThread = new Thread() {
@@ -278,6 +284,9 @@ public class CTC {
 				}
 				Schedule schedule = trainsInQueue.remove(trainName);
 				trainsDispatched.put(trainName, schedule);
+				
+				queueSelectedData.setDataVector(selectedTrainInitialData,selectedTrainColumnNames);
+				openScheduleInTable(queueSelectedTable,queueSelectedData,null);
 				updateQueueTable();
 				updateDispatchedTable();
 				
@@ -435,6 +444,52 @@ public class CTC {
 		frame.getContentPane().add(lblSelectedTrainSchedule);
 		
 		JButton editSelectedDispatchedTrainSchedule = new JButton("Edit Schedule");
+		editSelectedDispatchedTrainSchedule.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String trainName="";
+				int row;
+				String line = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
+				
+				//Get the train name
+				if(line=="Red") {
+					row = dispatchedRedTable.getSelectedRow();
+					if(row<0) return;
+					trainName = (String) dispatchedRedData.getValueAt(row, 0);
+				}
+				else if(line=="Green") {
+					row = dispatchedGreenTable.getSelectedRow();
+					if(row<0) return;
+					trainName = (String) dispatchedGreenData.getValueAt(row, 0);
+				}
+
+				scheduleForScheduleEditor = trainsDispatched.get(trainName);
+
+				Thread scheduleEditorThread = new Thread() {
+					public void run() {
+						try {
+							SwingUtilities.invokeAndWait(openScheduleEditor);
+						}
+						catch (Exception e) {
+							e.printStackTrace();
+						}
+				         
+						while(scheduleEditor.editing==true) {
+							try {
+								Thread.sleep(200);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+						Schedule schedule = scheduleEditor.currentSchedule;
+						trainsDispatched.put(schedule.name,schedule);
+						updateDispatchedTable();
+						
+						System.out.println("Finished on " + Thread.currentThread());
+					}
+				};
+				scheduleEditorThread.start();				
+			}
+		});
 		editSelectedDispatchedTrainSchedule.setBounds(971, 288, 171, 41);
 		frame.getContentPane().add(editSelectedDispatchedTrainSchedule);
 	}
