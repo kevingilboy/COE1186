@@ -2,16 +2,21 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JFrame;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.UIManager;
+import javax.swing.JComboBox;
 
 public class ScheduleEditor {
 	public Schedule currentSchedule;
 	public boolean editing = true;
 	public JFrame frame;
-	private JTextField textField;
+	private JTextField nameInput;
+	private JTextField authorityInput;
+	private JComboBox<String> lineSelect;
 
 
 	/**
@@ -41,32 +46,57 @@ public class ScheduleEditor {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
-		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBounds(100, 100, 450, 600);
 		frame.getContentPane().setLayout(null);
 		
 		JButton btnCreateSchedule = new JButton("Create Schedule");
 		btnCreateSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				currentSchedule.name = textField.getText();
+				currentSchedule.name = nameInput.getText();
+				currentSchedule.line = (String) lineSelect.getSelectedItem();
+				currentSchedule.authority = Integer.parseInt(authorityInput.getText());
+				
 				frame.dispose();
 				editing = false;
 			}
 		});
-		btnCreateSchedule.setBounds(113, 143, 171, 41);
+		btnCreateSchedule.setBounds(111, 421, 171, 41);
 		frame.getContentPane().add(btnCreateSchedule);
 		
-		textField = new JTextField();
-		textField.setBounds(150, 60, 199, 39);
-		frame.getContentPane().add(textField);
-		textField.setColumns(10);
+		nameInput = new JTextField();
+		nameInput.setBounds(150, 60, 199, 39);
+		frame.getContentPane().add(nameInput);
+		nameInput.setColumns(10);
 		
 		JLabel lblTrainName = new JLabel("Train Name:");
 		lblTrainName.setBounds(42, 63, 115, 33);
 		frame.getContentPane().add(lblTrainName);
+		
+		authorityInput = new JTextField();
+		authorityInput.setColumns(10);
+		authorityInput.setBounds(150, 200, 199, 39);
+		frame.getContentPane().add(authorityInput);
+		
+		JLabel lblTrainAuthority = new JLabel("Train Authority:");
+		lblTrainAuthority.setBounds(26, 203, 115, 33);
+		frame.getContentPane().add(lblTrainAuthority);
+		
+		lineSelect = new JComboBox<String>();
+		lineSelect.setModel(new DefaultComboBoxModel<String>(new String[] {"Red", "Green"}));
+		lineSelect.setBounds(150, 127, 199, 39);
+		frame.getContentPane().add(lineSelect);
+		
+		JLabel lblLine = new JLabel("Line");
+		lblLine.setBounds(83, 127, 115, 33);
+		frame.getContentPane().add(lblLine);
 	}
 	
 	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
