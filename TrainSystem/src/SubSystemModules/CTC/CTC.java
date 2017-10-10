@@ -13,7 +13,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-public class Gui4 {
+public class CTC {
 	private JFrame frame;
 	
 	private DefaultTableModel dispatchedGreenData;
@@ -60,7 +60,8 @@ public class Gui4 {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Gui4 window = new Gui4();
+					CTC window = new CTC();
+					window.frame.setResizable(false);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -72,7 +73,7 @@ public class Gui4 {
 	/**
 	 * Create the application.
 	 */
-	public Gui4() {
+	public CTC() {
 		initialize();
 	}
 
