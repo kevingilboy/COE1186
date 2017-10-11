@@ -17,6 +17,7 @@ public class ScheduleEditor {
 	private JTextField nameInput;
 	private JTextField authorityInput;
 	private JComboBox<String> lineSelect;
+	private JButton btnCreateSchedule;
 
 
 	/**
@@ -39,6 +40,7 @@ public class ScheduleEditor {
 			nameInput.setText(currentSchedule.name);
 			nameInput.setEnabled(false);
 			authorityInput.setText(Integer.toString(currentSchedule.authority));
+			btnCreateSchedule.setText("Save Edits");
 		}		
 	}
 
@@ -50,7 +52,7 @@ public class ScheduleEditor {
 		frame.setBounds(100, 100, 450, 600);
 		frame.getContentPane().setLayout(null);
 		
-		JButton btnCreateSchedule = new JButton("Create Schedule");
+		btnCreateSchedule = new JButton("Create Schedule");
 		btnCreateSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currentSchedule.name = nameInput.getText();
