@@ -69,6 +69,9 @@ public class CTC {
 	public ScheduleEditor scheduleEditor;
 	public Schedule scheduleForScheduleEditor = null;
 
+	public final int GUI_WINDOW_HEIGHT = 600;
+	public final int GUI_WINDOW_WIDTH = 1200;
+
 
 	/**
 	 * Launch the application.
@@ -104,7 +107,7 @@ public class CTC {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1200, 600);
+		frame.setBounds(100, 100, GUI_WINDOW_WIDTH, GUI_WINDOW_HEIGHT);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -497,6 +500,10 @@ public class CTC {
 		});
 		editSelectedDispatchedTrainSchedule.setBounds(971, 288, 171, 41);
 		frame.getContentPane().add(editSelectedDispatchedTrainSchedule);
+
+		JLabel logoPineapple = new JLabel(new ImageIcon("pineapple_icon.png"));
+		logoPineapple.setBounds(GUI_WINDOW_WIDTH-150,GUI_WINDOW_HEIGHT-12-100,138,76);
+		frame.getContentPane().add(logoPineapple);
 	}
 	
 	private void openScheduleInTable(ScheduleJTable table,DefaultTableModel data, Schedule schedule) {
@@ -564,8 +571,9 @@ public class CTC {
 	};
 
 	private static void stylize(JButton button){
-		button.setBackground(Color.BLACK);//new Color(59,89,182));
+		button.setContentAreaFilled(false);
+		button.setOpaque(true);
+		button.setBackground(Color.BLACK);
 		button.setForeground(Color.WHITE);
-		button.setFocusPainted(false);
 	}
 }
