@@ -389,7 +389,13 @@ public class CTC {
 		stylize(addToDispatchToQueue);
 		addToDispatchToQueue.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				dumpScheduleFromCreaterToQueue();
+				Schedule schedule = trainCreationTable.schedule;
+				trainsInQueue.put(schedule.name, schedule);
+				updateQueueTable();
+				
+				//Remove from the creator
+				trainCreationData.setDataVector(selectedTrainInitialData,selectedTrainColumnNames);
+				openScheduleInTable(trainCreationTable,trainCreationData,null);
 			}
 		});
 		addToDispatchToQueue.setBounds(430, 459, 131, 41);
@@ -514,50 +520,48 @@ public class CTC {
 		table.schedule = schedule;						
 	}
 	
-	private void dumpScheduleFromCreaterToQueue() {
-		Schedule schedule = trainCreationTable.schedule;
-		trainsInQueue.put(schedule.name, schedule);
-		updateQueueTable();
-		
-		//Remove from the creator
-		trainCreationData.setDataVector(selectedTrainInitialData,selectedTrainColumnNames);
-		openScheduleInTable(trainCreationTable,trainCreationData,null);
-	}
-	
 	private void updateQueueTable(){
+		//Clear the red and green tables
 		queueRedData.setDataVector(queueTrainInitialData, queueTrainColumnNames);
 		queueGreenData.setDataVector(queueTrainInitialData, queueTrainColumnNames);
+		
+		//Cycle through each dispatched train's schedule
+		Schedule schedule;
 		for(String trainName:trainsInQueue.keySet()) {
-			Schedule schedule = trainsInQueue.get(trainName);
+			schedule = trainsInQueue.get(trainName);
 			Object[] row = {schedule.name,schedule.authority,schedule.departureTime.toString()};
 			if(schedule.line=="Red") {
 				queueRedData.addRow(row);
-				queueRedData.fireTableDataChanged();
 			}
 			else if(schedule.line=="Green"){
 				queueGreenData.addRow(row);
-				queueGreenData.fireTableDataChanged();
 			}
 		}
+
+		//Update the tables in the GUI
 		queueRedData.fireTableDataChanged();
 		queueGreenData.fireTableDataChanged();
 	}
 
 	private void updateDispatchedTable(){
+		//Clear the red and green tables
 		dispatchedRedData.setDataVector(dispatchedTrainsInitialData,dispatchedTrainsColumnNames);
 		dispatchedGreenData.setDataVector(dispatchedTrainsInitialData,dispatchedTrainsColumnNames);
+
+		//Cycle through each dispatched train's schedule
+		Schedule schedule;
 		for(String trainName:trainsDispatched.keySet()) {
-			Schedule schedule = trainsDispatched.get(trainName);
+			schedule = trainsDispatched.get(trainName);
 			Object[] row = {schedule.name,"0","0",schedule.authority+" mi","0"};
 			if(schedule.line=="Red") {
 				dispatchedRedData.addRow(row);
-				dispatchedRedData.fireTableDataChanged();
 			}
 			else if(schedule.line=="Green"){
 				dispatchedGreenData.addRow(row);
-				dispatchedGreenData.fireTableDataChanged();
 			}
 		}
+
+		//Update the tables in the GUI
 		queueRedData.fireTableDataChanged();
 		queueGreenData.fireTableDataChanged();
 	}
