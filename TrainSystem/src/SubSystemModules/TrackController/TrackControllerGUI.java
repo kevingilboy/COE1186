@@ -1,3 +1,8 @@
+/*
+ * Track Controller Sub-System Module / GUI Interface
+ * Written by Nick Petro for COE 1186: Software Engineering, Fall 2017
+ */
+
 import java.util.*;
 
 import java.io.BufferedReader;
@@ -31,9 +36,14 @@ public class TrackControllerGUI extends JFrame {
 	private JTextField textStatus;
 	private JTextField textOccupancy;
 	
+	JRadioButton switchButtonTop = new JRadioButton("");
+	JRadioButton switchButtonBottom = new JRadioButton("");
+	JLabel labelCrossingGraphic = new JLabel("");
+	
 	private String holdFilename = new String("");
 	private String holdDirectory = new String("");
 	private Plc newPlc = new Plc();
+	private Block selectedBlock = new Block("green","A",1,100,0.5,55,"","","",0.5,0.5,"Switch 1","Head",1,"CROSSING","-","Open",false);
 	
 	/**
 	 * Launch the application.
@@ -68,16 +78,68 @@ public class TrackControllerGUI extends JFrame {
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		
+		//Sub-Panels
 		JPanel trackSelectorPanel = new JPanel();
 		trackSelectorPanel.setBorder(null);
 		trackSelectorPanel.setBounds(346, 55, 502, 67);
 		panel.add(trackSelectorPanel);
 		trackSelectorPanel.setLayout(null);
 		
+		JPanel trackInfoPanel = new JPanel();
+		trackInfoPanel.setBorder(null);
+		trackInfoPanel.setBounds(346, 119, 502, 329);
+		panel.add(trackInfoPanel);
+		trackInfoPanel.setLayout(null);
+		
+		JPanel updatePanel = new JPanel();
+		updatePanel.setBounds(10, 32, 487, 59);
+		trackInfoPanel.add(updatePanel);
+		updatePanel.setLayout(null);
+		
+		JPanel switchPanel = new JPanel();
+		switchPanel.setBorder(null);
+		switchPanel.setBounds(131, 220, 240, 66);
+		trackInfoPanel.add(switchPanel);
+		switchPanel.setLayout(null);
+		
+		JPanel lightsPanel = new JPanel();
+		lightsPanel.setLayout(null);
+		lightsPanel.setBorder(null);
+		lightsPanel.setBounds(131, 103, 240, 123);
+		trackInfoPanel.add(lightsPanel);
+		
+		//Separators
 		JSeparator separator1 = new JSeparator();
 		separator1.setBounds(0, 0, 502, 12);
 		trackSelectorPanel.add(separator1);
 		
+		JSeparator separator2 = new JSeparator();
+		separator2.setBounds(0, 54, 502, 12);
+		trackSelectorPanel.add(separator2);
+		
+		JSeparator separator3 = new JSeparator();
+		separator3.setBounds(0, 91, 502, 21);
+		trackInfoPanel.add(separator3);
+		
+		JSeparator separator4 = new JSeparator();
+		separator4.setBounds(0, 282, 502, 21);
+		trackInfoPanel.add(separator4);
+		
+		//GUI Title
+		JLabel labelTrackControllerInterface = new JLabel("<html><b>Track Controller Interface</b><html>");
+		labelTrackControllerInterface.setBounds(346, 0, 502, 54);
+		panel.add(labelTrackControllerInterface);
+		labelTrackControllerInterface.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		labelTrackControllerInterface.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		//Track Image
+		JLabel labelTrackImg = new JLabel("");
+		labelTrackImg.setBackground(Color.WHITE);
+		labelTrackImg.setBounds(0, 0, 334, 448);
+		panel.add(labelTrackImg);
+		labelTrackImg.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/track.png"));
+		
+		//Block Selectors
 		JLabel labelBlock = new JLabel("Block");
 		labelBlock.setBounds(338, 23, 34, 16);
 		trackSelectorPanel.add(labelBlock);
@@ -90,14 +152,10 @@ public class TrackControllerGUI extends JFrame {
 		labelLine.setBounds(10, 23, 26, 16);
 		trackSelectorPanel.add(labelLine);
 		
-		JSeparator separator2 = new JSeparator();
-		separator2.setBounds(0, 54, 502, 12);
-		trackSelectorPanel.add(separator2);
-		
 		JComboBox comboBlock = new JComboBox();
 		comboBlock.setBounds(384, 19, 104, 27);
 		trackSelectorPanel.add(comboBlock);
-		comboBlock.setModel(new DefaultComboBoxModel(new String[] {"2"}));
+		comboBlock.setModel(new DefaultComboBoxModel(new String[] {"1"}));
 		
 		JComboBox comboSection = new JComboBox();
 		comboSection.setBounds(222, 19, 104, 27);
@@ -107,143 +165,103 @@ public class TrackControllerGUI extends JFrame {
 		JComboBox comboLine = new JComboBox();
 		comboLine.setBounds(48, 19, 104, 27);
 		trackSelectorPanel.add(comboLine);
-		comboLine.setModel(new DefaultComboBoxModel(new String[] {"Green"}));
+		comboLine.setModel(new DefaultComboBoxModel(new String[] {"Red","Green"}));
 		
-		JPanel trackInfoPanel = new JPanel();
-		trackInfoPanel.setBorder(null);
-		trackInfoPanel.setBounds(346, 119, 502, 329);
-		panel.add(trackInfoPanel);
-		trackInfoPanel.setLayout(null);
-		
+		//Controller Specifier
 		JLabel labelController = new JLabel("<html><b>Controller - GA</b><html>");
 		labelController.setBounds(0, -1, 502, 32);
 		trackInfoPanel.add(labelController);
 		labelController.setHorizontalAlignment(SwingConstants.CENTER);
-		
-		JPanel updatePanel = new JPanel();
-		updatePanel.setBounds(10, 32, 487, 59);
-		trackInfoPanel.add(updatePanel);
-		updatePanel.setLayout(null);
-		
+	
+		//Block Status
 		JLabel labelStatus = new JLabel("Status");
 		labelStatus.setBounds(136, 0, 73, 28);
 		updatePanel.add(labelStatus);
 		labelStatus.setHorizontalAlignment(SwingConstants.TRAILING);
 		
+		textStatus = new JTextField();
+		textStatus.setBounds(220, 0, 134, 28);
+		updatePanel.add(textStatus);
+		textStatus.setHorizontalAlignment(SwingConstants.CENTER);
+		textStatus.setText("");
+		textStatus.setEditable(false);
+		textStatus.setColumns(10);
+		
+		//Block Occupancy
 		JLabel labelOccupancy = new JLabel("Occupancy");
 		labelOccupancy.setBounds(135, 29, 73, 28);
 		updatePanel.add(labelOccupancy);
 		labelOccupancy.setHorizontalAlignment(SwingConstants.TRAILING);
 		
-		textStatus = new JTextField();
-		textStatus.setBounds(220, 0, 134, 28);
-		updatePanel.add(textStatus);
-		textStatus.setHorizontalAlignment(SwingConstants.CENTER);
-		textStatus.setText("Open");
-		textStatus.setEditable(false);
-		textStatus.setColumns(10);
-		
 		textOccupancy = new JTextField();
 		textOccupancy.setBounds(220, 29, 134, 28);
 		updatePanel.add(textOccupancy);
-		textOccupancy.setText("True");
+		textOccupancy.setText("");
 		textOccupancy.setHorizontalAlignment(SwingConstants.CENTER);
 		textOccupancy.setEditable(false);
 		textOccupancy.setColumns(10);
 		
-		JPanel switchPanel = new JPanel();
-		switchPanel.setBorder(null);
-		switchPanel.setBounds(131, 220, 240, 66);
-		trackInfoPanel.add(switchPanel);
-		switchPanel.setLayout(null);
-		
-		JRadioButton switchButtonTop = new JRadioButton("B1");
-		switchButtonTop.setBounds(153, 6, 80, 28);
-		switchPanel.add(switchButtonTop);
-		switchButtonTop.setHorizontalAlignment(SwingConstants.LEFT);
-		
-		JRadioButton switchButtonBottom = new JRadioButton("F13");
-		switchButtonBottom.setBounds(153, 35, 80, 28);
-		switchPanel.add(switchButtonBottom);
-		switchButtonBottom.setHorizontalAlignment(SwingConstants.LEFT);
+		//Block Switch
+		JLabel labelSwitchState = new JLabel("Switch State");
+		labelSwitchState.setBounds(0, 6, 88, 57);
+		switchPanel.add(labelSwitchState);
+		labelSwitchState.setHorizontalAlignment(SwingConstants.TRAILING);
 		
 		JLabel labelSwitchGraphic = new JLabel("");
 		labelSwitchGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/switch.png"));
 		labelSwitchGraphic.setBounds(100, 17, 55, 33);
 		switchPanel.add(labelSwitchGraphic);
 		
-		JLabel labelSwitchState = new JLabel("Switch State");
-		labelSwitchState.setBounds(0, 6, 88, 57);
-		switchPanel.add(labelSwitchState);
-		labelSwitchState.setHorizontalAlignment(SwingConstants.TRAILING);
+		switchButtonTop.setBounds(153, 6, 80, 28);
+		switchPanel.add(switchButtonTop);
+		switchButtonTop.setHorizontalAlignment(SwingConstants.LEFT);
 		
-		JPanel lightsPanel = new JPanel();
-		lightsPanel.setLayout(null);
-		lightsPanel.setBorder(null);
-		lightsPanel.setBounds(131, 103, 240, 123);
-		trackInfoPanel.add(lightsPanel);
+		switchButtonBottom.setBounds(153, 35, 80, 28);
+		switchPanel.add(switchButtonBottom);
+		switchButtonBottom.setHorizontalAlignment(SwingConstants.LEFT);
 		
-		JRadioButton radioRightCrossing = new JRadioButton("");
-		radioRightCrossing.setHorizontalAlignment(SwingConstants.LEFT);
-		radioRightCrossing.setBounds(164, 89, 68, 28);
-		lightsPanel.add(radioRightCrossing);
-		
-		JLabel labelLightGraphic = new JLabel("");
-		labelLightGraphic.setBounds(151, 0, 35, 57);
-		lightsPanel.add(labelLightGraphic);
-		labelLightGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/light-green.png"));
-		
+		//Block Lights
 		JLabel labelLights = new JLabel("Lights");
 		labelLights.setHorizontalAlignment(SwingConstants.TRAILING);
 		labelLights.setBounds(0, 0, 88, 57);
 		lightsPanel.add(labelLights);
 		
+		JLabel labelLightGraphic = new JLabel("");
+		labelLightGraphic.setBounds(149, 0, 39, 57);
+		lightsPanel.add(labelLightGraphic);
+		labelLightGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/lightsOff.png"));
+		
+		//Block Crossing
 		JLabel labelCrossing = new JLabel("Crossing");
 		labelCrossing.setHorizontalAlignment(SwingConstants.TRAILING);
 		labelCrossing.setBounds(0, 60, 88, 57);
 		lightsPanel.add(labelCrossing);
 		
-		JRadioButton radioLeftCrossing = new JRadioButton("");
-		radioLeftCrossing.setHorizontalAlignment(SwingConstants.RIGHT);
-		radioLeftCrossing.setBounds(103, 89, 68, 28);
-		lightsPanel.add(radioLeftCrossing);
+		labelCrossingGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/crossingOff.png"));
+		labelCrossingGraphic.setForeground(Color.LIGHT_GRAY);
+		labelCrossingGraphic.setFont(new Font("Helvetica", Font.BOLD, 40));
+		labelCrossingGraphic.setHorizontalAlignment(SwingConstants.CENTER);
+		labelCrossingGraphic.setBounds(149, 60, 39, 57);
+		lightsPanel.add(labelCrossingGraphic);
 		
-		JLabel labelX = new JLabel("X");
-		labelX.setForeground(Color.LIGHT_GRAY);
-		labelX.setFont(new Font("Helvetica", Font.BOLD, 40));
-		labelX.setHorizontalAlignment(SwingConstants.CENTER);
-		labelX.setBounds(100, 60, 134, 44);
-		lightsPanel.add(labelX);
-		
-		JSeparator separator3 = new JSeparator();
-		separator3.setBounds(0, 91, 502, 21);
-		trackInfoPanel.add(separator3);
-		
+		//Buttons
 		JButton buttonUpdate = new JButton("Update");
 		buttonUpdate.setBounds(385, 298, 117, 29);
+		buttonUpdate.addActionListener(new UpdateGui());
 		trackInfoPanel.add(buttonUpdate);
 		
 		JButton buttonImportPlc = new JButton("Import PLC");
 		buttonImportPlc.setBounds(256, 298, 117, 29);
 		buttonImportPlc.addActionListener(new OpenFile());
 		trackInfoPanel.add(buttonImportPlc);
-		
-		JSeparator separator4 = new JSeparator();
-		separator4.setBounds(0, 282, 502, 21);
-		trackInfoPanel.add(separator4);
-		
-		JLabel labelTrackImg = new JLabel("");
-		labelTrackImg.setBackground(Color.WHITE);
-		labelTrackImg.setBounds(0, 0, 334, 448);
-		panel.add(labelTrackImg);
-		labelTrackImg.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/track.png"));
-		
-		JLabel labelTrackControllerInterface = new JLabel("<html><b>Track Controller Interface</b><html>");
-		labelTrackControllerInterface.setBounds(346, 0, 502, 54);
-		panel.add(labelTrackControllerInterface);
-		labelTrackControllerInterface.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		labelTrackControllerInterface.setHorizontalAlignment(SwingConstants.CENTER);
-		
+	}
+	
+	class UpdateGui implements ActionListener {
+	    public void actionPerformed(ActionEvent e) {
+			updateBlockInfo();
+			updateCrossing();
+			updateSwitch();
+	    }
 	}
 	
 	class OpenFile implements ActionListener {
@@ -272,6 +290,44 @@ public class TrackControllerGUI extends JFrame {
 			parseFile(holdDirectory, holdFilename);
 	    }
 	}
+	
+	/*
+		Update Functions
+	*/
+		
+	public void updateBlockInfo(){
+		textStatus.setText(selectedBlock.status);
+		if(selectedBlock.occupancy == true){
+			textOccupancy.setText("True");
+		} else {
+			textOccupancy.setText("False");
+		}
+	}
+	
+	public void updateLights(){
+		
+	}
+	
+	public void updateCrossing(){
+		if(!selectedBlock.switchID.equals("")){
+			labelCrossingGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/crossingOn.gif"));
+		} else {
+			labelCrossingGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/crossingOff.png"));
+		}
+	}
+	
+	public void updateSwitch(){
+		if(!selectedBlock.switchID.equals("")){
+			
+		} else {
+			switchButtonTop.setSelected(false);
+			switchButtonTop.setText("-");
+			switchButtonBottom.setSelected(false);
+			switchButtonBottom.setText("-");
+		}
+	}
+	
+	
 	
 	public void parseFile(String d, String f){
 		
@@ -303,10 +359,7 @@ public class TrackControllerGUI extends JFrame {
 				System.out.println(logicFor);
 				System.out.println(logic);
 			}
-
 			newPlc = new Plc(plcString[0], plcString[1], plcString[2], plcString[3], plcString[4], plcString[5], plcString[6], plcString[7]);
-			//labelBlockID.setText(Character.toUpperCase(blocks.get(selectedBlockIndex).line.charAt(0)) + Integer.toString(selectedBlockIndex+1));
-			//showBlockStaticInfo(blocks.get(0), !firstTime);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
