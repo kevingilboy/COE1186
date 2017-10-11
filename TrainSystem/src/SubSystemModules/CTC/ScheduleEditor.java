@@ -41,6 +41,10 @@ public class ScheduleEditor {
 			nameInput.setEnabled(false);
 			authorityInput.setText(Integer.toString(currentSchedule.authority));
 			btnCreateSchedule.setText("Save Edits");
+
+			if(currentSchedule.dispatched==true){
+				lineSelect.setEnabled(false);
+			}
 		}		
 	}
 

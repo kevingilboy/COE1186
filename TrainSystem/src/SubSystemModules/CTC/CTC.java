@@ -289,6 +289,7 @@ public class CTC {
 				}
 				Schedule schedule = trainsInQueue.remove(trainName);
 				trainsDispatched.put(trainName, schedule);
+				schedule.dispatched = true;
 				
 				queueSelectedData.setDataVector(selectedTrainInitialData,selectedTrainColumnNames);
 				openScheduleInTable(queueSelectedTable,queueSelectedData,null);
@@ -552,13 +553,13 @@ public class CTC {
 		Schedule schedule;
 		for(String trainName:trainsDispatched.keySet()) {
 			schedule = trainsDispatched.get(trainName);
-			Object[] row; //build the row here, but for now we fake the functionality below
+			//Object[] row; //build the row here, but for now we fake the functionality below
 			if(schedule.line=="Red") {
-				row = {schedule.name,"C9","0",schedule.authority+" mi","0"};
+				Object[] row = {schedule.name,"C9","0",schedule.authority+" mi","0"};
 				dispatchedRedData.addRow(row);
 			}
 			else if(schedule.line=="Green"){
-				row = {schedule.name,"J62","0",schedule.authority+" mi","0"};
+				Object[] row = {schedule.name,"J62","0",schedule.authority+" mi","0"};
 				dispatchedGreenData.addRow(row);
 			}
 		}
