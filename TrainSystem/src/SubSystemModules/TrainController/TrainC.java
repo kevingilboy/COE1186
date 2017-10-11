@@ -102,11 +102,13 @@ public class TrainC {
 		listModel.addElement("Train 1");
 		
 		JList list = new JList(listModel);
+
 		GridBagConstraints gbc_list = new GridBagConstraints();
 		gbc_list.fill = GridBagConstraints.BOTH;
 		gbc_list.gridx = 0;
 		gbc_list.gridy = 1;
 		panel.add(list, gbc_list);
+
 		list.setSelectedIndex(0);
 		
 		JPanel speedPanel = new JPanel();
@@ -117,6 +119,7 @@ public class TrainC {
 		gbc_speedPanel.gridy = 0;
 		frame.getContentPane().add(speedPanel, gbc_speedPanel);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
+
 		gbl_panel_1.columnWidths = new int[]{16, 174, 62, 0};
 		gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_panel_1.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
@@ -148,6 +151,7 @@ public class TrainC {
 		gbc_speedField.gridy = 2;
 		speedPanel.add(speedField, gbc_speedField);
 		speedField.setColumns(10);
+
 		speedField.setText("10");
 		
 		JLabel label = new JLabel("mi/hr");
@@ -174,6 +178,7 @@ public class TrainC {
 		gbc_textField_1.gridy = 4;
 		speedPanel.add(accelField, gbc_textField_1);
 		accelField.setColumns(10);
+
 		accelField.setText("0");
 		
 		JLabel lblMihr = new JLabel("mi/hr^2");
@@ -200,6 +205,7 @@ public class TrainC {
 		gbc_textField_2.gridy = 6;
 		speedPanel.add(authField, gbc_textField_2);
 		authField.setColumns(10);
+
 		authField.setText("100");
 		
 		JLabel lblMi = new JLabel("mi");
@@ -269,6 +275,7 @@ public class TrainC {
 		gbc_textField_4.gridy = 11;
 		speedPanel.add(powerField, gbc_textField_4);
 		powerField.setColumns(10);
+
 		powerField.setText("0");
 		
 		JLabel lblKw = new JLabel("kW");
@@ -290,6 +297,7 @@ public class TrainC {
 		frame.getContentPane().add(doorLightPanel, gbc_doorLightPanel);
 		GridBagLayout gbl_panel_4 = new GridBagLayout();
 		gbl_panel_4.columnWidths = new int[]{137, 103, 0};
+
 		gbl_panel_4.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_panel_4.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
 		gbl_panel_4.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
@@ -319,6 +327,7 @@ public class TrainC {
 		gbc_rdbtnOpen.gridx = 0;
 		gbc_rdbtnOpen.gridy = 2;
 		doorLightPanel.add(leftOpen, gbc_rdbtnOpen);
+
 		leftOpen.setSelected(true);
 		
 		JRadioButton leftClose = new JRadioButton("CLOSE");
@@ -328,6 +337,7 @@ public class TrainC {
 		gbc_rdbtnClose.gridx = 1;
 		gbc_rdbtnClose.gridy = 2;
 		doorLightPanel.add(leftClose, gbc_rdbtnClose);
+
 		leftClose.setSelected(false);
 		
 		leftOpen.addMouseListener(new MouseAdapter() {
@@ -424,12 +434,14 @@ public class TrainC {
 		
 		tempField = new JTextField();
 		GridBagConstraints gbc_textField = new GridBagConstraints();
+
 		gbc_textField.insets = new Insets(0, 0, 5, 5);
 		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField.gridx = 0;
 		gbc_textField.gridy = 10;
 		doorLightPanel.add(tempField, gbc_textField);
 		tempField.setColumns(10);
+
 		tempField.setText("70");
 		
 		JLabel lblF = new JLabel("F");
@@ -492,6 +504,7 @@ public class TrainC {
 		gbc_rdbtnManual.gridx = 0;
 		gbc_rdbtnManual.gridy = 1;
 		modePanel.add(modeManual, gbc_rdbtnManual);
+
 		modeManual.setSelected(true);
 		
 		JRadioButton modeAuto = new JRadioButton("AUTO");
@@ -500,6 +513,7 @@ public class TrainC {
 		gbc_rdbtnAuto.gridx = 0;
 		gbc_rdbtnAuto.gridy = 2;
 		modePanel.add(modeAuto, gbc_rdbtnAuto);
+
 		modeAuto.setSelected(false);
 		
 		modeManual.addMouseListener(new MouseAdapter() {
@@ -540,6 +554,7 @@ public class TrainC {
 		gbc_lblBrakeControl.gridy = 0;
 		brakePanel.add(lblBrakeControl, gbc_lblBrakeControl);
 		
+
 		serviceOn = new JRadioButton("Service Brake On");
 		GridBagConstraints gbc_rdbtnServiceBrakeOn = new GridBagConstraints();
 		gbc_rdbtnServiceBrakeOn.anchor = GridBagConstraints.WEST;
@@ -549,6 +564,7 @@ public class TrainC {
 		brakePanel.add(serviceOn, gbc_rdbtnServiceBrakeOn);
 		serviceOn.setSelected(false);
 		
+
 		serviceOff = new JRadioButton("Service Brake Off");
 		GridBagConstraints gbc_rdbtnServiceBrakeOff = new GridBagConstraints();
 		gbc_rdbtnServiceBrakeOff.anchor = GridBagConstraints.WEST;
@@ -634,6 +650,7 @@ public class TrainC {
 		gbc_textField_5.gridy = 1;
 		stationPanel.add(nextStationField, gbc_textField_5);
 		nextStationField.setColumns(10);
+
 		nextStationField.setText("Pioneer");
 		
 		JLabel lblDistanceTo = new JLabel("Distance to:");
@@ -652,6 +669,7 @@ public class TrainC {
 		stationPanel.add(nextDistField, gbc_textField_6);
 		nextDistField.setColumns(10);
 		nextDistField.setText("N/A");
+
 		nextDistField.setText("0 mi");
 	}
 	
