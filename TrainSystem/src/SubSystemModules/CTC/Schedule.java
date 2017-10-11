@@ -6,6 +6,7 @@ public class Schedule {
 	public String line;
 	public String name;
 	public int authority;
+	public boolean dispatched;
 	
 	public Schedule() {
 		/*
@@ -13,6 +14,7 @@ public class Schedule {
 		 */
 		stops = new ArrayList<Stop>();
 		
+		dispatched = false;
 		departureTime = new SimTime("0845");
 		stops.add(new Stop("Shadyside","0847","0849"));
 		stops.add(new Stop("Herron Ave","0853","0855"));
