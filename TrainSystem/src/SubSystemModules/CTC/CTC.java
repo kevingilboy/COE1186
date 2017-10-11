@@ -70,6 +70,9 @@ public class CTC {
 	public ScheduleEditor scheduleEditor;
 	public Schedule scheduleForScheduleEditor = null;
 
+	/**
+	 * Constants
+	 */
 	public final int GUI_WINDOW_HEIGHT = 600;
 	public final int GUI_WINDOW_WIDTH = 1200;
 
@@ -79,7 +82,7 @@ public class CTC {
 	 */
 	public static void main(String[] args) {
 		try {
-			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
