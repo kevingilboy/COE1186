@@ -10,6 +10,7 @@ import java.util.Vector;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Container;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
@@ -109,74 +110,75 @@ public class CTC {
 		frame = new JFrame();
 		frame.setBounds(100, 100, GUI_WINDOW_WIDTH, GUI_WINDOW_HEIGHT);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-		
-		/**
-		 * LEFT FRAME
-		 */
+		Container contentPane = frame.getContentPane();
+		contentPane.setLayout(null);
 		
 		JSeparator middleLeftSeparator = new JSeparator();
 		middleLeftSeparator.setOrientation(SwingConstants.VERTICAL);
 		middleLeftSeparator.setForeground(Color.GRAY);
 		middleLeftSeparator.setBackground(Color.BLACK);
 		middleLeftSeparator.setBounds(250, 0, 1, 512);
-		frame.getContentPane().add(middleLeftSeparator);
+		contentPane.add(middleLeftSeparator);
 		
 		JSeparator horizontalSeparator = new JSeparator();
 		horizontalSeparator.setBounds(250, 264, 487, 2);
-		frame.getContentPane().add(horizontalSeparator);
+		contentPane.add(horizontalSeparator);
 		
 		JSeparator middleRightSeparator = new JSeparator();
 		middleRightSeparator.setOrientation(SwingConstants.VERTICAL);
 		middleRightSeparator.setForeground(Color.GRAY);
 		middleRightSeparator.setBackground(Color.BLACK);
 		middleRightSeparator.setBounds(737, 0, 1, 512);
-		frame.getContentPane().add(middleRightSeparator);
+		contentPane.add(middleRightSeparator);
 		JLabel label = new JLabel("08:45");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setBounds(75, 64, 100, 44);
-		frame.getContentPane().add(label);
+		contentPane.add(label);
+
+		/**
+		 * LEFT FRAME
+		 */
 		
-		JLabel lblWeather = new JLabel("Temp");
-		lblWeather.setBounds(23, 172, 115, 33);
-		frame.getContentPane().add(lblWeather);
+		JLabel tempLbl = new JLabel("Temp");
+		tempLbl.setBounds(23, 172, 115, 33);
+		contentPane.add(tempLbl);
 		
-		JLabel label_1 = new JLabel("Weather");
-		label_1.setBounds(23, 128, 115, 33);
-		frame.getContentPane().add(label_1);
+		JSpinner tempSpinner = new JSpinner();
+		tempSpinner.setModel(new SpinnerNumberModel(new Integer(70), null, null, new Integer(1)));
+		tempSpinner.setBounds(134, 169, 66, 40);
+		contentPane.add(tempSpinner);
 		
-		JSpinner spinner = new JSpinner();
-		spinner.setModel(new SpinnerNumberModel(new Integer(70), null, null, new Integer(1)));
-		spinner.setBounds(134, 169, 66, 40);
-		frame.getContentPane().add(spinner);
+		JLabel fLbl = new JLabel("F");
+		fLbl.setBounds(209, 172, 14, 33);
+		contentPane.add(fLbl);
 		
-		JComboBox<String> comboBox = new JComboBox<String>();
-		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"Sunny", "Rainy"}));
-		comboBox.setBounds(124, 125, 100, 39);
-		frame.getContentPane().add(comboBox);
+		JLabel weatherLbl = new JLabel("Weather");
+		weatherLbl.setBounds(23, 128, 115, 33);
+		contentPane.add(weatherLbl);
 		
-		JLabel lblF = new JLabel("F");
-		lblF.setBounds(209, 172, 14, 33);
-		frame.getContentPane().add(lblF);
+		JComboBox<String> weatherSelect = new JComboBox<String>();
+		weatherSelect.setModel(new DefaultComboBoxModel<String>(new String[] {"Sunny", "Rainy"}));
+		weatherSelect.setBounds(124, 125, 100, 39);
+		contentPane.add(weatherSelect);
 		
 		JLabel lblThroughput = new JLabel("Throughput: ");
 		lblThroughput.setBounds(0, 479, 158, 33);
-		frame.getContentPane().add(lblThroughput);
+		contentPane.add(lblThroughput);
 		
 		JLabel lblThroughputAmt = new JLabel("###");
 		lblThroughputAmt.setBounds(134, 479, 89, 33);
-		frame.getContentPane().add(lblThroughputAmt);
+		contentPane.add(lblThroughputAmt);
 		
 		/**
 		 * MID TOP
 		 */		
 		JLabel lblQueue = new JLabel("Queue");
 		lblQueue.setBounds(463, 28, 115, 33);
-		frame.getContentPane().add(lblQueue);
+		contentPane.add(lblQueue);
 		
 		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane_1.setBounds(287, 55, 397, 97);
-		frame.getContentPane().add(tabbedPane_1);
+		contentPane.add(tabbedPane_1);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
 		tabbedPane_1.addTab("Red", null, scrollPane_2, null);
@@ -212,7 +214,7 @@ public class CTC {
 		
 		JScrollPane scrollPane_4 = new JScrollPane();
 		scrollPane_4.setBounds(277, 184, 221, 62);
-		frame.getContentPane().add(scrollPane_4);
+		contentPane.add(scrollPane_4);
 		
 		queueSelectedData = new DefaultTableModel(selectedTrainInitialData,selectedTrainColumnNames);
 		queueSelectedTable = new ScheduleJTable(queueSelectedData);
@@ -267,11 +269,11 @@ public class CTC {
 			}
 		});
 		editQueueSchedule.setBounds(513, 186, 171, 24);
-		frame.getContentPane().add(editQueueSchedule);
+		contentPane.add(editQueueSchedule);
 		
 		JLabel label_2 = new JLabel("Selected Train Schedule");
 		label_2.setBounds(399, 152, 198, 33);
-		frame.getContentPane().add(label_2);
+		contentPane.add(label_2);
 		
 		JButton dispatchQueueSchedule = new JButton("Dispatch Now");
 		stylize(dispatchQueueSchedule);
@@ -299,31 +301,31 @@ public class CTC {
 			}
 		});
 		dispatchQueueSchedule.setBounds(512, 218, 171, 24);
-		frame.getContentPane().add(dispatchQueueSchedule);
+		contentPane.add(dispatchQueueSchedule);
 		
 		/**
 		 * MID BOTTOM
 		 */
 		JLabel lblNewLabel = new JLabel("Dispatch Center");
 		lblNewLabel.setBounds(463, 274, 115, 33);
-		frame.getContentPane().add(lblNewLabel);
+		contentPane.add(lblNewLabel);
 		
 		JToggleButton tglManual = new JToggleButton("Manual");
 		tglManual.setSelected(true);
 		tglManual.setBounds(372, 308, 131, 33);
-		frame.getContentPane().add(tglManual);
+		contentPane.add(tglManual);
 		
 		JToggleButton tglAuto = new JToggleButton("Auto");
 		tglAuto.setBounds(502, 308, 131, 33);
-		frame.getContentPane().add(tglAuto);
+		contentPane.add(tglAuto);
 		
 		JLabel lblManualTrainCreation = new JLabel("Manual Train Creation");
 		lblManualTrainCreation.setBounds(395, 347, 221, 33);
-		frame.getContentPane().add(lblManualTrainCreation);
+		contentPane.add(lblManualTrainCreation);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(372, 385, 264, 62);
-		frame.getContentPane().add(scrollPane_1);
+		contentPane.add(scrollPane_1);
 		
 		trainCreationData = new DefaultTableModel(selectedTrainInitialData,selectedTrainColumnNames);
 		trainCreationTable = new ScheduleJTable(trainCreationData);
@@ -331,25 +333,25 @@ public class CTC {
 		
 		JLabel lblDepartAt = new JLabel("Depart at");
 		lblDepartAt.setBounds(260, 411, 115, 33);
-		frame.getContentPane().add(lblDepartAt);
+		contentPane.add(lblDepartAt);
 		
 		trainCreationDepartTime = new JTextField();
 		trainCreationDepartTime.setEditable(false);
 		trainCreationDepartTime.setText("NA");
 		trainCreationDepartTime.setBounds(314, 408, 52, 39);
-		frame.getContentPane().add(trainCreationDepartTime);
+		contentPane.add(trainCreationDepartTime);
 		trainCreationDepartTime.setColumns(10);
 		
 		JLabel lblLine = new JLabel("Line");
 		lblLine.setBounds(287, 377, 57, 33);
-		frame.getContentPane().add(lblLine);
+		contentPane.add(lblLine);
 			
 		trainCreationLine = new JTextField();
 		trainCreationLine.setEditable(false);
 		trainCreationLine.setText("NA");
 		trainCreationLine.setColumns(10);
 		trainCreationLine.setBounds(314, 374, 52, 39);
-		frame.getContentPane().add(trainCreationLine);
+		contentPane.add(trainCreationLine);
 		
 		JButton editToDispatchSchedule = new JButton("<html>Create/Edit<br>Schedule</html>");
 		stylize(editToDispatchSchedule);
@@ -384,7 +386,7 @@ public class CTC {
 			}
 		});
 		editToDispatchSchedule.setBounds(645, 383, 89, 64);
-		frame.getContentPane().add(editToDispatchSchedule);
+		contentPane.add(editToDispatchSchedule);
 		
 		JButton addToDispatchToQueue = new JButton("Add To Queue");
 		stylize(addToDispatchToQueue);
@@ -400,18 +402,18 @@ public class CTC {
 			}
 		});
 		addToDispatchToQueue.setBounds(430, 459, 131, 41);
-		frame.getContentPane().add(addToDispatchToQueue);
+		contentPane.add(addToDispatchToQueue);
 			
 		/**
 		 * RIGHT SIDE
 		 */
 		JLabel lblDispatchedTrains = new JLabel("Dispatched Trains");
 		lblDispatchedTrains.setBounds(930, 28, 115, 33);
-		frame.getContentPane().add(lblDispatchedTrains);
+		contentPane.add(lblDispatchedTrains);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(745, 55, 397, 187);
-		frame.getContentPane().add(tabbedPane);
+		contentPane.add(tabbedPane);
 		
 		JScrollPane dispatchedRedScrollPane = new JScrollPane();
 		
@@ -447,7 +449,7 @@ public class CTC {
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(745, 274, 221, 210);
-		frame.getContentPane().add(scrollPane);
+		contentPane.add(scrollPane);
 		
 		dispatchSelectedData = new DefaultTableModel(selectedTrainInitialData,selectedTrainColumnNames);
 		dispatchSelectedTable = new ScheduleJTable(dispatchSelectedData);
@@ -455,7 +457,7 @@ public class CTC {
 		
 		JLabel lblSelectedTrainSchedule = new JLabel("Selected Train Schedule");
 		lblSelectedTrainSchedule.setBounds(867, 242, 198, 33);
-		frame.getContentPane().add(lblSelectedTrainSchedule);
+		contentPane.add(lblSelectedTrainSchedule);
 		
 		JButton editSelectedDispatchedTrainSchedule = new JButton("Edit Schedule");
 		stylize(editSelectedDispatchedTrainSchedule);
@@ -506,11 +508,11 @@ public class CTC {
 			}
 		});
 		editSelectedDispatchedTrainSchedule.setBounds(971, 288, 171, 41);
-		frame.getContentPane().add(editSelectedDispatchedTrainSchedule);
+		contentPane.add(editSelectedDispatchedTrainSchedule);
 
 		JLabel logoPineapple = new JLabel(new ImageIcon("pineapple_icon.png"));
 		logoPineapple.setBounds(GUI_WINDOW_WIDTH-150,GUI_WINDOW_HEIGHT-12-100,138,76);
-		frame.getContentPane().add(logoPineapple);
+		contentPane.add(logoPineapple);
 	}
 	
 	private void openScheduleInTable(ScheduleJTable table,DefaultTableModel data, Schedule schedule) {

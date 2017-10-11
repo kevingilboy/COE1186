@@ -1,6 +1,7 @@
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 
+import java.awt.Container;
 import javax.swing.JFrame;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -54,7 +55,8 @@ public class ScheduleEditor {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 600);
-		frame.getContentPane().setLayout(null);
+		Container contentPane = frame.getContentPane();
+		contentPane.setLayout(null);
 		
 		btnCreateSchedule = new JButton("Create Schedule");
 		btnCreateSchedule.addActionListener(new ActionListener() {
@@ -68,34 +70,34 @@ public class ScheduleEditor {
 			}
 		});
 		btnCreateSchedule.setBounds(111, 421, 171, 41);
-		frame.getContentPane().add(btnCreateSchedule);
+		contentPane.add(btnCreateSchedule);
 		
 		nameInput = new JTextField();
 		nameInput.setBounds(150, 60, 199, 39);
-		frame.getContentPane().add(nameInput);
+		contentPane.add(nameInput);
 		nameInput.setColumns(10);
 		
 		JLabel lblTrainName = new JLabel("Train Name:");
 		lblTrainName.setBounds(42, 63, 115, 33);
-		frame.getContentPane().add(lblTrainName);
+		contentPane.add(lblTrainName);
 		
 		authorityInput = new JTextField();
 		authorityInput.setColumns(10);
 		authorityInput.setBounds(150, 200, 199, 39);
-		frame.getContentPane().add(authorityInput);
+		contentPane.add(authorityInput);
 		
 		JLabel lblTrainAuthority = new JLabel("Train Authority:");
 		lblTrainAuthority.setBounds(26, 203, 115, 33);
-		frame.getContentPane().add(lblTrainAuthority);
+		contentPane.add(lblTrainAuthority);
 		
 		lineSelect = new JComboBox<String>();
 		lineSelect.setModel(new DefaultComboBoxModel<String>(new String[] {"Red", "Green"}));
 		lineSelect.setBounds(150, 127, 199, 39);
-		frame.getContentPane().add(lineSelect);
+		contentPane.add(lineSelect);
 		
 		JLabel lblLine = new JLabel("Line");
 		lblLine.setBounds(83, 127, 115, 33);
-		frame.getContentPane().add(lblLine);
+		contentPane.add(lblLine);
 	}
 	
 	public static void main(String[] args) {
