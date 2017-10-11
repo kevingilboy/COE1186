@@ -1,6 +1,15 @@
+import java.util.*;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+import java.awt.event.*;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Color;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -13,15 +22,19 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
-import java.awt.Color;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 
 public class TrackControllerGUI extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textStatus;
 	private JTextField textOccupancy;
-
+	
+	private String holdFilename = new String("");
+	private String holdDirectory = new String("");
+	private Plc newPlc = new Plc();
+	
 	/**
 	 * Launch the application.
 	 */
@@ -212,6 +225,7 @@ public class TrackControllerGUI extends JFrame {
 		
 		JButton buttonImportPlc = new JButton("Import PLC");
 		buttonImportPlc.setBounds(256, 298, 117, 29);
+		buttonImportPlc.addActionListener(new OpenFile());
 		trackInfoPanel.add(buttonImportPlc);
 		
 		JSeparator separator4 = new JSeparator();
@@ -231,4 +245,81 @@ public class TrackControllerGUI extends JFrame {
 		labelTrackControllerInterface.setHorizontalAlignment(SwingConstants.CENTER);
 		
 	}
+	
+	class OpenFile implements ActionListener {
+	    public void actionPerformed(ActionEvent e) {
+
+			JFileChooser c = new JFileChooser();
+			int rVal = c.showOpenDialog(TrackControllerGUI.this);
+			if (rVal == JFileChooser.APPROVE_OPTION) {
+				//filename.setText(c.getSelectedFile().getName());
+				//directory.setText(c.getCurrentDirectory().toString());
+			}
+			if (rVal == JFileChooser.CANCEL_OPTION) {
+				//filename.setText("You pressed cancel");
+				//directory.setText("");
+				System.out.println("You pressed cancel.");
+			}
+			System.out.println("Filename = " + c.getSelectedFile().getName());
+			System.out.println("Directory = " + c.getCurrentDirectory().toString());
+
+			//textField.setText(".../" + c.getSelectedFile().getName());
+			//textField.setForeground(Color.gray);
+			//textField.setEditable(false);
+
+			holdFilename = c.getSelectedFile().getName();
+			holdDirectory = c.getCurrentDirectory().toString();
+			parseFile(holdDirectory, holdFilename);
+	    }
+	}
+	
+	public void parseFile(String d, String f){
+		
+		String path = d + "/" + f;
+
+		System.out.println("parsing file: " + path);
+		BufferedReader 	br 			= null;
+		String 			currline 	= "";
+		String 			delimeter 	= ":";
+
+		try {
+			br = new BufferedReader(new FileReader(path));
+			String [] plcString = new String[8];
+			int location = 0;
+			
+			// Read from plc file and create logic for each line, then
+			// add each statement to an arraylist of logic statements
+
+			while ((currline = br.readLine()) != null){
+				String [] logicStatement = currline.split(delimeter);
+				location++;
+				
+				String 	logicFor 		= logicStatement[0].replaceAll("\\s+","");
+				String 	logic 			= logicStatement[1].replaceAll("\\s+","");
+				
+				plcString[location-1] = logicFor;
+				plcString[location] = logic;
+					
+				System.out.println(logicFor);
+				System.out.println(logic);
+			}
+
+			newPlc = new Plc(plcString[0], plcString[1], plcString[2], plcString[3], plcString[4], plcString[5], plcString[6], plcString[7]);
+			//labelBlockID.setText(Character.toUpperCase(blocks.get(selectedBlockIndex).line.charAt(0)) + Integer.toString(selectedBlockIndex+1));
+			//showBlockStaticInfo(blocks.get(0), !firstTime);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+	}
+	
 }
