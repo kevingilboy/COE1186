@@ -552,11 +552,13 @@ public class CTC {
 		Schedule schedule;
 		for(String trainName:trainsDispatched.keySet()) {
 			schedule = trainsDispatched.get(trainName);
-			Object[] row = {schedule.name,"0","0",schedule.authority+" mi","0"};
+			Object[] row; //build the row here, but for now we fake the functionality below
 			if(schedule.line=="Red") {
+				row = {schedule.name,"C9","0",schedule.authority+" mi","0"};
 				dispatchedRedData.addRow(row);
 			}
 			else if(schedule.line=="Green"){
+				row = {schedule.name,"J62","0",schedule.authority+" mi","0"};
 				dispatchedGreenData.addRow(row);
 			}
 		}
