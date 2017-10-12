@@ -72,32 +72,32 @@ public class ScheduleEditor {
 		btnCreateSchedule.setBounds(111, 421, 171, 41);
 		contentPane.add(btnCreateSchedule);
 		
-		nameInput = new JTextField();
-		nameInput.setBounds(150, 60, 199, 39);
-		contentPane.add(nameInput);
-		nameInput.setColumns(10);
-		
 		JLabel lblTrainName = new JLabel("Train Name:");
 		lblTrainName.setBounds(42, 63, 115, 33);
 		contentPane.add(lblTrainName);
+
+		nameInput = new JTextField();
+		nameInput.setBounds(150, 60, 199, 39);
+		nameInput.setColumns(10);
+		contentPane.add(nameInput);
+		
+		JLabel lblTrainAuthority = new JLabel("Train Authority (mi):");
+		lblTrainAuthority.setBounds(20, 203, 115, 33);
+		contentPane.add(lblTrainAuthority);
 		
 		authorityInput = new JTextField();
 		authorityInput.setColumns(10);
 		authorityInput.setBounds(150, 200, 199, 39);
 		contentPane.add(authorityInput);
 		
-		JLabel lblTrainAuthority = new JLabel("Train Authority:");
-		lblTrainAuthority.setBounds(26, 203, 115, 33);
-		contentPane.add(lblTrainAuthority);
+		JLabel lblLine = new JLabel("Line");
+		lblLine.setBounds(83, 127, 115, 33);
+		contentPane.add(lblLine);
 		
 		lineSelect = new JComboBox<String>();
 		lineSelect.setModel(new DefaultComboBoxModel<String>(new String[] {"Red", "Green"}));
 		lineSelect.setBounds(150, 127, 199, 39);
 		contentPane.add(lineSelect);
-		
-		JLabel lblLine = new JLabel("Line");
-		lblLine.setBounds(83, 127, 115, 33);
-		contentPane.add(lblLine);
 	}
 	
 	public static void main(String[] args) {

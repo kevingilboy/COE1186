@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Container;
+import java.awt.Font;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
@@ -133,16 +134,20 @@ public class CTC {
 		middleRightSeparator.setBackground(Color.BLACK);
 		middleRightSeparator.setBounds(737, 0, 1, 512);
 		contentPane.add(middleRightSeparator);
-		JLabel label = new JLabel("08:45");
-		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setBounds(75, 64, 100, 44);
-		contentPane.add(label);
 
 		/**
 		 * LEFT FRAME
 		 */
 		
+		JLabel label = new JLabel("08:45");
+		setHeader(label);
+		setClockFont(label);
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setBounds(75, 64, 100, 44);
+		contentPane.add(label);
+
 		JLabel tempLbl = new JLabel("Temp");
+		setBold(tempLbl);
 		tempLbl.setBounds(23, 172, 115, 33);
 		contentPane.add(tempLbl);
 		
@@ -156,6 +161,7 @@ public class CTC {
 		contentPane.add(fLbl);
 		
 		JLabel weatherLbl = new JLabel("Weather");
+		setBold(weatherLbl);
 		weatherLbl.setBounds(23, 128, 115, 33);
 		contentPane.add(weatherLbl);
 		
@@ -165,6 +171,7 @@ public class CTC {
 		contentPane.add(weatherSelect);
 		
 		JLabel lblThroughput = new JLabel("Throughput: ");
+		setBold(lblThroughput);
 		lblThroughput.setBounds(0, 479, 158, 33);
 		contentPane.add(lblThroughput);
 		
@@ -176,6 +183,7 @@ public class CTC {
 		 * MID TOP
 		 */		
 		JLabel lblQueue = new JLabel("Queue");
+		setHeader(lblQueue);
 		lblQueue.setBounds(463, 28, 115, 33);
 		contentPane.add(lblQueue);
 		
@@ -275,6 +283,7 @@ public class CTC {
 		contentPane.add(editQueueSchedule);
 		
 		JLabel label_2 = new JLabel("Selected Train Schedule");
+		setSubHeader(label_2);
 		label_2.setBounds(399, 152, 198, 33);
 		contentPane.add(label_2);
 		
@@ -310,6 +319,7 @@ public class CTC {
 		 * MID BOTTOM
 		 */
 		JLabel lblNewLabel = new JLabel("Dispatch Center");
+		setHeader(lblNewLabel);
 		lblNewLabel.setBounds(463, 274, 115, 33);
 		contentPane.add(lblNewLabel);
 		
@@ -323,6 +333,7 @@ public class CTC {
 		contentPane.add(tglAuto);
 		
 		JLabel lblManualTrainCreation = new JLabel("Manual Train Creation");
+		setSubHeader(lblManualTrainCreation);
 		lblManualTrainCreation.setBounds(395, 347, 221, 33);
 		contentPane.add(lblManualTrainCreation);
 		
@@ -335,6 +346,7 @@ public class CTC {
 		scrollPane_1.setViewportView(trainCreationTable);
 		
 		JLabel lblDepartAt = new JLabel("Depart at");
+		setBold(lblDepartAt);
 		lblDepartAt.setBounds(260, 411, 115, 33);
 		contentPane.add(lblDepartAt);
 		
@@ -346,6 +358,7 @@ public class CTC {
 		trainCreationDepartTime.setColumns(10);
 		
 		JLabel lblLine = new JLabel("Line");
+		setBold(lblLine);
 		lblLine.setBounds(287, 377, 57, 33);
 		contentPane.add(lblLine);
 			
@@ -356,7 +369,7 @@ public class CTC {
 		trainCreationLine.setBounds(314, 374, 52, 39);
 		contentPane.add(trainCreationLine);
 		
-		JButton editToDispatchSchedule = new JButton("<html>Create/Edit<br>Schedule</html>");
+		JButton editToDispatchSchedule = new JButton("<html><center>Create/Edit<br>Schedule</center></html>");
 		stylize(editToDispatchSchedule);
 		editToDispatchSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -411,6 +424,7 @@ public class CTC {
 		 * RIGHT SIDE
 		 */
 		JLabel lblDispatchedTrains = new JLabel("Dispatched Trains");
+		setHeader(lblDispatchedTrains);
 		lblDispatchedTrains.setBounds(930, 28, 115, 33);
 		contentPane.add(lblDispatchedTrains);
 		
@@ -459,6 +473,7 @@ public class CTC {
 		scrollPane.setViewportView(dispatchSelectedTable);
 		
 		JLabel lblSelectedTrainSchedule = new JLabel("Selected Train Schedule");
+		setSubHeader(lblSelectedTrainSchedule);
 		lblSelectedTrainSchedule.setBounds(867, 242, 198, 33);
 		contentPane.add(lblSelectedTrainSchedule);
 		
@@ -587,5 +602,17 @@ public class CTC {
 		button.setOpaque(true);
 		button.setBackground(Color.BLACK);
 		button.setForeground(Color.WHITE);
+	}
+	private static void setHeader(JLabel lbl){
+		lbl.setFont(new Font(lbl.getFont().getName(),Font.BOLD,16));
+	}
+	private static void setClockFont(JLabel lbl){
+		lbl.setFont(new Font("Courier New",Font.BOLD,18));
+	}
+	private static void setSubHeader(JLabel lbl){
+		lbl.setFont(new Font(lbl.getFont().getName(),Font.BOLD+Font.ITALIC,14));
+	}
+	private static void setBold(JLabel lbl){
+		lbl.setFont(new Font(lbl.getFont().getName(),Font.BOLD,lbl.getFont().getSize()));
 	}
 }
