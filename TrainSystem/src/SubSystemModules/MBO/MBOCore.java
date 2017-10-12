@@ -31,7 +31,7 @@ public class MBOCore {
 				                       Arrays.toString(trains[i].position),
 				                       null,
 				                       trains[i].speed,
-				                       trains[i].currentAuthority};
+				                       String.format("%2f", trains[i].currentAuthority)};
 		}
 		return results;
 	}
@@ -40,6 +40,23 @@ public class MBOCore {
 		for (TrainInfo train : trains) {
 			train.updateLatestSignal(train.position, LocalDateTime.now());
 		}
+		for (int i = 0; i < trains.length; i++) {
+			trains[i].currentAuthority = calculateAuthority(i);
+		}
+	}
+
+	public double calculateAuthority(int trainIndex) {
+		double distance = Double.MAX_VALUE;
+		for (int i = 0; i < trains.length; i++) {
+			if (i != trainIndex) {
+				double newDist = Math.pow((Math.pow((trains[i].position[0] - trains[trainIndex].position[0]), 2) +
+				                           Math.pow((trains[i].position[1] - trains[trainIndex].position[1]), 2)), 0.5);
+				if (newDist < distance) {
+					distance = newDist;
+				}
+			}
+		}
+		return distance;
 	}
 
 	private static class TrainInfo {
@@ -78,12 +95,6 @@ public class MBOCore {
 			previousSignalReceived = signalReceived;
 			signalReceived = rec;
 			calculateVelocity();
-		}
-
-		private Object[] getFields() {
-			Object[] fields = {name, position, signalReceived, previousPosition, previousSignalReceived,
-				               velocity, speed, currentAuthority, signalTransmitted};
-			return fields;
 		}
 	}
 
