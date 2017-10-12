@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Container;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import java.awt.Font;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -426,7 +428,7 @@ public class CTC {
 		 */
 		JLabel lblDispatchedTrains = new JLabel("Dispatched Trains");
 		setHeader(lblDispatchedTrains);
-		lblDispatchedTrains.setBounds(930, 28, 115, 33);
+		lblDispatchedTrains.setBounds(900, 28, 145, 33);
 		contentPane.add(lblDispatchedTrains);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -599,19 +601,22 @@ public class CTC {
 	};
 
 	private static void stylize(JButton button){
+		Border thickBorder = new LineBorder(Color.WHITE, 3);
+		button.setFont(new Font(button.getFont().getName(),Font.PLAIN,14));
+    	button.setBorder(thickBorder);
 		button.setContentAreaFilled(false);
 		button.setOpaque(true);
 		button.setBackground(Color.BLACK);
 		button.setForeground(Color.WHITE);
 	}
 	private static void setHeader(JLabel lbl){
-		lbl.setFont(new Font(lbl.getFont().getName(),Font.BOLD,16));
+		lbl.setFont(new Font(lbl.getFont().getName(),Font.BOLD,14));
 	}
 	private static void setClockFont(JLabel lbl){
-		lbl.setFont(new Font("Courier New",Font.BOLD,18));
+		lbl.setFont(new Font("Courier New",Font.BOLD,28));
 	}
 	private static void setSubHeader(JLabel lbl){
-		lbl.setFont(new Font(lbl.getFont().getName(),Font.BOLD+Font.ITALIC,14));
+		lbl.setFont(new Font(lbl.getFont().getName(),Font.PLAIN,14));
 	}
 	private static void setBold(JLabel lbl){
 		lbl.setFont(new Font(lbl.getFont().getName(),Font.BOLD,lbl.getFont().getSize()));
