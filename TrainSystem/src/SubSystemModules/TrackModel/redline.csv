@@ -1,0 +1,81 @@
+red,A,1,50,0.5,40,,,,0.25,0.25,Switch 6,Head,2,-,-
+red,A,2,50,1,40,,,,0.5,0.75,,,2,-,-
+red,A,3,50,1.5,40,,,,0.75,1.5,,Head,2,-,-
+red,B,4,50,2,40,,,,1,2.5,,Head,2,-,-
+red,B,5,50,1.5,40,,,,0.75,3.25,,,2,-,-
+red,B,6,50,1,40,,,,0.5,3.75,,Head,2,-,-
+red,C,7,75,0.5,40,SHADYSIDE-R,,,0.38,4.13,,Head,2,-,-
+red,C,8,75,0,40,,,,0,4.13,,,2,-,-
+red,C,9,75,0,40,,SWITCH,,0,4.13,Switch 12,Head,2,-,-
+red,D,10,75,0,40,,,,0,4.13,Switch 12,Head,2,-,-
+red,D,11,75,-0.5,40,,,,-0.38,3.75,,,2,-,-
+red,D,12,75,-0.5,40,,,,-0.38,3.38,,Head,2,-,-
+red,E,13,68.4,-1,40,,,,-0.68,2.69,,Head,2,-,-
+red,E,14,60,-1,40,,,,-0.6,2.09,,,2,-,-
+red,E,15,60,-1,40,,,,-0.6,1.49,Switch 6,Head,2,-,-
+red,F,16,50,-0.5,40,HERRON AVE-R,SWITCH,,-0.25,1.24,Switch 6,Head,2,-,-
+red,F,17,200,-0.5,55,,,,-1,0.24,,,2,-,-
+red,F,18,400,-0.06025,70,,,,-0.24,0,,,2,-,-
+red,F,19,400,0,70,,,,0,0,,,2,-,-
+red,F,20,200,0,70,,,,0,0,,Head,2,-,-
+red,G,21,100,0,55,SWISSVILLE-R,,,0,0,,Head,2,-,-
+red,G,22,100,0,55,,,,0,0,,,2,-,-
+red,G,23,100,0,55,,,,0,0,,Head,2,-,-
+red,H,24,50,0,70,,,UNDERGROUND,0,0,,Head,2,-,-
+red,H,25,50,0,70,PENN STATION-L,,UNDERGROUND,0,0,,,2,-,-
+red,H,26,50,0,70,,,UNDERGROUND,0,0,,,2,-,-
+red,H,27,50,0,70,,SWITCH ,UNDERGROUND,0,0,Switch 7,,2,-,BEFORE
+red,H,28,50,0,70,,,UNDERGROUND,0,0,Switch 7,,2,-,-
+red,H,29,60,0,70,,,UNDERGROUND,0,0,,,2,-,-
+red,H,30,60,0,70,,,UNDERGROUND,0,0,,,2,-,-
+red,H,31,50,0,70,,,UNDERGROUND,0,0,,,2,-,-
+red,H,32,50,0,70,,,UNDERGROUND,0,0,Switch 8,,2,-,-
+red,H,33,50,0,70,,SWITCH,UNDERGROUND,0,0,Switch 8,,2,-,AFTER
+red,H,34,50,0,70,,,UNDERGROUND,0,0,,,2,-,-
+red,H,35,50,0,70,STEEL PLAZA-L,,UNDERGROUND,0,0,,,2,-,-
+red,H,36,50,0,70,,,UNDERGROUND,0,0,,,2,-,-
+red,H,37,50,0,70,,,UNDERGROUND,0,0,,,2,-,-
+red,H,38,50,0,70,,SWITCH,UNDERGROUND,0,0,Switch 9,,2,-,BEFORE
+red,H,39,50,0,70,,,UNDERGROUND,0,0,Switch 9,,2,-,-
+red,H,40,60,0,70,,,UNDERGROUND,0,0,,,2,-,-
+red,H,41,60,0,70,,,UNDERGROUND,0,0,,,2,-,-
+red,H,42,50,0,70,,,UNDERGROUND,0,0,,,2,-,-
+red,H,43,50,0,70,,,UNDERGROUND,0,0,Switch 10,,2,-,-
+red,H,44,50,0,70,,SWITCH,UNDERGROUND,0,0,Switch 10,,2,-,AFTER
+red,H,45,50,0,70,FIRST AVE-L,,UNDERGROUND,0,0,,Head,2,-,-
+red,I,46,75,0,70,,,UNDERGROUND,0,0,,Head,2,-,-
+red,I,47,75,0,70,,,UNDERGROUND,0,0,,,2,RAILWAY CROSSING,-
+red,I,48,75,0,70,STATION SQUARE-L,,UNDERGROUND,0,0,,Head,2,-,-
+red,J,49,50,0,60,,,,0,0,,Head,2,-,-
+red,J,50,50,0,60,,,,0,0,,,2,-,-
+red,J,51,50,0,55,,,,0,0,,,2,-,-
+red,J,52,43.2,0,55,,SWITCH,,0,0,Switch 11,,2,-,BEFORE
+red,J,53,50,0,55,,,,0,0,Switch 11,,2,-,-
+red,J,54,50,0,55,,,,0,0,,Head,2,-,-
+red,K,55,75,0.5,55,,,,0.38,0.38,,Head,2,-,-
+red,K,56,75,0.5,55,,,,0.38,0.75,,,2,-,-
+red,K,57,75,0.5,55,,,,0.38,1.13,,Head,2,-,-
+red,L,58,75,1,55,,,,0.75,1.88,,Head,2,-,-
+red,L,59,75,0.5,55,,,,0.38,2.25,,,2,-,-
+red,L,60,75,0,55,SOUTH HILLS JUNCTION-L,,,0,2.25,,Head,2,-,-
+red,M,61,75,-0.5,55,,,,-0.38,1.88,,Head,2,-,-
+red,M,62,75,-1,55,,,,-0.75,1.13,,,2,-,-
+red,M,63,75,-1,55,,,,-0.75,0.38,,Head,2,-,-
+red,N,64,75,-0.5,55,,,,-0.38,0,,Head,2,-,-
+red,N,65,75,0,55,,,,0,0,,,2,-,-
+red,N,66,75,0,55,,,,0,0,Switch 11,Head,2,-,-
+red,O,67,50,0,55,,,UNDERGROUND,0,0,Switch 10,Head,2,-,-
+red,O,68,0,0,55,,,UNDERGROUND,0,0,,Head,2,-,-
+red,P,69,50,0,55,,,UNDERGROUND,0,0,,Head,2,-,-
+red,P,70,50,0,55,,,UNDERGROUND,0,0,,,2,-,-
+red,P,71,50,0,55,,,UNDERGROUND,0,0,,Head,2,-,-
+red,Q,72,0,0,55,,,UNDERGROUND,0,0,,Head,2,-,-
+red,Q,73,50,0,55,,,UNDERGROUND,0,0,Switch 9,Head,2,-,-
+red,R,74,50,0,55,,,UNDERGROUND,0,0,Switch 8,Head,2,-,-
+red,R,75,0,0,55,,,UNDERGROUND,0,0,,Head,2,-,-
+red,S,76,50,0,55,,,UNDERGROUND,0,0,,Head,2,-,-
+red,S,77,50,0,55,,,UNDERGROUND,0,0,,,2,-,-
+red,S,78,50,0,55,,,UNDERGROUND,0,0,,Head,2,-,-
+red,T,79,0,0,55,,,UNDERGROUND,0,0,,Head,2,-,-
+red,T,80,50,0,55,,,UNDERGROUND,0,0,Switch 7,Head,2,-,-
+red,U,81,50,0,35,TO YARD/FROM YARD,,,0,0,Switch 12,Head/Head,2,-,-

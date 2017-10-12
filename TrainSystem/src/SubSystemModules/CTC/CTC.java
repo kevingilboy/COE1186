@@ -10,32 +10,45 @@ import java.util.Vector;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Container;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-public class Gui4 {
+public class CTC {
 	private JFrame frame;
 	
-	private DefaultTableModel dispatchedGreenData;
-	private JTable dispatchedGreenTable;
-	private DefaultTableModel dispatchedRedData;
-	private JTable dispatchedRedTable;
-	private DefaultTableModel dispatchSelectedData;
-	private ScheduleJTable dispatchSelectedTable;
-	private Object[] dispatchedTrainsColumnNames = {"Train","Location","Speed","Authority","Passengers"};
-	private Object[][] dispatchedTrainsInitialData = new Object[0][dispatchedTrainsColumnNames.length];
-		
 	private Object[] selectedTrainColumnNames = {"Stop","Arrival","Departure"};
 	private Object[][] selectedTrainInitialData = new Object[9][selectedTrainColumnNames.length];
 	
-	private Object[] queueTrainColumnNames = {"Train","Departure"};
-	private Object[][] queueTrainInitialData = new Object[0][queueTrainColumnNames.length];
-	
+	/**
+	 * Dispatched train tales
+	 */
+	private Object[] dispatchedTrainsColumnNames = {"Train","Location","Speed","Authority","Passengers"};
+	private Object[][] dispatchedTrainsInitialData = new Object[0][dispatchedTrainsColumnNames.length];
+
+	private DefaultTableModel dispatchedGreenData;
+	private JTable dispatchedGreenTable;
+
+	private DefaultTableModel dispatchedRedData;
+	private JTable dispatchedRedTable;
+
+	private DefaultTableModel dispatchSelectedData;
+	private ScheduleJTable dispatchSelectedTable;
+		
+	/**
+	 * Creator tales
+	 */
 	private ScheduleJTable trainCreationTable;
 	private DefaultTableModel trainCreationData;
 	private JTextField trainCreationDepartTime;
 	private JTextField trainCreationLine;
 	
+	/**
+	 * Queue tales
+	 */
+	private Object[] queueTrainColumnNames = {"Train","Authority","Departure"};
+	private Object[][] queueTrainInitialData = new Object[0][queueTrainColumnNames.length];
+
 	private JTable queueRedTable;
 	private DefaultTableModel queueRedData;
 	
@@ -45,8 +58,24 @@ public class Gui4 {
 	private ScheduleJTable queueSelectedTable;
 	private DefaultTableModel queueSelectedData;
 	
+	/**
+	 * Train objects hashed by name
+	 */
 	private Map<String,Schedule> trainsInQueue = new HashMap<>();
 	private Map<String,Schedule> trainsDispatched = new HashMap<>();
+	
+	/**
+	 * Threads
+	 */
+	public ScheduleEditor scheduleEditor;
+	public Schedule scheduleForScheduleEditor = null;
+
+	/**
+	 * Constants
+	 */
+	public final int GUI_WINDOW_HEIGHT = 600;
+	public final int GUI_WINDOW_WIDTH = 1200;
+
 
 	/**
 	 * Launch the application.
@@ -60,7 +89,8 @@ public class Gui4 {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Gui4 window = new Gui4();
+					CTC window = new CTC();
+					window.frame.setResizable(false);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -72,7 +102,7 @@ public class Gui4 {
 	/**
 	 * Create the application.
 	 */
-	public Gui4() {
+	public CTC() {
 		initialize();
 	}
 
@@ -81,76 +111,77 @@ public class Gui4 {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1200, 600);
+		frame.setBounds(100, 100, GUI_WINDOW_WIDTH, GUI_WINDOW_HEIGHT);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-		
-		/*
-		 * LEFT FRAME
-		 */
+		Container contentPane = frame.getContentPane();
+		contentPane.setLayout(null);
 		
 		JSeparator middleLeftSeparator = new JSeparator();
 		middleLeftSeparator.setOrientation(SwingConstants.VERTICAL);
 		middleLeftSeparator.setForeground(Color.GRAY);
 		middleLeftSeparator.setBackground(Color.BLACK);
 		middleLeftSeparator.setBounds(250, 0, 1, 512);
-		frame.getContentPane().add(middleLeftSeparator);
+		contentPane.add(middleLeftSeparator);
 		
 		JSeparator horizontalSeparator = new JSeparator();
 		horizontalSeparator.setBounds(250, 264, 487, 2);
-		frame.getContentPane().add(horizontalSeparator);
+		contentPane.add(horizontalSeparator);
 		
 		JSeparator middleRightSeparator = new JSeparator();
 		middleRightSeparator.setOrientation(SwingConstants.VERTICAL);
 		middleRightSeparator.setForeground(Color.GRAY);
 		middleRightSeparator.setBackground(Color.BLACK);
 		middleRightSeparator.setBounds(737, 0, 1, 512);
-		frame.getContentPane().add(middleRightSeparator);
+		contentPane.add(middleRightSeparator);
 		JLabel label = new JLabel("08:45");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setBounds(75, 64, 100, 44);
-		frame.getContentPane().add(label);
+		contentPane.add(label);
+
+		/**
+		 * LEFT FRAME
+		 */
 		
-		JLabel lblWeather = new JLabel("Temp");
-		lblWeather.setBounds(23, 172, 115, 33);
-		frame.getContentPane().add(lblWeather);
+		JLabel tempLbl = new JLabel("Temp");
+		tempLbl.setBounds(23, 172, 115, 33);
+		contentPane.add(tempLbl);
 		
-		JLabel label_1 = new JLabel("Weather");
-		label_1.setBounds(23, 128, 115, 33);
-		frame.getContentPane().add(label_1);
+		JSpinner tempSpinner = new JSpinner();
+		tempSpinner.setModel(new SpinnerNumberModel(new Integer(70), null, null, new Integer(1)));
+		tempSpinner.setBounds(134, 169, 66, 40);
+		contentPane.add(tempSpinner);
 		
-		JSpinner spinner = new JSpinner();
-		spinner.setModel(new SpinnerNumberModel(new Integer(70), null, null, new Integer(1)));
-		spinner.setBounds(134, 169, 66, 40);
-		frame.getContentPane().add(spinner);
+		JLabel fLbl = new JLabel("F");
+		fLbl.setBounds(209, 172, 14, 33);
+		contentPane.add(fLbl);
 		
-		JComboBox<String> comboBox = new JComboBox<String>();
-		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"Sunny", "Rainy"}));
-		comboBox.setBounds(124, 125, 100, 39);
-		frame.getContentPane().add(comboBox);
+		JLabel weatherLbl = new JLabel("Weather");
+		weatherLbl.setBounds(23, 128, 115, 33);
+		contentPane.add(weatherLbl);
 		
-		JLabel lblF = new JLabel("F");
-		lblF.setBounds(209, 172, 14, 33);
-		frame.getContentPane().add(lblF);
+		JComboBox<String> weatherSelect = new JComboBox<String>();
+		weatherSelect.setModel(new DefaultComboBoxModel<String>(new String[] {"Sunny", "Rainy"}));
+		weatherSelect.setBounds(124, 125, 100, 39);
+		contentPane.add(weatherSelect);
 		
 		JLabel lblThroughput = new JLabel("Throughput: ");
 		lblThroughput.setBounds(0, 479, 158, 33);
-		frame.getContentPane().add(lblThroughput);
+		contentPane.add(lblThroughput);
 		
 		JLabel lblThroughputAmt = new JLabel("###");
 		lblThroughputAmt.setBounds(134, 479, 89, 33);
-		frame.getContentPane().add(lblThroughputAmt);
+		contentPane.add(lblThroughputAmt);
 		
-		/*
+		/**
 		 * MID TOP
 		 */		
 		JLabel lblQueue = new JLabel("Queue");
 		lblQueue.setBounds(463, 28, 115, 33);
-		frame.getContentPane().add(lblQueue);
+		contentPane.add(lblQueue);
 		
 		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane_1.setBounds(287, 55, 397, 97);
-		frame.getContentPane().add(tabbedPane_1);
+		contentPane.add(tabbedPane_1);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
 		tabbedPane_1.addTab("Red", null, scrollPane_2, null);
@@ -186,67 +217,118 @@ public class Gui4 {
 		
 		JScrollPane scrollPane_4 = new JScrollPane();
 		scrollPane_4.setBounds(277, 184, 221, 62);
-		frame.getContentPane().add(scrollPane_4);
+		contentPane.add(scrollPane_4);
 		
 		queueSelectedData = new DefaultTableModel(selectedTrainInitialData,selectedTrainColumnNames);
 		queueSelectedTable = new ScheduleJTable(queueSelectedData);
 		scrollPane_4.setViewportView(queueSelectedTable);
 		
 		JButton editQueueSchedule = new JButton("Edit Schedule");
+		stylize(editQueueSchedule);
+		editQueueSchedule.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String trainName="";
+				int row;
+				String line = tabbedPane_1.getTitleAt(tabbedPane_1.getSelectedIndex());
+				
+				//Get the train name
+				if(line=="Red") {
+					row = queueRedTable.getSelectedRow();
+					if(row<0) return;
+					trainName = (String) queueRedData.getValueAt(row, 0);
+				}
+				else if(line=="Green") {
+					row = queueGreenTable.getSelectedRow();
+					if(row<0) return;
+					trainName = (String) queueGreenData.getValueAt(row, 0);
+				}
+
+				scheduleForScheduleEditor = trainsInQueue.get(trainName);
+
+				Thread scheduleEditorThread = new Thread() {
+					public void run() {
+						try {
+							SwingUtilities.invokeAndWait(openScheduleEditor);
+						}
+						catch (Exception e) {
+							e.printStackTrace();
+						}
+				         
+						while(scheduleEditor.editing==true) {
+							try {
+								Thread.sleep(200);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+						Schedule schedule = scheduleEditor.currentSchedule;
+						trainsInQueue.put(schedule.name,schedule);
+						updateQueueTable();
+						
+						System.out.println("Finished on " + Thread.currentThread());
+					}
+				};
+				scheduleEditorThread.start();				
+			}
+		});
 		editQueueSchedule.setBounds(513, 186, 171, 24);
-		frame.getContentPane().add(editQueueSchedule);
+		contentPane.add(editQueueSchedule);
 		
 		JLabel label_2 = new JLabel("Selected Train Schedule");
 		label_2.setBounds(399, 152, 198, 33);
-		frame.getContentPane().add(label_2);
+		contentPane.add(label_2);
 		
 		JButton dispatchQueueSchedule = new JButton("Dispatch Now");
+		stylize(dispatchQueueSchedule);
 		dispatchQueueSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String line = tabbedPane_1.getTitleAt(tabbedPane_1.getSelectedIndex());
+				String trainName="";
 				if(line=="Red") {
 					int row = queueRedTable.getSelectedRow();
-					String trainName = (String) queueRedData.getValueAt(row, 0);
-					Schedule schedule = trainsInQueue.remove(trainName);
-					trainsDispatched.put(trainName, schedule);
+					trainName = (String) queueRedData.getValueAt(row, 0);
 				}
 				else if(line=="Green") {
 					int row = queueGreenTable.getSelectedRow();
-					String trainName = (String) queueGreenData.getValueAt(row, 0);
-					Schedule schedule = trainsInQueue.remove(trainName);
-					trainsDispatched.put(trainName, schedule);
+					trainName = (String) queueGreenData.getValueAt(row, 0);
 				}
+				Schedule schedule = trainsInQueue.remove(trainName);
+				trainsDispatched.put(trainName, schedule);
+				schedule.dispatched = true;
+				
+				queueSelectedData.setDataVector(selectedTrainInitialData,selectedTrainColumnNames);
+				openScheduleInTable(queueSelectedTable,queueSelectedData,null);
 				updateQueueTable();
 				updateDispatchedTable();
 				
 			}
 		});
 		dispatchQueueSchedule.setBounds(512, 218, 171, 24);
-		frame.getContentPane().add(dispatchQueueSchedule);
+		contentPane.add(dispatchQueueSchedule);
 		
-		/*
+		/**
 		 * MID BOTTOM
 		 */
 		JLabel lblNewLabel = new JLabel("Dispatch Center");
 		lblNewLabel.setBounds(463, 274, 115, 33);
-		frame.getContentPane().add(lblNewLabel);
+		contentPane.add(lblNewLabel);
 		
 		JToggleButton tglManual = new JToggleButton("Manual");
 		tglManual.setSelected(true);
 		tglManual.setBounds(372, 308, 131, 33);
-		frame.getContentPane().add(tglManual);
+		contentPane.add(tglManual);
 		
 		JToggleButton tglAuto = new JToggleButton("Auto");
 		tglAuto.setBounds(502, 308, 131, 33);
-		frame.getContentPane().add(tglAuto);
+		contentPane.add(tglAuto);
 		
 		JLabel lblManualTrainCreation = new JLabel("Manual Train Creation");
 		lblManualTrainCreation.setBounds(395, 347, 221, 33);
-		frame.getContentPane().add(lblManualTrainCreation);
+		contentPane.add(lblManualTrainCreation);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(372, 385, 264, 62);
-		frame.getContentPane().add(scrollPane_1);
+		contentPane.add(scrollPane_1);
 		
 		trainCreationData = new DefaultTableModel(selectedTrainInitialData,selectedTrainColumnNames);
 		trainCreationTable = new ScheduleJTable(trainCreationData);
@@ -254,27 +336,31 @@ public class Gui4 {
 		
 		JLabel lblDepartAt = new JLabel("Depart at");
 		lblDepartAt.setBounds(260, 411, 115, 33);
-		frame.getContentPane().add(lblDepartAt);
+		contentPane.add(lblDepartAt);
 		
 		trainCreationDepartTime = new JTextField();
+		trainCreationDepartTime.setEditable(false);
 		trainCreationDepartTime.setText("NA");
 		trainCreationDepartTime.setBounds(314, 408, 52, 39);
-		frame.getContentPane().add(trainCreationDepartTime);
+		contentPane.add(trainCreationDepartTime);
 		trainCreationDepartTime.setColumns(10);
 		
 		JLabel lblLine = new JLabel("Line");
 		lblLine.setBounds(287, 377, 57, 33);
-		frame.getContentPane().add(lblLine);
+		contentPane.add(lblLine);
 			
 		trainCreationLine = new JTextField();
+		trainCreationLine.setEditable(false);
 		trainCreationLine.setText("NA");
 		trainCreationLine.setColumns(10);
 		trainCreationLine.setBounds(314, 374, 52, 39);
-		frame.getContentPane().add(trainCreationLine);
+		contentPane.add(trainCreationLine);
 		
 		JButton editToDispatchSchedule = new JButton("<html>Create/Edit<br>Schedule</html>");
+		stylize(editToDispatchSchedule);
 		editToDispatchSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				scheduleForScheduleEditor = trainCreationTable.schedule;
 				Thread scheduleEditorThread = new Thread() {
 					public void run() {
 						try {
@@ -298,34 +384,39 @@ public class Gui4 {
 						
 						System.out.println("Finished on " + Thread.currentThread());
 					}
-
-
 				};
 				scheduleEditorThread.start();				
 			}
 		});
 		editToDispatchSchedule.setBounds(645, 383, 89, 64);
-		frame.getContentPane().add(editToDispatchSchedule);
+		contentPane.add(editToDispatchSchedule);
 		
 		JButton addToDispatchToQueue = new JButton("Add To Queue");
+		stylize(addToDispatchToQueue);
 		addToDispatchToQueue.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				dumpScheduleFromCreaterToQueue();
+				Schedule schedule = trainCreationTable.schedule;
+				trainsInQueue.put(schedule.name, schedule);
+				updateQueueTable();
+				
+				//Remove from the creator
+				trainCreationData.setDataVector(selectedTrainInitialData,selectedTrainColumnNames);
+				openScheduleInTable(trainCreationTable,trainCreationData,null);
 			}
 		});
 		addToDispatchToQueue.setBounds(430, 459, 131, 41);
-		frame.getContentPane().add(addToDispatchToQueue);
+		contentPane.add(addToDispatchToQueue);
 			
-		/*
+		/**
 		 * RIGHT SIDE
 		 */
 		JLabel lblDispatchedTrains = new JLabel("Dispatched Trains");
 		lblDispatchedTrains.setBounds(930, 28, 115, 33);
-		frame.getContentPane().add(lblDispatchedTrains);
+		contentPane.add(lblDispatchedTrains);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(745, 55, 397, 187);
-		frame.getContentPane().add(tabbedPane);
+		contentPane.add(tabbedPane);
 		
 		JScrollPane dispatchedRedScrollPane = new JScrollPane();
 		
@@ -361,7 +452,7 @@ public class Gui4 {
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(745, 274, 221, 210);
-		frame.getContentPane().add(scrollPane);
+		contentPane.add(scrollPane);
 		
 		dispatchSelectedData = new DefaultTableModel(selectedTrainInitialData,selectedTrainColumnNames);
 		dispatchSelectedTable = new ScheduleJTable(dispatchSelectedData);
@@ -369,11 +460,62 @@ public class Gui4 {
 		
 		JLabel lblSelectedTrainSchedule = new JLabel("Selected Train Schedule");
 		lblSelectedTrainSchedule.setBounds(867, 242, 198, 33);
-		frame.getContentPane().add(lblSelectedTrainSchedule);
+		contentPane.add(lblSelectedTrainSchedule);
 		
 		JButton editSelectedDispatchedTrainSchedule = new JButton("Edit Schedule");
+		stylize(editSelectedDispatchedTrainSchedule);
+		editSelectedDispatchedTrainSchedule.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String trainName="";
+				int row;
+				String line = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
+				
+				//Get the train name
+				if(line=="Red") {
+					row = dispatchedRedTable.getSelectedRow();
+					if(row<0) return;
+					trainName = (String) dispatchedRedData.getValueAt(row, 0);
+				}
+				else if(line=="Green") {
+					row = dispatchedGreenTable.getSelectedRow();
+					if(row<0) return;
+					trainName = (String) dispatchedGreenData.getValueAt(row, 0);
+				}
+
+				scheduleForScheduleEditor = trainsDispatched.get(trainName);
+
+				Thread scheduleEditorThread = new Thread() {
+					public void run() {
+						try {
+							SwingUtilities.invokeAndWait(openScheduleEditor);
+						}
+						catch (Exception e) {
+							e.printStackTrace();
+						}
+				         
+						while(scheduleEditor.editing==true) {
+							try {
+								Thread.sleep(200);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+						Schedule schedule = scheduleEditor.currentSchedule;
+						trainsDispatched.put(schedule.name,schedule);
+						updateDispatchedTable();
+						
+						System.out.println("Finished on " + Thread.currentThread());
+					}
+				};
+				scheduleEditorThread.start();				
+			}
+		});
 		editSelectedDispatchedTrainSchedule.setBounds(971, 288, 171, 41);
-		frame.getContentPane().add(editSelectedDispatchedTrainSchedule);
+		contentPane.add(editSelectedDispatchedTrainSchedule);
+
+		JLabel logoPineapple = new JLabel(new ImageIcon("pineapple_icon.png"));
+		logoPineapple.setBounds(GUI_WINDOW_WIDTH-150,GUI_WINDOW_HEIGHT-12-100,138,76);
+		contentPane.add(logoPineapple);
 	}
 	
 	private void openScheduleInTable(ScheduleJTable table,DefaultTableModel data, Schedule schedule) {
@@ -384,68 +526,66 @@ public class Gui4 {
 		table.schedule = schedule;						
 	}
 	
-	private void dumpScheduleFromCreaterToQueue() {
-		Schedule schedule = trainCreationTable.schedule;
-		trainsInQueue.put(schedule.name, schedule);
-		updateQueueTable();
-		
-		//Remove from the creater
-		trainCreationData.setDataVector(selectedTrainInitialData,selectedTrainColumnNames);
-		openScheduleInTable(trainCreationTable,trainCreationData,null);
-	}
-	
 	private void updateQueueTable(){
+		//Clear the red and green tables
 		queueRedData.setDataVector(queueTrainInitialData, queueTrainColumnNames);
 		queueGreenData.setDataVector(queueTrainInitialData, queueTrainColumnNames);
+		
+		//Cycle through each dispatched train's schedule
+		Schedule schedule;
 		for(String trainName:trainsInQueue.keySet()) {
-			Schedule schedule = trainsInQueue.get(trainName);
-			Object[] row = {schedule.name,schedule.departureTime.toString()};
+			schedule = trainsInQueue.get(trainName);
+			Object[] row = {schedule.name,schedule.authority,schedule.departureTime.toString()};
 			if(schedule.line=="Red") {
 				queueRedData.addRow(row);
-				queueRedData.fireTableDataChanged();
 			}
 			else if(schedule.line=="Green"){
 				queueGreenData.addRow(row);
-				queueGreenData.fireTableDataChanged();
 			}
 		}
+
+		//Update the tables in the GUI
 		queueRedData.fireTableDataChanged();
 		queueGreenData.fireTableDataChanged();
 	}
-	
-	public static void setUILookAndFeel() {
-		try {
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		}
-		catch(Throwable e) {
-			e.printStackTrace();
-		}
-	}
-	
+
 	private void updateDispatchedTable(){
+		//Clear the red and green tables
 		dispatchedRedData.setDataVector(dispatchedTrainsInitialData,dispatchedTrainsColumnNames);
 		dispatchedGreenData.setDataVector(dispatchedTrainsInitialData,dispatchedTrainsColumnNames);
+
+		//Cycle through each dispatched train's schedule
+		Schedule schedule;
 		for(String trainName:trainsDispatched.keySet()) {
-			Schedule schedule = trainsDispatched.get(trainName);
-			Object[] row = {schedule.name,"0","0",schedule.authority+" mi","0"};
+			schedule = trainsDispatched.get(trainName);
+			//Object[] row; //build the row here, but for now we fake the functionality below
 			if(schedule.line=="Red") {
+				Object[] row = {schedule.name,"C9","0",schedule.authority+" mi","0"};
 				dispatchedRedData.addRow(row);
-				dispatchedRedData.fireTableDataChanged();
 			}
 			else if(schedule.line=="Green"){
+				Object[] row = {schedule.name,"J62","0",schedule.authority+" mi","0"};
 				dispatchedGreenData.addRow(row);
-				dispatchedGreenData.fireTableDataChanged();
 			}
 		}
+
+		//Update the tables in the GUI
 		queueRedData.fireTableDataChanged();
 		queueGreenData.fireTableDataChanged();
 	}
 	
-	public ScheduleEditor scheduleEditor;
 	final Runnable openScheduleEditor = new Runnable() {
 	    public void run() {
-	        scheduleEditor = new ScheduleEditor(new Schedule());
+	        scheduleEditor = new ScheduleEditor(scheduleForScheduleEditor);
 	        scheduleEditor.frame.setVisible(true);
+	        scheduleEditor.frame.setResizable(false);
 	    }
 	};
+
+	private static void stylize(JButton button){
+		button.setContentAreaFilled(false);
+		button.setOpaque(true);
+		button.setBackground(Color.BLACK);
+		button.setForeground(Color.WHITE);
+	}
 }

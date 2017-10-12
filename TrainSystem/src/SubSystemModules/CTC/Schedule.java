@@ -6,20 +6,19 @@ public class Schedule {
 	public String line;
 	public String name;
 	public int authority;
+	public boolean dispatched;
 	
 	public Schedule() {
 		/*
 		 * Hardcode some stops for now
 		 */
 		stops = new ArrayList<Stop>();
-		line = "Red";
-		name = "Train1";
-		authority = 100;
 		
-		departureTime = new SimTime("0900");
-		stops.add(new Stop("Cathy","0900","0902"));
-		stops.add(new Stop("Schenley","0908","0910"));
-		stops.add(new Stop("Suthy","0915","0917"));
+		dispatched = false;
+		departureTime = new SimTime("0845");
+		stops.add(new Stop("Shadyside","0847","0849"));
+		stops.add(new Stop("Herron Ave","0853","0855"));
+		stops.add(new Stop("Swissvale","0901","0902"));
 	}
 
 	public Object[][] toStringArray() {
