@@ -76,7 +76,8 @@ public class TrackControllerGUI extends JFrame {
 	 */
 	public TrackControllerGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 860, 482);
+		setBounds(100, 100, 870, 490);
+		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -120,15 +121,15 @@ public class TrackControllerGUI extends JFrame {
 		
 		//Separators
 		JSeparator separator1 = new JSeparator();
-		separator1.setBounds(0, 0, 502, 12);
+		separator1.setBounds(0, 7, 502, 12);
 		trackSelectorPanel.add(separator1);
 		
 		JSeparator separator2 = new JSeparator();
-		separator2.setBounds(0, 54, 502, 12);
+		separator2.setBounds(0, 56, 502, 12);
 		trackSelectorPanel.add(separator2);
 		
 		JSeparator separator3 = new JSeparator();
-		separator3.setBounds(0, 91, 502, 21);
+		separator3.setBounds(0, 96, 502, 21);
 		trackInfoPanel.add(separator3);
 		
 		//GUI Title
