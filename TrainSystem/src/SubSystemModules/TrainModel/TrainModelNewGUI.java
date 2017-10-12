@@ -84,7 +84,7 @@ public class TrainModelNewGUI extends JFrame {
 	JButton btnEmergencyBrake = new JButton("Emergency Brake");
 	JToggleButton btnServiceBrake = new JToggleButton("Service Brake");
 	
-	public JSpinner numCarsSpinner = new JSpinner();
+	public JLabel numCarsSpinner = new JLabel();
 	public JSpinner tempSpinner = new JSpinner();
 	JLabel setpointSpeedLabel = new JLabel("");
 	JSpinner powerSpinner = new JSpinner();
@@ -239,17 +239,17 @@ public class TrainModelNewGUI extends JFrame {
 		
 		lblWidth.setBounds(60, 175, 69, 20);
 		contentPane.add(lblWidth);
-		lblOfCars.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
+		lblOfCars.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblOfCars.setBounds(60, 211, 104, 20);
 		contentPane.add(lblOfCars);
-		numCarsSpinner.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
+		numCarsSpinner.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		numCarsSpinner.setBounds(153, 208, 75, 26);
 		contentPane.add(numCarsSpinner);
-		lblCapacity.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		lblCapacity.setBounds(60, 243, 69, 20);
+		lblCapacity.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblCapacity.setBounds(60, 238, 69, 20);
 		contentPane.add(lblCapacity);
 		
 		
@@ -389,7 +389,7 @@ public class TrainModelNewGUI extends JFrame {
 		
 		JLabel lblEngineFailureMode = new JLabel("Engine Failure");
 		lblEngineFailureMode.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblEngineFailureMode.setBounds(720, 108, 129, 20);
+		lblEngineFailureMode.setBounds(720, 110, 129, 20);
 		contentPane.add(lblEngineFailureMode);
 		
 		JLabel lblSignalFailure = new JLabel("Signal Failure");
@@ -406,25 +406,25 @@ public class TrainModelNewGUI extends JFrame {
 		engineFailPanel.setBounds(660, 100, 34, 31);
 		ImageIcon ledImage = new ImageIcon("greyStatusIcon.png");
 		JLabel ledImageLabel = new JLabel("", ledImage, JLabel.CENTER);
-		ledImageLabel.setBounds(660, 100, 34, 31);
+		ledImageLabel.setBounds(660, 105, 34, 31);
 		ledImageLabel.setIcon(ledImage);
 		contentPane.add(ledImageLabel);
 		contentPane.add(engineFailPanel);
 		
 		JPanel signalFailPanel = new JPanel();
-		signalFailPanel.setBounds(660, 150, 34, 31);
+		signalFailPanel.setBounds(660, 153, 34, 31);
 		ImageIcon ledImage2 = new ImageIcon("greyStatusIcon.png");
 		JLabel ledImageLabel2 = new JLabel("", ledImage2, JLabel.CENTER);
-		ledImageLabel.setBounds(660, 150, 34, 31);
-		ledImageLabel.setIcon(ledImage2);
+		ledImageLabel2.setBounds(660, 155, 34, 31);
+		ledImageLabel2.setIcon(ledImage2);
 		contentPane.add(ledImageLabel2);
 		contentPane.add(signalFailPanel);
 		
 		JPanel brakeFailPanel = new JPanel();
-		brakeFailPanel.setBounds(660, 200, 34, 31);
+		brakeFailPanel.setBounds(660, 203, 34, 31);
 		ImageIcon ledImageNew = new ImageIcon("greyStatusIcon.png");
 		JLabel ledImageLabel3 = new JLabel("", ledImageNew, JLabel.CENTER);
-		ledImageLabel3.setBounds(660, 200, 34, 31);
+		ledImageLabel3.setBounds(660, 205, 34, 31);
 		ledImageLabel3.setIcon(ledImageNew);
 		contentPane.add(ledImageLabel3);
 		contentPane.add(brakeFailPanel);
@@ -473,7 +473,7 @@ public class TrainModelNewGUI extends JFrame {
 		contentPane.add(widthVal);
 		capacityVal.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		capacityVal.setBounds(163, 243, 69, 20);
+		capacityVal.setBounds(154, 238, 69, 20);
 		contentPane.add(capacityVal);
 		blockVal.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		

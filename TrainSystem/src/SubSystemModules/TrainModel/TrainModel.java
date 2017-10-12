@@ -187,7 +187,7 @@ public class TrainModel {
         	 this.emerBrake = false;
          }
 
-         tmGUI.numCarsSpinner.setValue(this.trainCars);
+         tmGUI.numCarsSpinner.setText(Integer.toString(this.trainCars));
          tmGUI.heightVal.setText(Double.toString(truncateTo(this.trainHeight, 2)));
          tmGUI.widthVal.setText(Double.toString(truncateTo(this.trainWidth, 2)));
          tmGUI.lengthVal.setText(Double.toString(truncateTo(this.trainLength, 2)));
