@@ -8,6 +8,11 @@ import javax.swing.JLabel;
 import javax.swing.UIManager;
 import javax.swing.JButton;
 
+import javax.swing.border.Border;
+import java.awt.Color;
+import javax.swing.border.LineBorder;
+import java.awt.Font;
+
 public class SplashPage {
 
 	private JFrame frame;
@@ -75,11 +80,24 @@ public class SplashPage {
 					//OPEN JAR				
 				}
 			});
+
+			stylizeButton(newButton);
+			newButton.setFont(new Font("Arial", Font.BOLD, 18));
+
 			System.out.println(0+BUTTON_MARGIN_LR+" "+y+" "+BUTTON_WIDTH+" "+BUTTON_HEIGHT);
 			newButton.setBounds(0+BUTTON_MARGIN_LR, y, BUTTON_WIDTH, BUTTON_HEIGHT);
 			y += BUTTON_HEIGHT+BUTTON_MARGIN_TOP;
 			frame.getContentPane().add(newButton);
 		}
 		
+	}
+
+	public void stylizeButton(JButton b){
+		Border thickBorder = new LineBorder(Color.WHITE, 3);
+    	b.setBorder(thickBorder);
+		b.setContentAreaFilled(false);
+		b.setOpaque(true);
+		b.setBackground(Color.BLACK);
+		b.setForeground(Color.WHITE);
 	}
 }
