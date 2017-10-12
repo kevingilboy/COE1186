@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.UIManager;
 import javax.swing.JButton;
 
 public class SplashPage {
@@ -15,6 +16,12 @@ public class SplashPage {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		}
+		catch(Throwable e) {
+			//lmfao
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -39,38 +46,38 @@ public class SplashPage {
 	 */
 	private int IMAGE_HEIGHT = 768;
 	private int IMAGE_WIDTH = 1360;
-	private int BOTTOM_BAR_HEIGHT = 100;
-	private int BOTTOM_BAR_WIDTH = IMAGE_WIDTH;
-	private int BUTTON_MARGIN_TOP = 20;
-	private int BUTTON_MARGIN_LR = 50;
-	private int BUTTON_HEIGHT = (int)(BOTTOM_BAR_HEIGHT-2*BUTTON_MARGIN_TOP);
-	private int BUTTON_WIDTH = (int)((BOTTOM_BAR_WIDTH-(7*BUTTON_MARGIN_LR))/6.0);
+	private int LEFT_BAR_HEIGHT = IMAGE_HEIGHT;
+	private int LEFT_BAR_WIDTH = 200;
+	private int BUTTON_MARGIN_TOP = 50;
+	private int BUTTON_MARGIN_LR = 20;
+	private int BUTTON_HEIGHT = (int)((LEFT_BAR_HEIGHT-7*BUTTON_MARGIN_TOP)/6.0);
+	private int BUTTON_WIDTH = LEFT_BAR_WIDTH-2*BUTTON_MARGIN_LR;
+	
 	private String PICTURE ="icon.jpg";
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, IMAGE_WIDTH, IMAGE_HEIGHT+BOTTOM_BAR_HEIGHT);
+		frame.setBounds(100, 100, IMAGE_WIDTH+LEFT_BAR_WIDTH, IMAGE_HEIGHT);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.getContentPane().setLayout(null);
 		
-		JLabel label = new JLabel(new ImageIcon(PICTURE));
-		label.setBounds(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
-		frame.getContentPane().add(label);
+		JLabel img = new JLabel(new ImageIcon("icon.jpg"));
+		img.setBounds(LEFT_BAR_WIDTH, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+		frame.getContentPane().add(img);
 		
-		int x = BUTTON_MARGIN_LR;
+		int y = BUTTON_MARGIN_TOP;
 		String[] modules = new String[] {"CTC","Track Ctrl","Track Model","Train Model","Train Ctrl","MBO"};
 		for(int i=0;i<6;i++) {
 			JButton newButton = new JButton(modules[i]);
 			newButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					//OPEN JAR
-					
+					//OPEN JAR				
 				}
 			});
-			System.out.println(x+" "+(IMAGE_HEIGHT+BUTTON_MARGIN_TOP)+" "+BUTTON_WIDTH+" "+BUTTON_HEIGHT);
-			newButton.setBounds(x, IMAGE_HEIGHT+BUTTON_MARGIN_TOP, BUTTON_WIDTH, BUTTON_HEIGHT);
-			x+=BUTTON_MARGIN_LR+BUTTON_WIDTH;
+			System.out.println(0+BUTTON_MARGIN_LR+" "+y+" "+BUTTON_WIDTH+" "+BUTTON_HEIGHT);
+			newButton.setBounds(0+BUTTON_MARGIN_LR, y, BUTTON_WIDTH, BUTTON_HEIGHT);
+			y += BUTTON_HEIGHT+BUTTON_MARGIN_TOP;
 			frame.getContentPane().add(newButton);
 		}
 		
