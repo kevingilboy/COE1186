@@ -16,6 +16,10 @@ import javax.swing.border.LineBorder;
 import java.awt.Font;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class CTC {
 	private JFrame frame;
@@ -79,6 +83,10 @@ public class CTC {
 	public final int GUI_WINDOW_HEIGHT = 600;
 	public final int GUI_WINDOW_WIDTH = 1200;
 
+	/*
+	 * Real Time
+	 */
+	public static JLabel label = new JLabel(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
 
 	/**
 	 * Launch the application.
@@ -95,6 +103,10 @@ public class CTC {
 					CTC window = new CTC();
 					window.frame.setResizable(false);
 					window.frame.setVisible(true);
+
+					TimerTask newTask = new showTime();
+					Timer timer = new Timer();
+					timer.scheduleAtFixedRate(newTask, 0, 100);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -142,11 +154,10 @@ public class CTC {
 		 * LEFT FRAME
 		 */
 		
-		JLabel label = new JLabel("08:45");
 		setHeader(label);
 		setClockFont(label);
 		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setBounds(75, 64, 100, 44);
+		label.setBounds(35, 64, 200, 44);
 		contentPane.add(label);
 
 		JLabel tempLbl = new JLabel("Temp");
@@ -620,5 +631,11 @@ public class CTC {
 	}
 	private static void setBold(JLabel lbl){
 		lbl.setFont(new Font(lbl.getFont().getName(),Font.BOLD,lbl.getFont().getSize()));
+	}
+
+	public static class showTime extends TimerTask{
+		public void run(){
+			label.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+		}
 	}
 }
