@@ -28,7 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
-import javax.swing.UIManager;
+import javax.swing.UIManager; 
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.CompoundBorder;
@@ -42,110 +42,144 @@ import javax.swing.JFileChooser;
 @SuppressWarnings("serial")
 public class TrackModelGUI extends JFrame {
 
-	private static final int GUI_WINDOW_WIDTH 		= 880;
-	private static final int GUI_WINDOW_HEIGHT 		= 480;
-	private static final int GUI_WINDOW_XPOS  		= 200;
-	private static final int GUI_WINDOW_YPOS		= 200;
+	/* CONSTANTS */
+	private static final int GUI_WINDOW_WIDTH 	= 880;
+	private static final int GUI_WINDOW_HEIGHT 	= 480;
+	private static final int GUI_WINDOW_XPOS  	= 200;
+	private static final int GUI_WINDOW_YPOS	= 200;
 	
-	private static final int IMPORT_BOX_XPOS 		= 79;
-	private static final int IMPORT_BOX_YPOS 		= 29;
-	private static final int IMPORT_BOX_WIDTH 		= 197;
-	private static final int IMPORT_BOX_HEIGHT 		= 20;
-	private static final int IMPORT_BOX_NUM_COLUMNS = 10;
+	private static final int IMPORT_BOX_XPOS 	= 79;
+	private static final int IMPORT_BOX_YPOS 	= 29;
+	private static final int IMPORT_BOX_WIDTH 	= 197;
+	private static final int IMPORT_BOX_HEIGHT 	= 20;
+	private static final int IMPORT_BOX_COLUMNS = 10;
 
-	private boolean switchID = false;
-	private boolean firstTime 	= true;
+	/* GUI COMPONENTS */
+	private JLabel 		labelTrack 				= new JLabel("Track:");
+	private JTextField 	textField 				= new JTextField();
+	private JButton 	buttonImport 			= new JButton("Import");
+	private String 		trackFilename 			= new String("");
+	private JTextField 	filename 				= new JTextField(), directory = new JTextField();
+	
+	private JLabel 		labelTrackLayout 		= new JLabel("Track Overview");
+	private JPanel 		panelTrackView			= new JPanel();
+	
+	private JPanel 		contentPane             = new JPanel();
 
-	private JTextField filename = new JTextField(), directory = new JTextField();
-	private String trackFilename = new String("");
+	private JLabel 		labelSpecifyBlock 		= new JLabel("Specify Block");
+	private JLabel 		labelBlockID 			= new JLabel();
+	private JLabel 		iconSwitch 				= new JLabel("");
 
-	private JPanel contentPane;
-	private JTextField textField;
+	private JButton 	buttonPrevious 			= new JButton("prev");
+	private JButton 	buttonNext 				= new JButton("next");
 
-	private Block selectedBlock = new Block();
-	private int selectedBlockIndex = 0;
-	private ArrayList<Block> blocks = new ArrayList<Block>();
+	private JLabel 		labelRailFailure 		= new JLabel("Rail Failure");
+	private JLabel 		labelTrackCtFailure 	= new JLabel("Track Circuit Failure");
+	private JLabel 		labelPowerFailure 		= new JLabel("Power Failure");
 
-	JLabel dataBlockOccupied = new JLabel(new ImageIcon("images/greyStatusIcon.png"));
-	JLabel dataBlockLength = new JLabel("<no track>");
-	JLabel dataBlockGrade = new JLabel("<no track>");
-	JLabel dataBlockElevation = new JLabel("<no track>");
-	JLabel dataCumElevation = new JLabel("<no track>");
-	JLabel dataSpeedLimit = new JLabel("<no track>");
+	private JLabel 		labelInfrastructure 	= new JLabel("Infrastructure");
+	private JLabel 		labelUnderground 		= new JLabel("Underground");
+	private JLabel 		labelRailCrossing 		= new JLabel("Rail Crossing");
+	private JLabel 		labelSwitch 			= new JLabel("Switch");
+	private JLabel 		labelState 				= new JLabel("State");
+	private JLabel 		labelStation 			= new JLabel("Station");
+	private JLabel 		labelNearestStation 	= new JLabel("Nearest Station");
+	private JLabel 		labelStationName 		= new JLabel("StationName");
+	private JLabel 		labelAt 				= new JLabel("@");
+	private JLabel 		labelStationBlockID 	= new JLabel("StationBlockID");
+	private JLabel 		labelTrackCircuit 		= new JLabel("Track Circuit");
+	private JLabel 		labelSpeed 				= new JLabel("Speed");
+	private JLabel 		labelAuthority 			= new JLabel("Authority");
+	private JLabel 		labelTrackHeated 		= new JLabel("Track Heated");
 
-	JLabel labelBlockID = new JLabel(Integer.toString(selectedBlockIndex));
-	JLabel iconswitchID = new JLabel("");
+	private JLabel 		labelSwitchSource 		= new JLabel("P");
+	private JLabel 		labelSwitchDest1 		= new JLabel("S1");
+	private JLabel 		labelSwitchDest2 		= new JLabel("S3");
 
-	public static void main(String[] args) {
-		setUILookAndFeel();
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TrackModelGUI frame = new TrackModelGUI();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JLabel 		iconUndergroundStatus 	= new JLabel("");
+	private JLabel 		iconRailStatus 			= new JLabel("");
+	private JLabel 		iconSwitchStatus 		= new JLabel("");
+	private JLabel 		iconStationStatus 		= new JLabel("");
+	private JLabel 		iconRailFailure 		= new JLabel("");
+	private JLabel 		iconTrackCtFailure  	= new JLabel("");
+	private JLabel 		iconPowerFailure 		= new JLabel("");
+	private JLabel 		iconTrackHeated 		= new JLabel("");
+	private JLabel 		logoPineapple 			= new JLabel(new ImageIcon("images/pineapple_icon.png"));
+
+	private JLabel 		labelBlockOccupied 		= new JLabel("Block Occupied");
+	private JLabel 		labelLength 			= new JLabel("Length:");
+	private JLabel 		labelGrade 				= new JLabel("Grade:");
+	private JLabel 		labelElevation 			= new JLabel("Elevation:");
+	private JLabel 		labelCumElev 			= new JLabel("Cum. Elev:");
+	private JLabel 		labelSpeedLimit 		= new JLabel("Speed Limit:");
+
+	private JLabel 		dataBlockOccupied 		= new JLabel(new ImageIcon("images/greyStatusIcon.png"));
+	private JLabel 		dataBlockLength 		= new JLabel("<no track>");
+	private JLabel 		dataBlockGrade 			= new JLabel("<no track>");
+	private JLabel 		dataBlockElevation 		= new JLabel("<no track>");
+	private JLabel 		dataCumElevation 		= new JLabel("<no track>");
+	private JLabel 		dataSpeedLimit 			= new JLabel("<no track>");
+
+	private JSeparator 	separator1 				= new JSeparator();
+	private JSeparator 	separator2 				= new JSeparator();
+
+	/* VARIABLES */
+	private ArrayList<Block> 	blocks 				= new ArrayList<Block>();
+	private Block 				selectedBlock 		= new Block();
+	private int 				selectedBlockIndex 	= 0;
+	
+	private boolean 			firstTime 			= true;
+	private boolean 			switchID 			= false;
 
 	public TrackModelGUI() {
 
-		setTitle("Track Model");
-		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(	GUI_WINDOW_XPOS, 
-					GUI_WINDOW_YPOS, 
-					GUI_WINDOW_WIDTH, 
-					GUI_WINDOW_HEIGHT	);
+		// Main window config
+		this.setTitle("Track Model");
+		this.setResizable(false);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setBounds(	GUI_WINDOW_XPOS, 
+						GUI_WINDOW_YPOS, 
+						GUI_WINDOW_WIDTH, 
+						GUI_WINDOW_HEIGHT );
 
-		contentPane = new JPanel();
+		// Primary content pane config
+		contentPane.setLayout(null);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null); // ABSOLUTE LAYOUT
+		this.setContentPane(contentPane);
 		
-		textField = new JTextField();
-		textField.setBounds(	IMPORT_BOX_XPOS, 
-								IMPORT_BOX_YPOS, 
-								IMPORT_BOX_WIDTH, 
-								IMPORT_BOX_HEIGHT	);
-		contentPane.add(textField);
-		textField.setColumns(IMPORT_BOX_NUM_COLUMNS);
-
-		
-		JLabel labelTrack = new JLabel("Track:");
-		labelTrack.setBounds(37, 32, 46, 14);
-		contentPane.add(labelTrack);
-		
-		JButton buttonImport = new JButton("Import");
-		buttonImport.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("[Import...] pressed!");
-			}
-		});
-		buttonImport.setBounds(286, 28, 65, 23);
-		setButtonStyle(buttonImport);
-		
-		buttonImport.addActionListener(new OpenL());
-		contentPane.add(buttonImport);
-		
-		JPanel panelTrackView = new JPanel();
 		panelTrackView.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panelTrackView.setBackground(new Color(200, 200, 200));
 		panelTrackView.setBounds(28, 87, 351, 341);
 		contentPane.add(panelTrackView);
 		
-		JLabel labelSpecifyBlock = new JLabel("Specify Block");
-		labelSpecifyBlock.setBounds(485, 29, 96, 14);
+		labelTrack.setBounds(37, 32, 46, 14);
+		contentPane.add(labelTrack);
+
+		textField.setColumns(IMPORT_BOX_COLUMNS);
+		textField.setBounds( IMPORT_BOX_XPOS, 
+							 IMPORT_BOX_YPOS, 
+							 IMPORT_BOX_WIDTH, 
+							 IMPORT_BOX_HEIGHT );
+		contentPane.add(textField);
+		
+		stylizeButton(buttonImport);
+		buttonImport.setBounds(286, 28, 65, 23);
+		buttonImport.addActionListener(new OpenL());
+		contentPane.add(buttonImport);
+		
+		showBlockInfoHeaders();
+		showBlockStaticInfo(selectedBlock, firstTime);
+		
 		labelSpecifyBlock.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		labelSpecifyBlock.setForeground(Color.DARK_GRAY);
+		labelSpecifyBlock.setBounds(485, 29, 96, 14);
 		contentPane.add(labelSpecifyBlock);
 
 		labelBlockID.setBounds(508, 63, 38, 14);
 		contentPane.add(labelBlockID);
 
-		JButton buttonNext = new JButton("next");
+		stylizeButton(buttonNext);
+		buttonNext.setBounds(548, 59, 55, 23);
 		buttonNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
 				System.out.println("[next] pressed!");
@@ -157,11 +191,10 @@ public class TrackModelGUI extends JFrame {
 				showBlockStaticInfo(blocks.get(selectedBlockIndex-1), !firstTime);
 			}
 		});
-		buttonNext.setBounds(548, 59, 55, 23);
-		setButtonStyle(buttonNext);
 		contentPane.add(buttonNext);
 		
-		JButton buttonPrevious = new JButton("prev");
+		stylizeButton(buttonPrevious);
+		buttonPrevious.setBounds(439, 59, 55, 23);
 		buttonPrevious.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("[prev] pressed!");
@@ -173,162 +206,125 @@ public class TrackModelGUI extends JFrame {
 				showBlockStaticInfo(blocks.get(selectedBlockIndex-1), !firstTime);
 			}
 		});
-		buttonPrevious.setBounds(439, 59, 55, 23);
-		setButtonStyle(buttonPrevious);
 		contentPane.add(buttonPrevious);
+
 	
-		showBlockInfoHeaders();
-		showBlockStaticInfo(selectedBlock, firstTime);
-		
-		JLabel labelRailFailure = new JLabel("Rail Failure");
+
 		labelRailFailure.setBounds(439, 261, 78, 14);
-		contentPane.add(labelRailFailure);
-	
-		JLabel labelTrackCircuitFailure = new JLabel("Track Circuit Failure");
-		labelTrackCircuitFailure.setBounds(439, 276, 105, 14);
-		contentPane.add(labelTrackCircuitFailure);
-		
-		JLabel labelPowerFailure = new JLabel("Power Failure");
+		labelTrackCtFailure.setBounds(439, 276, 105, 14);
 		labelPowerFailure.setBounds(439, 292, 78, 14);
-		contentPane.add(labelPowerFailure);
 		
-		JLabel labelInfrastructure = new JLabel("Infrastructure");
-		labelInfrastructure.setBounds(708, 29, 112, 14);
-		labelInfrastructure.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		contentPane.add(labelRailFailure);
+		contentPane.add(labelTrackCtFailure);
+		contentPane.add(labelPowerFailure);
+	
+		
 		labelInfrastructure.setForeground(Color.DARK_GRAY);		
+		labelInfrastructure.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		labelInfrastructure.setBounds(708, 29, 112, 14);
 		contentPane.add(labelInfrastructure);
 		
-		JLabel labelUnderground = new JLabel("Underground");
 		labelUnderground.setBounds(664, 51, 65, 14);
-		contentPane.add(labelUnderground);
-		
-		JLabel labelRailCrossing = new JLabel("Rail Crossing");
 		labelRailCrossing.setBounds(664, 67, 65, 14);
-		contentPane.add(labelRailCrossing);
-		
-		JLabel labelSwitch = new JLabel("Switch");
 		labelSwitch.setBounds(664, 84, 65, 14);
+		
+		contentPane.add(labelUnderground);
+		contentPane.add(labelRailCrossing);
 		contentPane.add(labelSwitch);
 		
-		iconswitchID.setIcon(new ImageIcon("images/switchState0.png"));
-		iconswitchID.setBounds(722, 146, 46, 31);
-		contentPane.add(iconswitchID);
+		iconSwitch.setIcon(new ImageIcon("images/switchState0.png"));
+		iconSwitch.setBounds(722, 146, 46, 31);
+		contentPane.add(iconSwitch);
 
-		JLabel labelState = new JLabel("State");
 		labelState.setBounds(735, 118, 65, 14);
 		contentPane.add(labelState);
 		
 		//-------Get from switch-----------
-		JLabel lblP = new JLabel("P");
-		lblP.setBounds(713, 156, 24, 14);
-		contentPane.add(lblP);
+		labelSwitchSource.setBounds(713, 156, 24, 14);
+		contentPane.add(labelSwitchSource);
 		
-		JLabel lblS = new JLabel("S1");
-		lblS.setBounds(771, 143, 24, 14);
-		contentPane.add(lblS);
+		labelSwitchDest1.setBounds(771, 143, 24, 14);
+		contentPane.add(labelSwitchDest1);
 		
-		JLabel lblS_1 = new JLabel("S3");
-		lblS_1.setBounds(771, 168, 24, 14);
-		contentPane.add(lblS_1);
+		labelSwitchDest2.setBounds(771, 168, 24, 14);
+		contentPane.add(labelSwitchDest2);
 		//---------------------------------
 
-		JLabel labelTrackLayout = new JLabel("Track Overview");
 		labelTrackLayout.setBounds(142, 61, 120, 14);
 		labelTrackLayout.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		labelTrackLayout.setForeground(Color.DARK_GRAY);
 		contentPane.add(labelTrackLayout);
 		
-		JLabel labelStation = new JLabel("Station");
 		labelStation.setBounds(664, 189, 65, 14);
 		contentPane.add(labelStation);
 		
-		JLabel labelNearestStation = new JLabel("Nearest Station");
 		labelNearestStation.setBounds(713, 214, 87, 14);
 		contentPane.add(labelNearestStation);
 		
-		JLabel labelStationName = new JLabel("StationName");
 		labelStationName.setBounds(686, 234, 65, 14);
 		contentPane.add(labelStationName);
 
-		JLabel labelAt = new JLabel("@");
 		labelAt.setBounds(753, 234, 24, 14);
 		contentPane.add(labelAt);
 		
-		JLabel labelStationBlockID = new JLabel("StationBlockID");
 		labelStationBlockID.setBounds(771, 234, 83, 14);
 		contentPane.add(labelStationBlockID);
 		
-		JLabel labelTrackCircuit = new JLabel("Track Circuit");
 		labelTrackCircuit.setBounds(719, 258, 83, 14);
 		contentPane.add(labelTrackCircuit);
 		
-		JSeparator separator1 = new JSeparator();
 		separator1.setOrientation(SwingConstants.VERTICAL);
 		separator1.setBounds(627, 29, 9, 385);
 		contentPane.add(separator1);
 		
-		JSeparator separator2 = new JSeparator();
 		separator2.setOrientation(SwingConstants.VERTICAL);
 		separator2.setBounds(405, 29, 2, 387);
 		contentPane.add(separator2);
 		
-		JLabel labelSpeed = new JLabel("Speed");
 		labelSpeed.setBounds(664, 273, 65, 14);
 		contentPane.add(labelSpeed);
 		
-		JLabel labelAuthority = new JLabel("Authority");
 		labelAuthority.setBounds(664, 288, 65, 14);
 		contentPane.add(labelAuthority);
 		
-		JLabel labelTrackHeated = new JLabel("Track Heated");
 		labelTrackHeated.setBounds(664, 317, 65, 14);
 		contentPane.add(labelTrackHeated);
 		
-		JLabel iconUndergroundStatus = new JLabel("");
 		iconUndergroundStatus.setIcon(new ImageIcon("images/greyStatusIcon.png"));
 		iconUndergroundStatus.setBounds(646, 51, 46, 14);
 		contentPane.add(iconUndergroundStatus);
 
-		JLabel iconRailStatus = new JLabel("");
 		iconRailStatus.setIcon(new ImageIcon("images/greyStatusIcon.png"));
 		iconRailStatus.setBounds(646, 67, 46, 14);
 		contentPane.add(iconRailStatus);
 		
-		JLabel iconSwitchStatus = new JLabel("");
 		iconSwitchStatus.setIcon(new ImageIcon("images/greyStatusIcon.png"));
 		iconSwitchStatus.setBounds(646, 84, 46, 14);
 		contentPane.add(iconSwitchStatus);
 
-		JLabel iconStationStatus = new JLabel("");
 		iconStationStatus.setIcon(new ImageIcon("images/greyStatusIcon.png"));
 		iconStationStatus.setBounds(646, 189, 46, 14);
 		contentPane.add(iconStationStatus);
 
-		JLabel iconRailFailure = new JLabel("");
 		iconRailFailure.setIcon(new ImageIcon("images/greyStatusIcon.png"));
 		iconRailFailure.setBounds(421, 261, 46, 14);
 		contentPane.add(iconRailFailure);
 
-		JLabel iconTrackCircuitFailure = new JLabel("");
-		iconTrackCircuitFailure.setIcon(new ImageIcon("images/greyStatusIcon.png"));
-		iconTrackCircuitFailure.setBounds(421, 276, 46, 14);
-		contentPane.add(iconTrackCircuitFailure);
+		iconTrackCtFailure.setIcon(new ImageIcon("images/greyStatusIcon.png"));
+		iconTrackCtFailure.setBounds(421, 276, 46, 14);
+		contentPane.add(iconTrackCtFailure);
 
-		JLabel iconPowerFailure = new JLabel("");
 		iconPowerFailure.setIcon(new ImageIcon("images/greyStatusIcon.png"));
 		iconPowerFailure.setBounds(421, 292, 46, 14);
 		contentPane.add(iconPowerFailure);
 
-		JLabel iconTrackHeated = new JLabel("");
 		iconTrackHeated.setIcon(new ImageIcon("images/greyStatusIcon.png"));
 		iconTrackHeated.setBounds(646, 317, 65, 14);
 		contentPane.add(iconTrackHeated);
 
-		JLabel logoPineapple = new JLabel(new ImageIcon("images/pineapple_icon.png"));
 		logoPineapple.setBounds(GUI_WINDOW_WIDTH - 150, GUI_WINDOW_HEIGHT-12-100, 138, 76);
 		contentPane.add(logoPineapple);
 	}
-
 
 	public static void setUILookAndFeel(){
 		try  {
@@ -436,43 +432,42 @@ public class TrackModelGUI extends JFrame {
 	}
 
 	public void showBlockInfoHeaders(){
-		JLabel lblBlockOccupied = new JLabel("Block Occupied");
-		lblBlockOccupied.setBounds(439, 118, 78, 14);
-		contentPane.add(lblBlockOccupied);
+		labelBlockOccupied.setBounds(439, 118, 78, 14);
+		contentPane.add(labelBlockOccupied);
 		
-		JLabel lblNewLabel = new JLabel("Length:");
-		lblNewLabel.setBounds(439, 134, 78, 14);
-		contentPane.add(lblNewLabel);
+		labelLength.setBounds(439, 134, 78, 14);
+		contentPane.add(labelLength);
 		
-		JLabel lblNewLabel_1 = new JLabel("Grade:");
-		lblNewLabel_1.setBounds(439, 151, 78, 14);
-		contentPane.add(lblNewLabel_1);
+		labelGrade.setBounds(439, 151, 78, 14);
+		contentPane.add(labelGrade);
 		
-		JLabel lblNewLabel_2 = new JLabel("Elevation:");
-		lblNewLabel_2.setBounds(439, 168, 78, 14);
-		contentPane.add(lblNewLabel_2);
+		labelElevation.setBounds(439, 168, 78, 14);
+		contentPane.add(labelElevation);
 		
-		JLabel lblCumElev = new JLabel("Cum. Elev:");
-		lblCumElev.setBounds(439, 185, 78, 14);
-		contentPane.add(lblCumElev);
+		labelCumElev.setBounds(439, 185, 78, 14);
+		contentPane.add(labelCumElev);
 		
-		JLabel lblSpeedLimit = new JLabel("Speed Limit:");
-		lblSpeedLimit.setBounds(439, 201, 78, 14);
-		contentPane.add(lblSpeedLimit);
+		labelSpeedLimit.setBounds(439, 201, 78, 14);
+		contentPane.add(labelSpeedLimit);
 	}
 
 	public void showBlockStaticInfo(Block b, boolean firstTime){
 		if (firstTime){
 			dataBlockOccupied.setBounds(389, 118, 78, 14);
 			contentPane.add(dataBlockOccupied);
+
 			dataBlockLength.setBounds(530, 134, 78, 14);
 			contentPane.add(dataBlockLength);
+
 			dataBlockGrade.setBounds(530, 151, 78, 14);
 			contentPane.add(dataBlockGrade);
+
 			dataBlockElevation.setBounds(530, 168, 78, 14);
 			contentPane.add(dataBlockElevation);
+
 			dataCumElevation.setBounds(530, 185, 78, 14);
 			contentPane.add(dataCumElevation);
+
 			dataSpeedLimit.setBounds(530, 201, 78, 14);
 			contentPane.add(dataSpeedLimit);
 		}
@@ -493,21 +488,36 @@ public class TrackModelGUI extends JFrame {
 
 			try{
 				if (Character.toLowerCase(b.switchID.charAt(0)) == 's'){
-					iconswitchID.setIcon(new ImageIcon("images/switchState1.png"));
+					iconSwitch.setIcon(new ImageIcon("images/switchState1.png"));
 				} else {
-					iconswitchID.setIcon(new ImageIcon("images/switchState0.png"));
+					iconSwitch.setIcon(new ImageIcon("images/switchState0.png"));
 				}
 			} catch (StringIndexOutOfBoundsException e){
-				iconswitchID.setIcon(new ImageIcon("images/switchState0.png"));
+				iconSwitch.setIcon(new ImageIcon("images/switchState0.png"));
 			}
 		}
 	}
 
 
-	public void setButtonStyle(JButton b){
+	public void stylizeButton(JButton b){
 		b.setContentAreaFilled(false);
 		b.setOpaque(true);
 		b.setBackground(Color.BLACK);
 		b.setForeground(Color.WHITE);
+	}
+
+
+	public static void main(String[] args) {
+		setUILookAndFeel();
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					TrackModelGUI frame = new TrackModelGUI();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }
