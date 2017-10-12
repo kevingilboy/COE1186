@@ -36,14 +36,18 @@ public class TrackControllerGUI extends JFrame {
 	private JTextField textStatus;
 	private JTextField textOccupancy;
 	
-	JRadioButton switchButtonTop = new JRadioButton("");
-	JRadioButton switchButtonBottom = new JRadioButton("");
-	JLabel labelCrossingGraphic = new JLabel("");
+	JComboBox comboBlock = new JComboBox();
+	JRadioButton switchButtonTop = new JRadioButton();
+	JRadioButton switchButtonBottom = new JRadioButton();
+	JLabel labelCrossingGraphic = new JLabel();
+	JLabel labelLightGraphic = new JLabel();
+	JComboBox comboOccupancy = new JComboBox();
 	
-	private String holdFilename = new String("");
-	private String holdDirectory = new String("");
 	private Plc newPlc = new Plc();
-	private Block selectedBlock = new Block("green","A",1,100,0.5,55,"","","",0.5,0.5,"Switch 1","Head",1,"CROSSING","-","Open",false);
+	
+	private int selectedBlockIndex = 0;
+	private static ArrayList<Block> blocks = new ArrayList<Block>();
+	private Block selectedBlock = new Block();
 	
 	/**
 	 * Launch the application.
@@ -54,6 +58,7 @@ public class TrackControllerGUI extends JFrame {
 				try {
 					TrackControllerGUI frame = new TrackControllerGUI();
 					frame.setVisible(true);
+					parseFile("/Users/npetro/Desktop/greenline.csv");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -133,7 +138,7 @@ public class TrackControllerGUI extends JFrame {
 		labelTrackControllerInterface.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		//Track Image
-		JLabel labelTrackImg = new JLabel("");
+		JLabel labelTrackImg = new JLabel();
 		labelTrackImg.setBackground(Color.WHITE);
 		labelTrackImg.setBounds(0, 0, 334, 448);
 		panel.add(labelTrackImg);
@@ -152,20 +157,19 @@ public class TrackControllerGUI extends JFrame {
 		labelLine.setBounds(10, 23, 26, 16);
 		trackSelectorPanel.add(labelLine);
 		
-		JComboBox comboBlock = new JComboBox();
 		comboBlock.setBounds(384, 19, 104, 27);
 		trackSelectorPanel.add(comboBlock);
-		comboBlock.setModel(new DefaultComboBoxModel(new String[] {"1"}));
+		comboBlock.setModel(new DefaultComboBoxModel(new String[] {"-", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99", "100", "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125", "126", "127", "128", "129", "130", "131", "132", "133", "134", "135", "136", "137", "138", "139", "140", "141", "142", "143", "144", "145", "146", "147", "148", "149", "150", "151", "152", "153", "154", "155", "156"}));
 		
 		JComboBox comboSection = new JComboBox();
 		comboSection.setBounds(222, 19, 104, 27);
 		trackSelectorPanel.add(comboSection);
-		comboSection.setModel(new DefaultComboBoxModel(new String[] {"A"}));
+		comboSection.setModel(new DefaultComboBoxModel(new String[] {"-", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "ZZ", "YY"}));
 		
 		JComboBox comboLine = new JComboBox();
 		comboLine.setBounds(48, 19, 104, 27);
 		trackSelectorPanel.add(comboLine);
-		comboLine.setModel(new DefaultComboBoxModel(new String[] {"Red","Green"}));
+		comboLine.setModel(new DefaultComboBoxModel(new String[] {"-", "Green"}));
 		
 		//Controller Specifier
 		JLabel labelController = new JLabel("<html><b>Controller - GA</b><html>");
@@ -183,7 +187,7 @@ public class TrackControllerGUI extends JFrame {
 		textStatus.setBounds(220, 0, 134, 28);
 		updatePanel.add(textStatus);
 		textStatus.setHorizontalAlignment(SwingConstants.CENTER);
-		textStatus.setText("");
+		textStatus.setText("-");
 		textStatus.setEditable(false);
 		textStatus.setColumns(10);
 		
@@ -193,21 +197,25 @@ public class TrackControllerGUI extends JFrame {
 		updatePanel.add(labelOccupancy);
 		labelOccupancy.setHorizontalAlignment(SwingConstants.TRAILING);
 		
+		comboOccupancy.setBounds(220, 29, 134, 28);
+		updatePanel.add(comboOccupancy);
+		comboOccupancy.setModel(new DefaultComboBoxModel(new String[] {"False", "True"}));
+		/*
 		textOccupancy = new JTextField();
 		textOccupancy.setBounds(220, 29, 134, 28);
 		updatePanel.add(textOccupancy);
-		textOccupancy.setText("");
+		textOccupancy.setText("-");
 		textOccupancy.setHorizontalAlignment(SwingConstants.CENTER);
 		textOccupancy.setEditable(false);
 		textOccupancy.setColumns(10);
-		
+		*/
 		//Block Switch
 		JLabel labelSwitchState = new JLabel("Switch State");
 		labelSwitchState.setBounds(0, 6, 88, 57);
 		switchPanel.add(labelSwitchState);
 		labelSwitchState.setHorizontalAlignment(SwingConstants.TRAILING);
 		
-		JLabel labelSwitchGraphic = new JLabel("");
+		JLabel labelSwitchGraphic = new JLabel();
 		labelSwitchGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/switch.png"));
 		labelSwitchGraphic.setBounds(100, 17, 55, 33);
 		switchPanel.add(labelSwitchGraphic);
@@ -226,7 +234,6 @@ public class TrackControllerGUI extends JFrame {
 		labelLights.setBounds(0, 0, 88, 57);
 		lightsPanel.add(labelLights);
 		
-		JLabel labelLightGraphic = new JLabel("");
 		labelLightGraphic.setBounds(149, 0, 39, 57);
 		lightsPanel.add(labelLightGraphic);
 		labelLightGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/lightsOff.png"));
@@ -252,42 +259,34 @@ public class TrackControllerGUI extends JFrame {
 		
 		JButton buttonImportPlc = new JButton("Import PLC");
 		buttonImportPlc.setBounds(256, 298, 117, 29);
-		buttonImportPlc.addActionListener(new OpenFile());
+		buttonImportPlc.addActionListener(new OpenPlc());
 		trackInfoPanel.add(buttonImportPlc);
+		
+		JButton buttonImportTrack = new JButton("Import Track");
+		buttonImportTrack.setBounds(127, 298, 117, 29);
+		//buttonImportTrack.addActionListener(new OpenL());
+		trackInfoPanel.add(buttonImportTrack);
 	}
 	
 	class UpdateGui implements ActionListener {
 	    public void actionPerformed(ActionEvent e) {
+			getSelectedBlock();
+			updateOccupancy();
 			updateBlockInfo();
+			updateLights();
 			updateCrossing();
 			updateSwitch();
 	    }
 	}
 	
-	class OpenFile implements ActionListener {
+	class OpenPlc implements ActionListener {
 	    public void actionPerformed(ActionEvent e) {
-
 			JFileChooser c = new JFileChooser();
 			int rVal = c.showOpenDialog(TrackControllerGUI.this);
-			if (rVal == JFileChooser.APPROVE_OPTION) {
-				//filename.setText(c.getSelectedFile().getName());
-				//directory.setText(c.getCurrentDirectory().toString());
-			}
-			if (rVal == JFileChooser.CANCEL_OPTION) {
-				//filename.setText("You pressed cancel");
-				//directory.setText("");
-				System.out.println("You pressed cancel.");
-			}
 			System.out.println("Filename = " + c.getSelectedFile().getName());
 			System.out.println("Directory = " + c.getCurrentDirectory().toString());
-
-			//textField.setText(".../" + c.getSelectedFile().getName());
-			//textField.setForeground(Color.gray);
-			//textField.setEditable(false);
-
-			holdFilename = c.getSelectedFile().getName();
-			holdDirectory = c.getCurrentDirectory().toString();
-			parseFile(holdDirectory, holdFilename);
+			
+			parsePlc(c.getCurrentDirectory().toString(), c.getSelectedFile().getName());
 	    }
 	}
 	
@@ -295,41 +294,67 @@ public class TrackControllerGUI extends JFrame {
 		Update Functions
 	*/
 		
+	public void getSelectedBlock(){
+		if(!comboBlock.getSelectedItem().equals("-")){
+			selectedBlockIndex = Integer.parseInt((String)comboBlock.getSelectedItem());
+			selectedBlock = blocks.get(selectedBlockIndex);
+		}
+	}
+		
 	public void updateBlockInfo(){
 		textStatus.setText(selectedBlock.status);
 		if(selectedBlock.occupancy == true){
-			textOccupancy.setText("True");
+			comboOccupancy.setSelectedItem("True");
 		} else {
-			textOccupancy.setText("False");
+			comboOccupancy.setSelectedItem("False");
 		}
 	}
 	
 	public void updateLights(){
-		
+		if(!selectedBlock.occupancy && !blocks.get(selectedBlockIndex+1).occupancy){
+			labelLightGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/greenLight.png"));
+		} else {
+			labelLightGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/redLight.png"));
+		}
 	}
 	
 	public void updateCrossing(){
-		if(!selectedBlock.switchID.equals("")){
+		if(!selectedBlock.crossing.equals("") && !(selectedBlock.crossing == null) && selectedBlock.occupancy){
 			labelCrossingGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/crossingOn.gif"));
 		} else {
 			labelCrossingGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/crossingOff.png"));
 		}
 	}
 	
-	public void updateSwitch(){
-		if(!selectedBlock.switchID.equals("")){
-			
+	public void updateOccupancy(){
+		if (comboOccupancy.getSelectedItem().equals("True")){
+			selectedBlock.occupancy = true;
 		} else {
-			switchButtonTop.setSelected(false);
-			switchButtonTop.setText("-");
-			switchButtonBottom.setSelected(false);
-			switchButtonBottom.setText("-");
+			selectedBlock.occupancy = false;
 		}
+		
 	}
 	
+	public void updateSwitch(){
+		try{
+			if(selectedBlock.switchBlock.charAt(0) == 'S'){
+				switchButtonTop.setSelected(false);
+				switchButtonTop.setText("Alt");
+				switchButtonBottom.setSelected(true);
+				switchButtonBottom.setText("Norm");
+			} else {
+				switchButtonTop.setSelected(false);
+				switchButtonTop.setText("-");
+				switchButtonBottom.setSelected(false);
+				switchButtonBottom.setText("-");
+			}
+		} catch (StringIndexOutOfBoundsException e){
+			System.out.println("out of bounds");
+		}
+		
+	}
 	
-	
-	public void parseFile(String d, String f){
+	public void parsePlc(String d, String f){
 		
 		String path = d + "/" + f;
 
@@ -375,4 +400,86 @@ public class TrackControllerGUI extends JFrame {
         }
 	}
 	
+	/*
+		For Block Info --- needed for demo only
+	*/
+	
+	class OpenL implements ActionListener {
+	    public void actionPerformed(ActionEvent e) {
+			JFileChooser c = new JFileChooser();
+			int rVal = c.showOpenDialog(TrackControllerGUI.this);
+			//parseFile(c.getCurrentDirectory().toString(), c.getSelectedFile().getName());
+	    }
+	}
+
+	public static void parseFile(String f){
+		//String path = d + "/" + f;
+		//System.out.println("parsing file: " + path);
+		BufferedReader 	br 			= null;
+		String 			currline 	= "";
+		String 			delimeter 	= ",";
+
+		try {
+			br = new BufferedReader(new FileReader(f));
+
+			// Read from csv file and create blocks for each line, then
+			// add each block to an arraylist of blocks
+
+			while ((currline = br.readLine()) != null){
+				String [] blockInfo = currline.split(delimeter);
+
+				String 	line 			= blockInfo[0];
+				String 	section 		= blockInfo[1];
+				int 	id 				= Integer.parseInt(blockInfo[2]);
+				double 	length 			= Double.parseDouble(blockInfo[3]);
+				double 	grade 			= Double.parseDouble(blockInfo[4]);
+				int 	speedLimit 		= Integer.parseInt(blockInfo[5]);
+				String 	station 		= blockInfo[6];
+				String  switchBlock     = blockInfo[7];
+				String 	underground     = blockInfo[8];
+				double 	elevation 		= Double.parseDouble(blockInfo[9]);
+				double 	cumElevation 	= Double.parseDouble(blockInfo[10]);
+				String 	switchID     	= blockInfo[11];
+				String  partOfSection   = blockInfo[12];
+				int     direction       = Integer.parseInt(blockInfo[13]);
+				String  crossing 		= blockInfo[14];
+				String  switchType      = blockInfo[15];
+				String	status			= "Open";
+				boolean	occupancy		= false;
+
+
+				Block currBlock = new Block(line,
+											section,
+											id,
+											length,
+											grade,
+											speedLimit,
+											station,
+											switchBlock,
+											underground,
+											elevation,
+											cumElevation,
+											switchID,
+											partOfSection,
+											direction,
+											crossing,
+											switchType,
+											status,
+											occupancy );
+				blocks.add(currBlock);
+			}
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+	}
 }
