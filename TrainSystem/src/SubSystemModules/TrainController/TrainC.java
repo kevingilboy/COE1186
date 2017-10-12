@@ -74,7 +74,9 @@ public class TrainC {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 717, 486);
+		frame.setTitle("Train Controller");
+		frame.setBounds(100, 100, 717, 570);
+		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{123, 292, 263, 0};
