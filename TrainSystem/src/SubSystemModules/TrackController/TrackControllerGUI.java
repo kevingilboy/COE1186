@@ -29,6 +29,10 @@ import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.UIManager; 
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 public class TrackControllerGUI extends JFrame {
 
@@ -53,6 +57,7 @@ public class TrackControllerGUI extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		setUILookAndFeel();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -244,11 +249,13 @@ public class TrackControllerGUI extends JFrame {
 		JButton buttonUpdate = new JButton("Update");
 		buttonUpdate.setBounds(260, 294, 96, 29);
 		buttonUpdate.addActionListener(new UpdateGui());
+		stylizeButton(buttonUpdate);
 		trackInfoPanel.add(buttonUpdate);
 		
 		JButton buttonImportPlc = new JButton("Import PLC");
 		buttonImportPlc.setBounds(141, 294, 117, 29);
 		buttonImportPlc.addActionListener(new OpenPlc());
+		stylizeButton(buttonImportPlc);
 		trackInfoPanel.add(buttonImportPlc);
 		
 		//Pineapple logo
@@ -487,5 +494,26 @@ public class TrackControllerGUI extends JFrame {
                 }
             }
         }
+	}
+	
+	/*
+		For Block Info --- needed for demo only
+	*/
+	public static void setUILookAndFeel(){
+		try  {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		}
+		catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void stylizeButton(JButton b){
+		Border thickBorder = new LineBorder(Color.WHITE, 3);
+    	b.setBorder(thickBorder);
+		b.setContentAreaFilled(false);
+		b.setOpaque(true);
+		b.setBackground(Color.BLACK);
+		b.setForeground(Color.WHITE);
 	}
 }
