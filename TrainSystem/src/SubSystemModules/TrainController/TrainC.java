@@ -1,5 +1,10 @@
 import java.awt.EventQueue;
 
+import javax.swing.UIManager; 
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
 import javax.swing.JFrame;
 import java.awt.GridBagLayout;
 import javax.swing.JList;
@@ -15,6 +20,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 
 public class TrainC {
 
@@ -37,11 +43,13 @@ public class TrainC {
 	private double mu = .01;
 	private double theta = 0;
 	
+	private JLabel logoPineapple = new JLabel(new ImageIcon("pineapple_icon.png"));
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		setUILookAndFeel();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -234,6 +242,7 @@ public class TrainC {
 		newSpeedField.setColumns(10);
 		
 		JButton btnSetNewSpeed = new JButton("Set New Speed");
+		stylizeButton(btnSetNewSpeed);
 		btnSetNewSpeed.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -453,6 +462,7 @@ public class TrainC {
 		doorLightPanel.add(lblF, gbc_lblF);
 		
 		JButton btnSet = new JButton("Set");
+		stylizeButton(btnSet);
 		GridBagConstraints gbc_btnSet = new GridBagConstraints();
 		gbc_btnSet.insets = new Insets(0, 0, 0, 5);
 		gbc_btnSet.gridx = 0;
@@ -671,6 +681,12 @@ public class TrainC {
 		nextDistField.setText("N/A");
 
 		nextDistField.setText("0 mi");
+
+		GridBagConstraints gbc_logo = new GridBagConstraints();
+		gbc_logo.gridx = 2;
+		gbc_logo.gridy = 2;
+		frame.getContentPane().add(logoPineapple, gbc_logo);
+
 	}
 	
 	private String calcPower(double newSpeed) {
@@ -704,6 +720,24 @@ public class TrainC {
 	private void deactivateService() {
 		serviceOn.setSelected(false);
 		serviceOff.setSelected(true);
+	}
+
+	public void stylizeButton(JButton b){
+		Border thickBorder = new LineBorder(Color.WHITE, 3);
+    		b.setBorder(thickBorder);
+		b.setContentAreaFilled(false);
+		b.setOpaque(true);
+		b.setBackground(Color.BLACK);
+		b.setForeground(Color.WHITE);
+	}
+
+	public static void setUILookAndFeel(){
+		try  {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		}
+		catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
