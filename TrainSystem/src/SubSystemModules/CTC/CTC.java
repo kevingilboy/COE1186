@@ -114,6 +114,7 @@ public class CTC {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.setTitle("CTC");
 		frame.setBounds(100, 100, GUI_WINDOW_WIDTH, GUI_WINDOW_HEIGHT);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Container contentPane = frame.getContentPane();
@@ -123,7 +124,7 @@ public class CTC {
 		middleLeftSeparator.setOrientation(SwingConstants.VERTICAL);
 		middleLeftSeparator.setForeground(Color.GRAY);
 		middleLeftSeparator.setBackground(Color.BLACK);
-		middleLeftSeparator.setBounds(250, 0, 1, 512);
+		middleLeftSeparator.setBounds(250, 50, 1, GUI_WINDOW_HEIGHT-100);
 		contentPane.add(middleLeftSeparator);
 		
 		JSeparator horizontalSeparator = new JSeparator();
@@ -134,7 +135,7 @@ public class CTC {
 		middleRightSeparator.setOrientation(SwingConstants.VERTICAL);
 		middleRightSeparator.setForeground(Color.GRAY);
 		middleRightSeparator.setBackground(Color.BLACK);
-		middleRightSeparator.setBounds(737, 0, 1, 512);
+		middleRightSeparator.setBounds(737, 50, 1, GUI_WINDOW_HEIGHT-100);
 		contentPane.add(middleRightSeparator);
 
 		/**
@@ -174,7 +175,7 @@ public class CTC {
 		
 		JLabel lblThroughput = new JLabel("Throughput: ");
 		setBold(lblThroughput);
-		lblThroughput.setBounds(0, 479, 158, 33);
+		lblThroughput.setBounds(40, 479, 158, 33);
 		contentPane.add(lblThroughput);
 		
 		JLabel lblThroughputAmt = new JLabel("###");
@@ -336,7 +337,7 @@ public class CTC {
 		
 		JLabel lblManualTrainCreation = new JLabel("Manual Train Creation");
 		setSubHeader(lblManualTrainCreation);
-		lblManualTrainCreation.setBounds(330, 347, 221, 33);
+		lblManualTrainCreation.setBounds(430, 347, 221, 33);
 		contentPane.add(lblManualTrainCreation);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
@@ -431,7 +432,7 @@ public class CTC {
 		contentPane.add(lblDispatchedTrains);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(745, 55, 397, 187);
+		tabbedPane.setBounds(770, 55, 397, 187);
 		contentPane.add(tabbedPane);
 		
 		JScrollPane dispatchedRedScrollPane = new JScrollPane();
@@ -467,7 +468,7 @@ public class CTC {
 		tabbedPane.addTab("Green", null, dispatchedGreenScrollPane, null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(745, 274, 221, 210);
+		scrollPane.setBounds(770, 274, 221, 210);
 		contentPane.add(scrollPane);
 		
 		dispatchSelectedData = new DefaultTableModel(selectedTrainInitialData,selectedTrainColumnNames);
@@ -476,7 +477,7 @@ public class CTC {
 		
 		JLabel lblSelectedTrainSchedule = new JLabel("Selected Train Schedule");
 		setSubHeader(lblSelectedTrainSchedule);
-		lblSelectedTrainSchedule.setBounds(867, 242, 198, 33);
+		lblSelectedTrainSchedule.setBounds(887, 242, 198, 33);
 		contentPane.add(lblSelectedTrainSchedule);
 		
 		JButton editSelectedDispatchedTrainSchedule = new JButton("Edit Schedule");
@@ -527,7 +528,7 @@ public class CTC {
 				scheduleEditorThread.start();				
 			}
 		});
-		editSelectedDispatchedTrainSchedule.setBounds(971, 288, 171, 41);
+		editSelectedDispatchedTrainSchedule.setBounds(1011, 288, 171, 41);
 		contentPane.add(editSelectedDispatchedTrainSchedule);
 
 		JLabel logoPineapple = new JLabel(new ImageIcon("pineapple_icon.png"));
