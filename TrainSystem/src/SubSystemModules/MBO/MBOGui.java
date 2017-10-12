@@ -10,12 +10,13 @@ import javax.swing.text.*;
 import javax.swing.table.*;
 import java.time.format.DateTimeFormatter;
 import java.io.*;
+import javax.swing.border.*;
 
 public class MBOGui extends JFrame implements ActionListener {
    
     private JLabel timeBox;
     private Font font;
-    private MaterialButton generateButton;
+    private JButton generateButton;
     private JFileChooser fileChooser;
     private MBOCore mbo;
     private Object[][] trainData;
@@ -74,20 +75,13 @@ public class MBOGui extends JFrame implements ActionListener {
 		//searchBar.getDocument().addDocumentListener(new SearchListener());
 
         // create a table with train info
-		trainInfoColumns = new String [] {"Train Name",
-			                "Time Most Recent Signal Received",
-						    "Coordinates Received",
-							"Calculated Location",
-							"Calculated Velocity",
-							"Transmitted Authority"};
+		trainInfoColumns = new String [] {"<html><br><center>Train Name<br><br></center></html>",
+			                "<html><center>Time Most<br>Recent Signal<br>Received</center></html>",
+						    "<html><center>Coordinates<br>Received</center></html>",
+							"<html><center>Calculated<br>Location</center></html>",
+							"<html><center>Calculated<br>Velocity</center></html>",
+							"<html><center>Transmitted<br>Authority</center></html>"};
 		this.trainData = mbo.getTrainData();
-		/*Object[][] dummyData = {
-			{"RED 1", "15:43:01", "(40.0 N, 17.0 W)", "RA4", "45 MPH", "7 mi"},
-			{"RED 2", "15:43:01", "(40.0 N, 17.0 W)", "RA4", "45 MPH", "7 mi"},
-			{"GREEN 1", "15:43:01", "(40.0 N, 17.0 W)", "RA4", "45 MPH", "7 mi"},
-			{"GREEN 2", "15:43:01", "(40.0 N, 17.0 W)", "RA4", "45 MPH", "7 mi"},
-			{"GREEN 3", "15:43:01", "(40.0 N, 17.0 W)", "RA4", "45 MPH", "7 mi"},
-		};*/
 		trainInfoTableModel = new DefaultTableModel(trainData, trainInfoColumns) {
     		public boolean isCellEditable(int row, int column) {
       			return false;
@@ -172,7 +166,14 @@ public class MBOGui extends JFrame implements ActionListener {
 		JLabel throughputPromptLabel = new JLabel("Desired Throughput");
 		JTextField datePrompt = new JTextField(20);
 		JTextField throughputPrompt = new JTextField(20);
-		generateButton = new MaterialButton("Generate Schedule");
+		generateButton = new JButton("Generate Schedule");
+		Border thickBorder = new LineBorder(Color.WHITE, 3);
+    	generateButton.setBorder(thickBorder);
+    	generateButton.setPreferredSize(new Dimension(15, 90));
+		generateButton.setContentAreaFilled(false);
+		generateButton.setOpaque(true);
+		generateButton.setBackground(Color.BLACK);
+		generateButton.setForeground(Color.WHITE);
 		generateButton.addActionListener(this);
 
 		JPanel finalInputPanel = new JPanel();
@@ -293,7 +294,6 @@ public class MBOGui extends JFrame implements ActionListener {
 	public void update() {
 		this.timeBox.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
 		this.trainData = mbo.getTrainData();
-		System.out.println(trainData[0][1]);
 		this.trainInfoTableModel.fireTableDataChanged();
 		this.trainInfoTable.repaint();
 	}
@@ -308,7 +308,6 @@ public class MBOGui extends JFrame implements ActionListener {
 		});
 		while (true) {
 			mboGui.update();
-			//System.out.println(LocalDateTime.now().toString());
 			try {
 			    Thread.sleep(100);
 			} catch (Exception ex) {
