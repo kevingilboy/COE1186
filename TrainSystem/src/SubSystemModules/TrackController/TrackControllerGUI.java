@@ -76,6 +76,7 @@ public class TrackControllerGUI extends JFrame {
 	 */
 	public TrackControllerGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("Track Controller");
 		setBounds(100, 100, 870, 490);
 		setResizable(false);
 		contentPane = new JPanel();
