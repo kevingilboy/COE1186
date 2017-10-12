@@ -604,10 +604,10 @@ public class CTC {
 		button.setForeground(Color.WHITE);
 	}
 	private static void setHeader(JLabel lbl){
-		lbl.setFont(new Font(lbl.getFont().getName(),Font.BOLD,16));
+		lbl.setFont(new Font(lbl.getFont().getName(),Font.BOLD,14));
 	}
 	private static void setClockFont(JLabel lbl){
-		lbl.setFont(new Font("Courier New",Font.BOLD,18));
+		lbl.setFont(new Font("Courier New",Font.BOLD,28));
 	}
 	private static void setSubHeader(JLabel lbl){
 		lbl.setFont(new Font(lbl.getFont().getName(),Font.BOLD+Font.ITALIC,14));
