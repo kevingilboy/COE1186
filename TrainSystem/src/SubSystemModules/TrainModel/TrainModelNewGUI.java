@@ -4,7 +4,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JLabel;
@@ -178,13 +180,14 @@ public class TrainModelNewGUI extends JFrame {
 	private void initComponents() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 975, 614);
+		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(0, 0, 953, 31);
+		menuBar.setBounds(0, 0, 969, 31);
 		contentPane.add(menuBar);
 		
 		menuBar.add(mnFile);
@@ -317,8 +320,8 @@ public class TrainModelNewGUI extends JFrame {
 		powerSpinner.setBounds(481, 446, 84, 26);
 		contentPane.add(powerSpinner);
 		btnSendPowerCommand.setFont(new Font("Tahoma", Font.BOLD, 16));
-		
-		btnSendPowerCommand.setBounds(364, 485, 220, 29);
+		btnSendPowerCommand.setBounds(364, 495, 220, 29);
+		stylizeButton(btnSendPowerCommand);
 		contentPane.add(btnSendPowerCommand);
 		
 		btnSendPowerCommand.addActionListener(new ActionListener()
@@ -328,14 +331,13 @@ public class TrainModelNewGUI extends JFrame {
 			  // send the power command through when the button is pressed
 
 			  setPowerIn = Integer.parseInt(powerSpinner.getValue().toString());
-			  //trainModel.setValuesForDisplay(tmGUI);
-			  //System.out.println(setPowerIn);
 		  }
 		});
 		
 		btnServiceBrake.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnServiceBrake.setForeground(Color.BLACK);
-		btnServiceBrake.setBounds(660, 449, 220, 29);
+		btnServiceBrake.setBounds(670, 459, 220, 29);
+		stylizeToggleButton(btnServiceBrake);
 		contentPane.add(btnServiceBrake);
 		btnServiceBrake.addActionListener(new ActionListener()
 		{
@@ -372,7 +374,8 @@ public class TrainModelNewGUI extends JFrame {
 		btnEmergencyBrake.setFont(new Font("Tahoma", Font.BOLD, 16));
 		
 		btnEmergencyBrake.setForeground(Color.RED);
-		btnEmergencyBrake.setBounds(660, 485, 220, 29);
+		btnEmergencyBrake.setBounds(670, 495, 220, 29);
+		stylizeButton(btnEmergencyBrake);
 		contentPane.add(btnEmergencyBrake);
 		btnEmergencyBrake.addActionListener(new ActionListener()
 		{
@@ -386,34 +389,44 @@ public class TrainModelNewGUI extends JFrame {
 		
 		JLabel lblEngineFailureMode = new JLabel("Engine Failure");
 		lblEngineFailureMode.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblEngineFailureMode.setBounds(720, 110, 129, 20);
+		lblEngineFailureMode.setBounds(720, 108, 129, 20);
 		contentPane.add(lblEngineFailureMode);
 		
 		JLabel lblSignalFailure = new JLabel("Signal Failure");
 		lblSignalFailure.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblSignalFailure.setBounds(720, 161, 129, 20);
+		lblSignalFailure.setBounds(720, 158, 129, 20);
 		contentPane.add(lblSignalFailure);
 		
 		JLabel lblBrakeFailure = new JLabel("Brake Failure");
 		lblBrakeFailure.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblBrakeFailure.setBounds(720, 221, 129, 20);
+		lblBrakeFailure.setBounds(720, 208, 129, 20);
 		contentPane.add(lblBrakeFailure);
 		
 		JPanel engineFailPanel = new JPanel();
-		engineFailPanel.setBounds(660, 99, 34, 31);
-		ImageIcon ledImage = new ImageIcon("greylight.png");
+		engineFailPanel.setBounds(660, 100, 34, 31);
+		ImageIcon ledImage = new ImageIcon("greyStatusIcon.png");
 		JLabel ledImageLabel = new JLabel("", ledImage, JLabel.CENTER);
-		ledImageLabel.setBounds(630, 99, 34, 31);
+		ledImageLabel.setBounds(660, 100, 34, 31);
 		ledImageLabel.setIcon(ledImage);
 		contentPane.add(ledImageLabel);
 		contentPane.add(engineFailPanel);
 		
 		JPanel signalFailPanel = new JPanel();
 		signalFailPanel.setBounds(660, 150, 34, 31);
+		ImageIcon ledImage2 = new ImageIcon("greyStatusIcon.png");
+		JLabel ledImageLabel2 = new JLabel("", ledImage2, JLabel.CENTER);
+		ledImageLabel.setBounds(660, 150, 34, 31);
+		ledImageLabel.setIcon(ledImage2);
+		contentPane.add(ledImageLabel2);
 		contentPane.add(signalFailPanel);
 		
 		JPanel brakeFailPanel = new JPanel();
-		brakeFailPanel.setBounds(660, 209, 34, 31);
+		brakeFailPanel.setBounds(660, 200, 34, 31);
+		ImageIcon ledImageNew = new ImageIcon("greyStatusIcon.png");
+		JLabel ledImageLabel3 = new JLabel("", ledImageNew, JLabel.CENTER);
+		ledImageLabel3.setBounds(660, 200, 34, 31);
+		ledImageLabel3.setIcon(ledImageNew);
+		contentPane.add(ledImageLabel3);
 		contentPane.add(brakeFailPanel);
 		
 		JLabel labelFt = new JLabel("ft.");
@@ -531,6 +544,12 @@ public class TrainModelNewGUI extends JFrame {
 		label_13.setBounds(204, 449, 69, 20);
 		contentPane.add(label_13);
 		
+		ImageIcon pineapple = new ImageIcon("pineapple_icon.png");
+		JLabel pineappleImageLabel = new JLabel("", pineapple, JLabel.CENTER);
+		pineappleImageLabel.setBounds(40, 480, 138, 76);
+		pineappleImageLabel.setIcon(pineapple);
+		contentPane.add(pineappleImageLabel);
+		
 		JLabel label_14 = new JLabel("100");
 		label_14.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		label_14.setBounds(521, 393, 44, 20);
@@ -551,5 +570,23 @@ public class TrainModelNewGUI extends JFrame {
 		ctcSpeedUnitsLabel.setBounds(574, 368, 34, 20);
 		contentPane.add(ctcSpeedUnitsLabel);
 		
+	}
+	
+	public void stylizeButton(JButton b){
+		Border thickBorder = new LineBorder(Color.WHITE, 3);
+    	b.setBorder(thickBorder);
+		b.setContentAreaFilled(false);
+		b.setOpaque(true);
+		b.setBackground(Color.BLACK);
+		b.setForeground(Color.WHITE);
+	}
+	
+	public void stylizeToggleButton(JToggleButton b){
+		Border thickBorder = new LineBorder(Color.WHITE, 3);
+    	b.setBorder(thickBorder);
+		b.setContentAreaFilled(false);
+		b.setOpaque(true);
+		b.setBackground(Color.BLACK);
+		b.setForeground(Color.WHITE);
 	}
 }
