@@ -4,6 +4,8 @@
  */
 
 import java.util.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -115,12 +117,15 @@ public class TrackModelGUI extends JFrame{
 	private JLabel 		labelCumElev 			= new JLabel("Cum. Elev:");
 	private JLabel 		labelSpeedLimit 		= new JLabel("Speed Limit:");
 
-	private JLabel 		dataBlockOccupied 		= new JLabel(new ImageIcon("images/greyStatusIcon.png"));
+	private static JLabel  dataBlockOccupied 	= new JLabel(new ImageIcon("images/greyStatusIcon.png"));
 	private JLabel 		dataBlockLength 		= new JLabel("<no track>");
 	private JLabel 		dataBlockGrade 			= new JLabel("<no track>");
 	private JLabel 		dataBlockElevation 		= new JLabel("<no track>");
 	private JLabel 		dataCumElevation 		= new JLabel("<no track>");
 	private JLabel 		dataSpeedLimit 			= new JLabel("<no track>");
+
+	private static JLabel  dataSpeed			= new JLabel("<no track>");
+	private static JLabel  dataAuthority        = new JLabel("<no track>");
 
 	private JSeparator 	separator1 				= new JSeparator();
 	private JSeparator 	separator2 				= new JSeparator();
@@ -128,10 +133,16 @@ public class TrackModelGUI extends JFrame{
 	/* VARIABLES */
 	private ArrayList<Block> 	blocks 				= new ArrayList<Block>();
 	private Block 				selectedBlock 		= new Block();
-	private int 				selectedBlockIndex 	= 0;
+	private static int 				selectedBlockIndex 	= 0;
 	
 	private boolean 			firstTime 			= true;
 	private boolean 			switchID 			= false;
+
+	private static int          trainRectPos        = 0;
+	private static JPanel 		trainRect           = new JPanel();
+
+	private static JPanel       selectionRect       = new JPanel();
+	private static JPanel       staticSelectionRect = new JPanel();
 
 	public TrackModelGUI() {
 
@@ -149,14 +160,16 @@ public class TrackModelGUI extends JFrame{
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		this.setContentPane(contentPane);
 		
+		panelTrackView.setLayout(null);
 		panelTrackView.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panelTrackView.setBackground(new Color(200, 200, 200));
-		panelTrackView.setBounds(28, 87, 351, 341);
+		panelTrackView.setBounds(28, 87, 351, 300);
 		panelTrackView.addMouseMotionListener(new MouseMotionListener() {
 			public void mouseMoved(MouseEvent e){
 				if ((e.getY()/2 < blocks.size())&&(e.getY()/2 > 0)){
 					int currentPos = e.getY()/2;
 					labelMouseOverBlock.setText(blocks.get(currentPos-1).section + Integer.toString(currentPos));
+					selectionRect.setBounds(10, e.getY()-2, 12, 20);
 				}
 			}
 			public void mouseDragged(MouseEvent e){
@@ -164,6 +177,8 @@ public class TrackModelGUI extends JFrame{
 					selectedBlockIndex = e.getY()/2;
 
 					labelMouseOverBlock.setText(blocks.get(selectedBlockIndex-1).section + Integer.toString(selectedBlockIndex));
+					selectionRect.setBounds(10, e.getY()-2, 12, 20);
+					staticSelectionRect.setBounds(10, e.getY()-2, 12, 20);
 					labelBlockID.setText(blocks.get(selectedBlockIndex-1).section + Integer.toString(selectedBlockIndex));
 					showBlockStaticInfo(blocks.get(selectedBlockIndex-1), !firstTime);
 				}
@@ -186,11 +201,13 @@ public class TrackModelGUI extends JFrame{
 				if ((e.getY()/2 < blocks.size())&&(e.getY()/2 > 0)){
 					selectedBlockIndex = e.getY()/2;
 
+					staticSelectionRect.setBounds(10, e.getY()-2, 12, 20);
 					labelBlockID.setText(blocks.get(selectedBlockIndex-1).section + Integer.toString(selectedBlockIndex));
 					showBlockStaticInfo(blocks.get(selectedBlockIndex-1), !firstTime);
 				}
 			}
 		});
+
 		contentPane.add(panelTrackView);
 		
 		labelTrack.setBounds(37, 32, 46, 14);
@@ -297,7 +314,7 @@ public class TrackModelGUI extends JFrame{
 		labelTrackLayout.setForeground(Color.DARK_GRAY);
 		contentPane.add(labelTrackLayout);
 		
-		labelMouseOverBlock.setBounds(142, 20, 120, 14);
+		labelMouseOverBlock.setBounds(127, 130, 400, 60);
 		labelMouseOverBlock.setFont(new Font("Consolas", Font.BOLD, 60));
 		labelMouseOverBlock.setForeground(Color.WHITE);
 		panelTrackView.add(labelMouseOverBlock);
@@ -333,10 +350,10 @@ public class TrackModelGUI extends JFrame{
 		separator2.setBounds(405, 29, 2, 387);
 		contentPane.add(separator2);
 		
-		labelSpeed.setBounds(664, 273, 65, 14);
+		labelSpeed.setBounds(664, 278, 65, 14);
 		contentPane.add(labelSpeed);
 		
-		labelAuthority.setBounds(664, 288, 65, 14);
+		labelAuthority.setBounds(664, 293, 65, 14);
 		contentPane.add(labelAuthority);
 		
 		labelTrackHeated.setBounds(664, 317, 65, 14);
@@ -467,7 +484,25 @@ public class TrackModelGUI extends JFrame{
 			}
 
 			labelBlockID.setText(blocks.get(selectedBlockIndex+1).section + Integer.toString(selectedBlockIndex+1));
+			iconTrackHeated.setIcon(new ImageIcon("images/greenStatusIcon.png"));
 			showBlockStaticInfo(blocks.get(0), !firstTime);
+
+			TimerTask newTask = new randomSpeedAuthorityTask();
+			Timer timer = new Timer();
+			timer.scheduleAtFixedRate(newTask, 0, 100);
+
+			drawTrack();
+			trainRect.setBounds(10, trainRectPos, 12, 12);
+			trainRect.setBackground(Color.GREEN);
+			panelTrackView.add(trainRect);
+
+			selectionRect.setBounds(10, 0, 12, 20);
+			selectionRect.setBackground(Color.BLACK);
+			panelTrackView.add(selectionRect);
+
+			staticSelectionRect.setBounds(10, 0, 12, 20);
+			staticSelectionRect.setBackground(Color.GRAY);
+			panelTrackView.add(staticSelectionRect);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -505,7 +540,7 @@ public class TrackModelGUI extends JFrame{
 	}
 
 	public void showBlockStaticInfo(Block b, boolean firstTime){
-		if (firstTime){
+		if (firstTime){		
 			dataBlockOccupied.setBounds(389, 118, 78, 14);
 			contentPane.add(dataBlockOccupied);
 
@@ -524,13 +559,20 @@ public class TrackModelGUI extends JFrame{
 			dataSpeedLimit.setBounds(530, 201, 78, 14);
 			contentPane.add(dataSpeedLimit);
 
+			dataSpeed.setBounds(750, 278, 70, 14);
+			contentPane.add(dataSpeed);
+
+			dataAuthority.setBounds(750, 293, 70, 14);
+			contentPane.add(dataAuthority);
+
 			iconTrackHeated.setIcon(new ImageIcon("images/greenStatusIcon.png"));
 		}
 
 		if (!firstTime){
 
+			System.out.println("trainRectPos = " + Integer.toString(trainRectPos) + ", selectedBlockIndex = " + Integer.toString(selectedBlockIndex));
 			dataBlockOccupied.setText("");
-			if (selectedBlockIndex == 2){
+			if ((trainRectPos / 2 > selectedBlockIndex - 10)&&(trainRectPos / 2 < selectedBlockIndex + 8)){
 				dataBlockOccupied.setIcon(new ImageIcon("images/greenStatusIcon.png"));
 			} else {
 				dataBlockOccupied.setIcon(new ImageIcon("images/greyStatusIcon.png"));
@@ -632,8 +674,36 @@ public class TrackModelGUI extends JFrame{
 		b.setForeground(Color.WHITE);
 	}
 
+	public static class randomSpeedAuthorityTask extends TimerTask{
+		public void run(){
+			double minRandSpeed = 30.00;
+			double maxRandSpeed = 31.00;
+			double minRandAuthority = 1.8;
+			double maxRandAuthority = 1.9;
+
+			Random r = new Random();
+			double randomValue = minRandSpeed + (maxRandSpeed - minRandSpeed) * r.nextDouble();
+			double randomValue2 = minRandAuthority + (maxRandAuthority - minRandAuthority) * r.nextDouble();
+
+			dataSpeed.setText(String.format("%.2f", randomValue) + " mph");
+			dataAuthority.setText(String.format("%.2f", randomValue2) + " mi");
+
+			trainRectPos++;
+			if (trainRectPos > 300){
+				trainRectPos = 0;
+			}
+			trainRect.setBounds(10, trainRectPos, 12, 12);
+
+			if ((trainRectPos / 2 > selectedBlockIndex - 10)&&(trainRectPos / 2 < selectedBlockIndex + 8)){
+				dataBlockOccupied.setIcon(new ImageIcon("images/greenStatusIcon.png"));
+			} else {
+				dataBlockOccupied.setIcon(new ImageIcon("images/greyStatusIcon.png"));
+			}
+		}
+	}
 
 	public static void main(String[] args) {
+
 		setUILookAndFeel();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -645,5 +715,17 @@ public class TrackModelGUI extends JFrame{
 				}
 			}
 		});
+	}
+
+	public void drawTrack(){
+		int trackRectWidth 	= 12;
+		int trackRectHeight = panelTrackView.getHeight();
+		Border thickBorder = new LineBorder(Color.WHITE, 2);
+
+		JPanel trackRect = new JPanel();
+		trackRect.setOpaque(false);
+		trackRect.setBorder(thickBorder);
+		trackRect.setBounds(10, -2, trackRectWidth, trackRectHeight + 2);
+		panelTrackView.add(trackRect);
 	}
 }
