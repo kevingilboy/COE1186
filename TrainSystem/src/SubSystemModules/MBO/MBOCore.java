@@ -37,11 +37,19 @@ public class MBOCore {
 	}
 
 	public void updateInfo() {
-		for (TrainInfo train : trains) {
-			train.updateLatestSignal(train.position, LocalDateTime.now());
+		double[] new_train0 = {trains[0].position[0] + 1, trains[0].position[1]};
+		double[] new_train3 = {trains[3].position[0], trains[3].position[1] - 1};
+		for (int i = 0; i < trains.length; i++) {
+			if (i == 0) {
+				trains[i].updateLatestSignal(new_train0, LocalDateTime.now());
+			} else if (i == 3) {
+				//System.out.println("Before: " + trains[i].position[0] + "." + trains[i].position[1]);
+				trains[i].updateLatestSignal(new_train3, LocalDateTime.now());
+				//System.out.println("After: " + trains[i].position[0] + "." + trains[i].position[1]);
+			} else {
+			    trains[i].updateLatestSignal(trains[i].position, LocalDateTime.now());
+			}
 		}
-		trains[0].position[0]++;
-		trains[3].position[1]--;
 		for (int i = 0; i < trains.length; i++) {
 			trains[i].currentAuthority = calculateAuthority(i);
 		}
@@ -88,7 +96,7 @@ public class MBOCore {
 			double elapsedHours = previousSignalReceived.until(signalReceived, ChronoUnit.MILLIS);
 			velocity[0] = (position[0] - previousPosition[0]) / elapsedHours;
 			velocity[1] = (position[1] - previousPosition[1]) / elapsedHours;
-			speed = Math.pow(Math.pow(velocity[0], 2) + Math.pow(velocity[1], 2), 0.5);
+			speed = Math.pow(Math.pow(velocity[0], 2) + Math.pow(velocity[1], 2), 0.5) * 100;
 		}
 
 		private void updateLatestSignal(double[] pos, LocalDateTime rec) {
