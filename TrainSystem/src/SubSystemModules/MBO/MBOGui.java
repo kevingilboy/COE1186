@@ -294,8 +294,14 @@ public class MBOGui extends JFrame implements ActionListener {
 	public void update() {
 		this.timeBox.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
 		this.trainData = mbo.getTrainData();
-		this.trainInfoTableModel.fireTableDataChanged();
-		this.trainInfoTable.repaint();
+		this.trainInfoTableModel.setDataVector(this.trainData, this.trainInfoColumns);
+		//for (int i; i < this.trainData.length; i++) {
+		//	for (int j; j < this.trainData[0].length; j++) {
+		//		this.trainInfoTableModel
+		//	}
+		//}
+		//this.trainInfoTableModel.update(this.trainData);
+		//this.trainInfoTable.repaint();
 	}
 
 	public static void main(String[] args) throws InterruptedException {

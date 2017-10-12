@@ -40,6 +40,8 @@ public class MBOCore {
 		for (TrainInfo train : trains) {
 			train.updateLatestSignal(train.position, LocalDateTime.now());
 		}
+		trains[0].position[0]++;
+		trains[3].position[1]--;
 		for (int i = 0; i < trains.length; i++) {
 			trains[i].currentAuthority = calculateAuthority(i);
 		}
