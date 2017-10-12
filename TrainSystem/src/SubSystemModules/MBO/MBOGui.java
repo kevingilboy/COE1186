@@ -7,6 +7,7 @@ import javax.swing.*;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.event.*;
 import javax.swing.text.*;
+import javax.swing.table.*;
 import java.time.format.DateTimeFormatter;
 import java.io.*;
 
@@ -26,7 +27,7 @@ public class MBOGui extends JFrame implements ActionListener {
 		// initialize class attributes
 		this.font = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
 		fileChooser = new JFileChooser();
-		fileChooser.setForeground(Color.WHITE);
+		//fileChooser.setForeground(Color.WHITE);
 
 		// initialize the jframe
         setTitle("Moving Block Overlay");
@@ -58,7 +59,7 @@ public class MBOGui extends JFrame implements ActionListener {
 
 		// create a clock
 		this.timeBox = new JLabel(LocalDateTime.now().toString());
-		this.timeBox.setForeground(Color.WHITE);
+		//this.timeBox.setForeground(Color.WHITE);
 		this.timeBox.setFont(this.font);
 
 		//searchBar.getDocument().addDocumentListener(new SearchListener());
@@ -77,7 +78,12 @@ public class MBOGui extends JFrame implements ActionListener {
 			{"GREEN 2", "15:43:01", "(40.0 N, 17.0 W)", "RA4", "45 MPH", "7 mi"},
 			{"GREEN 3", "15:43:01", "(40.0 N, 17.0 W)", "RA4", "45 MPH", "7 mi"},
 		};
-		JTable trainInfoTable = new JTable(dummyData, trainInfoColumns);
+		TableModel trainInfoTableModel = new DefaultTableModel(dummyData, trainInfoColumns) {
+    		public boolean isCellEditable(int row, int column) {
+      			return false;
+    		}
+  		};
+		JTable trainInfoTable = new JTable(trainInfoTableModel);
 		trainInfoTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		trainInfoTable.setFillsViewportHeight(true);
 		JScrollPane scrollPane = new JScrollPane(trainInfoTable);
@@ -110,34 +116,41 @@ public class MBOGui extends JFrame implements ActionListener {
 
 		// create the basic components
 		JLabel trainTitle = new JLabel("Train Schedules");
-		trainTitle.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
-		trainTitle.setForeground(Color.WHITE);
+		trainTitle.setFont(this.font);
+		//trainTitle.setForeground(Color.WHITE);
 		JLabel operatorTitle = new JLabel("Operator Schedules");
+		operatorTitle.setFont(this.font);
 		GroupLayout layout = new GroupLayout(schedulerPanel);
 
         // train schedule table
 		String[] trainTableHeaders = {"Train Name", "Start Time", "Stop Time"};
-		Object[][] trainTableData = {{"Red 1", new Date(), new Date()}, 
-		                             {"Red 2", new Date(), new Date()}, 
-		                             {"Red 1", new Date(), new Date()}, 
-		                             {"Green 2", new Date(), new Date()}, 
-		                             {"Green 3", new Date(), new Date()}};
-		JTable trainTable = new JTable(trainTableData, trainTableHeaders);
+		Object[][] trainTableData = {{"Red 1", new String(), new String()}, 
+		                             {"Red 2", new String(), new String()}, 
+		                             {"Red 1", new String(), new String()}, 
+		                             {"Green 2", new String(), new String()}, 
+		                             {"Green 3", new String(), new String()}};
+		TableModel trainScheduleTableModel = new DefaultTableModel(trainTableData, trainTableHeaders) {
+    		public boolean isCellEditable(int row, int column) {
+      			return column != 0;
+    		}
+  		};
+		JTable trainTable = new JTable(trainScheduleTableModel);
 		trainTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		trainTable.setFillsViewportHeight(true);
-		trainTable.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
-		JScrollPane scrollPane = new JScrollPane(trainTable);
+		//trainTable.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+		JScrollPane trainScrollPane = new JScrollPane(trainTable);
 
 		// operator schedule table
 		String[] operatorTableHeaders = {"Operator Name", "Start Time", "Stop Time"};
-		Object[][] operatorTableData = {{"Bob", new Date(), new Date()}, 
-		                                {"Pat", new Date(), new Date()}, 
-		                                {"Ward", new Date(), new Date()}, 
-		                                {"Sandy", new Date(), new Date()}, 
-		                                {"Eugene", new Date(), new Date()}};
+		Object[][] operatorTableData = {{new String(), new String(), new String()}, 
+		                                {new String(), new String(), new String()}, 
+		                                {new String(), new String(), new String()}, 
+		                                {new String(), new String(), new String()}, 
+		                                {new String(), new String(), new String()}};
 		JTable operatorTable = new JTable(operatorTableData, operatorTableHeaders);
 		operatorTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		operatorTable.setFillsViewportHeight(true);
+		JScrollPane operatorScrollPane = new JScrollPane(operatorTable);
 
         // final parameter input
 		JLabel datePromptLabel = new JLabel("Date");
@@ -176,18 +189,18 @@ public class MBOGui extends JFrame implements ActionListener {
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 				                        .addGroup(layout.createParallelGroup()
 				                                        .addComponent(trainTitle)
-				                                        .addComponent(trainTable)
+				                                        .addComponent(trainScrollPane)
 														.addComponent(finalInputPanel))
 										.addGroup(layout.createParallelGroup()
 											            .addComponent(operatorTitle)
-														.addComponent(operatorTable)));
+														.addComponent(operatorScrollPane)));
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				                      .addGroup(layout.createParallelGroup()
 				                                      .addComponent(trainTitle)
 				                                      .addComponent(operatorTitle))
 									  .addGroup(layout.createParallelGroup()
-											          .addComponent(trainTable)
-												      .addComponent(operatorTable))
+											          .addComponent(trainScrollPane)
+												      .addComponent(operatorScrollPane))
 									  .addComponent(finalInputPanel));
 	}
 
