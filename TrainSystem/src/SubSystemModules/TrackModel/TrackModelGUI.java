@@ -38,9 +38,10 @@ import javax.swing.SwingConstants;
 import javax.swing.JRadioButton;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.border.Border;
 
 @SuppressWarnings("serial")
-public class TrackModelGUI extends JFrame {
+public class TrackModelGUI extends JFrame{
 
 	/* CONSTANTS */
 	private static final int GUI_WINDOW_WIDTH 	= 880;
@@ -61,7 +62,8 @@ public class TrackModelGUI extends JFrame {
 	private String 		trackFilename 			= new String("");
 	private JTextField 	filename 				= new JTextField(), directory = new JTextField();
 	
-	private JLabel 		labelTrackLayout 		= new JLabel("Track Overview");
+	private JLabel 		labelTrackLayout 		= new JLabel("Click to Select Block");
+	private JLabel 		labelMouseOverBlock 	= new JLabel("");
 	private JPanel 		panelTrackView			= new JPanel();
 	
 	private JPanel 		contentPane             = new JPanel();
@@ -84,7 +86,7 @@ public class TrackModelGUI extends JFrame {
 	private JLabel 		labelState 				= new JLabel("State");
 	private JLabel 		labelStation 			= new JLabel("Station");
 	private JLabel 		labelNearestStation 	= new JLabel("Nearest Station");
-	private JLabel 		labelStationName 		= new JLabel("StationName");
+	private JLabel 		labelStationName 		= new JLabel("<no station>");
 	private JLabel 		labelAt 				= new JLabel("@");
 	private JLabel 		labelStationBlockID 	= new JLabel("StationBlockID");
 	private JLabel 		labelTrackCircuit 		= new JLabel("Track Circuit");
@@ -150,6 +152,45 @@ public class TrackModelGUI extends JFrame {
 		panelTrackView.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panelTrackView.setBackground(new Color(200, 200, 200));
 		panelTrackView.setBounds(28, 87, 351, 341);
+		panelTrackView.addMouseMotionListener(new MouseMotionListener() {
+			public void mouseMoved(MouseEvent e){
+				if ((e.getY()/2 < blocks.size())&&(e.getY()/2 > 0)){
+					int currentPos = e.getY()/2;
+					labelMouseOverBlock.setText(blocks.get(currentPos-1).section + Integer.toString(currentPos));
+				}
+			}
+			public void mouseDragged(MouseEvent e){
+				if ((e.getY()/2 < blocks.size())&&(e.getY()/2 > 0)){
+					selectedBlockIndex = e.getY()/2;
+
+					labelMouseOverBlock.setText(blocks.get(selectedBlockIndex-1).section + Integer.toString(selectedBlockIndex));
+					labelBlockID.setText(blocks.get(selectedBlockIndex-1).section + Integer.toString(selectedBlockIndex));
+					showBlockStaticInfo(blocks.get(selectedBlockIndex-1), !firstTime);
+				}
+			}
+		});
+		panelTrackView.addMouseListener(new MouseListener(){
+			public void mousePressed(MouseEvent e){
+				labelMouseOverBlock.setForeground(Color.GREEN);
+			}
+			public void mouseExited(MouseEvent e){
+				// Do nothing right now
+			}
+			public void mouseEntered(MouseEvent e){
+				// Do nothing right now
+			}
+			public void mouseReleased(MouseEvent e){
+				labelMouseOverBlock.setForeground(Color.WHITE);
+			}
+			public void mouseClicked(MouseEvent e){
+				if ((e.getY()/2 < blocks.size())&&(e.getY()/2 > 0)){
+					selectedBlockIndex = e.getY()/2;
+
+					labelBlockID.setText(blocks.get(selectedBlockIndex-1).section + Integer.toString(selectedBlockIndex));
+					showBlockStaticInfo(blocks.get(selectedBlockIndex-1), !firstTime);
+				}
+			}
+		});
 		contentPane.add(panelTrackView);
 		
 		labelTrack.setBounds(37, 32, 46, 14);
@@ -170,24 +211,24 @@ public class TrackModelGUI extends JFrame {
 		showBlockInfoHeaders();
 		showBlockStaticInfo(selectedBlock, firstTime);
 		
-		labelSpecifyBlock.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		labelSpecifyBlock.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		labelSpecifyBlock.setForeground(Color.DARK_GRAY);
-		labelSpecifyBlock.setBounds(485, 29, 96, 14);
+		labelSpecifyBlock.setBounds(480, 29, 96, 14);
 		contentPane.add(labelSpecifyBlock);
 
 		labelBlockID.setBounds(508, 63, 38, 14);
+		labelBlockID.setFont(new Font("Consolas", Font.BOLD, 14));
 		contentPane.add(labelBlockID);
 
 		stylizeButton(buttonNext);
 		buttonNext.setBounds(548, 59, 55, 23);
 		buttonNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
-				System.out.println("[next] pressed!");
 				selectedBlockIndex++;
 				if (selectedBlockIndex >= blocks.size()){
 					selectedBlockIndex = 1;
 				}
-				labelBlockID.setText(Character.toUpperCase(blocks.get(selectedBlockIndex).line.charAt(0)) + Integer.toString(selectedBlockIndex));
+				labelBlockID.setText(blocks.get(selectedBlockIndex-1).section + Integer.toString(selectedBlockIndex));
 				showBlockStaticInfo(blocks.get(selectedBlockIndex-1), !firstTime);
 			}
 		});
@@ -197,18 +238,15 @@ public class TrackModelGUI extends JFrame {
 		buttonPrevious.setBounds(439, 59, 55, 23);
 		buttonPrevious.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("[prev] pressed!");
 				selectedBlockIndex--;
 				if (selectedBlockIndex <= 0){
-					selectedBlockIndex = blocks.size()-1;
+					selectedBlockIndex = blocks.size();
 				}
-				labelBlockID.setText(Character.toUpperCase(blocks.get(selectedBlockIndex).line.charAt(0)) + Integer.toString(selectedBlockIndex));
+				labelBlockID.setText(blocks.get(selectedBlockIndex-1).section + Integer.toString(selectedBlockIndex));
 				showBlockStaticInfo(blocks.get(selectedBlockIndex-1), !firstTime);
 			}
 		});
 		contentPane.add(buttonPrevious);
-
-	
 
 		labelRailFailure.setBounds(439, 261, 78, 14);
 		labelTrackCtFailure.setBounds(439, 276, 105, 14);
@@ -237,40 +275,54 @@ public class TrackModelGUI extends JFrame {
 		contentPane.add(iconSwitch);
 
 		labelState.setBounds(735, 118, 65, 14);
+		labelState.setForeground(Color.LIGHT_GRAY);
 		contentPane.add(labelState);
 		
 		//-------Get from switch-----------
 		labelSwitchSource.setBounds(713, 156, 24, 14);
+		labelSwitchSource.setForeground(Color.LIGHT_GRAY);
 		contentPane.add(labelSwitchSource);
 		
 		labelSwitchDest1.setBounds(771, 143, 24, 14);
+		labelSwitchDest1.setForeground(Color.LIGHT_GRAY);
 		contentPane.add(labelSwitchDest1);
 		
 		labelSwitchDest2.setBounds(771, 168, 24, 14);
+		labelSwitchDest2.setForeground(Color.LIGHT_GRAY);
 		contentPane.add(labelSwitchDest2);
 		//---------------------------------
 
-		labelTrackLayout.setBounds(142, 61, 120, 14);
-		labelTrackLayout.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		labelTrackLayout.setBounds(130, 71, 150, 14);
+		labelTrackLayout.setFont(new Font("Consolas", Font.BOLD, 12));
 		labelTrackLayout.setForeground(Color.DARK_GRAY);
 		contentPane.add(labelTrackLayout);
 		
+		labelMouseOverBlock.setBounds(142, 20, 120, 14);
+		labelMouseOverBlock.setFont(new Font("Consolas", Font.BOLD, 60));
+		labelMouseOverBlock.setForeground(Color.WHITE);
+		panelTrackView.add(labelMouseOverBlock);
+
 		labelStation.setBounds(664, 189, 65, 14);
 		contentPane.add(labelStation);
 		
 		labelNearestStation.setBounds(713, 214, 87, 14);
+		labelNearestStation.setForeground(Color.LIGHT_GRAY);
 		contentPane.add(labelNearestStation);
 		
-		labelStationName.setBounds(686, 234, 65, 14);
+		labelStationName.setBounds(670, 234, 100, 14);
+		labelStationName.setForeground(Color.LIGHT_GRAY);
 		contentPane.add(labelStationName);
 
 		labelAt.setBounds(753, 234, 24, 14);
+		labelAt.setForeground(Color.LIGHT_GRAY);
 		contentPane.add(labelAt);
 		
 		labelStationBlockID.setBounds(771, 234, 83, 14);
+		labelStationBlockID.setForeground(Color.LIGHT_GRAY);
 		contentPane.add(labelStationBlockID);
 		
-		labelTrackCircuit.setBounds(719, 258, 83, 14);
+		labelTrackCircuit.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		labelTrackCircuit.setBounds(710, 258, 83, 14);
 		contentPane.add(labelTrackCircuit);
 		
 		separator1.setOrientation(SwingConstants.VERTICAL);
@@ -348,11 +400,13 @@ public class TrackModelGUI extends JFrame {
 				filename.setText("You pressed cancel");
 				directory.setText("");
 			}
-			System.out.println("Filename = " + c.getSelectedFile().getName());
 
-			textField.setText(".../" + c.getSelectedFile().getName());
-			textField.setForeground(Color.gray);
+			textField.setText(c.getSelectedFile().getName());
+			textField.setForeground(Color.LIGHT_GRAY);
 			textField.setEditable(false);
+
+			selectedBlockIndex = 0;
+			panelTrackView.setBackground(Color.DARK_GRAY);
 
 			trackFilename = c.getSelectedFile().getName();
 			parseFile(trackFilename);
@@ -361,7 +415,6 @@ public class TrackModelGUI extends JFrame {
 
 	public void parseFile(String f){
 
-		System.out.println("parsing file: " + f);
 		BufferedReader 	br 			= null;
 		String 			currline 	= "";
 		String 			delimeter 	= ",";
@@ -413,7 +466,7 @@ public class TrackModelGUI extends JFrame {
 				blocks.add(currBlock);
 			}
 
-			labelBlockID.setText(Character.toUpperCase(blocks.get(selectedBlockIndex).line.charAt(0)) + Integer.toString(selectedBlockIndex+1));
+			labelBlockID.setText(blocks.get(selectedBlockIndex+1).section + Integer.toString(selectedBlockIndex+1));
 			showBlockStaticInfo(blocks.get(0), !firstTime);
 
         } catch (FileNotFoundException e) {
@@ -470,10 +523,12 @@ public class TrackModelGUI extends JFrame {
 
 			dataSpeedLimit.setBounds(530, 201, 78, 14);
 			contentPane.add(dataSpeedLimit);
+
+			iconTrackHeated.setIcon(new ImageIcon("images/greenStatusIcon.png"));
 		}
 
 		if (!firstTime){
-			System.out.println("switchID = " + b.switchID);
+
 			dataBlockOccupied.setText("");
 			if (selectedBlockIndex == 2){
 				dataBlockOccupied.setIcon(new ImageIcon("images/greenStatusIcon.png"));
@@ -486,20 +541,91 @@ public class TrackModelGUI extends JFrame {
 			dataCumElevation.setText(Double.toString(b.cumElevation) + " m");
 			dataSpeedLimit.setText(Integer.toString(b.speedLimit) + " mph");
 
+			// Check for Underground
 			try{
-				if (Character.toLowerCase(b.switchID.charAt(0)) == 's'){
-					iconSwitch.setIcon(new ImageIcon("images/switchState1.png"));
+				if (Character.toLowerCase(b.underground.charAt(0)) == 'u'){
+					iconUndergroundStatus.setIcon(new ImageIcon("images/greenStatusIcon.png"));
 				} else {
-					iconSwitch.setIcon(new ImageIcon("images/switchState0.png"));
+					iconUndergroundStatus.setIcon(new ImageIcon("images/greyStatusIcon.png"));
 				}
 			} catch (StringIndexOutOfBoundsException e){
+				iconUndergroundStatus.setIcon(new ImageIcon("images/greyStatusIcon.png"));
+			}
+
+			// Check for Railroad Crossing
+			try{
+				if (Character.toLowerCase(b.crossing.charAt(0)) == 'r'){
+					iconRailStatus.setIcon(new ImageIcon("images/greenStatusIcon.png"));
+				} else {
+					iconRailStatus.setIcon(new ImageIcon("images/greyStatusIcon.png"));
+				}
+			} catch (StringIndexOutOfBoundsException e){
+				iconRailStatus.setIcon(new ImageIcon("images/greyStatusIcon.png"));
+			}
+
+			// Check for Switch
+			try{
+				if (Character.toLowerCase(b.switchID.charAt(0)) == 's'){
+					// FIX THIS TO ACTUALLY SHOW THE REAL SWITCH POSITION
+					iconSwitchStatus.setIcon(new ImageIcon("images/greenStatusIcon.png"));
+					
+					iconSwitch.setIcon(new ImageIcon("images/switchState1.png"));
+					labelState.setForeground(Color.BLACK);
+					labelSwitchSource.setForeground(Color.BLACK);
+					labelSwitchDest1.setForeground(Color.BLACK);
+					labelSwitchDest2.setForeground(Color.BLACK);
+				} else {
+					iconSwitchStatus.setIcon(new ImageIcon("images/greyStatusIcon.png"));
+					
+					iconSwitch.setIcon(new ImageIcon("images/switchState0.png"));
+					labelState.setForeground(Color.LIGHT_GRAY);
+					labelSwitchSource.setForeground(Color.LIGHT_GRAY);
+					labelSwitchDest1.setForeground(Color.LIGHT_GRAY);
+					labelSwitchDest2.setForeground(Color.LIGHT_GRAY);
+				}
+			} catch (StringIndexOutOfBoundsException e){
+				iconSwitchStatus.setIcon(new ImageIcon("images/greyStatusIcon.png"));
+				
 				iconSwitch.setIcon(new ImageIcon("images/switchState0.png"));
+				labelState.setForeground(Color.LIGHT_GRAY);
+				labelSwitchSource.setForeground(Color.LIGHT_GRAY);
+				labelSwitchDest1.setForeground(Color.LIGHT_GRAY);
+				labelSwitchDest2.setForeground(Color.LIGHT_GRAY);
+			}
+
+			// Check for Station
+			try{
+				if (b.station.length() > 0){
+					iconStationStatus.setIcon(new ImageIcon("images/greenStatusIcon.png"));
+					labelStationName.setForeground(Color.BLACK);
+					
+					String stationName = new String("");
+					for (int i = 0; i < b.station.length(); i++){
+						if (b.station.charAt(i) != '|'){
+							stationName += b.station.charAt(i);
+						} else {
+							break;
+						}
+					}
+
+					labelStationName.setText(stationName);
+				} else {
+					iconStationStatus.setIcon(new ImageIcon("images/greyStatusIcon.png"));
+					labelStationName.setText("<no station>");
+					labelStationName.setForeground(Color.LIGHT_GRAY);
+				}
+			} catch (StringIndexOutOfBoundsException e){
+				iconStationStatus.setIcon(new ImageIcon("images/greyStatusIcon.png"));
+				labelStationName.setText("<no station>");
+				labelStationName.setForeground(Color.LIGHT_GRAY);
 			}
 		}
 	}
 
 
 	public void stylizeButton(JButton b){
+		Border thickBorder = new LineBorder(Color.WHITE, 3);
+    	b.setBorder(thickBorder);
 		b.setContentAreaFilled(false);
 		b.setOpaque(true);
 		b.setBackground(Color.BLACK);
