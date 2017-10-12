@@ -293,7 +293,7 @@ public class CTC {
 				scheduleEditorThread.start();				
 			}
 		});
-		editQueueSchedule.setBounds(513, 186, 171, 24);
+		editQueueSchedule.setBounds(512, 186, 171, 24);
 		contentPane.add(editQueueSchedule);
 		
 		JLabel label_2 = new JLabel("Selected Train Schedule");
@@ -301,9 +301,9 @@ public class CTC {
 		label_2.setBounds(399, 152, 198, 33);
 		contentPane.add(label_2);
 		
-		JButton dispatchQueueSchedule = new JButton("Dispatch Now");
-		stylize(dispatchQueueSchedule);
-		dispatchQueueSchedule.addActionListener(new ActionListener() {
+		JButton deleteQueueSchedule = new JButton("Delete selected");
+		stylize(deleteQueueSchedule);
+		deleteQueueSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String line = tabbedPane_1.getTitleAt(tabbedPane_1.getSelectedIndex());
 				String trainName="";
@@ -326,7 +326,31 @@ public class CTC {
 				
 			}
 		});
-		dispatchQueueSchedule.setBounds(512, 218, 171, 24);
+		deleteQueueSchedule.setBounds(512, 215, 171, 24);
+		contentPane.add(deleteQueueSchedule);
+		
+		JButton dispatchQueueSchedule = new JButton("Dispatch Now");
+		stylize(dispatchQueueSchedule);
+		dispatchQueueSchedule.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String line = tabbedPane_1.getTitleAt(tabbedPane_1.getSelectedIndex());
+				String trainName="";
+				if(line=="Red") {
+					int row = queueRedTable.getSelectedRow();
+					trainName = (String) queueRedData.getValueAt(row, 0);
+				}
+				else if(line=="Green") {
+					int row = queueGreenTable.getSelectedRow();
+					trainName = (String) queueGreenData.getValueAt(row, 0);
+				}
+				Schedule schedule = trainsInQueue.remove(trainName);
+				
+				queueSelectedData.setDataVector(selectedTrainInitialData,selectedTrainColumnNames);
+				openScheduleInTable(queueSelectedTable,queueSelectedData,null);
+				updateQueueTable();
+			}
+		});
+		dispatchQueueSchedule.setBounds(512, 244, 171, 24);
 		contentPane.add(dispatchQueueSchedule);
 		
 		/**
