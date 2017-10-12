@@ -293,13 +293,38 @@ public class CTC {
 				scheduleEditorThread.start();				
 			}
 		});
-		editQueueSchedule.setBounds(513, 186, 171, 24);
+		editQueueSchedule.setBounds(512, 186, 171, 24);
 		contentPane.add(editQueueSchedule);
 		
 		JLabel label_2 = new JLabel("Selected Train Schedule");
 		setSubHeader(label_2);
 		label_2.setBounds(399, 152, 198, 33);
 		contentPane.add(label_2);
+		
+		JButton deleteQueueSchedule = new JButton("Delete selected");
+		stylize(deleteQueueSchedule);
+		deleteQueueSchedule.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String line = tabbedPane_1.getTitleAt(tabbedPane_1.getSelectedIndex());
+				String trainName="";
+				if(line=="Red") {
+					int row = queueRedTable.getSelectedRow();
+					trainName = (String) queueRedData.getValueAt(row, 0);
+				}
+				else if(line=="Green") {
+					int row = queueGreenTable.getSelectedRow();
+					trainName = (String) queueGreenData.getValueAt(row, 0);
+				}
+				Schedule schedule = trainsInQueue.remove(trainName);
+
+				queueSelectedData.setDataVector(selectedTrainInitialData,selectedTrainColumnNames);
+				openScheduleInTable(queueSelectedTable,queueSelectedData,null);
+				updateQueueTable();
+				
+			}
+		});
+		deleteQueueSchedule.setBounds(512, 206, 171, 24);
+		contentPane.add(deleteQueueSchedule);
 		
 		JButton dispatchQueueSchedule = new JButton("Dispatch Now");
 		stylize(dispatchQueueSchedule);
@@ -316,17 +341,13 @@ public class CTC {
 					trainName = (String) queueGreenData.getValueAt(row, 0);
 				}
 				Schedule schedule = trainsInQueue.remove(trainName);
-				trainsDispatched.put(trainName, schedule);
-				schedule.dispatched = true;
 				
 				queueSelectedData.setDataVector(selectedTrainInitialData,selectedTrainColumnNames);
 				openScheduleInTable(queueSelectedTable,queueSelectedData,null);
 				updateQueueTable();
-				updateDispatchedTable();
-				
 			}
 		});
-		dispatchQueueSchedule.setBounds(512, 218, 171, 24);
+		dispatchQueueSchedule.setBounds(512, 226, 171, 24);
 		contentPane.add(dispatchQueueSchedule);
 		
 		/**
