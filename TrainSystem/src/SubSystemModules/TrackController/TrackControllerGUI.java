@@ -58,7 +58,7 @@ public class TrackControllerGUI extends JFrame {
 				try {
 					TrackControllerGUI frame = new TrackControllerGUI();
 					frame.setVisible(true);
-					parseFile("/Users/npetro/Desktop/greenline.csv");
+					parseFile("greenline.csv");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -126,10 +126,6 @@ public class TrackControllerGUI extends JFrame {
 		separator3.setBounds(0, 91, 502, 21);
 		trackInfoPanel.add(separator3);
 		
-		JSeparator separator4 = new JSeparator();
-		separator4.setBounds(0, 282, 502, 21);
-		trackInfoPanel.add(separator4);
-		
 		//GUI Title
 		JLabel labelTrackControllerInterface = new JLabel("<html><b>Track Controller Interface</b><html>");
 		labelTrackControllerInterface.setBounds(346, 0, 502, 54);
@@ -142,7 +138,7 @@ public class TrackControllerGUI extends JFrame {
 		labelTrackImg.setBackground(Color.WHITE);
 		labelTrackImg.setBounds(0, 0, 334, 448);
 		panel.add(labelTrackImg);
-		labelTrackImg.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/track.png"));
+		labelTrackImg.setIcon(new ImageIcon("imgs/track.png"));
 		
 		//Block Selectors
 		JLabel labelBlock = new JLabel("Block");
@@ -209,7 +205,7 @@ public class TrackControllerGUI extends JFrame {
 		labelSwitchState.setHorizontalAlignment(SwingConstants.TRAILING);
 		
 		JLabel labelSwitchGraphic = new JLabel();
-		labelSwitchGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/switch.png"));
+		labelSwitchGraphic.setIcon(new ImageIcon("imgs/switch.png"));
 		labelSwitchGraphic.setBounds(100, 17, 55, 33);
 		switchPanel.add(labelSwitchGraphic);
 		
@@ -229,7 +225,7 @@ public class TrackControllerGUI extends JFrame {
 		
 		labelLightGraphic.setBounds(149, 0, 39, 57);
 		lightsPanel.add(labelLightGraphic);
-		labelLightGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/lightsOff.png"));
+		labelLightGraphic.setIcon(new ImageIcon("imgs/lightsOff.png"));
 		
 		//Block Crossing
 		JLabel labelCrossing = new JLabel("Crossing");
@@ -237,7 +233,7 @@ public class TrackControllerGUI extends JFrame {
 		labelCrossing.setBounds(0, 60, 88, 57);
 		lightsPanel.add(labelCrossing);
 		
-		labelCrossingGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/crossingOff.png"));
+		labelCrossingGraphic.setIcon(new ImageIcon("imgs/crossingOff.png"));
 		labelCrossingGraphic.setForeground(Color.LIGHT_GRAY);
 		labelCrossingGraphic.setFont(new Font("Helvetica", Font.BOLD, 40));
 		labelCrossingGraphic.setHorizontalAlignment(SwingConstants.CENTER);
@@ -246,21 +242,26 @@ public class TrackControllerGUI extends JFrame {
 		
 		//Buttons
 		JButton buttonUpdate = new JButton("Update");
-		buttonUpdate.setBounds(385, 298, 117, 29);
+		buttonUpdate.setBounds(260, 294, 96, 29);
 		buttonUpdate.addActionListener(new UpdateGui());
 		trackInfoPanel.add(buttonUpdate);
 		
 		JButton buttonImportPlc = new JButton("Import PLC");
-		buttonImportPlc.setBounds(256, 298, 117, 29);
+		buttonImportPlc.setBounds(141, 294, 117, 29);
 		buttonImportPlc.addActionListener(new OpenPlc());
 		trackInfoPanel.add(buttonImportPlc);
 		
-		//JButton buttonImportTrack = new JButton("Import Track");
-		//buttonImportTrack.setBounds(127, 298, 117, 29);
-		//buttonImportTrack.addActionListener(new OpenL());
-		//trackInfoPanel.add(buttonImportTrack);
+		//Pineapple logo
+		JLabel labelPineapple = new JLabel("");
+		labelPineapple.setIcon(new ImageIcon("imgs/pineapple_icon.png"));
+		labelPineapple.setBounds(364, 253, 138, 76);
+		trackInfoPanel.add(labelPineapple);
+
 	}
 	
+	/*
+		Action Listeners
+	*/	
 	class UpdateGui implements ActionListener {
 	    public void actionPerformed(ActionEvent e) {
 			updateOccupancy();
@@ -295,8 +296,7 @@ public class TrackControllerGUI extends JFrame {
 	
 	/*
 		Update Functions
-	*/
-		
+	*/	
 	public void getSelectedBlock(){
 		if(!comboBlock.getSelectedItem().equals("-")){
 			selectedBlockIndex = Integer.parseInt((String)comboBlock.getSelectedItem());
@@ -315,19 +315,19 @@ public class TrackControllerGUI extends JFrame {
 	
 	public void updateLights(){
 		if(!blocks.get(selectedBlockIndex+1).occupancy || altSelected == 1){
-			labelLightGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/greenLight.png"));
+			labelLightGraphic.setIcon(new ImageIcon("imgs/greenLight.png"));
 			altSelected = 0;
 		} else {
-			labelLightGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/redLight.png"));
+			labelLightGraphic.setIcon(new ImageIcon("imgs/redLight.png"));
 		}
 	}
 	
 	public void updateCrossing(){
 		try{
 			if((Character.toLowerCase(selectedBlock.crossing.charAt(0)) == 'r') && (selectedBlock.occupancy)){
-				labelCrossingGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/crossingOn.gif"));
+				labelCrossingGraphic.setIcon(new ImageIcon("imgs/crossingOn.gif"));
 			} else {
-				labelCrossingGraphic.setIcon(new ImageIcon("/Users/npetro/Documents/Github/COE1186/TrainSystem/src/SubSystemModules/TrackController/crossingOff.png"));
+				labelCrossingGraphic.setIcon(new ImageIcon("imgs/crossingOff.png"));
 			}
 		} catch (StringIndexOutOfBoundsException e){
 			System.out.println("out of bounds");
@@ -367,6 +367,9 @@ public class TrackControllerGUI extends JFrame {
 		}
 	}
 	
+	/*
+		For Plc file
+	*/
 	public void parsePlc(String d, String f){
 		
 		String path = d + "/" + f;
