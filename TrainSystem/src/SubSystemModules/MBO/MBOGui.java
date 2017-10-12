@@ -75,12 +75,12 @@ public class MBOGui extends JFrame implements ActionListener {
 		//searchBar.getDocument().addDocumentListener(new SearchListener());
 
         // create a table with train info
-		trainInfoColumns = new String [] {"<html><br><center>Train Name<br><br></center></html>",
+		trainInfoColumns = new String [] {"<html><br><br><center>Train Name<br><br></center></html>",
 			                "<html><center>Time Most<br>Recent Signal<br>Received</center></html>",
-						    "<html><center>Coordinates<br>Received</center></html>",
+						    "<html><center>Coordinates<br>Received<br>(mi, mi)</center></html>",
 							"<html><center>Calculated<br>Location</center></html>",
-							"<html><center>Calculated<br>Velocity</center></html>",
-							"<html><center>Transmitted<br>Authority</center></html>"};
+							"<html><center>Calculated<br>Velocity<br>(mi/s)</center></html>",
+							"<html><center>Transmitted<br>Authority<br>(mi)</center></html>"};
 		this.trainData = mbo.getTrainData();
 		trainInfoTableModel = new DefaultTableModel(trainData, trainInfoColumns) {
     		public boolean isCellEditable(int row, int column) {
