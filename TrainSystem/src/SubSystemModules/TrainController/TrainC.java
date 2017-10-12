@@ -40,7 +40,7 @@ public class TrainC {
 	private double meanAccel = 0.5;
 	private double emptyMass = 40900;
 	private double g = 9.806;
-	private double mu = .01;
+	private double mu = .16;
 	private double theta = 0;
 	
 	private JLabel logoPineapple = new JLabel(new ImageIcon("pineapple_icon.png"));
