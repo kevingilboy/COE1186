@@ -316,13 +316,10 @@ public class CTC {
 					trainName = (String) queueGreenData.getValueAt(row, 0);
 				}
 				Schedule schedule = trainsInQueue.remove(trainName);
-				trainsDispatched.put(trainName, schedule);
-				schedule.dispatched = true;
-				
+
 				queueSelectedData.setDataVector(selectedTrainInitialData,selectedTrainColumnNames);
 				openScheduleInTable(queueSelectedTable,queueSelectedData,null);
 				updateQueueTable();
-				updateDispatchedTable();
 				
 			}
 		});
