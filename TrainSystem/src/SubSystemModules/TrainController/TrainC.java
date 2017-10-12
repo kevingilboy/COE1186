@@ -1,5 +1,10 @@
 import java.awt.EventQueue;
 
+import javax.swing.UIManager; 
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
 import javax.swing.JFrame;
 import java.awt.GridBagLayout;
 import javax.swing.JList;
@@ -14,6 +19,8 @@ import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 
 public class TrainC {
 
@@ -27,14 +34,22 @@ public class TrainC {
 	private JTextField nextStationField;
 	private JTextField tempField;
 	
+	private JRadioButton serviceOn;
+	private JRadioButton serviceOff;
+	
 	private double meanAccel = 0.5;
 	private double emptyMass = 40900;
+	private double g = 9.806;
+	private double mu = .01;
+	private double theta = 0;
 	
+	private JLabel logoPineapple = new JLabel(new ImageIcon("pineapple_icon.png"));
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		setUILookAndFeel();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -91,12 +106,18 @@ public class TrainC {
 		gbc_lblTrainList.gridy = 0;
 		panel.add(lblTrainList, gbc_lblTrainList);
 		
-		JList list = new JList();
+		DefaultListModel listModel = new DefaultListModel();
+		listModel.addElement("Train 1");
+		
+		JList list = new JList(listModel);
+
 		GridBagConstraints gbc_list = new GridBagConstraints();
 		gbc_list.fill = GridBagConstraints.BOTH;
 		gbc_list.gridx = 0;
 		gbc_list.gridy = 1;
 		panel.add(list, gbc_list);
+
+		list.setSelectedIndex(0);
 		
 		JPanel speedPanel = new JPanel();
 		GridBagConstraints gbc_speedPanel = new GridBagConstraints();
@@ -106,7 +127,8 @@ public class TrainC {
 		gbc_speedPanel.gridy = 0;
 		frame.getContentPane().add(speedPanel, gbc_speedPanel);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
-		gbl_panel_1.columnWidths = new int[]{16, 174, 0, 0};
+
+		gbl_panel_1.columnWidths = new int[]{16, 174, 62, 0};
 		gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_panel_1.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
@@ -137,7 +159,16 @@ public class TrainC {
 		gbc_speedField.gridy = 2;
 		speedPanel.add(speedField, gbc_speedField);
 		speedField.setColumns(10);
-		speedField.setText("0 mi/hr");
+
+		speedField.setText("10");
+		
+		JLabel label = new JLabel("mi/hr");
+		GridBagConstraints gbc_label = new GridBagConstraints();
+		gbc_label.anchor = GridBagConstraints.WEST;
+		gbc_label.insets = new Insets(0, 0, 5, 0);
+		gbc_label.gridx = 2;
+		gbc_label.gridy = 2;
+		speedPanel.add(label, gbc_label);
 		
 		JLabel lblAcceleration = new JLabel("Acceleration");
 		GridBagConstraints gbc_lblAcceleration = new GridBagConstraints();
@@ -155,7 +186,16 @@ public class TrainC {
 		gbc_textField_1.gridy = 4;
 		speedPanel.add(accelField, gbc_textField_1);
 		accelField.setColumns(10);
-		accelField.setText("0 mi/hr^2");
+
+		accelField.setText("0");
+		
+		JLabel lblMihr = new JLabel("mi/hr^2");
+		GridBagConstraints gbc_lblMihr = new GridBagConstraints();
+		gbc_lblMihr.anchor = GridBagConstraints.WEST;
+		gbc_lblMihr.insets = new Insets(0, 0, 5, 0);
+		gbc_lblMihr.gridx = 2;
+		gbc_lblMihr.gridy = 4;
+		speedPanel.add(lblMihr, gbc_lblMihr);
 		
 		JLabel lblAuthority = new JLabel("Authority");
 		GridBagConstraints gbc_lblAuthority = new GridBagConstraints();
@@ -173,7 +213,16 @@ public class TrainC {
 		gbc_textField_2.gridy = 6;
 		speedPanel.add(authField, gbc_textField_2);
 		authField.setColumns(10);
-		authField.setText("0 mi");
+
+		authField.setText("100");
+		
+		JLabel lblMi = new JLabel("mi");
+		GridBagConstraints gbc_lblMi = new GridBagConstraints();
+		gbc_lblMi.anchor = GridBagConstraints.WEST;
+		gbc_lblMi.insets = new Insets(0, 0, 5, 0);
+		gbc_lblMi.gridx = 2;
+		gbc_lblMi.gridy = 6;
+		speedPanel.add(lblMi, gbc_lblMi);
 		
 		JLabel lblNewSpeed = new JLabel("New Speed");
 		GridBagConstraints gbc_lblNewSpeed = new GridBagConstraints();
@@ -193,6 +242,7 @@ public class TrainC {
 		newSpeedField.setColumns(10);
 		
 		JButton btnSetNewSpeed = new JButton("Set New Speed");
+		stylizeButton(btnSetNewSpeed);
 		btnSetNewSpeed.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -234,7 +284,16 @@ public class TrainC {
 		gbc_textField_4.gridy = 11;
 		speedPanel.add(powerField, gbc_textField_4);
 		powerField.setColumns(10);
-		powerField.setText("0 kW");
+
+		powerField.setText("0");
+		
+		JLabel lblKw = new JLabel("kW");
+		GridBagConstraints gbc_lblKw = new GridBagConstraints();
+		gbc_lblKw.anchor = GridBagConstraints.WEST;
+		gbc_lblKw.insets = new Insets(0, 0, 5, 0);
+		gbc_lblKw.gridx = 2;
+		gbc_lblKw.gridy = 11;
+		speedPanel.add(lblKw, gbc_lblKw);
 		
 		
 		
@@ -247,9 +306,10 @@ public class TrainC {
 		frame.getContentPane().add(doorLightPanel, gbc_doorLightPanel);
 		GridBagLayout gbl_panel_4 = new GridBagLayout();
 		gbl_panel_4.columnWidths = new int[]{137, 103, 0};
-		gbl_panel_4.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+		gbl_panel_4.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_panel_4.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel_4.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_4.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		doorLightPanel.setLayout(gbl_panel_4);
 		
 		JLabel lblDoorControl = new JLabel("Door Control");
@@ -276,7 +336,8 @@ public class TrainC {
 		gbc_rdbtnOpen.gridx = 0;
 		gbc_rdbtnOpen.gridy = 2;
 		doorLightPanel.add(leftOpen, gbc_rdbtnOpen);
-		leftOpen.setSelected(false);
+
+		leftOpen.setSelected(true);
 		
 		JRadioButton leftClose = new JRadioButton("CLOSE");
 		GridBagConstraints gbc_rdbtnClose = new GridBagConstraints();
@@ -285,7 +346,8 @@ public class TrainC {
 		gbc_rdbtnClose.gridx = 1;
 		gbc_rdbtnClose.gridy = 2;
 		doorLightPanel.add(leftClose, gbc_rdbtnClose);
-		leftClose.setSelected(true);
+
+		leftClose.setSelected(false);
 		
 		leftOpen.addMouseListener(new MouseAdapter() {
 			@Override
@@ -381,17 +443,30 @@ public class TrainC {
 		
 		tempField = new JTextField();
 		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 0, 5);
+
+		gbc_textField.insets = new Insets(0, 0, 5, 5);
 		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField.gridx = 0;
 		gbc_textField.gridy = 10;
 		doorLightPanel.add(tempField, gbc_textField);
 		tempField.setColumns(10);
+
+		tempField.setText("70");
+		
+		JLabel lblF = new JLabel("F");
+		GridBagConstraints gbc_lblF = new GridBagConstraints();
+		gbc_lblF.anchor = GridBagConstraints.WEST;
+		gbc_lblF.insets = new Insets(0, 0, 5, 0);
+		gbc_lblF.gridx = 1;
+		gbc_lblF.gridy = 10;
+		doorLightPanel.add(lblF, gbc_lblF);
 		
 		JButton btnSet = new JButton("Set");
+		stylizeButton(btnSet);
 		GridBagConstraints gbc_btnSet = new GridBagConstraints();
-		gbc_btnSet.gridx = 1;
-		gbc_btnSet.gridy = 10;
+		gbc_btnSet.insets = new Insets(0, 0, 0, 5);
+		gbc_btnSet.gridx = 0;
+		gbc_btnSet.gridy = 11;
 		doorLightPanel.add(btnSet, gbc_btnSet);
 		
 		lightOff.addMouseListener(new MouseAdapter() {
@@ -439,7 +514,8 @@ public class TrainC {
 		gbc_rdbtnManual.gridx = 0;
 		gbc_rdbtnManual.gridy = 1;
 		modePanel.add(modeManual, gbc_rdbtnManual);
-		modeManual.setSelected(false);
+
+		modeManual.setSelected(true);
 		
 		JRadioButton modeAuto = new JRadioButton("AUTO");
 		GridBagConstraints gbc_rdbtnAuto = new GridBagConstraints();
@@ -447,7 +523,8 @@ public class TrainC {
 		gbc_rdbtnAuto.gridx = 0;
 		gbc_rdbtnAuto.gridy = 2;
 		modePanel.add(modeAuto, gbc_rdbtnAuto);
-		modeAuto.setSelected(true);
+
+		modeAuto.setSelected(false);
 		
 		modeManual.addMouseListener(new MouseAdapter() {
 			@Override
@@ -487,7 +564,8 @@ public class TrainC {
 		gbc_lblBrakeControl.gridy = 0;
 		brakePanel.add(lblBrakeControl, gbc_lblBrakeControl);
 		
-		JRadioButton serviceOn = new JRadioButton("Service Brake On");
+
+		serviceOn = new JRadioButton("Service Brake On");
 		GridBagConstraints gbc_rdbtnServiceBrakeOn = new GridBagConstraints();
 		gbc_rdbtnServiceBrakeOn.anchor = GridBagConstraints.WEST;
 		gbc_rdbtnServiceBrakeOn.insets = new Insets(0, 0, 5, 5);
@@ -496,7 +574,8 @@ public class TrainC {
 		brakePanel.add(serviceOn, gbc_rdbtnServiceBrakeOn);
 		serviceOn.setSelected(false);
 		
-		JRadioButton serviceOff = new JRadioButton("Service Brake Off");
+
+		serviceOff = new JRadioButton("Service Brake Off");
 		GridBagConstraints gbc_rdbtnServiceBrakeOff = new GridBagConstraints();
 		gbc_rdbtnServiceBrakeOff.anchor = GridBagConstraints.WEST;
 		gbc_rdbtnServiceBrakeOff.insets = new Insets(0, 0, 5, 0);
@@ -581,7 +660,8 @@ public class TrainC {
 		gbc_textField_5.gridy = 1;
 		stationPanel.add(nextStationField, gbc_textField_5);
 		nextStationField.setColumns(10);
-		nextStationField.setText("None");
+
+		nextStationField.setText("Pioneer");
 		
 		JLabel lblDistanceTo = new JLabel("Distance to:");
 		GridBagConstraints gbc_lblDistanceTo = new GridBagConstraints();
@@ -599,17 +679,65 @@ public class TrainC {
 		stationPanel.add(nextDistField, gbc_textField_6);
 		nextDistField.setColumns(10);
 		nextDistField.setText("N/A");
-		
+
+		nextDistField.setText("0 mi");
+
+		GridBagConstraints gbc_logo = new GridBagConstraints();
+		gbc_logo.gridx = 2;
+		gbc_logo.gridy = 2;
+		frame.getContentPane().add(logoPineapple, gbc_logo);
+
 	}
 	
 	private String calcPower(double newSpeed) {
-		newSpeed = newSpeed * 0.44704;
-		double force = meanAccel * emptyMass;
-		double Pow = force * newSpeed;
+		double currSpeed = Double.parseDouble(speedField.getText());
+		String strPow;
+		double a;
 		DecimalFormat df = new DecimalFormat("#.####");
-		String strPow = df.format(Pow/1000) + " kW";
+		if (newSpeed > currSpeed) {
+			deactivateService();
+			newSpeed = newSpeed * 0.44704;
+			double Pow = newSpeed * emptyMass * (meanAccel + (mu * g * Math.cos(theta)));
+			strPow = df.format(Pow/1000) + "";
+			a = .5 * 8052.9706;
+			accelField.setText(df.format(a) + "");
+		}
+		else {
+			strPow = "0";
+			activateService();
+			a = -(1.2 + (Math.cos(theta) * mu * g));
+			a = a *8052.9706;
+			accelField.setText(df.format(a) + "");
+		}
 		return strPow;
 	}
 	
+	private void activateService() {
+		serviceOn.setSelected(true);
+		serviceOff.setSelected(false);
+	}
+	
+	private void deactivateService() {
+		serviceOn.setSelected(false);
+		serviceOff.setSelected(true);
+	}
+
+	public void stylizeButton(JButton b){
+		Border thickBorder = new LineBorder(Color.WHITE, 3);
+    		b.setBorder(thickBorder);
+		b.setContentAreaFilled(false);
+		b.setOpaque(true);
+		b.setBackground(Color.BLACK);
+		b.setForeground(Color.WHITE);
+	}
+
+	public static void setUILookAndFeel(){
+		try  {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		}
+		catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
 	
 }
