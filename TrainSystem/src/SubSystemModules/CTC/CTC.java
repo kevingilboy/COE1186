@@ -334,7 +334,7 @@ public class CTC {
 		
 		JLabel lblManualTrainCreation = new JLabel("Manual Train Creation");
 		setSubHeader(lblManualTrainCreation);
-		lblManualTrainCreation.setBounds(395, 347, 221, 33);
+		lblManualTrainCreation.setBounds(430, 347, 221, 33);
 		contentPane.add(lblManualTrainCreation);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
