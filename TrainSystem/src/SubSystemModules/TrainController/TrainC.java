@@ -154,6 +154,7 @@ public class TrainC {
 		speedPanel.add(lblCurrentSpeed, gbc_lblNewLabel);
 		
 		speedField = new JTextField();
+		speedField.setEditable(false);
 		GridBagConstraints gbc_speedField = new GridBagConstraints();
 		gbc_speedField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_speedField.insets = new Insets(0, 0, 5, 5);
@@ -181,6 +182,7 @@ public class TrainC {
 		speedPanel.add(lblAcceleration, gbc_lblAcceleration);
 		
 		accelField = new JTextField();
+		accelField.setEditable(false);
 		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
 		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
@@ -208,6 +210,7 @@ public class TrainC {
 		speedPanel.add(lblAuthority, gbc_lblAuthority);
 		
 		authField = new JTextField();
+		authField.setEditable(false);
 		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
 		gbc_textField_2.fill = GridBagConstraints.BOTH;
 		gbc_textField_2.insets = new Insets(0, 0, 5, 5);
@@ -279,6 +282,7 @@ public class TrainC {
 		speedPanel.add(lblPowerOutput, gbc_lblPowerOutput);
 		
 		powerField = new JTextField();
+		powerField.setEditable(false);
 		GridBagConstraints gbc_textField_4 = new GridBagConstraints();
 		gbc_textField_4.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_4.insets = new Insets(0, 0, 5, 5);
@@ -655,6 +659,7 @@ public class TrainC {
 		stationPanel.add(lblNextStation, gbc_lblNextStation);
 		
 		nextStationField = new JTextField();
+		nextStationField.setEditable(false);
 		GridBagConstraints gbc_textField_5 = new GridBagConstraints();
 		gbc_textField_5.insets = new Insets(0, 0, 5, 0);
 		gbc_textField_5.fill = GridBagConstraints.HORIZONTAL;
@@ -674,6 +679,7 @@ public class TrainC {
 		stationPanel.add(lblDistanceTo, gbc_lblDistanceTo);
 		
 		nextDistField = new JTextField();
+		nextDistField.setEditable(false);
 		GridBagConstraints gbc_textField_6 = new GridBagConstraints();
 		gbc_textField_6.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_6.gridx = 1;
