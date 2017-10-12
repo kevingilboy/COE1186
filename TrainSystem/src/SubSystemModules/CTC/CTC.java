@@ -323,7 +323,7 @@ public class CTC {
 				
 			}
 		});
-		deleteQueueSchedule.setBounds(512, 215, 171, 24);
+		deleteQueueSchedule.setBounds(512, 206, 171, 24);
 		contentPane.add(deleteQueueSchedule);
 		
 		JButton dispatchQueueSchedule = new JButton("Dispatch Now");
@@ -347,7 +347,7 @@ public class CTC {
 				updateQueueTable();
 			}
 		});
-		dispatchQueueSchedule.setBounds(512, 244, 171, 24);
+		dispatchQueueSchedule.setBounds(512, 226, 171, 24);
 		contentPane.add(dispatchQueueSchedule);
 		
 		/**
