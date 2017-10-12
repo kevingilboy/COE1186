@@ -701,13 +701,22 @@ public class TrainC {
 		double currSpeed = Double.parseDouble(speedField.getText());
 		String strPow;
 		double a;
+		double Pow;
 		DecimalFormat df = new DecimalFormat("#.####");
 		if (newSpeed > currSpeed) {
 			deactivateService();
-			newSpeed = newSpeed * 0.44704;
-			double Pow = newSpeed * emptyMass * (meanAccel + (mu * g * Math.cos(theta)));
+                	newSpeed = newSpeed * 0.44704;
+			Pow = newSpeed * ((meanAccel * emptyMass) + (emptyMass * mu * g * Math.cos(theta)));
 			strPow = df.format(Pow/1000) + "";
 			a = .5 * 8052.9706;
+			accelField.setText(df.format(a) + "");
+		}
+		else if (newSpeed == currSpeed) {
+			deactivateService();
+	                newSpeed = newSpeed * 0.44704;
+			Pow = newSpeed * emptyMass * Math.cos(theta) * g * mu;
+			strPow = df.format(Pow/1000) + "";
+			a = 0;
 			accelField.setText(df.format(a) + "");
 		}
 		else {

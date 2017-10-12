@@ -24,6 +24,7 @@ import javax.swing.JSpinner;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JToggleButton;
+import javax.swing.SwingConstants;
 
 public class TrainModelNewGUI extends JFrame {
 
@@ -68,6 +69,31 @@ public class TrainModelNewGUI extends JFrame {
 	JLabel lblCtcSpeed = new JLabel("CTC Speed:");
 	JLabel lblCtcAuthority = new JLabel("CTC Authority:");
 	JLabel lblPowerInput = new JLabel("Power:");
+	JLabel leftDoorLabel = new JLabel("Left Door:");
+	JLabel rightDoorLabel = new JLabel("Right Door:");
+	JLabel lblLight = new JLabel("Light:");
+	JLabel labelTemperature = new JLabel("Cabin Temperature:");
+	JLabel lblEngineFailureMode = new JLabel("Engine Failure");
+	JLabel lblSignalFailure = new JLabel("Signal Failure");
+	JLabel lblBrakeFailure = new JLabel("Brake Failure");
+	JPanel engineFailPanel = new JPanel();
+	JPanel signalFailPanel = new JPanel();
+	JPanel brakeFailPanel = new JPanel();
+	
+	JLabel gpsAntennaStatusLabel = new JLabel("ON");
+	JLabel mboAntennaStatusLabel = new JLabel("ON");
+	JLabel stationVal = new JLabel("Pioneer");
+	JLabel rightDoorStatusLabel = new JLabel("CLOSED");
+	JLabel timeVal = new JLabel("9:15");
+	JLabel lblAm = new JLabel("AM");
+	JLabel lblOpen = new JLabel("OPEN");
+	JLabel lightStatusLabel = new JLabel("OFF");
+	JLabel numPassengers = new JLabel("20");
+	JLabel authorityVal = new JLabel("100");
+	JLabel authorityUnits = new JLabel("mi");
+	JLabel setpointSpeedUnits = new JLabel("mph");
+	JLabel ctcSpeedUnitsLabel = new JLabel("mph");
+	JLabel speedLimitUnitsLabel = new JLabel("mph");
 	
 	JLabel lblLine = new JLabel("");
 	JLabel heightVal = new JLabel("");
@@ -213,15 +239,15 @@ public class TrainModelNewGUI extends JFrame {
 		
 		
 		lblOnboardTemperature.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblOnboardTemperature.setBounds(660, 303, 197, 20);
+		lblOnboardTemperature.setBounds(660, 312, 197, 20);
 		contentPane.add(lblOnboardTemperature);
 		
 		lblSpeedauthority.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblSpeedauthority.setBounds(364, 303, 178, 20);
+		lblSpeedauthority.setBounds(364, 312, 178, 20);
 		contentPane.add(lblSpeedauthority);
 		
 		lblStationControl.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblStationControl.setBounds(60, 303, 154, 20);
+		lblStationControl.setBounds(60, 312, 154, 20);
 		contentPane.add(lblStationControl);
 		lblHeight.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
@@ -278,49 +304,50 @@ public class TrainModelNewGUI extends JFrame {
 		contentPane.add(lblMboAntenna);
 		lblNextStation.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		lblNextStation.setBounds(60, 339, 129, 20);
+		lblNextStation.setBounds(60, 348, 129, 20);
 		contentPane.add(lblNextStation);
 		lblTimeOfArrival.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		lblTimeOfArrival.setBounds(60, 368, 129, 20);
+		lblTimeOfArrival.setBounds(60, 377, 129, 20);
 		contentPane.add(lblTimeOfArrival);
+		
 		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		
-		lblStatus.setBounds(60, 424, 69, 20);
+		lblStatus.setBounds(60, 404, 69, 20);
 		contentPane.add(lblStatus);
+		
 		arrivalStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		
-		arrivalStatusLabel.setBounds(204, 424, 85, 20);
+		arrivalStatusLabel.setBounds(204, 404, 85, 20);
 		contentPane.add(arrivalStatusLabel);
-		passengersEnRoute.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		passengersEnRoute.setBounds(60, 449, 104, 20);
+		passengersEnRoute.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		passengersEnRoute.setBounds(60, 429, 104, 20);
 		contentPane.add(passengersEnRoute);
 		
 		lblCurrentSpeed.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblCurrentSpeed.setBounds(364, 339, 142, 20);
+		lblCurrentSpeed.setBounds(364, 348, 142, 20);
 		contentPane.add(lblCurrentSpeed);
 		lblCtcSpeed.setFont(new Font("Tahoma", Font.PLAIN, 16));
 	
-		lblCtcSpeed.setBounds(364, 368, 129, 20);
+		lblCtcSpeed.setBounds(364, 377, 129, 20);
 		contentPane.add(lblCtcSpeed);
+		setpointSpeedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		setpointSpeedLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		setpointSpeedLabel.setBounds(521, 339, 44, 20);
+		setpointSpeedLabel.setBounds(521, 348, 44, 20);
 		contentPane.add(setpointSpeedLabel);
 		lblCtcAuthority.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		lblCtcAuthority.setBounds(364, 393, 142, 20);
+		lblCtcAuthority.setBounds(364, 402, 142, 20);
 		contentPane.add(lblCtcAuthority);
 		lblPowerInput.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		lblPowerInput.setBounds(364, 449, 178, 20);
+		lblPowerInput.setBounds(364, 458, 178, 20);
 		contentPane.add(lblPowerInput);
 		powerSpinner.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		powerSpinner.setBounds(481, 446, 84, 26);
+		powerSpinner.setBounds(481, 455, 84, 26);
 		contentPane.add(powerSpinner);
 		btnSendPowerCommand.setFont(new Font("Tahoma", Font.BOLD, 16));
-		btnSendPowerCommand.setBounds(364, 495, 220, 29);
+		btnSendPowerCommand.setBounds(364, 504, 220, 29);
 		stylizeButton(btnSendPowerCommand);
 		contentPane.add(btnSendPowerCommand);
 		
@@ -336,7 +363,7 @@ public class TrainModelNewGUI extends JFrame {
 		
 		btnServiceBrake.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnServiceBrake.setForeground(Color.BLACK);
-		btnServiceBrake.setBounds(670, 459, 220, 29);
+		btnServiceBrake.setBounds(670, 468, 220, 29);
 		stylizeToggleButton(btnServiceBrake);
 		contentPane.add(btnServiceBrake);
 		btnServiceBrake.addActionListener(new ActionListener()
@@ -347,34 +374,30 @@ public class TrainModelNewGUI extends JFrame {
 		  }
 		});
 		
-		JLabel leftDoorLabel = new JLabel("Left Door:");
 		leftDoorLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		leftDoorLabel.setBounds(660, 339, 129, 20);
+		leftDoorLabel.setBounds(660, 348, 129, 20);
 		contentPane.add(leftDoorLabel);
 		
-		JLabel rightDoorLabel = new JLabel("Right Door:");
 		rightDoorLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		rightDoorLabel.setBounds(660, 368, 129, 20);
+		rightDoorLabel.setBounds(660, 377, 129, 20);
 		contentPane.add(rightDoorLabel);
 		
-		JLabel lblLight = new JLabel("Light:");
 		lblLight.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblLight.setBounds(660, 393, 129, 20);
+		lblLight.setBounds(660, 402, 129, 20);
 		contentPane.add(lblLight);
 		
-		JLabel labelTemperature = new JLabel("Cabin Temperature:");
 		labelTemperature.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		labelTemperature.setBounds(660, 421, 154, 20);
+		labelTemperature.setBounds(660, 430, 154, 20);
 		contentPane.add(labelTemperature);
 		tempSpinner.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		tempSpinner.setBounds(818, 418, 75, 26);
+		tempSpinner.setBounds(818, 427, 75, 26);
 		//tempSpinner.setValue(70);
 		contentPane.add(tempSpinner);
 		btnEmergencyBrake.setFont(new Font("Tahoma", Font.BOLD, 16));
 		
 		btnEmergencyBrake.setForeground(Color.RED);
-		btnEmergencyBrake.setBounds(670, 495, 220, 29);
+		btnEmergencyBrake.setBounds(670, 504, 220, 29);
 		stylizeButton(btnEmergencyBrake);
 		contentPane.add(btnEmergencyBrake);
 		btnEmergencyBrake.addActionListener(new ActionListener()
@@ -386,23 +409,18 @@ public class TrainModelNewGUI extends JFrame {
 		});
 		
 		
-		
-		JLabel lblEngineFailureMode = new JLabel("Engine Failure");
 		lblEngineFailureMode.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblEngineFailureMode.setBounds(720, 110, 129, 20);
 		contentPane.add(lblEngineFailureMode);
 		
-		JLabel lblSignalFailure = new JLabel("Signal Failure");
 		lblSignalFailure.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblSignalFailure.setBounds(720, 158, 129, 20);
 		contentPane.add(lblSignalFailure);
 		
-		JLabel lblBrakeFailure = new JLabel("Brake Failure");
 		lblBrakeFailure.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblBrakeFailure.setBounds(720, 208, 129, 20);
 		contentPane.add(lblBrakeFailure);
 		
-		JPanel engineFailPanel = new JPanel();
 		engineFailPanel.setBounds(660, 100, 34, 31);
 		ImageIcon ledImage = new ImageIcon("greyStatusIcon.png");
 		JLabel ledImageLabel = new JLabel("", ledImage, JLabel.CENTER);
@@ -411,7 +429,6 @@ public class TrainModelNewGUI extends JFrame {
 		contentPane.add(ledImageLabel);
 		contentPane.add(engineFailPanel);
 		
-		JPanel signalFailPanel = new JPanel();
 		signalFailPanel.setBounds(660, 153, 34, 31);
 		ImageIcon ledImage2 = new ImageIcon("greyStatusIcon.png");
 		JLabel ledImageLabel2 = new JLabel("", ledImage2, JLabel.CENTER);
@@ -420,7 +437,6 @@ public class TrainModelNewGUI extends JFrame {
 		contentPane.add(ledImageLabel2);
 		contentPane.add(signalFailPanel);
 		
-		JPanel brakeFailPanel = new JPanel();
 		brakeFailPanel.setBounds(660, 203, 34, 31);
 		ImageIcon ledImageNew = new ImageIcon("greyStatusIcon.png");
 		JLabel ledImageLabel3 = new JLabel("", ledImageNew, JLabel.CENTER);
@@ -451,7 +467,7 @@ public class TrainModelNewGUI extends JFrame {
 		
 		JLabel lblKw = new JLabel("kW");
 		lblKw.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblKw.setBounds(574, 449, 34, 20);
+		lblKw.setBounds(574, 458, 34, 20);
 		contentPane.add(lblKw);
 		heightVal.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
@@ -475,103 +491,104 @@ public class TrainModelNewGUI extends JFrame {
 		
 		capacityVal.setBounds(154, 238, 69, 20);
 		contentPane.add(capacityVal);
+		
+		blockVal.setHorizontalAlignment(SwingConstants.RIGHT);
 		blockVal.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		
-		blockVal.setBounds(504, 125, 69, 20);
+		blockVal.setBounds(464, 125, 69, 20);
 		contentPane.add(blockVal);
+		
+		gradeVal.setHorizontalAlignment(SwingConstants.RIGHT);
 		gradeVal.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		
-		
-		gradeVal.setBounds(504, 150, 52, 20);
+		gradeVal.setBounds(481, 150, 52, 20);
 		contentPane.add(gradeVal);
 		
 		JLabel percent = new JLabel("%");
 		percent.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		percent.setBounds(557, 150, 34, 20);
 		contentPane.add(percent);
-		speedLimitVal.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		speedLimitVal.setBounds(504, 175, 69, 20);
+		speedLimitVal.setHorizontalAlignment(SwingConstants.RIGHT);
+		speedLimitVal.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		speedLimitVal.setBounds(464, 175, 69, 20);
 		contentPane.add(speedLimitVal);
 		
-		JLabel lblMph = new JLabel("mph");
-		lblMph.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblMph.setBounds(557, 175, 34, 20);
-		contentPane.add(lblMph);
+		gpsAntennaStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		gpsAntennaStatusLabel.setBounds(504, 219, 69, 20);
+		contentPane.add(gpsAntennaStatusLabel);
 		
-		JLabel lblOn = new JLabel("ON");
-		lblOn.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblOn.setBounds(504, 219, 69, 20);
-		contentPane.add(lblOn);
+		mboAntennaStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		mboAntennaStatusLabel.setBounds(504, 243, 69, 20);
+		contentPane.add(mboAntennaStatusLabel);
 		
-		JLabel label_11 = new JLabel("ON");
-		label_11.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		label_11.setBounds(504, 243, 69, 20);
-		contentPane.add(label_11);
-		
-		JLabel stationVal = new JLabel("Pioneer");
 		stationVal.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		stationVal.setBounds(204, 339, 69, 20);
+		stationVal.setBounds(204, 348, 69, 20);
 		contentPane.add(stationVal);
 		
-		JLabel timeVal = new JLabel("9:15");
 		timeVal.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		timeVal.setBounds(204, 368, 52, 20);
+		timeVal.setBounds(204, 377, 52, 20);
 		contentPane.add(timeVal);
 		
-		JLabel lblAm = new JLabel("AM");
 		lblAm.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblAm.setBounds(255, 368, 34, 20);
+		lblAm.setBounds(255, 377, 34, 20);
 		contentPane.add(lblAm);
 		
-		JLabel lblOpen = new JLabel("OPEN");
 		lblOpen.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblOpen.setBounds(818, 339, 69, 20);
+		lblOpen.setBounds(818, 348, 69, 20);
 		contentPane.add(lblOpen);
 		
-		JLabel lblClosed = new JLabel("CLOSED");
-		lblClosed.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblClosed.setBounds(818, 368, 69, 20);
-		contentPane.add(lblClosed);
+		rightDoorStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		rightDoorStatusLabel.setBounds(818, 377, 69, 20);
+		contentPane.add(rightDoorStatusLabel);
 		
-		JLabel lblOff = new JLabel("OFF");
-		lblOff.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblOff.setBounds(818, 393, 69, 20);
-		contentPane.add(lblOff);
 		
-		JLabel label_13 = new JLabel("20");
-		label_13.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		label_13.setBounds(204, 449, 69, 20);
-		contentPane.add(label_13);
+		lightStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lightStatusLabel.setBounds(818, 402, 69, 20);
+		contentPane.add(lightStatusLabel);
+		
+		
+		numPassengers.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		numPassengers.setBounds(204, 429, 69, 20);
+		contentPane.add(numPassengers);
 		
 		ImageIcon pineapple = new ImageIcon("pineapple_icon.png");
 		JLabel pineappleImageLabel = new JLabel("", pineapple, JLabel.CENTER);
 		pineappleImageLabel.setBounds(40, 480, 138, 76);
 		pineappleImageLabel.setIcon(pineapple);
 		contentPane.add(pineappleImageLabel);
+		authorityVal.setHorizontalAlignment(SwingConstants.RIGHT);
 		
-		JLabel label_14 = new JLabel("100");
-		label_14.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		label_14.setBounds(521, 393, 44, 20);
-		contentPane.add(label_14);
+		authorityVal.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		authorityVal.setBounds(521, 402, 44, 20);
+		contentPane.add(authorityVal);
 		
-		JLabel lblMi = new JLabel("mi");
-		lblMi.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblMi.setBounds(574, 393, 34, 20);
-		contentPane.add(lblMi);
+		authorityUnits.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		authorityUnits.setBounds(574, 402, 34, 20);
+		contentPane.add(authorityUnits);
 		
-		JLabel lblMph_1 = new JLabel("mph");
-		lblMph_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblMph_1.setBounds(574, 339, 34, 20);
-		contentPane.add(lblMph_1);
+		setpointSpeedUnits.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		setpointSpeedUnits.setBounds(574, 348, 34, 20);
+		contentPane.add(setpointSpeedUnits);
 		
-		JLabel ctcSpeedUnitsLabel = new JLabel("mph");
 		ctcSpeedUnitsLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		ctcSpeedUnitsLabel.setBounds(574, 368, 34, 20);
+		ctcSpeedUnitsLabel.setBounds(574, 377, 34, 20);
 		contentPane.add(ctcSpeedUnitsLabel);
+		
+		JLabel label = new JLabel("0");
+		label.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		label.setHorizontalAlignment(SwingConstants.RIGHT);
+		label.setBounds(521, 377, 44, 20);
+		contentPane.add(label);
+		
+		speedLimitUnitsLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		speedLimitUnitsLabel.setBounds(557, 175, 44, 20);
+		contentPane.add(speedLimitUnitsLabel);
 		
 	}
 	
+	/**
+	 * Created by Kevin Le to stylize buttons to all look the same
+	 * @param b
+	 */
 	public void stylizeButton(JButton b){
 		Border thickBorder = new LineBorder(Color.WHITE, 3);
     	b.setBorder(thickBorder);
@@ -581,6 +598,11 @@ public class TrainModelNewGUI extends JFrame {
 		b.setForeground(Color.WHITE);
 	}
 	
+	/**
+	 * Created by Kevin Le to stylize buttons to all look the same
+	 * Edited by me to allow for toggle buttons to be stylized
+	 * @param b
+	 */
 	public void stylizeToggleButton(JToggleButton b){
 		Border thickBorder = new LineBorder(Color.WHITE, 3);
     	b.setBorder(thickBorder);
