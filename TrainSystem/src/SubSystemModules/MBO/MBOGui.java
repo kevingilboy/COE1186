@@ -17,6 +17,12 @@ public class MBOGui extends JFrame implements ActionListener {
     private Font font;
     private MaterialButton generateButton;
     private JFileChooser fileChooser;
+    private MBOCore mbo;
+    private Object[][] trainData;
+    private JTable trainInfoTable;
+    private String[] trainInfoColumns;
+    private DefaultTableModel trainInfoTableModel, trainScheduleTableModel;
+    private JLabel pineapple, pineapple2;
 
 	public MBOGui() {
         init();
@@ -27,6 +33,7 @@ public class MBOGui extends JFrame implements ActionListener {
 		// initialize class attributes
 		this.font = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
 		fileChooser = new JFileChooser();
+		mbo = new MBOCore("demo");
 		//fileChooser.setForeground(Color.WHITE);
 
 		// initialize the jframe
@@ -36,6 +43,8 @@ public class MBOGui extends JFrame implements ActionListener {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		// set the icon
+		pineapple = new JLabel(new ImageIcon("pineapple_icon.png"));
+		pineapple2 = new JLabel(new ImageIcon("pineapple_icon.png"));
 		setIconImage((new ImageIcon("..\\..\\Shared\\static\\pineapple2.png")).getImage());
 
 		// create the infopanel
@@ -65,31 +74,34 @@ public class MBOGui extends JFrame implements ActionListener {
 		//searchBar.getDocument().addDocumentListener(new SearchListener());
 
         // create a table with train info
-		String[] trainInfoColumns = {"Train Name",
-			                         "Time Most Recent Signal Received",
-									 "Coordinates Received",
-									 "Calculated Location",
-									 "Calculated Velocity",
-									 "Transmitted Authority"};
-		Object[][] dummyData = {
+		trainInfoColumns = new String [] {"Train Name",
+			                "Time Most Recent Signal Received",
+						    "Coordinates Received",
+							"Calculated Location",
+							"Calculated Velocity",
+							"Transmitted Authority"};
+		this.trainData = mbo.getTrainData();
+		/*Object[][] dummyData = {
 			{"RED 1", "15:43:01", "(40.0 N, 17.0 W)", "RA4", "45 MPH", "7 mi"},
 			{"RED 2", "15:43:01", "(40.0 N, 17.0 W)", "RA4", "45 MPH", "7 mi"},
 			{"GREEN 1", "15:43:01", "(40.0 N, 17.0 W)", "RA4", "45 MPH", "7 mi"},
 			{"GREEN 2", "15:43:01", "(40.0 N, 17.0 W)", "RA4", "45 MPH", "7 mi"},
 			{"GREEN 3", "15:43:01", "(40.0 N, 17.0 W)", "RA4", "45 MPH", "7 mi"},
-		};
-		TableModel trainInfoTableModel = new DefaultTableModel(dummyData, trainInfoColumns) {
+		};*/
+		trainInfoTableModel = new DefaultTableModel(trainData, trainInfoColumns) {
     		public boolean isCellEditable(int row, int column) {
       			return false;
     		}
   		};
-		JTable trainInfoTable = new JTable(trainInfoTableModel);
+		trainInfoTable = new JTable(trainInfoTableModel);
 		trainInfoTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		trainInfoTable.setFillsViewportHeight(true);
-		JScrollPane scrollPane = new JScrollPane(trainInfoTable);
+	    JScrollPane scrollPane = new JScrollPane(trainInfoTable);
 
 		// create the train map
-		JLabel map = new JLabel(new ImageIcon("..\\..\\Shared\\static\\dummy_map.png"));
+		ImageIcon mapIcon = new ImageIcon("..\\..\\Shared\\static\\dummy_map.png");
+		mapIcon = new ImageIcon(mapIcon.getImage().getScaledInstance(349, 467, Image.SCALE_DEFAULT));
+		JLabel map = new JLabel(mapIcon);
 		
         // populate the information panel
 		GroupLayout infoPanelLayout = new GroupLayout(infoPanel);
@@ -98,18 +110,21 @@ public class MBOGui extends JFrame implements ActionListener {
 		infoPanelLayout.setAutoCreateGaps(true);
 		infoPanelLayout.setHorizontalGroup(infoPanelLayout.createSequentialGroup()
 				                                          .addGroup(infoPanelLayout.createParallelGroup()
-					                                                               .addComponent(searchBox)
-				                                                                   .addComponent(scrollPane))
+															                       .addComponent(this.timeBox, GroupLayout.Alignment.CENTER)
+																				   .addComponent(map))
 				                                          .addGroup(infoPanelLayout.createParallelGroup()
-															                       .addComponent(this.timeBox)
-																				   .addComponent(map)));
+					                                                               .addComponent(searchBox)
+				                                                                   .addComponent(scrollPane)
+																				   .addComponent(pineapple, GroupLayout.Alignment.TRAILING)));
         infoPanelLayout.setVerticalGroup(infoPanelLayout.createSequentialGroup()
 				                                        .addGroup(infoPanelLayout.createParallelGroup()
-					                                                             .addComponent(searchBox)
-					                                                             .addComponent(this.timeBox))
+					                                                             .addComponent(this.timeBox, GroupLayout.Alignment.CENTER)
+					                                                             .addComponent(searchBox))
 				                                        .addGroup(infoPanelLayout.createParallelGroup()
-															                     .addComponent(scrollPane)
-																				 .addComponent(map)));
+															                     .addComponent(map)
+															                     .addGroup(infoPanelLayout.createSequentialGroup()
+																										  .addComponent(scrollPane)
+				                                       													  .addComponent(pineapple))));
 	}
 	
 	private void initSchedulerPanel(JPanel schedulerPanel) {
@@ -129,7 +144,7 @@ public class MBOGui extends JFrame implements ActionListener {
 		                             {"Red 1", new String(), new String()}, 
 		                             {"Green 2", new String(), new String()}, 
 		                             {"Green 3", new String(), new String()}};
-		TableModel trainScheduleTableModel = new DefaultTableModel(trainTableData, trainTableHeaders) {
+		trainScheduleTableModel = new DefaultTableModel(trainTableData, trainTableHeaders) {
     		public boolean isCellEditable(int row, int column) {
       			return column != 0;
     		}
@@ -193,7 +208,8 @@ public class MBOGui extends JFrame implements ActionListener {
 														.addComponent(finalInputPanel))
 										.addGroup(layout.createParallelGroup()
 											            .addComponent(operatorTitle)
-														.addComponent(operatorScrollPane)));
+														.addComponent(operatorScrollPane)
+										.addComponent(pineapple2, GroupLayout.Alignment.TRAILING)));
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				                      .addGroup(layout.createParallelGroup()
 				                                      .addComponent(trainTitle)
@@ -201,7 +217,9 @@ public class MBOGui extends JFrame implements ActionListener {
 									  .addGroup(layout.createParallelGroup()
 											          .addComponent(trainScrollPane)
 												      .addComponent(operatorScrollPane))
-									  .addComponent(finalInputPanel));
+									  .addGroup(layout.createParallelGroup()
+									  	              .addComponent(finalInputPanel)
+									  	              .addComponent(pineapple2, GroupLayout.Alignment.TRAILING)));
 	}
 
     private class SearchListener implements DocumentListener {
@@ -274,6 +292,10 @@ public class MBOGui extends JFrame implements ActionListener {
 
 	public void update() {
 		this.timeBox.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+		this.trainData = mbo.getTrainData();
+		System.out.println(trainData[0][1]);
+		this.trainInfoTableModel.fireTableDataChanged();
+		this.trainInfoTable.repaint();
 	}
 
 	public static void main(String[] args) throws InterruptedException {
@@ -286,7 +308,7 @@ public class MBOGui extends JFrame implements ActionListener {
 		});
 		while (true) {
 			mboGui.update();
-			System.out.println(LocalDateTime.now().toString());
+			//System.out.println(LocalDateTime.now().toString());
 			try {
 			    Thread.sleep(100);
 			} catch (Exception ex) {
