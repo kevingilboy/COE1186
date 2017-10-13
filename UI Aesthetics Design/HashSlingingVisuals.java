@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridBagLayout;
 
 import javax.swing.UIManager;
 import javax.swing.*;
@@ -19,7 +20,7 @@ public class HashSlingingVisuals extends JFrame{
 	private JPanel mainPanel;
 
 	private JButton button1;
-	private boolean clicked = false;
+	private JButton button2;
 
 	public HashSlingingVisuals(){
 		initializeFrame();
@@ -27,9 +28,16 @@ public class HashSlingingVisuals extends JFrame{
 	}	
 
 	public void initializeButtons(){
-		button1 = new JButton("button 1");
+		button1 = new JButton("Normal Button");
+		button2 = new JButton("Critical Button");
+
 		stylizeBtn(button1);
-		frame.add(button1);
+		stylizeBtnCritical(button2);
+
+		button1.setBounds(0,0,button1.getWidth(),button1.getHeight());
+		button2.setBounds(button1.getWidth() + 10,0,button2.getWidth(),button2.getHeight());
+		mainPanel.add(button1);
+		mainPanel.add(button2);
 	}
 
 
@@ -43,12 +51,12 @@ public class HashSlingingVisuals extends JFrame{
 		Border buttonBorder 	= new LineBorder(new Color(20, 20, 20), 2);
 		int buttonInnerPadding 	= 20; 
 
-		Color defaultBgColor = new Color(50, 50, 50);
-		Color defaultTxtColor = Color.WHITE;
-		Color hoverBgColor = defaultBgColor;
-		Color hoverTxtColor = Color.GREEN;
-		Color pressedBgColor = Color.GREEN;
-		Color pressedTxtColor = new Color(20, 20, 20);
+		Color 	defaultBgColor 	= new Color(50, 50, 50),
+				defaultTxtColor = Color.WHITE,
+				hoverBgColor 	= Color.BLACK,
+				hoverTxtColor 	= Color.GREEN,
+				pressedBgColor 	= Color.GREEN,
+				pressedTxtColor = new Color(20, 20, 20);
 
 		b.setContentAreaFilled(false);
 		b.setOpaque(true);
@@ -69,8 +77,8 @@ public class HashSlingingVisuals extends JFrame{
 				b.setForeground(pressedTxtColor);
 			}
 			public void mouseReleased(MouseEvent e){
-				b.setBackground(defaultBgColor);
-				b.setForeground(defaultTxtColor);
+				b.setBackground(hoverBgColor);
+				b.setForeground(hoverTxtColor);
 			}
 			public void mouseClicked(MouseEvent e){}
 			public void mouseEntered(MouseEvent e){
@@ -78,6 +86,52 @@ public class HashSlingingVisuals extends JFrame{
 				b.setForeground(hoverTxtColor);
 			}
 			public void mouseExited(MouseEvent e){
+				b.setBackground(defaultBgColor);
+				b.setForeground(defaultTxtColor);
+			}
+		});
+	}
+
+	public void stylizeBtnCritical(JButton b){
+		Border buttonBorder 	= new LineBorder(new Color(100, 10, 0), 2);
+		int buttonInnerPadding 	= 20; 
+
+		Color 	defaultBgColor 	= Color.RED,
+				defaultTxtColor = Color.WHITE,
+				hoverBgColor 	= new Color(255, 100, 0),
+				hoverTxtColor 	= new Color(100, 0, 0),
+				pressedBgColor 	= Color.RED,
+				pressedTxtColor = Color.BLACK;
+
+		b.setContentAreaFilled(false);
+		b.setOpaque(true);
+		
+		b.setBackground(defaultBgColor);
+		b.setForeground(defaultTxtColor);
+    	b.setBorder(buttonBorder);
+		
+		b.setText((b.getText()).toUpperCase());
+		b.setFont(new Font("Roboto Condensed", Font.BOLD, 18));
+		// Correctly sizes a button to display its text content
+		b.setSize(	b.getPreferredSize().width + buttonInnerPadding,
+					b.getPreferredSize().height + buttonInnerPadding );
+
+		b.addMouseListener(new MouseListener() {
+			public void mousePressed(MouseEvent e){
+				b.setBackground(pressedBgColor);
+				b.setForeground(pressedTxtColor);
+			}
+			public void mouseReleased(MouseEvent e){
+				b.setBackground(hoverBgColor);
+				b.setForeground(hoverTxtColor);
+			}
+			public void mouseClicked(MouseEvent e){}
+			public void mouseEntered(MouseEvent e){
+				b.setBackground(hoverBgColor);
+				b.setForeground(hoverTxtColor);
+			}
+			public void mouseExited(MouseEvent e){
+				b.setBackground(defaultBgColor);
 				b.setForeground(defaultTxtColor);
 			}
 		});
@@ -97,6 +151,7 @@ public class HashSlingingVisuals extends JFrame{
 		frame.setIconImage(img.getImage());
 
 		mainPanel = new JPanel();
+		mainPanel.setLayout(null);
 		mainPanel.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		mainPanel.setBackground(new Color(30, 30, 30));
