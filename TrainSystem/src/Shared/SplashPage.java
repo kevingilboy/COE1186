@@ -67,7 +67,7 @@ public class SplashPage {
 		"java -jar MBO.jar",
 		};
 	
-	private String PICTURE ="icon.jpg";
+	private String PICTURE ="HSS_PrototypesBG.jpg";
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, IMAGE_WIDTH+LEFT_BAR_WIDTH, IMAGE_HEIGHT);
