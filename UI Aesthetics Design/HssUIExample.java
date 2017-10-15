@@ -34,7 +34,7 @@ public class HssUIExample extends JFrame{
 
 	public static void initializeButtons(){
 		button1 = new JButton("Button");
-		visualizer.stylizeBtn(button1);
+		visualizer.stylizeButton(button1);
 		button1.setBounds(0, 0, button1.getWidth(), button1.getHeight());
 
 		button1.addActionListener(new ActionListener() {
