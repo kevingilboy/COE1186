@@ -6,9 +6,11 @@ import java.awt.event.*;
 @SuppressWarnings("serial")
 public class HssUIExample extends JFrame{
 
+	/* Constants */
 	private static final int WINDOW_WIDTH 	= 1000;
 	private static final int WINDOW_HEIGHT 	= 800;
 
+	/* J-Components */
 	private static JFrame frame = new JFrame();
 	private static JPanel mainPanel;
 	private static JButton button1;
@@ -16,15 +18,14 @@ public class HssUIExample extends JFrame{
 	private static JLabel label2;
 	private static JLabel statusIcon1; 
 
+	/* Instantiate Visualization Class */
 	private static HssVisualizer visualizer = new HssVisualizer(frame);
 
+	/* Variables */
 	private static boolean statusOn = false;
 
-   /*
-	* Create the GUI window and set the look and feel
-	*/
+	/* Main Function */
 	public static void main(String[] args){
-
 		EventQueue.invokeLater(new Runnable() {
 			public void run(){
 				initializeGUI();
@@ -32,6 +33,7 @@ public class HssUIExample extends JFrame{
 		});
 	}
 
+	/* Create Buttons */
 	public static void initializeButtons(){
 		button1 = new JButton("Button");
 		visualizer.stylizeButton(button1);
@@ -40,7 +42,7 @@ public class HssUIExample extends JFrame{
 		button1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
 				int statusLightType;
-				if (statusOn){
+				if (statusOn){`
 					statusLightType = HssVisualizer.TYPE_GREEN_STATUS_ICON;
 				} else {
 					statusLightType = HssVisualizer.TYPE_GRAY_STATUS_ICON;
@@ -53,6 +55,7 @@ public class HssUIExample extends JFrame{
 		mainPanel.add(button1);
 	}
 
+	/* Create Labels */
 	public static void initializeLabels(){
 		label1 = new JLabel("Normal Label");
 		label2 = new JLabel("Header Label");
@@ -67,6 +70,7 @@ public class HssUIExample extends JFrame{
 		mainPanel.add(label2);
 	}
 
+	/* Create Status Icons */
 	public static void initializeStatusIcons(){
 		statusIcon1 = new JLabel();
 		
@@ -76,6 +80,7 @@ public class HssUIExample extends JFrame{
 		mainPanel.add(statusIcon1);
 	}
 
+	/* Initialize the GUI */
 	public static void initializeGUI(){
 		frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		mainPanel = new JPanel();
