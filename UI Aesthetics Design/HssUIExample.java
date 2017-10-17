@@ -42,7 +42,7 @@ public class HssUIExample extends JFrame{
 		button1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
 				int statusLightType;
-				if (statusOn){`
+				if (statusOn){
 					statusLightType = HssVisualizer.TYPE_GREEN_STATUS_ICON;
 				} else {
 					statusLightType = HssVisualizer.TYPE_GRAY_STATUS_ICON;
@@ -80,6 +80,26 @@ public class HssUIExample extends JFrame{
 		mainPanel.add(statusIcon1);
 	}
 
+	/* Create Drop-Down Boxes */
+	public static void initializeDropDownBoxes(){
+		String[] teamMembers = {"kevin", "nick", "dave", "mike", "jennifer"};
+
+		JComboBox teamList = new JComboBox(teamMembers);
+		teamList.setSelectedIndex(0);
+
+		mainPanel.add(teamList);
+	}
+
+	/* Create Menu */
+	public static void initializeMenu(){
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu = new JMenu("A Menu");
+		JMenuItem menuItem = new JMenuItem("A text-only menu item");
+		menu.add(menuItem);
+		menuBar.add(menu);
+		mainPanel.add(menuBar);
+	}
+
 	/* Initialize the GUI */
 	public static void initializeGUI(){
 		frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -92,6 +112,8 @@ public class HssUIExample extends JFrame{
 		initializeButtons();
 		initializeLabels();
 		initializeStatusIcons();
+		initializeDropDownBoxes();
+		initializeMenu();
 
 		frame.setVisible(true);
 	}

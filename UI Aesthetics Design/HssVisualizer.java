@@ -28,11 +28,10 @@ public class HssVisualizer extends JFrame{
 
 		if (type == TYPE_NORMAL_LABEL){
 			l.setForeground(Color.WHITE);
-			l.setFont(new Font("Roboto", Font.PLAIN, 18));
+			l.setFont(new Font("Raleway Light", Font.PLAIN, 18));
 		} else if (type == TYPE_HEADER_LABEL){
 			l.setForeground(Color.WHITE);
-			l.setFont(new Font("Roboto Condensed", Font.PLAIN, 34));
-			l.setText((l.getText()).toUpperCase());
+			l.setFont(new Font("Raleway Bold", Font.PLAIN, 30));
 		}
 
 		l.setSize(	l.getPreferredSize().width + labelPadding,
@@ -52,7 +51,7 @@ public class HssVisualizer extends JFrame{
 
 	/* Button style wrapper */
 	public void stylizeButton(JButton b){
-		b.setFont(new Font("Roboto Condensed", Font.PLAIN, 28 ));
+		b.setFont(new Font("Raleway", Font.ITALIC, 22 ));
 
     	b.setSize(	b.getPreferredSize().width,
 					b.getPreferredSize().height);
@@ -82,10 +81,15 @@ public class HssVisualizer extends JFrame{
 
 		try {
 		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Light.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/RobotoCondensed-Lightitalic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Raleway/Raleway-Regular.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Raleway/Raleway-Italic.ttf")));		    
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Raleway/Raleway-Light.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Raleway/Raleway-LightItalic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Raleway/Raleway-Bold.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Raleway/Raleway-BoldItalic.ttf")));
+		    System.out.println("Loaded custom font.");
 		} catch (IOException|FontFormatException e) {
-		    System.out.println("HssVisualizer Error: Cannot load custom font");
+		    System.out.println("HssVisualizer Error: Cannot load custom font.");
 		}
 
 		System.setProperty("awt.useSystemAAFontSettings","on");
