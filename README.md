@@ -11,7 +11,7 @@ Kevin Gilboy, Nick Petro, Kevin Le, Jennifer Patterson, Mike Kotcher, Dylan McGu
 4. **Train Model** - Jennifer Patterson
 5. **Train Controller** - Mike Kotcher
 6. **MBO** - Dylan McGuire
-7. **Dynamic Display** - TBD
+7. **Dynamic Display** - Kevin Le
 
 ### Folder Structure
 ##### Sub-System Modules:
@@ -19,8 +19,3 @@ Kevin Gilboy, Nick Petro, Kevin Le, Jennifer Patterson, Mike Kotcher, Dylan McGu
 
 ##### yUML Documentation:
 `TrainSystem / yUML / Class Diagrams / <module> / <module_diagram>.yuml`
-
-##### Swing UI Modernization with Material UI
-`Material UI for Swing / src / <component>.java`
-
-As GUI's are developed for each sub-module, components will be modified for look-and-feel (LAF) using a set of modernized components based on Google's *Material* style convention. These components are extension classes to the standard Swing JButton and container classes that should be simple to implement.
