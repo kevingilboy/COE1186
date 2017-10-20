@@ -14,5 +14,5 @@
 [TrackViewer| importTrack(); renderTrackLayout(); selectBlock(); currentBlock(); nextBlock(); previousBlock(); showBlockStaticInfo(); showBlockDynamicInfo(); correctFailure();]
 
 // Class Connections
-[Block]1..*-1[Track]
+[Block]1..*-++1[Track]
 [Track]0..*-1[TrackViewer]
