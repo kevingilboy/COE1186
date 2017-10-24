@@ -2,7 +2,7 @@
 public class TrainModelSystemActions {
 	
 	public static void runTrainModel () throws InterruptedException {
-        TrainModel trainModel = new TrainModel("GREEN", 1);
+        TrainModel trainModel = new TrainModel("GREEN", "Train 1");
         //Instantiate a GUI for this train
         TrainModelNewGUI trainModelGUI = trainModel.CreateNewGUI(trainModel);
         trainModel.showTrainGUI();
