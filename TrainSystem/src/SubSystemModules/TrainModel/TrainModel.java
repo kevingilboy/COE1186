@@ -101,8 +101,11 @@ public class TrainModel {
     private double slope;
     private double finalSpeed;
     private double trainAcceleration;
+    private Block prevBlockID;
+    private Block currentBlockID;
+    private Block nextBlockID;
     
-    public TrainModel (String line, String trainID) {
+    public TrainModel (String line, String trainID/*, Block currentBlockID*/) {
     	
     	this.trainActive = true;
     	this.trainIDStr = trainID;
@@ -115,8 +118,10 @@ public class TrainModel {
         this.trainWidth = TRAINWIDTH;
         
         // Track Information
-        //private Block currentBlock;
-        //private Block nextBlock;
+        this.prevBlockID = null;
+        //setting this for now until we figure out integration stuff
+        this.currentBlockID = null;
+        this.nextBlockID = null;
         this.lineColor = line;
         this.grade = 0;
         this.GPSAntenna = false;
@@ -157,6 +162,7 @@ public class TrainModel {
         this.slope = 0;
         this.finalSpeed = 0;
         this.trainAcceleration = 0;
+        
     	
     	this.trainModelGUI = null;
     }
@@ -177,7 +183,7 @@ public class TrainModel {
         return  trainModelGUI;  //Return the GUI object
     }
     
-    public void showTrainGUI() {
+    private void showTrainGUI() {
         //Make sure to set it visible//Initialize a JFrame to hold the GUI in (Since it is only a JPanel)
         this.trainModelGUI.setTitle("Train ID: " + this.trainIDStr);
         //trainModelFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -187,46 +193,47 @@ public class TrainModel {
     }
 
     
-    public void setValuesForDisplay(TrainModelNewGUI tmGUI) {
-    	 tmGUI.tempSpinner.setValue(this.temperature);
-         
-         this.powerIn = tmGUI.returnPowerInput();
-         
-         if(tmGUI.serviceBrakeStatus()) {	// if the brakes were applied (button pressed)
-        	 this.serviceBrake = true;
-         } else {
-        	 this.serviceBrake = false;
-         }
-         if(tmGUI.emerBrakeStatus()) {	// if the e brake was pushed (button pressed)
-        	 this.emerBrake = true;
-         } else {
-        	 this.emerBrake = false;
-         }
-
-         tmGUI.numCarsSpinner.setText(Integer.toString(this.trainCars));
-         tmGUI.heightVal.setText(Double.toString(truncateTo(this.trainHeight, 2)));
-         tmGUI.widthVal.setText(Double.toString(truncateTo(this.trainWidth, 2)));
-         tmGUI.lengthVal.setText(Double.toString(truncateTo(this.trainLength, 2)));
-         tmGUI.weightVal.setText(Double.toString(truncateTo(this.trainWeight, 2)));
-         tmGUI.capacityVal.setText(Integer.toString(this.trainCapacity));
-         tmGUI.gradeVal.setText(Double.toString(0.0));
-         tmGUI.setpointSpeedLabel.setText(Double.toString(truncateTo((this.currentSpeed*SECONDSTOHOURCONVERT/
-        		 METERSTOMILECONVERT), 2)));
-         
-         if (this.lineColor.equals("GREEN")) {
-        	 tmGUI.lblLine.setText(lineColor);
-        	 tmGUI.lblLine.setForeground(Color.GREEN);
-         } else {
-        	 tmGUI.lblLine.setText("RED");
-        	 tmGUI.lblLine.setForeground(Color.RED);
-         }
+    private void setValuesForDisplay(TrainModelNewGUI tmGUI) {
+		updateTrainValues();
+		tmGUI.tempSpinner.setValue(this.temperature);
+	 
+		this.powerIn = tmGUI.returnPowerInput();
+		 
+		if(tmGUI.serviceBrakeStatus()) {	// if the brakes were applied (button pressed)
+			this.serviceBrake = true;
+		} else {
+			this.serviceBrake = false;
+		}
+		if(tmGUI.emerBrakeStatus()) {	// if the e brake was pushed (button pressed)
+			this.emerBrake = true;
+		} else {
+			this.emerBrake = false;
+		}
+		
+		tmGUI.numCarsSpinner.setText(Integer.toString(this.trainCars));
+		tmGUI.heightVal.setText(Double.toString(truncateTo(this.trainHeight, 2)));
+		tmGUI.widthVal.setText(Double.toString(truncateTo(this.trainWidth, 2)));
+		tmGUI.lengthVal.setText(Double.toString(truncateTo(this.trainLength, 2)));
+		tmGUI.weightVal.setText(Double.toString(truncateTo(this.trainWeight, 2)));
+		tmGUI.capacityVal.setText(Integer.toString(this.trainCapacity));
+		tmGUI.gradeVal.setText(Double.toString(0.0));
+		tmGUI.setpointSpeedLabel.setText(Double.toString(truncateTo((this.currentSpeed*SECONDSTOHOURCONVERT/
+				METERSTOMILECONVERT), 2)));
+		 
+		if (this.lineColor.equals("GREEN")) {
+			tmGUI.lblLine.setText(lineColor);
+			tmGUI.lblLine.setForeground(Color.GREEN);
+		} else {
+			tmGUI.lblLine.setText("RED");
+			tmGUI.lblLine.setForeground(Color.RED);
+		}
     }
     
     /**
      * updateTrainValues updates all the dynamic data that the train model 'displays' (physical characteristics that the train
      * would dynamically update as a physical train
      */
-    public void updateTrainValues() {
+    private void updateTrainValues() {
     	// So far the values of the train are all hard coded EXCEPT the velocity and power
     	// Need to add functionality to output a velocity from a power input
     	// Step 1: input power and convert the power to a force based on the starting velocity
@@ -264,6 +271,8 @@ public class TrainModel {
     		this.trainAcceleration = TRAINMAXACCELERATION * 1;	// time elapsed (one second)
     	}
     	
+    	// this works because the train e brake and train service brake values are negative
+    	// and recalling physics 1, a negative acceleration is a deceleration.
     	if (emerBrake) {
     		this.trainAcceleration = (TRAINEBRAKE*1);
     	}
@@ -286,6 +295,8 @@ public class TrainModel {
     	
     }
     
+    
+    
     /**
      * truncateTo method is used to 'truncate' the double primitive values so that we aren't spamming the user
      * with crazy long decimal point numbers
@@ -294,7 +305,7 @@ public class TrainModel {
      * @param decimalPlaces
      * @return truncated number
      */
-    static double truncateTo( double unroundedNumber, int decimalPlaces ){
+    public static double truncateTo( double unroundedNumber, int decimalPlaces ){
         int truncatedNumberInt = (int)( unroundedNumber * Math.pow( 10, decimalPlaces ) );
         double truncatedNumber = (double)( truncatedNumberInt / Math.pow( 10, decimalPlaces ) );
         return truncatedNumber;

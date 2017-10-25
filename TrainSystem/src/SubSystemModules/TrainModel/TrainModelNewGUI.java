@@ -403,7 +403,7 @@ public class TrainModelNewGUI extends JFrame {
 		{
 		  public void actionPerformed(ActionEvent e)
 		  {
-			  emerBrake = !emerBrake;
+			  emerBrake = true;
 		  }
 		});
 		
