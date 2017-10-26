@@ -1,0 +1,57 @@
+@startuml
+class TrackControllers {
+  {field} +waysideControllers : <ArrayList> WaysideController[];
+  {field} -speed : int;
+  {field} -authority : int;
+  {method} +timeUpdate(int time); 
+  {method} +setSpeed(string trainName, int speed);
+  {method} +setAuthority(string trainName, int authority);
+  {method} +setStatus(string line, int blockId, string status);
+  {method} +setSwitchState(string line, int blockId, boolean switch); 
+  {method} +getLightState();
+  {method} +getSwitchState();
+  {method} +getCrossingState();
+}
+
+class WaysideController {
+  {field} -lightState : boolean;
+  {field} -switchState : boolean;
+  {field} -crossingState : bolean;
+  {field} -line : string;
+  {field} -section : string;
+  {field} -block : int;
+  {field} -status : string;
+  {field} -occupancy : boolean;
+  {field} -light : boolean;
+  {field} -switch : boolean;
+  {field} -crossing : boolean;
+  {method} -timeUpdate(int time);
+  {method} -guiUpdate();
+  {method} -setLightState(boolean light);
+  {method} -setSwitchState(boolean switch);
+  {method} -setCrossingState(boolean crossing);
+}
+
+class WaysideControllerGUI {
+  {field} line : string;
+  {field} section : string;
+  {field} block : int;
+  {field} plcPath : string;
+  {method} displayInfo(string line, string section, int block);
+  {method} getSelectionInfo();
+}
+
+class PLC {
+  {field} lightLogic : string; 
+  {field} switchLogic : string; 
+  {field} crossingLogic : string;
+  {method} parsePLC(string path); 
+  {method} updatePLC(string lightLogic, string switchLogic, string crossingLogic);
+  {method} runPLC(boolean occupancy);
+}
+
+TrackControllers --> "1..*" WaysideController
+WaysideController -- WaysideControllerGUI
+WaysideController *-- "1" PLC
+
+@enduml
