@@ -1,0 +1,6 @@
+[MBO Analyst]-(View Data for Specifc Trains), [MBO Analyst]-(View Data for All Trains)
+[Train Controller]-(Get Authority), [Train Controller]-(Get Safe Braking Distance)
+(Get Safe Braking Distance)>(Calculate Safe Braking Distance)
+(Get Authority)>(Calculate Authority)
+[Scheduler]-(Create Train Schedule)
+(Create Train Schedule)>(Calculate Safe Braking Distance)

@@ -1,0 +1,63 @@
+------------------------------
+MBO_GUI
+------------------------------
+scheduler: Scheduler
+authorityGenerator: AuthorityGenerator
+mode: boolearn
+------------------------------
+getTrainsByFilter()
+switchMode()
+downloadSchedule()
+inputOperators()
+inputTrains()
+inputThroughput()
+
+------------------------------
+Scheduler
+------------------------------
+operators: Operator[]
+trains: TrainSchedule[]
+throughput: double
+------------------------------
+addOperators()
+addTrains()
+generateSchedule()
+
+------------------------------
+AuthorityGenerator
+------------------------------
+trains: TrainInfo[]
+trackInfo: TrackInfo
+authorities: double[]
+------------------------------
+(double, double) getPositionFromTrain(string name)
+getPositions()
+setAuthorityForTrain
+setAuthorities
+getAuthorityForTrain(string name, double)
+getAuthorities()
+getInfoAboutTrain()
+getAllTrainInfo()
+
+
+------------------------------
+TrainInfo
+------------------------------
+name: string
+position: (double, double)
+lastPosition: (double, double)
+lastAuthority: double
+------------------------------
+double getVelocity()
+
+------------------------------
+TrainSchedule (private)
+------------------------------
+
+------------------------------
+OperatorSchedule (private)
+------------------------------
+name
+startTime
+stopTime
+------------------------------

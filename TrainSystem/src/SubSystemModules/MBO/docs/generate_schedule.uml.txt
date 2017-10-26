@@ -1,0 +1,6 @@
+@startuml
+MBOGui->MBOScheduler: updateTrainSchedules()
+MBOGui->MBOScheduler: updateOperatorSchedules()
+MBOGui->MBOScheduler: generateSchedules()
+MBOScheduler->MBOGui: boolean scheduleCreatedSuccessfully
+@enduml

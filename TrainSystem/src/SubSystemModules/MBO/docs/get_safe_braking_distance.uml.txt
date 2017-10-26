@@ -1,0 +1,4 @@
+@startuml
+TrainController->MBOCore: getSafeBrakingDistance(String trainID)
+MBOCore-->TrainController: double safeBrakingDistance
+@enduml
