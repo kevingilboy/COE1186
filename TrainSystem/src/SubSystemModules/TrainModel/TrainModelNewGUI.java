@@ -38,82 +38,85 @@ public class TrainModelNewGUI extends JFrame {
 	private int setPowerIn;
 	private boolean serviceBrake = false;
 	private boolean emerBrake = false;
-	
-	JMenu mnFile = new JMenu("File");
-	JMenu mnSelectTrain = new JMenu("Select Train");
-	JMenu mnHelp = new JMenu("Help");
-	
-	JLabel lblSpecifications = new JLabel("Train Specifications");
-	JLabel lblTrackInformation = new JLabel("Track Information");
-	JLabel lblFailureModeActivation = new JLabel("Failure Mode Activation");
-	JLabel lblOnboardTemperature = new JLabel("Train Operations");
-	JLabel lblSpeedauthority = new JLabel("Speed/Authority");
-	JLabel lblStationControl = new JLabel("Station Control");
 
-	JLabel lblHeight = new JLabel("Height:");
-	JLabel lblWeight = new JLabel("Weight:");
-	JLabel lblLength = new JLabel("Length:");
-	JLabel lblWidth = new JLabel("Width:");
-	JLabel lblOfCars = new JLabel("# of Cars:");
-	JLabel lblCapacity = new JLabel("Capacity:");
-	JLabel lblBlock = new JLabel("Block:");
-	JLabel lblGrade = new JLabel("Grade:");
-	JLabel lblSpeedLimit = new JLabel("Speed Limit:");
-	JLabel lblGpsAntenna = new JLabel("GPS Antenna:");
-	JLabel lblMboAntenna = new JLabel("MBO Antenna:");
-	JLabel lblNextStation = new JLabel("Next Station:");
-	JLabel lblTimeOfArrival = new JLabel("Time of Arrival:");
-	JLabel lblStatus = new JLabel("Status:");
-	JLabel passengersEnRoute = new JLabel("Passengers:");
-	JLabel lblCurrentSpeed = new JLabel("Setpoint Speed:");
-	JLabel lblCtcSpeed = new JLabel("CTC Speed:");
-	JLabel lblCtcAuthority = new JLabel("CTC Authority:");
-	JLabel lblPowerInput = new JLabel("Power:");
-	JLabel leftDoorLabel = new JLabel("Left Door:");
-	JLabel rightDoorLabel = new JLabel("Right Door:");
-	JLabel lblLight = new JLabel("Light:");
-	JLabel labelTemperature = new JLabel("Cabin Temperature:");
-	JLabel lblEngineFailureMode = new JLabel("Engine Failure");
-	JLabel lblSignalFailure = new JLabel("Signal Failure");
-	JLabel lblBrakeFailure = new JLabel("Brake Failure");
-	JPanel engineFailPanel = new JPanel();
-	JPanel signalFailPanel = new JPanel();
-	JPanel brakeFailPanel = new JPanel();
+	private JLabel lblSpecifications = new JLabel("Train Specifications");
+	private JLabel lblTrackInformation = new JLabel("Track Information");
+	private JLabel lblFailureModeActivation = new JLabel("Failure Mode Activation");
+	private JLabel lblOnboardTemperature = new JLabel("Train Operations");
+	private JLabel lblSpeedauthority = new JLabel("Speed/Authority");
+	private JLabel lblStationControl = new JLabel("Station Control");
+
+	private JLabel lblHeight = new JLabel("Height:");
+	private JLabel lblWeight = new JLabel("Weight:");
+	private JLabel lblLength = new JLabel("Length:");
+	private JLabel lblWidth = new JLabel("Width:");
+	private JLabel lblOfCars = new JLabel("# of Cars:");
+	private JLabel lblCapacity = new JLabel("Capacity:");
+	private JLabel lblBlock = new JLabel("Block:");
+	private JLabel lblGrade = new JLabel("Grade:");
+	private JLabel lblSpeedLimit = new JLabel("Speed Limit:");
+	private JLabel lblGpsAntenna = new JLabel("GPS Antenna:");
+	private JLabel lblMboAntenna = new JLabel("MBO Antenna:");
+	private JLabel lblNextStation = new JLabel("Next Station:");
+	private JLabel lblTimeOfArrival = new JLabel("Time of Arrival:");
+	private JLabel lblStatus = new JLabel("Status:");
+	private JLabel passengersEnRoute = new JLabel("Passengers:");
+	private JLabel lblCurrentSpeed = new JLabel("Setpoint Speed:");
+	private JLabel lblCtcSpeed = new JLabel("CTC Speed:");
+	private JLabel lblCtcAuthority = new JLabel("CTC Authority:");
+	private JLabel lblPowerInput = new JLabel("Power:");
+	private JLabel leftDoorLabel = new JLabel("Left Door:");
+	private JLabel rightDoorLabel = new JLabel("Right Door:");
+	private JLabel lblLight = new JLabel("Light:");
+	private JLabel labelTemperature = new JLabel("Cabin Temperature:");
+	private JLabel lblEngineFailureMode = new JLabel("Engine Failure");
+	private JLabel lblSignalFailure = new JLabel("Signal Failure");
+	private JLabel lblBrakeFailure = new JLabel("Brake Failure");
+	private JLabel lblActualAuthority = new JLabel("Actual Authority:");
+	private JLabel actualAuthorityUnits = new JLabel("mi");
+	private JLabel authorityUnits = new JLabel("mi");
+	private JLabel setpointSpeedUnits = new JLabel("mph");
+	private JLabel ctcSpeedUnitsLabel = new JLabel("mph");
 	
-	JLabel gpsAntennaStatusLabel = new JLabel("ON");
-	JLabel mboAntennaStatusLabel = new JLabel("ON");
-	JLabel stationVal = new JLabel("Pioneer");
-	JLabel rightDoorStatusLabel = new JLabel("CLOSED");
-	JLabel timeVal = new JLabel("9:15");
-	JLabel lblAm = new JLabel("AM");
-	JLabel lblOpen = new JLabel("OPEN");
-	JLabel lightStatusLabel = new JLabel("OFF");
-	JLabel numPassengers = new JLabel("20");
-	JLabel authorityVal = new JLabel("100");
-	JLabel authorityUnits = new JLabel("mi");
-	JLabel setpointSpeedUnits = new JLabel("mph");
-	JLabel ctcSpeedUnitsLabel = new JLabel("mph");
-	JLabel speedLimitUnitsLabel = new JLabel("mph");
+	public JPanel engineFailPanel = new JPanel();
+	public JPanel signalFailPanel = new JPanel();
+	public JPanel brakeFailPanel = new JPanel();
+	public JMenu mnFile = new JMenu("File");
+	public JMenu mnSelectTrain = new JMenu("Select Train");
+	public JMenu mnHelp = new JMenu("Help");
 	
-	JLabel lblLine = new JLabel("");
-	JLabel heightVal = new JLabel("");
-	JLabel weightVal = new JLabel("");
-	JLabel lengthVal = new JLabel("");
-	JLabel widthVal = new JLabel("");
-	JLabel capacityVal = new JLabel("");
-	JLabel blockVal = new JLabel("A2");
-	JLabel gradeVal = new JLabel("");
-	JLabel speedLimitVal = new JLabel("");
-	JLabel arrivalStatusLabel = new JLabel("ARRIVING");
+	public JLabel gpsAntennaStatusLabel = new JLabel("ON");
+	public JLabel mboAntennaStatusLabel = new JLabel("ON");
+	public JLabel stationVal = new JLabel("Pioneer");
+	public JLabel rightDoorStatusLabel = new JLabel("CLOSED");
+	public JLabel timeVal = new JLabel("9:15");
+	public JLabel lblAm = new JLabel("AM");
+	public JLabel leftDoorStatusLabel = new JLabel("OPEN");
+	public JLabel lightStatusLabel = new JLabel("OFF");
+	public JLabel numPassengers = new JLabel("20");
+	public JLabel authorityVal = new JLabel("100");
+	public JLabel actualAuthorityVal = new JLabel("100");
 	
-	JButton btnSendPowerCommand = new JButton("Set Power Input");
-	JButton btnEmergencyBrake = new JButton("Emergency Brake");
-	JToggleButton btnServiceBrake = new JToggleButton("Service Brake");
+	public JLabel lblLine = new JLabel("");
+	public JLabel heightVal = new JLabel("");
+	public JLabel weightVal = new JLabel("");
+	public JLabel lengthVal = new JLabel("");
+	public JLabel widthVal = new JLabel("");
+	public JLabel capacityVal = new JLabel("");
+	public JLabel blockVal = new JLabel("A2");
+	public JLabel gradeVal = new JLabel("");
+	//JLabel speedLimitVal = new JLabel("");
+	public JLabel arrivalStatusLabel = new JLabel("ARRIVING");
+	public JLabel setpointSpeedLabel = new JLabel("");
+	
+	public JButton btnSendPowerCommand = new JButton("Set Power Input");
+	public JButton btnEmergencyBrake = new JButton("Emergency Brake");
+	public JToggleButton btnServiceBrake = new JToggleButton("Service Brake");
 	
 	public JLabel numCarsSpinner = new JLabel();
 	public JSpinner tempSpinner = new JSpinner();
-	JLabel setpointSpeedLabel = new JLabel("");
-	JSpinner powerSpinner = new JSpinner();
+	
+	public JSpinner powerSpinner = new JSpinner();
 	
 	
 	// The instance of the TrainModel class we will use to go between the back end elements
@@ -290,17 +293,13 @@ public class TrainModelNewGUI extends JFrame {
 		
 		lblGrade.setBounds(364, 150, 69, 20);
 		contentPane.add(lblGrade);
-		lblSpeedLimit.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		
-		lblSpeedLimit.setBounds(364, 175, 129, 20);
-		contentPane.add(lblSpeedLimit);
+
 		lblGpsAntenna.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		
-		lblGpsAntenna.setBounds(364, 219, 129, 20);
+		lblGpsAntenna.setBounds(364, 175, 129, 20);
 		contentPane.add(lblGpsAntenna);
 		lblMboAntenna.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		lblMboAntenna.setBounds(364, 243, 129, 20);
+		lblMboAntenna.setBounds(364, 199, 129, 20);
 		contentPane.add(lblMboAntenna);
 		lblNextStation.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
@@ -404,7 +403,7 @@ public class TrainModelNewGUI extends JFrame {
 		{
 		  public void actionPerformed(ActionEvent e)
 		  {
-			  emerBrake = !emerBrake;
+			  emerBrake = true;
 		  }
 		});
 		
@@ -507,17 +506,17 @@ public class TrainModelNewGUI extends JFrame {
 		percent.setBounds(557, 150, 34, 20);
 		contentPane.add(percent);
 		
-		speedLimitVal.setHorizontalAlignment(SwingConstants.RIGHT);
+		/*speedLimitVal.setHorizontalAlignment(SwingConstants.RIGHT);
 		speedLimitVal.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		speedLimitVal.setBounds(464, 175, 69, 20);
-		contentPane.add(speedLimitVal);
+		contentPane.add(speedLimitVal);*/
 		
 		gpsAntennaStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		gpsAntennaStatusLabel.setBounds(504, 219, 69, 20);
+		gpsAntennaStatusLabel.setBounds(504, 175, 69, 20);
 		contentPane.add(gpsAntennaStatusLabel);
 		
 		mboAntennaStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		mboAntennaStatusLabel.setBounds(504, 243, 69, 20);
+		mboAntennaStatusLabel.setBounds(504, 199, 69, 20);
 		contentPane.add(mboAntennaStatusLabel);
 		
 		stationVal.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -532,9 +531,9 @@ public class TrainModelNewGUI extends JFrame {
 		lblAm.setBounds(255, 377, 34, 20);
 		contentPane.add(lblAm);
 		
-		lblOpen.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblOpen.setBounds(818, 348, 69, 20);
-		contentPane.add(lblOpen);
+		leftDoorStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		leftDoorStatusLabel.setBounds(818, 348, 69, 20);
+		contentPane.add(leftDoorStatusLabel);
 		
 		rightDoorStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		rightDoorStatusLabel.setBounds(818, 377, 69, 20);
@@ -579,9 +578,18 @@ public class TrainModelNewGUI extends JFrame {
 		label.setBounds(521, 377, 44, 20);
 		contentPane.add(label);
 		
-		speedLimitUnitsLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		speedLimitUnitsLabel.setBounds(557, 175, 44, 20);
-		contentPane.add(speedLimitUnitsLabel);
+
+		lblActualAuthority.setBounds(364, 429, 142, 20);
+		contentPane.add(lblActualAuthority);
+		
+		actualAuthorityVal.setHorizontalAlignment(SwingConstants.RIGHT);
+		actualAuthorityVal.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		actualAuthorityVal.setBounds(521, 429, 44, 20);
+		contentPane.add(actualAuthorityVal);
+		
+		actualAuthorityUnits.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		actualAuthorityUnits.setBounds(574, 429, 34, 20);
+		contentPane.add(actualAuthorityUnits);
 		
 	}
 	
