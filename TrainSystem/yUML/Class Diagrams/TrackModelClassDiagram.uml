@@ -1,0 +1,103 @@
+@startuml
+
+title Track Model Class Diagram
+'skinparam backgroundColor transparent'
+skinparam classBackgroundColor #e6ffcc
+skinparam classBorderColor 	#049595
+skinparam packageBorderCOlor  #049595
+skinparam arrowColor #006666
+
+package "Shared"{
+    interface Module{
+        -timeUpdate(SimTime)
+    }
+}
+
+class TrackModel {
+    +heated : boolean
+    -railStatus: boolean
+    -trackCircuitStatus: boolean
+    -powerStatus: boolean
+    -Blocks: ArrayList<Block>
+    +getRailStatus()
+    +getPowerStatus()
+    +getTrackCircuitStatus()
+    +getBlock(int)
+    +getOccupiedBlock()
+    +getNextBlock(int)
+    +getPreviousBlock(int)
+}
+
+class Block {
+    -line : string
+    -ID : int
+    ..
+    -speedLimit : double
+    -elevation : double
+    -cumElevation : double
+    -direction : int
+    -length : double
+    -underground : boolean
+    -crossing : boolean
+    -station : Station
+    -switch : Switch
+    -occupied : boolean
+    __
+    +getBlockSpeedLimit()
+    +getBlockElevation()
+    +getBlockCumElevation()
+    +getBlockDirection()
+    +getBlockLength()
+    +getBlockSwitch()
+    +getBlockUndergroundState()
+    +getBlockCrossingState()
+    +getBlockStation()
+    +getBlockOccupancy()
+    ..
+    +setBlockOccupancy(boolean)
+}
+
+class Switch{
+    -state : boolean
+    -head : boolean
+    -portNorm : int
+    -portAlt : int
+    +getSwitchState()
+    +getSwitchHead()
+    +getSwitchPortNorm()
+    +getSwitchPortAlt()
+    +setBlockSwitchState(boolean)
+}
+
+class Station{
+    -ID : string
+    -location : Block
+    -doorside : boolean
+    +getStationID()
+    +getStationLocation()
+    +getStationDoorside()
+}
+
+class TrackModelGUI{
+    -currentBlock : Block
+    +importTrack(string)
+    +displayBlockInfo(Block)    
+    +setCurrentBlock(Block)
+    +nextBlock()
+    +previousBlock()
+    +showRailStatus()
+    +showPowerStatus()
+    +showTrackCircuitStatus()
+    +setRailFailure()
+    +setTrackCircuitFailure()
+    +setPowerFailure()
+    +renderTrackView()
+}
+
+Module <|-- TrackModel : implements
+TrackModel - TrackModelGUI
+Block "1..*"-* TrackModel
+Switch "0..1"-* Block
+Station "0..1"--* Block
+
+@enduml

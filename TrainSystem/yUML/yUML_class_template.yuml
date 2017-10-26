@@ -1,7 +1,0 @@
-// Example Class Diagram
-// Generate diagram from this code at www.yUML.me
-
-[Class1|field1:string;field2:int|doShiz()]<>-orders*>[Class2|field1:string;field2:int|doShiz()], 
-[Thing1]++-0..*>[Thing2],
-[Thing2]->[Class2], [Thing3]<->[Class1],
-[Thing3]-[note:Note{bg:palegreen}],
