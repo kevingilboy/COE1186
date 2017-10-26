@@ -73,6 +73,10 @@ public class HssVisualizer extends JFrame{
 		frame.setIconImage(img.getImage());
 
 		try {
+			UIManager.put("nimbusBase", Color.BLUE);
+			UIManager.put("nimbusBlueGrey", Color.WHITE);
+			UIManager.put("control", Color.YELLOW);
+
 			String laf = "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel";
 			UIManager.setLookAndFeel(laf);
 		} catch(Throwable e) {

@@ -1,0 +1,30 @@
+@startuml
+
+title Track Model Use Case Diagram
+'skinparam backgroundColor transparent'
+skinparam usecaseBackgroundColor #e6ffcc
+skinparam usecaseBorderColor 	#049595
+skinparam actorBorderColor 	#049595
+skinparam packageBorderCOlor  #049595
+skinparam arrowColor #006666
+
+:Dispatcher / CTC: as d
+:Track Controller: as tkc
+:Train Model: as tnm
+
+rectangle TrackModelGUI{
+	(Import Track Layout)
+	(View Block Attributes)
+	(View Track Failures)
+	(View Block Occupancy)
+	(View Light Status)
+}
+
+d --> (Import Track Layout)
+tkc ---> (View Block Attributes)
+tkc ---> (View Track Failures)
+tkc ---> (View Block Occupancy)
+tkc ---> (View Light Status)
+tnm ---> (View Block Attributes)
+
+@enduml
