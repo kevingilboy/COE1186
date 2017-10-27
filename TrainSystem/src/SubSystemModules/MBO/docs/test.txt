@@ -1,0 +1,4 @@
+@startuml
+MBOGui->MBOCore: getTrainData(String regex)
+MBOCore-->MBOGui: Object[][] trainData
+@enduml

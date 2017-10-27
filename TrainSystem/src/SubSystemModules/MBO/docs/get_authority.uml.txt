@@ -1,0 +1,4 @@
+@startuml
+TrainController->MBOCore: getAuthority(String)
+MBOCore-->TrainController: double authority
+@enduml

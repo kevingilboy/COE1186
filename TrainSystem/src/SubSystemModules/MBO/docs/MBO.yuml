@@ -1,0 +1,12 @@
+%2F%2F Cool Class Diagram, 
+[MBOCore|time:LocalDateTime|+getTrainData():Object［］［］;+getAuthority(String):double;+getSafeBrakingDistance(String):double;+updateTime();-updateTrainInfo();-calculateAuthority():double［2］;-calculateSafeBrakingDistance():double]
+[MBOGui||display()]
+[MBOScheduler|date:String;desiredThroughput:int|+updateTrainSchedules();+updateOperatorSchedules();+generateSchedule(String filename)]
+[TrainInfo|name:string;position:double［2］;timeSignalReceived:LocalDateTime;previousPosition:double［2］;timePreviousSignalReceived:LocalDateTime;velocity:double［2］;speed:double;authority:double;timeSignalTransmitted:LocalDateTime|calculateVelocity():void;updateLatestSignal():void]
+[BlockInfo|section:char;number:int;length:double;grade:double;speedLimit:int;infrastructre:String;elevation:double;cumulativeElevation:double]
+[OperatorSchedule|name:String;startTime:LocalDateTime;stopTime:LocalDateTime]
+[TrainSchedule|name:String;startPosition:double［2］;startTime:LocalDateTime;stopPosition:double［2］;stopTime:LocalDateTime]
+
+[MBOGui]-1>[MBOCore], [MBOGui]-1>[MBOScheduler]
+[MBOCore]-1..>[TrainInfo], [MBOCore]-1..>[BlockInfo]
+[MBOScheduler]-1..>[TrainSchedule], [MBOScheduler]-1..>[OperatorSchedule]

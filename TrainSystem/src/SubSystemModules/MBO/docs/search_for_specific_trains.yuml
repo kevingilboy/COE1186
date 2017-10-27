@@ -1,0 +1,4 @@
+title Search For Specific Trains
+
+MBOGui->MBOCore: getTrainData(String regex)
+MBOCore-->MBOGui: Object[][] trainData
