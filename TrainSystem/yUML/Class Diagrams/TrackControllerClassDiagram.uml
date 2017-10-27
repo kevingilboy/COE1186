@@ -10,7 +10,6 @@ class TrackControllers {
 	{field} + waysideControllers : ArrayList <WaysideController>[]
 	{field} + trkmdl : TrackModel
 	__
-    {method} + dispatchTrainToBlock(String,String,int)
 	{method} + suggestTrainSetpointSpeed(string trainName, int speed)
 	{method} + transmitCtcAuthority(string trainName, int authority)
 	{method} + recieveBlockInfo(string line, int blockId) : Block
@@ -42,9 +41,9 @@ class WaysideController {
 	{field} - crossing : boolean
 	__
 	{method} - timeUpdate(int time)
-		'calls runPLC(), guiUpdate(), transmit...State()
+		'calls runPLC( ), guiUpdate( ), transmit...State( )
 	{method} - guiUpdate()
-		'calls GUI.displayInfo()
+		'calls GUI.displayInfo( )
 	..
 	{method} - recieveBlockInfo(string line, int blockId) : Block
 	{method} - transmitLightState(string line, int blockId, boolean light)
@@ -61,9 +60,11 @@ class WaysideControllerGUI {
 	{method} - displayInfo()
 		'updates all values on gui
 	{method} - getBlockInfo(string line, int blockId) : Block
-		'calls waysideController.recieveBlockInfo(), displayInfo()
+		'calls waysideController.recieveBlockInfo( ), displayInfo( )
 	{method} - uploadPLC()
-		'calls PLC.parsePLC(string path) 
+		'calls PLC.parsePLC(string path)
+	{method} - runPLC(boolean occupancy)
+		'update states using PLC.logic
 }
 
 class PLC {
@@ -72,10 +73,7 @@ class PLC {
 	{field} - crossingLogic : string
 	__
 	{method} - parsePLC(string path)
-		'parses and calls updatePLC
-	{method} - updatePLC(string lightLogic, string switchLogic, string crossingLogic)
-	{method} - runPLC(boolean occupancy)
-		'returns lightStatus, switchStatus, crossingStatus
+		'parses and updates logic values
 }
 
 TrackControllers -down-> "1..4" WaysideController
