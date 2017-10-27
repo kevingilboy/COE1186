@@ -1,56 +1,67 @@
 @startuml
 class TrackControllers {
-  {field} +waysideControllers : <ArrayList> WaysideController[];
-  {field} -speed : int;
-  {field} -authority : int;
-  {method} +timeUpdate(int time); 
-  {method} +setSpeed(string trainName, int speed);
-  {method} +setAuthority(string trainName, int authority);
-  {method} +setStatus(string line, int blockId, string status);
-  {method} +setSwitchState(string line, int blockId, boolean switch); 
-  {method} +getLightState();
-  {method} +getSwitchState();
-  {method} +getCrossingState();
+	{field} + waysideControllers : ArrayList <WaysideController>[];
+	{field} + trkmdl : TrackModel();
+	__
+	{method} + transmitSpeed(string trainName, int speed);
+	{method} + transmitAuthority(string trainName, int authority);
+	{method} + transmitSwitchState(string line, int blockId, boolean switch);
+	{method} + recieveBlockStatus(string line, int blockId, string status);
+	..
+	{method} + updateTime(int time);
+	{method} - initializeWaysides(); 
+}
+
+class TrackControllersGUI {
+	{field} - waysideIndex : int;
+	__
+	{method} - openWaysideGui(int waysideIndex);
 }
 
 class WaysideController {
-  {field} -lightState : boolean;
-  {field} -switchState : boolean;
-  {field} -crossingState : bolean;
-  {field} -line : string;
-  {field} -section : string;
-  {field} -block : int;
-  {field} -status : string;
-  {field} -occupancy : boolean;
-  {field} -light : boolean;
-  {field} -switch : boolean;
-  {field} -crossing : boolean;
-  {method} -timeUpdate(int time);
-  {method} -guiUpdate();
-  {method} -setLightState(boolean light);
-  {method} -setSwitchState(boolean switch);
-  {method} -setCrossingState(boolean crossing);
+	{field} - trkmdl : TrackModel();
+	{field} - line : string;
+	{field} - section : string;
+	{field} - blockId : int;
+	{field} - lightState : boolean;
+	{field} - switchState : boolean;
+	{field} - crossingState : bolean;
+	{field} - status : string;
+	{field} - occupancy : boolean;
+	{field} - light : boolean;
+	{field} - switch : boolean;
+	{field} - crossing : boolean;
+	__
+	{method} - timeUpdate(int time);
+	{method} - guiUpdate();
+	..
+	{method} - transmitLightState(string line, int blockId, boolean light); 
+	{method} - transmitCrossingState(string line, int blockId, boolean crossing);
+	{method} - transmitSwitchState(string line, int blockId, boolean switch);
 }
 
 class WaysideControllerGUI {
-  {field} line : string;
-  {field} section : string;
-  {field} block : int;
-  {field} plcPath : string;
-  {method} displayInfo(string line, string section, int block);
-  {method} getSelectionInfo();
+	{field} line : string;
+	{field} section : string;
+	{field} blockId : int;
+	{field} plcPath : string;
+	__
+	{method} displayInfo(string line, string section, int block);
+	{method} getSelectionInfo(string line, int blockId);
 }
 
 class PLC {
-  {field} lightLogic : string; 
-  {field} switchLogic : string; 
-  {field} crossingLogic : string;
-  {method} parsePLC(string path); 
-  {method} updatePLC(string lightLogic, string switchLogic, string crossingLogic);
-  {method} runPLC(boolean occupancy);
+	{field} lightLogic : string; 
+	{field} switchLogic : string; 
+	{field} crossingLogic : string;
+	__
+	{method} parsePLC(string path); 
+	{method} updatePLC(string lightLogic, string switchLogic, string crossingLogic);
+	{method} runPLC(boolean occupancy);
 }
 
 TrackControllers --> "1..*" WaysideController
+TrackControllers -- TrackControllersGUI
 WaysideController -- WaysideControllerGUI
 WaysideController *-- "1" PLC
 
