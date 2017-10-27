@@ -1,0 +1,28 @@
+@startuml
+title Track Controller Use Case Diagram
+
+skinparam usecaseBackgroundColor #e6ffcc
+skinparam usecaseBorderColor 	#049595
+skinparam actorBorderColor 	#049595
+skinparam packageBorderCOlor  #049595
+skinparam arrowColor #006666
+
+:Dispatcher / CTC: as d
+:Wayside Engineer: as we
+
+rectangle TrackControllersGUI{
+	(Select Wayside Controller)
+	rectangle WaysideControllerGUI{
+		(View Block Status)
+		(Upload PLC Code)
+	}
+}
+
+'(Select Wayside Controller) --> WaysideControllerGUI
+we --> (Select Wayside Controller)
+we --> (View Block Status)
+we --> (Upload PLC Code)
+d --> (Set Switch State)
+d --> (Close Block for Maintenance)
+
+@enduml
