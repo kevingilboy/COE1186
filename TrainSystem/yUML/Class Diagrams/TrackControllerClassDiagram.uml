@@ -1,68 +1,86 @@
 @startuml
+title Track Controller Class Diagram
+
+skinparam classBackgroundColor #e6ffcc
+skinparam classBorderColor 	#049595
+skinparam packageBorderCOlor  #049595
+skinparam arrowColor #006666
+
 class TrackControllers {
-	{field} + waysideControllers : ArrayList <WaysideController>[];
-	{field} + trkmdl : TrackModel();
+	{field} + waysideControllers : ArrayList <WaysideController>[]
+	{field} + trkmdl : TrackModel
 	__
-	{method} + transmitSpeed(string trainName, int speed);
-	{method} + transmitAuthority(string trainName, int authority);
-	{method} + transmitSwitchState(string line, int blockId, boolean switch);
-	{method} + recieveBlockStatus(string line, int blockId, string status);
+    {method} + dispatchTrainToBlock(String,String,int)
+	{method} + suggestTrainSetpointSpeed(string trainName, int speed)
+	{method} + transmitCtcAuthority(string trainName, int authority)
+	{method} + recieveBlockInfo(string line, int blockId) : Block
+    {method} + transmitBlockMaintenance(String line, int blockId, boolean maintenance)
+	{method} + transmitSwitchState(string line, int blockId, boolean switch)
 	..
-	{method} + updateTime(int time);
-	{method} - initializeWaysides(); 
+	{method} + updateTime(int time)
+	{method} - initializeWaysides() 
 }
 
 class TrackControllersGUI {
-	{field} - waysideIndex : int;
+	{field} - waysideIndex : int
 	__
-	{method} - openWaysideGui(int waysideIndex);
+	{method} - openWaysideGui(int waysideIndex)
 }
 
 class WaysideController {
-	{field} - trkmdl : TrackModel();
-	{field} - line : string;
-	{field} - section : string;
-	{field} - blockId : int;
-	{field} - lightState : boolean;
-	{field} - switchState : boolean;
-	{field} - crossingState : bolean;
-	{field} - status : string;
-	{field} - occupancy : boolean;
-	{field} - light : boolean;
-	{field} - switch : boolean;
-	{field} - crossing : boolean;
+	{field} - trkmdl : TrackModel
+	{field} - line : string
+	{field} - section : string
+	{field} - blockId : int
+	{field} - lightState : boolean
+	{field} - switchState : boolean
+	{field} - crossingState : bolean
+	{field} - status : string
+	{field} - occupancy : boolean
+	{field} - light : boolean
+	{field} - switch : boolean
+	{field} - crossing : boolean
 	__
-	{method} - timeUpdate(int time);
-	{method} - guiUpdate();
+	{method} - timeUpdate(int time)
+		'calls runPLC(), guiUpdate(), transmit...State()
+	{method} - guiUpdate()
+		'calls GUI.displayInfo()
 	..
-	{method} - transmitLightState(string line, int blockId, boolean light); 
-	{method} - transmitCrossingState(string line, int blockId, boolean crossing);
-	{method} - transmitSwitchState(string line, int blockId, boolean switch);
+	{method} - recieveBlockInfo(string line, int blockId) : Block
+	{method} - transmitLightState(string line, int blockId, boolean light)
+	{method} - transmitCrossingState(string line, int blockId, boolean crossing)
+	{method} - transmitSwitchState(string line, int blockId, boolean switch)
 }
 
 class WaysideControllerGUI {
-	{field} line : string;
-	{field} section : string;
-	{field} blockId : int;
-	{field} plcPath : string;
+	{field} - line : string
+	{field} - section : string
+	{field} - blockId : int
+	{field} - plcPath : string
 	__
-	{method} displayInfo(string line, string section, int block);
-	{method} getSelectionInfo(string line, int blockId);
+	{method} - displayInfo()
+		'updates all values on gui
+	{method} - getBlockInfo(string line, int blockId) : Block
+		'calls waysideController.recieveBlockInfo(), displayInfo()
+	{method} - uploadPLC()
+		'calls PLC.parsePLC(string path) 
 }
 
 class PLC {
-	{field} lightLogic : string; 
-	{field} switchLogic : string; 
-	{field} crossingLogic : string;
+	{field} - lightLogic : string 
+	{field} - switchLogic : string
+	{field} - crossingLogic : string
 	__
-	{method} parsePLC(string path); 
-	{method} updatePLC(string lightLogic, string switchLogic, string crossingLogic);
-	{method} runPLC(boolean occupancy);
+	{method} - parsePLC(string path)
+		'parses and calls updatePLC
+	{method} - updatePLC(string lightLogic, string switchLogic, string crossingLogic)
+	{method} - runPLC(boolean occupancy)
+		'returns lightStatus, switchStatus, crossingStatus
 }
 
-TrackControllers --> "1..*" WaysideController
-TrackControllers -- TrackControllersGUI
-WaysideController -- WaysideControllerGUI
-WaysideController *-- "1" PLC
+TrackControllers -down-> "1..4" WaysideController
+TrackControllers -right- "1" TrackControllersGUI
+WaysideController -right- "1" WaysideControllerGUI
+WaysideController *-down- "1" PLC
 
 @enduml
