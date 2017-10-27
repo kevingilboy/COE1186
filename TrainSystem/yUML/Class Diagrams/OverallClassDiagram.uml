@@ -1,0 +1,166 @@
+@startuml
+'ticket sales'
+'change the getBlock stuff from ctc and trkctl to a setBlocks or something'
+'if only I care about time of day, we should not import SimTime to Module'
+'Does MBO send authority only to the train model'
+
+title Overall Class Diagram
+skinparam backgroundColor transparent
+skinparam classBackgroundColor #e6ffcc
+skinparam classBorderColor 	#049595
+skinparam packageBorderCOlor  #049595
+skinparam arrowColor #006666
+
+'skinparam classBackgroundColor #fff
+'skinparam classBorderColor #000
+'skinparam arrowColor #000
+
+
+class Simulator{
+  -speedup : int
+  -currentTime : SimTime
+  -weather : String
+  -temperature : int
+  __
+  -initializeModules();
+  ..Time Control..
+  -incrementTime(SimTime);
+  +setSpeedup(int);
+  ..Environment..
+  +getWeather() : String
+  +setWeather(String)
+  +getTemperature() : int
+  +setTemperature(int)
+}
+class SimTime{
+  +hr : int
+  +min : int
+  +sec : int
+  +incrementByOneSecond()
+  +toString() : String
+}
+interface Module{
+  +simulator : Simulator
+  -currentTime : SimTime
+  +updateTime(SimTime) : boolean
+}
+class Ctc{
+  +trkctl : TrackController
+  __
+  ..Dispatch..
+  -transmitDispatchTrainToBlock(String,String,int)
+  ..Speed & Auth..
+  -transmitSuggestTrainSetpointSpeed(String,int)
+  -transmitCtcAuthority(String,double)
+  ..Interact with Blocks..
+  -transmitSwitchState(String,int,boolean)
+  -receiveBlockSpeedLimit(String, int) : int
+  -receiveBlockGrade(String, int) : double
+  -receiveBlockElevation(String, int) : int
+  -receiveBlockLength(String, int) : int
+  -receiveBlockSwitch(String, int) : boolean
+  -receiveBlockSwitchState(String, int) : boolean
+  -receiveBlockOccupancy(String,int) : boolean
+  -receiveBlockStatus(String,int) : boolean
+  -transmitBlockMaintenance(String,int) : boolean
+  .
+  .
+}
+class TrackController{
+  +trkmdl : TrackModel
+  __
+  ..Dispatch..
+  +dispatchTrainToBlock(String,String,int)
+  ..Speed & Auth..
+  +suggestTrainSetpointSpeed(String,int)
+  +setCtcAuthority(String,double)
+  ..Interact with Blocks..
+  -transmitLightState(String,int,boolean)
+  -transmitCrossingState(String,int,boolean)
+  +setSwitchState(String,int,boolean)
+  +getBlockSpeedLimit(String, int) : int
+  +getBlockGrade(String, int) : double
+  +getBlockElevation(String, int) : int
+  +getBlockLength(String, int) : int
+  +getBlockSwitch(String, int) : boolean
+  +getBlockSwitchState(String, int) : boolean
+  +getBlockOccupancy(String,int) : boolean
+  +getBlockStatus(String,int) : boolean
+  +setBlockMaintenance(String,int) : boolean
+}
+class TrackModel{
+  +trnmdl : TrainModel
+  __
+  ..Dispatch..
+  +dispatchTrainToBlock(String,String,int)
+  ..Speed & Auth..
+  +suggestTrainSetpointSpeed(String,int)
+  +setCtcAuthority(String,double)
+  ..Interact with Blocks..
+  +getBlock(String, int) : Block
+  .
+  .
+  .
+}
+class TrainModel{
+  +trkmdl : TrackModel
+  __
+  ..Dispatch..
+  +dispatchTrainToBlock(String,String,int)
+  ..Speed & Auth..
+  +suggestTrainSetpointSpeed(String,int)
+  +setCtcAuthority(String,double)
+  ..Interact with Trains..
+  +getTrain(String) : Train
+  -transmitTrainSpeed(String, double)
+  +getTrainPower(String)
+  +setMboAuthority(String,double)
+}
+class TrainController{
+  +trnmdl : TrainModel
+  __
+  ..Dispatch..
+  +dispatchTrainToBlock(String,String,int)
+  ..Speed & Auth..
+  +setCtcAuthority(String,double)
+  +setTrainSpeed(String,int)
+  ..Interact with Trains..
+  +getTrainPosition(String) : String[2]
+  +setTrainSpeed(String) : double
+  -transmitTrainPower(String,double) : double
+  +setSafeBreakingDistance(String,int)
+}
+class Mbo{
+  +trnctl : TrainController
+  __
+  ..Interact with Trains..
+  -receiveTrainPosition(String) : String[2]
+  -transmitSafeBreakingDistance(String,double)
+  -transmitMboAuthority(String,double)
+}
+
+Simulator -> "1" SimTime
+
+Simulator o--"1" Ctc
+TrackController "1"--o Simulator
+TrackModel "1"--o Simulator
+TrainModel "1"--o Simulator
+TrainController "1"--o Simulator
+Mbo "1"--o Simulator
+
+Ctc -.|> Module
+TrackController -.|> Module
+TrackModel -.|> Module
+TrainModel -.|> Module
+TrainController -.|> Module
+Mbo -.|> Module
+
+Module - SimTime
+
+Ctc -> TrackController
+TrackController -> TrackModel
+TrackModel <-> TrainModel
+TrainModel <- TrainController
+TrainController <- Mbo
+
+@enduml
