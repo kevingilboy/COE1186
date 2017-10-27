@@ -33,11 +33,11 @@ public class Gps {
 		this.section = null;
 	}
 	
-	private void updatePrevBlock() {
+	private void setPrevBlock() {
 		// prevBlock = currentBlock;
 	}
 	
-	private void updateCurrentBlock() {
+	private void setCurrentBlock() {
 		// currentBlock = nextBlock;
 	}
 	
