@@ -1,0 +1,195 @@
+@startuml
+'if only I care about time of day, we should not import SimTime to Module'
+
+title Overall Class Diagram
+skinparam backgroundColor transparent
+skinparam classBackgroundColor #e6ffcc
+skinparam classBorderColor 	#049595
+skinparam packageBorderCOlor  #049595
+skinparam arrowColor #006666
+
+class Simulator{
+  -speedup : int
+  -currentTime : SimTime
+  -weather : String
+  -temperature : int
+  __
+  -initializeModules();
+  ..Time Control..
+  -incrementTime(SimTime);
+  +setSpeedup(int);
+  ..Environment..
+  +getWeather() : String
+  +setWeather(String)
+  +getTemperature() : int
+  +setTemperature(int)
+}
+class SimTime{
+  +hr : int
+  +min : int
+  +sec : int
+  +incrementByOneSecond()
+  +toString() : String
+}
+interface Module{
+  +simulator : Simulator
+  -currentTime : SimTime
+  +updateTime(SimTime) : boolean
+}
+class Ctc{
+  +trkctl : TrackController
+  +trnmdl : TrainModel
+  +trnctl : TrainController
+  __
+  ..Interact with Trains (Dispatch,Speed,Authority)..
+  -transmitSuggestedTrainSetpointSpeed(String,int)
+  -transmitCtcAuthority(String,double)
+  -transmitDispatchTrainToBlock(String,String,int)
+  -transmitDispatchTrainToBlock(String,String,int,String[])
+    -transmitEditedSchedule(String,String[])
+  ..Interact with Blocks..
+  -receiveBlockInfo(String,int) : Block
+  -transmitSwitchState(String,int,boolean)
+  -transmitBlockMaintenance(String,int) : boolean
+  .
+  .
+  .
+  ..Ticket Sales..
+  +setTicketSales(int)
+}
+class TrackController{
+  +trkmdl : TrackModel
+  .
+  .
+  __
+  ..Interact with Trains (Dispatch,Speed,Authority)..
+  +transmitSuggestedTrainSetpointSpeed(String,int)
+  +transmitCtcAuthority(String,double)
+  .
+  .
+  .
+  ..Interact with Blocks..
+  +receiveBlockInfo(String,int) : Block
+  +transmitSwitchState(String,int,boolean)
+  +transmitBlockMaintenance(String,int) : boolean
+  -transmitLightState(String,int,boolean)
+  -transmitCrossingState(String,int,boolean)
+  .
+  .
+  .
+}
+class TrackModel{
+  +trnmdl : TrainModel
+  +ctc : Ctc
+  .
+  __
+  ..Interact with Trains (Dispatch,Speed,Authority)..
+  +transmitSuggestedTrainSetpointSpeed(String,int)
+  +TransmitCtcAuthority(String,double)
+  .
+  .
+  .
+  ..Interact with Blocks..
+  +getBlock(String, int) : Block
+  +getMap(String) : int[]
+  .
+  .
+  .
+  .
+  ..Ticket Sales..
+  -transmitTicketSales(int)
+}
+class TrainModel{
+  +trkmdl : TrackModel
+  .
+  .
+  __
+  ..Interact with Trains (Dispatch,Speed,Authority)..
+  +suggestTrainSetpointSpeed(String,int)
+  +transmitCtcAuthority(String,double)
+  +dispatchTrainToBlock(String,String,int)
+  .
+  .
+  .
+  +setMboAuthority(String,double)
+  .
+  .
+  .
+  +getTrain(String) : Train
+  -transmitTrainSpeed(String, double)
+  +getTrainPower(String)
+  .
+}
+class TrainController{
+  +trnmdl : TrainModel
+  +trkmdl : TrackModel
+  .
+  __
+  ..Interact with Trains (Dispatch,Speed,Authority)..
+  +setTrainSpeed(String,int)
+  +setCtcAuthority(String,double)
+  .
+  +dispatchTrainToBlock(String,String,int,String[])
+  +setSchedule(String,String[])
+  .
+  +getTrainPosition(String) : String[2]
+  +setTrainSpeed(String) : double
+  -transmitTrainPower(String,double) : double
+  +setSafeBreakingDistance(String,int)
+  -receiveMap(String) : int[]
+  .
+  .
+  .
+}
+class Mbo{
+  +trnctl : TrainController
+  .
+  .
+  __
+  ..Interact with Trains..
+  -receiveTrainPosition(String) : String[2]
+  -transmitSafeBreakingDistance(String,double)
+  .
+  .
+  .
+  .
+  .
+  .
+  -transmitMboAuthority(String,double)
+  .
+  .
+  .
+  .
+  .
+}
+
+Simulator -> "1" SimTime
+
+Simulator o--"1" Ctc
+TrackController "1"--o Simulator
+TrackModel "1"--o Simulator
+TrainModel "1"--o Simulator
+TrainController "1"--o Simulator
+Mbo "1"--o Simulator
+
+Ctc -.|> Module
+TrackController -.|> Module
+TrackModel -.|> Module
+TrainModel -.|> Module
+TrainController -.|> Module
+Mbo -.|> Module
+
+Module - SimTime
+
+Ctc -> TrackController
+TrackController -> TrackModel
+TrackModel <-> TrainModel
+TrainModel <- TrainController
+TrainController <- Mbo
+
+TrainController -> TrackModel /'for getting map'/
+TrackModel -> Ctc /'for ticket sales'/
+Ctc -> TrainModel /'for dispatching'/
+Ctc -> TrainController /'for dispatching'/
+
+@enduml

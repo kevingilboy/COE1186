@@ -15,7 +15,6 @@ participant Ctc
 participant TrackController
 participant TrackModel
 participant TrainModel
-participant Mbo
 
 activate Ctc
 Ctc -> Ctc : Create Schedule

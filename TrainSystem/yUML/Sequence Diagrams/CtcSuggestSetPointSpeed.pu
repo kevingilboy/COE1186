@@ -10,8 +10,10 @@ skinparam sequence {
   ArrowColor #006666
   LifeLineBorderColor #c09cd9
 }
-
+box "Ctc"
 participant Ctc
+participant CtcGui
+end box
 participant TrackController
 participant TrackModel
 participant TrainModel
