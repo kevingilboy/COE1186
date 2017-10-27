@@ -1,0 +1,34 @@
+@startuml
+
+title Train Controller Use Case Diagram
+
+rectangle TrainControllerGUI {
+	(Set New Speed)
+	(Open Doors)
+	(Close Doors)
+	(Activate Brakes)
+	(Deactivate Brakes)
+	(Turn On Lights)
+	(Turn Off Lights)
+}
+
+rectangle EngineerGUI {
+	(Set New P Value)
+	(Set New I Value)
+}
+
+Engineer --> (Set New P Value)
+Engineer --> (Set New I Value)
+
+Driver --> (Set New Speed)
+Driver --> (Open Doors)
+Driver --> (Close Doors)
+Driver --> (Activate Brakes)
+Driver --> (Deactivate Brakes)
+Driver --> (Turn On Lights)
+Driver --> (Turn Off Lights)
+
+
+left to right direction
+
+@enduml
