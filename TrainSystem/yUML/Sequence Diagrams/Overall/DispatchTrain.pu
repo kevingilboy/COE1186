@@ -12,9 +12,9 @@ skinparam sequence {
 }
 
 participant Ctc
-participant TrackController
-participant TrackModel
 participant TrainModel
+participant TrainController
+participant TrackModel
 
 == Create the Schedule ==
 activate Ctc

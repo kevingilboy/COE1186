@@ -16,9 +16,10 @@ participant CtcGui
 participant ScheduleEditor
 participant Ctc
 end box
-participant TrackController
-participant TrackModel
+
 participant TrainModel
+participant TrainController
+participant TrackModel
 
 == Create the Schedule ==
 activate CtcGui
