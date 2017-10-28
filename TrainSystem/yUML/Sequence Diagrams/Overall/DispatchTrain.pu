@@ -19,16 +19,13 @@ participant TrainModel
 activate Ctc
 Ctc -> Ctc : Create Schedule
 Ctc -> Ctc : Add to Queue
-Ctc -> TrainModel : Send line, starting block, & schedule
+Ctc -> TrainModel : Send line & starting block
+Ctc -> TrainController : Send line, starting block, & schedule
 deactivate Ctc
-
-activate TrainModel
-TrainModel -> TrainController : Notification of creation
-deactivate TrainModel
 
 activate TrainController
 TrainController -> TrackModel : Get copy of map
-TrackModel --> TrainController : Block speed limits
+TrackModel --> TrainController : Blocks & speed limits
 deactivate TrainController
 
 @enduml
