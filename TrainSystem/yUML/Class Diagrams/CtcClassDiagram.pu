@@ -2,9 +2,10 @@
 
 title CTC
 skinparam backgroundColor transparent
-skinparam classBackgroundColor #fff
-skinparam classBorderColor #000
-skinparam arrowColor #000
+skinparam classBackgroundColor #e6ffcc
+skinparam classBorderColor 	#049595
+skinparam packageBorderCOlor  #049595
+skinparam arrowColor #006666
 
 class SimTime{
   +hr : int
@@ -46,8 +47,8 @@ class Train{
   setSchedule(Schedule)
 }
 class CtcGui {
-  editSchedule(Schedule)
-  openMaintenance()
+  createSchedule(Schedule) : Schedule
+  editSchedule(Schedule) : Schedule
   repaint()
 }
 class ScheduleEditorGui {

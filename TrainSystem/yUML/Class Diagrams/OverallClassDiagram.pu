@@ -8,33 +8,37 @@ skinparam classBorderColor 	#049595
 skinparam packageBorderCOlor  #049595
 skinparam arrowColor #006666
 
-class Simulator{
-  -speedup : int
-  -currentTime : SimTime
-  -weather : String
-  -temperature : int
-  __
-  -initializeModules();
-  ..Time Control..
-  -incrementTime(SimTime)
-  +setSpeedup(int)
-  +pause()
-  +play()
-  ..Environment..
-  +getWeather() : String
-  +setWeather(String)
-  +getTemperature() : int
-  +setTemperature(int)
+package Simulator{
+  class Simulator{
+    -speedup : int
+    -currentTime : SimTime
+    -weather : String
+    -temperature : int
+    __
+    -initializeModules();
+    ..Time Control..
+    -incrementTime(SimTime)
+    +setSpeedup(int)
+    +pause()
+    +play()
+    ..Environment..
+    +getWeather() : String
+    +setWeather(String)
+    +getTemperature() : int
+    +setTemperature(int)
+  }
 }
-class SimTime{
-  +hr : int
-  +min : int
-  +sec : int
-  +incrementByOneSecond()
-  +toString() : String
-}
-interface Module{
-  +timeUpdate(SimTime) : boolean
+Package Shared{
+  class SimTime{
+    +hr : int
+    +min : int
+    +sec : int
+    +incrementByOneSecond()
+    +toString() : String
+  }
+  interface Module{
+    +timeUpdate(SimTime) : boolean
+  }
 }
 class Ctc{
   +simulator : Simulator
@@ -136,7 +140,7 @@ class TrainController{
   .
   +dispatchTrainToBlock(String,String,int,String[])
   +setSchedule(String,String[])
-  .
+  transmitMboAuthority(String,double)
   +getTrainPosition(String) : String[2]
   +setTrainSpeed(String) : double
   -transmitTrainPower(String,double) : double
@@ -172,11 +176,11 @@ class Mbo{
 Simulator -> "1" SimTime
 
 Simulator o--"1" Ctc
-TrackController "1"--o Simulator
-TrackModel "1"--o Simulator
-TrainModel "1"--o Simulator
-TrainController "1"--o Simulator
-Mbo "1"--o Simulator
+Simulator o--"1" TrackController
+Simulator o--"1" TrackModel
+Simulator o--"1" TrainModel
+Simulator o--"1" TrainController
+Simulator o--"1" Mbo
 
 Ctc -.|> Module
 TrackController -.|> Module
