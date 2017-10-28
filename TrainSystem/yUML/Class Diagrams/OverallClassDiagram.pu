@@ -33,7 +33,6 @@ class SimTime{
 }
 interface Module{
   +simulator : Simulator
-  -currentTime : SimTime
   +updateTime(SimTime) : boolean
 }
 class Ctc{
