@@ -8,35 +8,40 @@ skinparam classBorderColor 	#049595
 skinparam packageBorderCOlor  #049595
 skinparam arrowColor #006666
 
-class Simulator{
-  -speedup : int
-  -currentTime : SimTime
-  -weather : String
-  -temperature : int
-  __
-  -initializeModules();
-  ..Time Control..
-  -incrementTime(SimTime);
-  +setSpeedup(int);
-  ..Environment..
-  +getWeather() : String
-  +setWeather(String)
-  +getTemperature() : int
-  +setTemperature(int)
+package Simulator{
+  class Simulator{
+    -speedup : int
+    -currentTime : SimTime
+    -weather : String
+    -temperature : int
+    __
+    -initializeModules();
+    ..Time Control..
+    -incrementTime(SimTime)
+    +setSpeedup(int)
+    +pause()
+    +play()
+    ..Environment..
+    +getWeather() : String
+    +setWeather(String)
+    +getTemperature() : int
+    +setTemperature(int)
+  }
 }
-class SimTime{
-  +hr : int
-  +min : int
-  +sec : int
-  +incrementByOneSecond()
-  +toString() : String
-}
-interface Module{
-  +simulator : Simulator
-  -currentTime : SimTime
-  +updateTime(SimTime) : boolean
+Package Shared{
+  class SimTime{
+    +hr : int
+    +min : int
+    +sec : int
+    +incrementByOneSecond()
+    +toString() : String
+  }
+  interface Module{
+    +timeUpdate(SimTime) : boolean
+  }
 }
 class Ctc{
+  +simulator : Simulator
   +trkctl : TrackController
   +trnmdl : TrainModel
   +trnctl : TrainController
@@ -44,6 +49,7 @@ class Ctc{
   ..Interact with Trains (Dispatch,Speed,Authority)..
   -transmitSuggestedTrainSetpointSpeed(String,int)
   -transmitCtcAuthority(String,double)
+  .
   -transmitDispatchTrainToBlock(String,String,int)
   -transmitDispatchTrainToBlock(String,String,int,String[])
     -transmitEditedSchedule(String,String[])
@@ -61,10 +67,12 @@ class TrackController{
   +trkmdl : TrackModel
   .
   .
+  .
   __
   ..Interact with Trains (Dispatch,Speed,Authority)..
   +transmitSuggestedTrainSetpointSpeed(String,int)
   +transmitCtcAuthority(String,double)
+  .
   .
   .
   .
@@ -79,6 +87,7 @@ class TrackController{
   .
 }
 class TrackModel{
+  +simulator : Simulator
   +trnmdl : TrainModel
   +ctc : Ctc
   .
@@ -86,6 +95,7 @@ class TrackModel{
   ..Interact with Trains (Dispatch,Speed,Authority)..
   +transmitSuggestedTrainSetpointSpeed(String,int)
   +TransmitCtcAuthority(String,double)
+  .
   .
   .
   .
@@ -103,40 +113,46 @@ class TrainModel{
   +trkmdl : TrackModel
   .
   .
+  .
   __
   ..Interact with Trains (Dispatch,Speed,Authority)..
   +suggestTrainSetpointSpeed(String,int)
   +transmitCtcAuthority(String,double)
+  .
   +dispatchTrainToBlock(String,String,int)
   .
   .
   .
-  +setMboAuthority(String,double)
+  .
+  .
   .
   .
   .
   +getTrain(String) : Train
-  -transmitTrainSpeed(String, double)
-  +getTrainPower(String)
+  -getTrainSpeed(String) : double
+  +setTrainPower(String,double)
   .
 }
 class TrainController{
   +trnmdl : TrainModel
   +trkmdl : TrackModel
   .
+  .
   __
   ..Interact with Trains (Dispatch,Speed,Authority)..
   +setTrainSpeed(String,int)
   +setCtcAuthority(String,double)
+  +setMboAuthority(String,double)
   .
   +dispatchTrainToBlock(String,String,int,String[])
   +setSchedule(String,String[])
   .
-  +getTrainPosition(String) : String[2]
-  +setTrainSpeed(String) : double
-  -transmitTrainPower(String,double) : double
+  receiveTrainPosition(String) : String[2]
+  -receiveTrainSpeed(String) : double
+  -transmitTrainPower(String,double)
   +setSafeBreakingDistance(String,int)
   -receiveMap(String) : int[]
+  .
   .
   .
   .
@@ -145,17 +161,20 @@ class Mbo{
   +trnctl : TrainController
   .
   .
+  .
   __
   ..Interact with Trains..
   -receiveTrainPosition(String) : String[2]
   -transmitSafeBreakingDistance(String,double)
-  .
-  .
-  .
-  .
-  .
-  .
   -transmitMboAuthority(String,double)
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
   .
   .
   .
@@ -163,14 +182,14 @@ class Mbo{
   .
 }
 
-Simulator -> "1" SimTime
+Simulator -> "1" SimTime : tracks time with
 
 Simulator o--"1" Ctc
-TrackController "1"--o Simulator
-TrackModel "1"--o Simulator
-TrainModel "1"--o Simulator
-TrainController "1"--o Simulator
-Mbo "1"--o Simulator
+Simulator o--"1" TrackController
+Simulator o--"1" TrackModel
+Simulator o--"1" TrainModel
+Simulator o--"1" TrainController
+Simulator o--"1" Mbo
 
 Ctc -.|> Module
 TrackController -.|> Module
@@ -179,7 +198,7 @@ TrainModel -.|> Module
 TrainController -.|> Module
 Mbo -.|> Module
 
-Module - SimTime
+Module - SimTime : imports
 
 Ctc -> TrackController
 TrackController -> TrackModel
