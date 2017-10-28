@@ -17,9 +17,10 @@ participant TrainController
 activate Ctc
 Ctc -> Ctc : Select Train
 Ctc -> Ctc : editSchedule(Train)
-activate TrainController
+
 Ctc -> TrainController : sendSchedule(Train,Schedule)
 deactivate Ctc
+activate TrainController
 deactivate TrainController
 
 @enduml
