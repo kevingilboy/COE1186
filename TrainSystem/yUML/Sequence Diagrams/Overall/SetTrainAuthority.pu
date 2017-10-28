@@ -15,25 +15,31 @@ participant Ctc
 participant TrackController
 participant TrackModel
 participant TrainModel
+participant Mbo
 
 activate Ctc
-Ctc -> Ctc : Set suggested speed
-Ctc -> TrackController : transmitSuggestedSetpointSpeed(Train,speed)
+Ctc -> Ctc : Determine authority
+Ctc -> TrackController : transmitCtcAuthority(Train,authority)
 deactivate Ctc
 
 activate TrackController
-TrackController -> TrackModel : transmitSuggestedSetpointSpeed(Train,speed)
+TrackController -> TrackModel : transmitCtcAuthority(Train,authority)
 deactivate TrackController
 
 activate TrackModel
-TrackModel -> TrainModel : setSuggestedSetpointSpeed(Train,speed)
+TrackModel -> TrainModel : transmitCtcAuthority(Train,authority)
 deactivate TrackModel
 
 activate TrainModel
-TrainModel -> TrainController : setSpeed(Train,speed)
-
+TrainModel -> TrainController : setCtcAuthority(Train,authority)
 activate TrainController
-TrainController --> TrainModel : Return power
+
+activate Mbo
+Mbo -> Mbo : Determine authority
+Mbo -> TrainController : setMboAuthority(Train, authority)
+deactivate Mbo
+
+TrainController --> TrainController : setAuthority(ctcAuthority,mboAuthority)
 deactivate TrainController
 
 deactivate TrainModel
