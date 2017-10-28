@@ -25,11 +25,11 @@ TrackController -> TrackModel : setBlockStatus(Block,"maintenance" or "open")
 activate TrackModel
 TrackModel -> TrackModel : getBlock(Block)
 TrackModel -> TrackModel : setMaintenance("maintenance" or "open")
-TrackModel --> TrackController : new block status
+TrackModel --> TrackController : //new block status//
 deactivate TrackModel
 
 TrackController -> TrackController : setBlockStatus(status)
-TrackController --> Ctc : new block status
+TrackController --> Ctc : //new block status//
 deactivate TrackController
 
 Ctc -> Ctc : setBlockStatus(status)
