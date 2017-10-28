@@ -38,8 +38,8 @@ Ctc -> TrainController : dispatchTrain(line,startingBlock,Schedule)
 
 
 activate TrainController
-TrainController -> TrackModel : getMap(line)
-TrackModel --> TrainController : Blocks & speed limits
+TrainController -> TrackModel : getBlockSpeedLimits(line)
+TrackModel --> TrainController : speedLimits[]
 deactivate TrainController
 
 @enduml
