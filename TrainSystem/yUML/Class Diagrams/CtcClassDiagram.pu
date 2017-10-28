@@ -31,7 +31,7 @@ package Module.Ctc {
     -calculateThroughput(int)
     +transmitSuggestedSetpointSpeed(String,int)
     +transmitCtcAuthority(String,double)
-    +setTicketSales(String,int)
+    +addTicketSales(int)
     +updateSchedule(String,Schedule)
     +receiveBlocks()
     +receiveBlockOccupancy(String,String)
