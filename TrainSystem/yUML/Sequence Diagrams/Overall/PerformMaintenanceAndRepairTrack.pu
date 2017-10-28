@@ -1,0 +1,37 @@
+@startuml
+
+title Close Track For Maintenance & Repair Track
+
+skinparam sequence {
+  BackgroundColor transparent
+  ParticipantBackgroundColor #e6ffcc
+  ParticipantBorderColor 	#049595
+  PackageBorderCOlor  #049595
+  ArrowColor #006666
+  LifeLineBorderColor #c09cd9
+}
+
+participant Ctc
+participant TrackController
+participant TrackModel
+
+activate Ctc
+Ctc -> Ctc : Select Block
+Ctc -> TrackController : setBlockMaintenance(Block,"maintenance" or "open")
+
+
+activate TrackController
+TrackController -> TrackModel : setBlockMaintenance(Block,"maintenance" or "open")
+
+
+activate TrackModel
+TrackModel -> TrackModel : getBlock(Block)
+TrackModel -> TrackModel : setMaintenance("maintenance" or "open")
+TrackModel --> TrackController : new block status
+deactivate TrackModel
+TrackController -> TrackController : setBlockStatus(status)
+TrackController --> Ctc : new block status
+deactivate TrackController
+Ctc -> Ctc : setBlockStatus(status)
+deactivate Ctc
+@enduml
