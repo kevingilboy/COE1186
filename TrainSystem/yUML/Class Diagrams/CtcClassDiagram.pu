@@ -22,11 +22,13 @@ package Shared{
 package Module.Ctc {
   class Ctc {
     -trains : Train[]
+    -throughput : int
     -schedulesInQueue : Schedule
     -blocks : Block[]
     +addTrainToQueue(Schedule)
     -dispatchTrainFromQueue(String)
     -importSchedule(String)
+    -calculateThroughput(int)
     +transmitSuggestedSetpointSpeed(String,int)
     +transmitCtcAuthority(String,double)
     +setTicketSales(String,int)
