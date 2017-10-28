@@ -49,6 +49,7 @@ class Ctc{
   ..Interact with Trains (Dispatch,Speed,Authority)..
   -transmitSuggestedTrainSetpointSpeed(String,int)
   -transmitCtcAuthority(String,double)
+  .
   -transmitDispatchTrainToBlock(String,String,int)
   -transmitDispatchTrainToBlock(String,String,int,String[])
     -transmitEditedSchedule(String,String[])
@@ -74,6 +75,7 @@ class TrackController{
   .
   .
   .
+  .
   ..Interact with Blocks..
   +receiveBlockInfo(String,int) : Block
   +transmitSwitchState(String,int,boolean)
@@ -96,6 +98,7 @@ class TrackModel{
   .
   .
   .
+  .
   ..Interact with Blocks..
   +getBlock(String, int) : Block
   +getMap(String) : int[]
@@ -115,17 +118,19 @@ class TrainModel{
   ..Interact with Trains (Dispatch,Speed,Authority)..
   +suggestTrainSetpointSpeed(String,int)
   +transmitCtcAuthority(String,double)
+  .
   +dispatchTrainToBlock(String,String,int)
   .
   .
   .
-  +setMboAuthority(String,double)
+  .
+  .
   .
   .
   .
   +getTrain(String) : Train
-  -transmitTrainSpeed(String, double)
-  +getTrainPower(String)
+  -getTrainSpeed(String) : double
+  +setTrainPower(String,double)
   .
 }
 class TrainController{
@@ -137,15 +142,17 @@ class TrainController{
   ..Interact with Trains (Dispatch,Speed,Authority)..
   +setTrainSpeed(String,int)
   +setCtcAuthority(String,double)
+  +setMboAuthority(String,double)
   .
   +dispatchTrainToBlock(String,String,int,String[])
   +setSchedule(String,String[])
-  transmitMboAuthority(String,double)
-  +getTrainPosition(String) : String[2]
-  +setTrainSpeed(String) : double
-  -transmitTrainPower(String,double) : double
+  .
+  receiveTrainPosition(String) : String[2]
+  -receiveTrainSpeed(String) : double
+  -transmitTrainPower(String,double)
   +setSafeBreakingDistance(String,int)
   -receiveMap(String) : int[]
+  .
   .
   .
   .
@@ -159,13 +166,15 @@ class Mbo{
   ..Interact with Trains..
   -receiveTrainPosition(String) : String[2]
   -transmitSafeBreakingDistance(String,double)
-  .
-  .
-  .
-  .
-  .
-  .
   -transmitMboAuthority(String,double)
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
   .
   .
   .
