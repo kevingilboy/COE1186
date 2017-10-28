@@ -13,7 +13,7 @@ class SimTime{
   +toString() : String
 }
 interface Module{
-  timeUpdate(SimTime) : Boolean
+  +timeUpdate(SimTime) : Boolean
 }
 class Ctc {
   trains : Train[]

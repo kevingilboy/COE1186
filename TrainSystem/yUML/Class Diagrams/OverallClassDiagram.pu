@@ -16,8 +16,10 @@ class Simulator{
   __
   -initializeModules();
   ..Time Control..
-  -incrementTime(SimTime);
-  +setSpeedup(int);
+  -incrementTime(SimTime)
+  +setSpeedup(int)
+  +pause()
+  +play()
   ..Environment..
   +getWeather() : String
   +setWeather(String)
@@ -32,10 +34,10 @@ class SimTime{
   +toString() : String
 }
 interface Module{
-  +simulator : Simulator
-  +updateTime(SimTime) : boolean
+  +timeUpdate(SimTime) : boolean
 }
 class Ctc{
+  +simulator : Simulator
   +trkctl : TrackController
   +trnmdl : TrainModel
   +trnctl : TrainController
@@ -60,6 +62,7 @@ class TrackController{
   +trkmdl : TrackModel
   .
   .
+  .
   __
   ..Interact with Trains (Dispatch,Speed,Authority)..
   +transmitSuggestedTrainSetpointSpeed(String,int)
@@ -78,6 +81,7 @@ class TrackController{
   .
 }
 class TrackModel{
+  +simulator : Simulator
   +trnmdl : TrainModel
   +ctc : Ctc
   .
@@ -102,6 +106,7 @@ class TrainModel{
   +trkmdl : TrackModel
   .
   .
+  .
   __
   ..Interact with Trains (Dispatch,Speed,Authority)..
   +suggestTrainSetpointSpeed(String,int)
@@ -123,6 +128,7 @@ class TrainController{
   +trnmdl : TrainModel
   +trkmdl : TrackModel
   .
+  .
   __
   ..Interact with Trains (Dispatch,Speed,Authority)..
   +setTrainSpeed(String,int)
@@ -142,6 +148,7 @@ class TrainController{
 }
 class Mbo{
   +trnctl : TrainController
+  .
   .
   .
   __
