@@ -1,6 +1,6 @@
 @startuml
 
-title Dispatch Train to Block
+title Manually Dispatch Train to Block
 
 skinparam sequence {
   BackgroundColor transparent
@@ -10,20 +10,32 @@ skinparam sequence {
   ArrowColor #006666
   LifeLineBorderColor #c09cd9
 }
-
+box "CTC"
+actor Dispatcher
+participant CtcGui
+participant ScheduleEditor
 participant Ctc
+end box
 participant TrackController
 participant TrackModel
 participant TrainModel
 
 == Create the Schedule ==
-activate Ctc
-Ctc -> Ctc : Create Schedule
-Ctc -> Ctc : Add to Queue
+activate CtcGui
+Dispatcher -> CtcGui : Create New Schedule
+activate ScheduleEditor
+CtcGui -> ScheduleEditor : initialize()
+Dispatcher -> ScheduleEditor : Create the Schedule
+Dispatcher -> ScheduleEditor : Request Schedule be Added to Queue
+ScheduleEditor -> Ctc : addScheduleToQueue(Schedule)
+deactivate ScheduleEditor
+Ctc -> CtcGui : repaint()
+deactivate CtcGui
 == Dispatch the Train ==
+Ctc -> Ctc : dispatchTrainFromQueue(Schedule)
 Ctc -> TrainModel : dispatchTrain(line,startingBlock)
 Ctc -> TrainController : dispatchTrain(line,startingBlock,Schedule)
-deactivate Ctc
+
 
 activate TrainController
 TrainController -> TrackModel : getMap(line)
