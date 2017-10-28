@@ -182,7 +182,7 @@ class Mbo{
   .
 }
 
-Simulator -> "1" SimTime
+Simulator -> "1" SimTime : tracks time with
 
 Simulator o--"1" Ctc
 Simulator o--"1" TrackController
@@ -198,7 +198,7 @@ TrainModel -.|> Module
 TrainController -.|> Module
 Mbo -.|> Module
 
-Module - SimTime
+Module - SimTime : imports
 
 Ctc -> TrackController
 TrackController -> TrackModel

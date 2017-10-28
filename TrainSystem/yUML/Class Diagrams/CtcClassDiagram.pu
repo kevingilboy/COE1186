@@ -21,22 +21,20 @@ package Shared{
 }
 package Module.Ctc {
   class Ctc {
-    trains : Train[]
-    schedulesInQueue : Schedule
-    blocks : Block[]
-    addTrainToQueue(Schedule)
-    dispatchTrainFromQueue(String)
-    importSchedule(String)
-    setTicketSales(String,int)
-    updateSchedule(String,Schedule)
-
-    getBlocks()
-    getBlockOccupancy(String,String)
-    getBlockStatus(String,String)
-    getSwitchState(String,String)
-    setBlockStatus(String,String,String)
-    setSwitchState(String,String,boolean)
-    toggleSwitchState(String,String)
+    -trains : Train[]
+    -schedulesInQueue : Schedule
+    -blocks : Block[]
+    +addTrainToQueue(Schedule)
+    -dispatchTrainFromQueue(String)
+    -importSchedule(String)
+    +setTicketSales(String,int)
+    +updateSchedule(String,Schedule)
+    +getBlocks()
+    +getBlockOccupancy(String,String)
+    +getBlockStatus(String,String)
+    +getSwitchState(String,String)
+    +setBlockStatus(String,String,String)
+    +setSwitchState(String,String,boolean)
   }
 
   class Train{
@@ -51,12 +49,14 @@ package Module.Ctc {
     setSchedule(Schedule)
   }
   class CtcGui {
+    ctc : Ctc
     createSchedule(Schedule) : Schedule
     editSchedule(Schedule) : Schedule
     repaint()
   }
   class ScheduleEditorGui {
-
+    ctcGui : CtcGui
+    -submitScheduleToCtc()
   }
   class Schedule {
     departureTime : SimTime
@@ -82,21 +82,21 @@ package Module.Ctc {
   }
 }
 
-Module--SimTime
+Module--SimTime : imports
 
-Module <|. Ctc
+Module <|. Ctc : implements
 
-Ctc "0..*"-> Block : has knowledge of
-Ctc "0..*"--> Schedule : contains in queue
-Ctc "0..*"--> Train : monitors
-Ctc "1" *-> CtcGui : instantiates
+Ctc "0..*" o-> Block : has knowledge of
+Ctc "0..*" o-> Schedule : contains in queue
+Ctc "0..*" o--> Train : monitors
+Ctc "1" *- CtcGui : instantiates
 
-CtcGui *--> ScheduleEditorGui
+CtcGui *- ScheduleEditorGui : instantiates
 
-Schedule "1.." -> Stop : contains
-Stop "1" -> Block : located at
+Schedule "1.." o-> Stop : contains
+Stop "1" o-> Block : located at
 
 Train "1" *-> Schedule : is following
-Train "1" -> Block : located at
+Train "1" o-> Block : located at
 
 @enduml
