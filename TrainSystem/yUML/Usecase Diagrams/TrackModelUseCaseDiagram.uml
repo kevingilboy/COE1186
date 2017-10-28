@@ -5,7 +5,7 @@ title Track Model Use Case Diagram
 skinparam usecaseBackgroundColor #e6ffcc
 skinparam usecaseBorderColor 	#049595
 skinparam actorBorderColor 	#049595
-skinparam packageBorderCOlor  #049595
+skinparam packageBorderColor  #049595
 skinparam arrowColor #006666
 
 :Dispatcher / CTC: as d
