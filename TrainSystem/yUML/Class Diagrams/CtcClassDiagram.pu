@@ -27,14 +27,16 @@ package Module.Ctc {
     +addTrainToQueue(Schedule)
     -dispatchTrainFromQueue(String)
     -importSchedule(String)
+    +transmitSuggestedSetpointSpeed(String,int)
+    +transmitCtcAuthority(String,double)
     +setTicketSales(String,int)
     +updateSchedule(String,Schedule)
-    +getBlocks()
-    +getBlockOccupancy(String,String)
-    +getBlockStatus(String,String)
-    +getSwitchState(String,String)
+    +receiveBlocks()
+    +receiveBlockOccupancy(String,String)
+    +receiveBlockStatus(String,String)
+    +receiveSwitchState(String,String)
     +setBlockStatus(String,String,String)
-    +setSwitchState(String,String,boolean)
+    +transmittSwitchState(String,String,boolean)
   }
 
   class Train{

@@ -17,10 +17,10 @@ participant TrackModel
 
 activate Ctc
 Ctc -> Ctc : Select Block
-Ctc -> TrackController : setBlockMaintenance(Block,"maintenance" or "open")
+Ctc -> TrackController : setBlockStatus(Block,"maintenance" or "open")
 
 activate TrackController
-TrackController -> TrackModel : setBlockMaintenance(Block,"maintenance" or "open")
+TrackController -> TrackModel : setBlockStatus(Block,"maintenance" or "open")
 
 activate TrackModel
 TrackModel -> TrackModel : getBlock(Block)
