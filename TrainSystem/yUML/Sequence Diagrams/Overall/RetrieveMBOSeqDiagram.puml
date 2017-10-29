@@ -1,0 +1,30 @@
+@startuml
+
+title Retrieve MBO Antenna Signal Sequence Diagram
+
+skinparam sequence {
+  BackgroundColor transparent
+  ParticipantBackgroundColor #e6ffcc
+  ParticipantBorderColor 	#049595
+  PackageBorderCOlor  #049595
+  ArrowColor #006666
+  LifeLineBorderColor #c09cd9
+}
+
+participant "TrainModel" as A
+participant "MBO" as B
+
+
+A -> B : getMboAntennaStatus()
+activate A
+activate B
+
+B --> A : Return State
+
+B -> A : getPos()
+
+A --> B : Complete Request
+deactivate A
+deactivate B
+
+@enduml
