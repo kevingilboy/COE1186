@@ -7,134 +7,178 @@ skinparam classBorderColor 	#049595
 skinparam packageBorderCOlor  #049595
 skinparam arrowColor #006666
 
-package "Shared"{
-    interface Module{
-        -timeUpdate(SimTime)
+package Shared{
+  interface Module{
+    +timeUpdate(SimTime) : Boolean
+  }
+  class SimTime{
+    +hr : int
+    +min : int
+    +sec : int
+    +toString() : String
+  }
+}
+package Module.TrainModel {
+    class TrainModelList {
+        -trainID : String
+        -trainModel : TrainModel
+    }
+
+    class TrainModel {
+        -id : String
+        -weight : double
+        -height : double
+        -length : double
+        -width : double
+        -numCars : int
+        -capacity : int
+        -lineColor : String
+        -grade : double
+        -gpsStatus : boolean
+        -mboStatus : boolean
+        -engineFailureStatus : boolean
+        -signalFailureStatus : boolean
+        -brakeFailureStatus : boolean
+        -nextStationID : String
+        -timeOfArrival : double
+        -arrivalStatus : boolean
+        -numPassengers : int
+        -currentSpeed : double
+        -CTCSpeed : double
+        -CTCAuthority : double
+        -powerOut : double
+        -leftDoorStatus : boolean
+        -rightDoorStatus : boolean
+        -lightsStatus : boolean
+        -temperature : int
+        -serviceBrake : boolean
+        -emerBrake : boolean
+        -trainActive : boolean
+        -force : double
+        -normalForce : double
+        -downwardForce : double
+        -totalForce : double
+        -friction : double
+        -slope : double
+        -finalSpeed : double
+        -trainAcceleration : double
+        -gpsSignal : Gps
+        __
+        +simulator : Simulator
+        +trainController : TrainController
+        +trainModelGUI : TrainModelNewGUI
+        +trainList : Arraylist
+        __
+        -showTrainGUI()
+        -setValuesForDisplay(TrainModelNewGUI)
+        -updateTrainValues()
+        +CreateNewGUI(TrainModel)
+        +activateFailureModeTest()
+        +endFailureModeTest()
+        +getTrainController()
+        +updateTrainList()
+        +updateArrivalStatus()
+        +setPos(double)
+        +getPos()
+        +getGrade(Block)
+        +setSetpointSpeed(double)
+        +getSetpointSpeed()
+        +getAuthority()
+        +setAuthority(double)
+        +setLightStatus(boolean)
+        +setLeftDoorStatus(boolean)
+        +setRightDoorStatus(boolean)
+        +setTemperature(int)
+        +truncateTo(double‚int)
+    }
+
+    class Gps{
+        -line : String
+        -prevBlockID : Block
+        -prevSection : String
+        -currentBlockID : Block
+        -currBlockLength : double
+        -metersIn : double
+        -nextBlockID : Block
+        -nextBlockLength : double
+        __
+        -setPrevBlock(Block)
+        -setCurrentBlock(Block)
+        -getNextBlock()
+        -setGpsPos(Block)
+        -getGpsPos()
+    }
+    
+    class Block{
+        label :String
+        line : String
+        isStation : Boolean
+        station : String
+        isSwitch : Boolean
+        isStation() : Boolean
+        getStationName() : String
+        isSwitch() : Boolean
+    }
+    
+    class TrainController {
+        -time : integer
+        -controlList : ArrayList
+        -positions : ArrayList
+        +mbo : MBO
+        +trnModel : TrainModel
+        +timeUpdate()
+        +addTrain()
+        +setCtcAuth()
+        +setBrakingDist()
+        +setActualSpeed()
+        +setPosition()
+        +setTime()
+        +suggestTrainSpeed()
+        +getPosition()
+        +getTrainController()
+    }
+
+
+    class TrainModelNewGUI{
+        +gpsAntennaStatusLabel : JLabel
+        +mboAntennaStatusLabel : JLabel
+        +stationVal : JLabel
+        +rightDoorStatusLabel : Jlabel
+        +leftDoorStatusLabel : Jlabel
+        +timeVal : Jlabel
+        +lblAm : JLabel
+        +leftDoorStatusLabel : JLabel
+        +lightStatusLabel : JLabel
+        +numPassengersLbl : JLabel
+        +authorityVal : JLabel
+        +lblLine : JLabel
+        +heightVal : JLabel
+        +weightVal : JLabel
+        +lengthVal : JLabel
+        +widthVal : JLabel
+        +capacityVal : JLabel
+        +capacityVal : JLabel
+        +blockVal : JLabel
+        +gradeVal : Jlabel
+        +arrivalStatusLabel : JLabel
+        +currentSpeedLabel : Jlabel
+        +btnSendPowerCommand : JButton
+        +btnEmergencyBrake : JButton
+        +numCarsLabel : JLabel
+        +tempInCabin : JLabel
+        +powerInput : JLabel
+        +trainModel : TrainModel
     }
 }
 
-class TrainModelList {
-    -trainID : String
-    -trainModel : TrainModel
-}
+Module--SimTime : imports
 
-class TrainModel {
-    -id : String
-    -weight : double
-    -height : double
-    -length : double
-    -width : double
-    -numCars : int
-    -capacity : int
-    -lineColor : String
-    -grade : double
-    -gpsStatus : boolean
-    -mboStatus : boolean
-    -engineFailureStatus : boolean
-    -signalFailureStatus : boolean
-    -brakeFailureStatus : boolean
-    -nextStationID : String
-    -timeOfArrival : double
-    -arrivalStatus : boolean
-    -numPassengers : int
-    -currentSpeed : double
-    -CTCSpeed : double
-    -CTCAuthority : double
-    -powerOut : double
-    -leftDoorStatus : boolean
-    -rightDoorStatus : boolean
-    -lightsStatus : boolean
-    -temperature : int
-    -serviceBrake : boolean
-    -emerBrake : boolean
-    -trainActive : boolean
-    -force : double
-    -normalForce : double
-    -downwardForce : double
-    -totalForce : double
-    -friction : double
-    -slope : double
-    -finalSpeed : double
-    -trainAcceleration : double
-    -gpsSignal : Gps
-    __
-    +simulator : Simulator
-    +trainController : TrainController
-    +trainModelGUI : TrainModelNewGUI
-    +trainList : Arraylist
-    __
-    -showTrainGUI()
-    +CreateNewGUI(TrainModel)
-    -setValuesForDisplay(TrainModelNewGUI)
-    -updateTrainValues()
-    +activateFailureModeTest()
-    +endFailureModeTest()
-    +getTrainController()
-    +updateTrainList()
-    +updateArrivalStatus()
-    +setAuthority()
-    +setPos()
-    +getPos()
-    +getGrade(Block)
-    +setSpeed()
-    +getSpeed()
-    +getAuthority()
-    +setAuthority()
-    +truncateTo(double‚int)
-}
+Module <|. TrainModelList : implements
 
-class Gps{
-    -line : String
-    -prevBlockID : Block
-    -prevSection : String
-    -currentBlockID : Block
-    -currBlockLength : double
-    -metersIn : double
-    -nextBlockID : Block
-    -nextBlockLength : double
-    __
-    -setPrevBlock()
-    -setCurrentBlock()
-    -getNextBlock(Block)
-    -setGps()
-}
-
-class TrainModelNewGUI{
-    +gpsAntennaStatusLabel : JLabel
-    +mboAntennaStatusLabel : JLabel
-    +stationVal : JLabel
-    +rightDoorStatusLabel : Jlabel
-    +leftDoorStatusLabel : Jlabel
-    +timeVal : Jlabel
-    +lblAm : JLabel
-    +leftDoorStatusLabel : JLabel
-    +lightStatusLabel : JLabel
-    +numPassengersLbl : JLabel
-    +authorityVal : JLabel
-    +actualAuthorityVal : JLabel
-    +lblLine : JLabel
-    +heightVal : JLabel
-    +weightVal : JLabel
-    +lengthVal : JLabel
-    +widthVal : JLabel
-    +capacityVal : JLabel
-    +capacityVal : JLabel
-    +blockVal : JLabel
-    +gradeVal : Jlabel
-    +arrivalStatusLabel : JLabel
-    +setpointSpeedLabel : Jlabel
-    +btnSendPowerCommand : JButton
-    +btnEmergencyBrake : JButton
-    +btnServiceBrake : JButton
-    +numCarsSpinner : JLabel
-    +tempSpinner : JSpinner
-    +powerSpinner : JSpinner
-    +trainModel : TrainModel
-}
-
-Module <|-- TrainModelList : implements
-TrainModelList - TrainModel
-TrainModel - TrainModelNewGUI
-Gps "1..*"-* TrainModel
+TrainModelList "1..*"*-down- TrainModel : instantiates
+TrainModel "0..*"*- TrainModelNewGUI : instantiates
+TrainModel "1..*"-* Gps : contains
+TrainModel "0..*"*down- TrainController : monitors
+Gps "2..*"-* Block : monitors
 
 @enduml

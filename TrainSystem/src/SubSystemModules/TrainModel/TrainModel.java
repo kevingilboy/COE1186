@@ -66,9 +66,9 @@ public class TrainModel {
     private boolean MBOAntenna;
     
     // Failure Modes Activation
-    private boolean engineFailureActive;
-    private boolean signalFailureActive;
-    private boolean brakeFailureActive;
+    private boolean engineFailureStatus;
+    private boolean signalFailureStatus;
+    private boolean brakeFailureStatus;
     
     // Station Control
     private String nextStation;
@@ -101,9 +101,9 @@ public class TrainModel {
     private double slope;
     private double finalSpeed;
     private double trainAcceleration;
-    private Block prevBlockID;
-    private Block currentBlockID;
-    private Block nextBlockID;
+    //private Block prevBlockID;
+    //private Block currentBlockID;
+    //private Block nextBlockID;
     
     public TrainModel (String line, String trainID/*, Block currentBlockID*/) {
     	
@@ -118,25 +118,25 @@ public class TrainModel {
         this.trainWidth = TRAINWIDTH;
         
         // Track Information
-        this.prevBlockID = null;
+        //this.prevBlockID = null;
         //setting this for now until we figure out integration stuff
-        this.currentBlockID = null;
-        this.nextBlockID = null;
+        //this.currentBlockID = null;
+        //this.nextBlockID = null;
         this.lineColor = line;
         this.grade = 0;
         this.GPSAntenna = false;
         this.MBOAntenna = false;
         
         // Failure Modes Activation
-        this.engineFailureActive = false;
-        this.signalFailureActive = false;
-        this.brakeFailureActive = false;
+        this.engineFailureStatus = false;
+        this.signalFailureStatus = false;
+        this.brakeFailureStatus = false;
         
         // Station Control
         //private String nextStation;
         this.timeOfArrival = 0;
         this.arrivalStatus = false;
-        this.numPassengers = 0;
+        this.numPassengers = 20;
         
         // Speed/Authority
         this.currentSpeed = 0;
@@ -183,6 +183,10 @@ public class TrainModel {
         return  trainModelGUI;  //Return the GUI object
     }
     
+    /**
+     * showTrainGUI is a method that will be called when the user selects a train from the "Select Train" dropdown menu
+     * from the GUI
+     */
     private void showTrainGUI() {
         //Make sure to set it visible//Initialize a JFrame to hold the GUI in (Since it is only a JPanel)
         this.trainModelGUI.setTitle("Train ID: " + this.trainIDStr);
@@ -192,7 +196,11 @@ public class TrainModel {
         this.trainModelGUI.setVisible(true);     //Make sure to set it visible
     }
 
-    
+    /**
+     * setValuesForDisplay method allows the GUI to be updated in sync with the clock (speed values will most likely be
+     * changing constantly) and will be called with every clock tick
+     * @param tmGUI
+     */
     private void setValuesForDisplay(TrainModelNewGUI tmGUI) {
 		updateTrainValues();
 		tmGUI.tempSpinner.setValue(this.temperature);
@@ -216,15 +224,15 @@ public class TrainModel {
 		tmGUI.lengthVal.setText(Double.toString(truncateTo(this.trainLength, 2)));
 		tmGUI.weightVal.setText(Double.toString(truncateTo(this.trainWeight, 2)));
 		tmGUI.capacityVal.setText(Integer.toString(this.trainCapacity));
-		tmGUI.gradeVal.setText(Double.toString(0.0));
-		tmGUI.setpointSpeedLabel.setText(Double.toString(truncateTo((this.currentSpeed*SECONDSTOHOURCONVERT/
+		//tmGUI.gradeVal.setText(Double.toString(0.0));
+		tmGUI.currentSpeedLabel.setText(Double.toString(truncateTo((this.currentSpeed*SECONDSTOHOURCONVERT/
 				METERSTOMILECONVERT), 2)));
 		 
-		if (this.lineColor.equals("GREEN")) {
+		if (this.lineColor.equals("GREEN LINE")) {
 			tmGUI.lblLine.setText(lineColor);
 			tmGUI.lblLine.setForeground(Color.GREEN);
 		} else {
-			tmGUI.lblLine.setText("RED");
+			tmGUI.lblLine.setText("RED LINE");
 			tmGUI.lblLine.setForeground(Color.RED);
 		}
     }
@@ -236,8 +244,9 @@ public class TrainModel {
     private void updateTrainValues() {
     	// So far the values of the train are all hard coded EXCEPT the velocity and power
     	// Need to add functionality to output a velocity from a power input
-    	// Step 1: input power and convert the power to a force based on the starting velocity
+    	// First get input power and convert the power to a force based on the starting velocity
     	//powerIn = 180;
+    	trainWeight = (TRAINWEIGHT*trainCars) + (numPassengers*AVEPASSENGERWEIGHT);
     	double trainMass = trainWeight*KGTOPOUNDCONVERT;
     	
     	if (this.currentSpeed == 0) {
@@ -246,11 +255,11 @@ public class TrainModel {
     		this.force = (this.powerIn * 1000)/this.currentSpeed;
     	}
     	
-    	// Step 2: Calculate the slope of the train's current angle (Degrees = Tan-1 (Slope Percent/100))
+    	// Calculate the slope of the train's current angle (Degrees = Tan-1 (Slope Percent/100))
     	this.slope = Math.atan2(this.grade,100);
     	double angle = Math.toDegrees(this.slope);
     	
-    	// Step 3: Calculate the forces acting on the train using the coefficient of friction (TODO: FIND OUT WHAT THAT IS)
+    	// Calculate the forces acting on the train using the coefficient of friction (TODO: FIND OUT WHAT THAT IS)
     	// and the train's weight in lbs converted to kg divided over the wheels times gravity (G)
     	this.normalForce = (trainMass/12) * G * Math.sin(angle);	// divide by 12 for the number of wheels
     	this.downwardForce = (trainMass/12) * G * Math.cos(angle);	// divide by 12 for the number of wheels
@@ -262,7 +271,7 @@ public class TrainModel {
     	
     	this.force = this.totalForce;
     	
-    	// Step 4: Calculate acceleration using the F = ma equation, where m = the mass of the body moving
+    	// Calculate acceleration using the F = ma equation, where m = the mass of the body moving
     	this.trainAcceleration = this.force/trainMass;
     	
     	// and have to check to make sure this acceleration does not exceed our max.
@@ -280,7 +289,7 @@ public class TrainModel {
     		this.trainAcceleration = (TRAINSERVICEBRAKE*1);
     	}
     	
-    	// Step 5: Calculate the final speed by adding the old speed with the acceleration x the time elapsed (one second)
+    	// Calculate the final speed by adding the old speed with the acceleration x the time elapsed (one second)
     	// TODO: DO I CHANGE THE TIME GIVEN THE SPEED UP?
     	this.finalSpeed = this.currentSpeed + (this.trainAcceleration * 1);
     	
@@ -310,4 +319,75 @@ public class TrainModel {
         double truncatedNumber = (double)( truncatedNumberInt / Math.pow( 10, decimalPlaces ) );
         return truncatedNumber;
     }
+    
+    public void activateFailureModeTest() {
+    	
+    }
+    
+    public void endFailureModeTest() {
+    	
+    }
+    
+    public void getTrainController(TrainModel trainModel) {
+    	
+    }
+    
+    public void updateTrainList() {
+    	
+    }
+    
+    public void updateArrivalStatus() {
+    	
+    }
+    
+    public void setPos(double pos) {
+    	
+    }
+    
+    /*public double getPos() {
+    	return pos;
+    }*/
+    
+    /*public Block getGrade() {
+    	
+    }*/
+    
+    public void setSetpointSpeed(double setpointSpeed) {
+    	
+    }
+    
+    /*public double getSetpointSpeed() {
+    	return setpointSpeed;
+    }*/
+    
+    /*public double getAuthority() {
+    	return authority;
+    }*/
+    
+    public void setAuthority(double authority) {
+    	
+    }
+    
+    public static void runTrainModel () throws InterruptedException {
+        TrainModel trainModel = new TrainModel("GREEN LINE", "Train 1");
+        //Instantiate a GUI for this train
+        TrainModelNewGUI trainModelGUI = trainModel.CreateNewGUI(trainModel);
+        trainModel.showTrainGUI();
+        
+        //Constantly update velocity then the GUI
+        while(true){
+        	long millis = System.currentTimeMillis();
+            //code to run
+            trainModel.updateTrainValues();
+            trainModel.setValuesForDisplay(trainModelGUI);
+            if(trainModelGUI.isDisplayable() == false) {
+                System.exit(0);
+            }
+            Thread.sleep(1000 - millis % 1000);
+        }
+    }
+	
+	public static void main(String[] args) throws InterruptedException {
+		runTrainModel();
+	}
 }
