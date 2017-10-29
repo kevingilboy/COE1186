@@ -111,7 +111,6 @@ public class TrainModelNewGUI extends JFrame {
 	
 	public JButton btnSendPowerCommand = new JButton("Set Power Input");
 	public JButton btnEmergencyBrake = new JButton("Emergency Brake");
-	public JToggleButton btnServiceBrake = new JToggleButton("Service Brake");
 	
 	public JLabel numCarsSpinner = new JLabel();
 	public JSpinner tempSpinner = new JSpinner();
@@ -360,19 +359,6 @@ public class TrainModelNewGUI extends JFrame {
 		  }
 		});
 		
-		btnServiceBrake.setFont(new Font("Tahoma", Font.BOLD, 16));
-		btnServiceBrake.setForeground(Color.BLACK);
-		btnServiceBrake.setBounds(670, 468, 220, 29);
-		stylizeToggleButton(btnServiceBrake);
-		contentPane.add(btnServiceBrake);
-		btnServiceBrake.addActionListener(new ActionListener()
-		{
-		  public void actionPerformed(ActionEvent e)
-		  {
-			  serviceBrake = !serviceBrake;
-		  }
-		});
-		
 		leftDoorLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		leftDoorLabel.setBounds(660, 348, 129, 20);
 		contentPane.add(leftDoorLabel);
@@ -396,7 +382,7 @@ public class TrainModelNewGUI extends JFrame {
 		btnEmergencyBrake.setFont(new Font("Tahoma", Font.BOLD, 16));
 		
 		btnEmergencyBrake.setForeground(Color.RED);
-		btnEmergencyBrake.setBounds(670, 504, 220, 29);
+		btnEmergencyBrake.setBounds(670, 469, 220, 64);
 		stylizeButton(btnEmergencyBrake);
 		contentPane.add(btnEmergencyBrake);
 		btnEmergencyBrake.addActionListener(new ActionListener()
@@ -613,10 +599,5 @@ public class TrainModelNewGUI extends JFrame {
 	 */
 	public void stylizeToggleButton(JToggleButton b){
 		Border thickBorder = new LineBorder(Color.WHITE, 3);
-    	b.setBorder(thickBorder);
-		b.setContentAreaFilled(false);
-		b.setOpaque(true);
-		b.setBackground(Color.BLACK);
-		b.setForeground(Color.WHITE);
 	}
 }

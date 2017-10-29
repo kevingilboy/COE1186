@@ -1,0 +1,21 @@
+@startuml
+
+participant "TrackModel" as A
+participant "TrainModel" as B
+participant "TrainController" as C
+
+activate A
+A -> B : getGps()
+activate B
+
+B -> C : setGps()
+activate C
+
+B --> A : Complete Request
+deactivate A
+
+C --> B : Received Message
+deactivate B
+deactivate C
+
+@enduml
