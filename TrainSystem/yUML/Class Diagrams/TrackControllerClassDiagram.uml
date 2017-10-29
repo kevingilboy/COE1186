@@ -62,7 +62,7 @@ class WaysideControllerGUI {
 	{method} - getBlockInfo(string line, int blockId) : Block
 		'calls waysideController.recieveBlockInfo( ), displayInfo( )
 	{method} - uploadPLC()
-		'calls PLC.parsePLC(string path)
+		'calls PLC.parsePLC(string path), runPLC( )
 	{method} - runPLC(boolean occupancy)
 		'update states using PLC.logic
 }
