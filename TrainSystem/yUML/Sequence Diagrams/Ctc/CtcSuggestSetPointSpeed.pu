@@ -10,16 +10,26 @@ skinparam sequence {
   ArrowColor #006666
   LifeLineBorderColor #c09cd9
 }
-
+box "Ctc"
+actor "Dispatcher"
+participant CtcGui
 participant Ctc
+end box
 participant TrackController
 participant TrackModel
 participant TrainModel
+'participant Mbo
+
+activate Dispatcher
+activate CtcGui
+Dispatcher -> CtcGui : Select train
+Dispatcher -> CtcGui : Set speed
+deactivate Dispatcher
 
 activate Ctc
-Ctc -> Ctc : Set suggested speed
+CtcGui -> Ctc : modifyTrainSpeed(Train,speed)
+deactivate CtcGui
 Ctc -> TrackController : transmitSuggestedSetpointSpeed(Train,speed)
-deactivate Ctc
 
 activate TrackController
 TrackController -> TrackModel : transmitSuggestedSetpointSpeed(Train,speed)
