@@ -2,95 +2,105 @@
 
 title CTC
 skinparam backgroundColor transparent
-skinparam classBackgroundColor #fff
-skinparam classBorderColor #000
-skinparam arrowColor #000
+skinparam classBackgroundColor #e6ffcc
+skinparam classBorderColor 	#049595
+skinparam packageBorderCOlor  #049595
+skinparam arrowColor #006666
 
-class SimTime{
-  +hr : int
-  +min : int
-  +sec : int
-  +toString() : String
-}
-interface Module{
-  timeUpdate(SimTime) : Boolean
-}
-class Ctc {
-  trains : Train[]
-  schedulesInQueue : Schedule
-  blocks : Block[]
-  addTrainToQueue(Schedule)
-  dispatchTrainFromQueue(String)
-  importSchedule(String)
-  setTicketSales(String,int)
-  updateSchedule(String,Schedule)
 
-  getBlocks()
-  getBlockOccupancy(String,String)
-  getBlockStatus(String,String)
-  getSwitchState(String,String)
-  setBlockStatus(String,String,String)
-  setSwitchState(String,String,boolean)
-  toggleSwitchState(String,String)
+package Shared{
+  interface Module{
+    +timeUpdate(SimTime) : Boolean
+  }
+  class SimTime{
+    +hr : int
+    +min : int
+    +sec : int
+    +toString() : String
+  }
+}
+package Module.Ctc {
+  class Ctc {
+    -trains : Train[]
+    -throughput : int
+    -schedulesInQueue : Schedule
+    -blocks : Block[]
+    +addTrainToQueue(Schedule)
+    -dispatchTrainFromQueue(String)
+    -importSchedule(String)
+    -calculateThroughput(int)
+    +transmitSuggestedSetpointSpeed(String,int)
+    +transmitCtcAuthority(String,double)
+    +addTicketSales(int)
+    +updateSchedule(String,Schedule)
+    +receiveBlocks()
+    +receiveBlockOccupancy(String,String)
+    +receiveBlockStatus(String,String)
+    +receiveSwitchState(String,String)
+    +setBlockStatus(String,String,String)
+    +transmittSwitchState(String,String,boolean)
+  }
+
+  class Train{
+    speed : int
+    authority : int
+    nextStop : String
+    getSpeed() : int
+    getAuthority() : int
+    getSchedule() : Schedule
+    setSpeed(int)
+    setAuthority(int)
+    setSchedule(Schedule)
+  }
+  class CtcGui {
+    ctc : Ctc
+    createSchedule(Schedule) : Schedule
+    editSchedule(Schedule) : Schedule
+    repaint()
+  }
+  class ScheduleEditorGui {
+    ctcGui : CtcGui
+    -submitScheduleToCtc()
+  }
+  class Schedule {
+    departureTime : SimTime
+    line : String
+    name : String
+    authority : int
+    dispatched : Boolean
+    toStringArray() : String
+  }
+  class Stop {
+    arrivalTime : SimTime
+    departureTime : SimTime
+  }
+  class Block{
+    label :String
+    line : String
+    isStation : Boolean
+    station : String
+    isSwitch : Boolean
+    isStation() : Boolean
+    getStationName() : String
+    isSwitch() : Boolean
+  }
 }
 
-class Train{
-  speed : int
-  authority : int
-  nextStop : String
-  getSpeed() : int
-  getAuthority() : int
-  getSchedule() : Schedule
-  setSpeed(int)
-  setAuthority(int)
-  setSchedule(Schedule)
-}
-class CtcGui {
-  editSchedule(Schedule)
-  openMaintenance()
-  repaint()
-}
-class ScheduleEditorGui {
+Module--SimTime : imports
 
-}
-class Schedule {
-  departureTime : SimTime
-  line : String
-  name : String
-  authority : int
-  dispatched : Boolean
-  toStringArray() : String
-}
-class Stop {
-  arrivalTime : SimTime
-  departureTime : SimTime
-}
-class Block{
-  label :String
-  line : String
-  isStation : Boolean
-  station : String
-  isSwitch : Boolean
-  isStation() : Boolean
-  getStationName() : String
-  isSwitch() : Boolean
-}
+Module <|. Ctc : implements
 
-Module-SimTime
+Ctc "0..*" o-> Block : has knowledge of
+Ctc "0..*" o-> Schedule : contains in queue
+Ctc "0..*" o--> Train : monitors
+Ctc "1" *- CtcGui : instantiates
 
-Module <|.- Ctc
+CtcGui *- ScheduleEditorGui : instantiates
 
-Ctc "0..*"-> Block : has knowledge of
-Ctc "0..*"--> Schedule : contains in queue
-Ctc "0..*"--> Train : monitors
-Ctc "1" *-> CtcGui : instantiates
-
-CtcGui *--> ScheduleEditorGui
-
-Schedule "1.." -> Stop : contains
-Stop "1" -> Block : at
+Schedule "1.." o-> Stop : contains
+Stop "1" o-> Block : located at
 
 Train "1" *-> Schedule : is following
-Train "1" -> Block : located at
+Train "1" o-> Block : located at
 
 @enduml
