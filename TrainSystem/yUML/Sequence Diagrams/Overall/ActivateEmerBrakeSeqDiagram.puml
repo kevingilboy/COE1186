@@ -1,0 +1,29 @@
+@startuml
+
+title Activate Emergency Brake Sequence Diagram
+skinparam sequence {
+  BackgroundColor transparent
+  ParticipantBackgroundColor #e6ffcc
+  ParticipantBorderColor 	#049595
+  PackageBorderCOlor  #049595
+  ArrowColor #006666
+  LifeLineBorderColor #c09cd9
+}
+actor Passenger(s)
+
+participant "TrainModelGUI" as A
+participant "TrainModel" as B
+participant "TrainController" as C
+
+Passenger(s) -> A : Clicks "Emergency Brake" Button
+activate A
+
+A -> B : setEmergencyBrake()
+activate B
+deactivate A
+
+B -> C : setEmergencyBrake()
+activate C
+deactivate B
+
+@enduml
