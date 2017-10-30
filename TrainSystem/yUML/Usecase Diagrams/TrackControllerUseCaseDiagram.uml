@@ -8,7 +8,6 @@ skinparam packageBorderCOlor  #049595
 skinparam arrowColor #006666
 
 :Dispatcher / CTC: as d
-:Train / Train Model: as t
 :Wayside Engineer: as we
 
 rectangle TrackControllersGUI{
@@ -23,8 +22,6 @@ rectangle TrackControllersGUI{
 we --> (Select Wayside Controller)
 we --> (View Block Status)
 we --> (Upload PLC Code)
-t --> (Occupy Block) 
-(Occupy Block) ..> (Update Switch, Lights, and Crossing)
 d --> (Set Switch State)
 d --> (Close Block for Maintenance)
 
