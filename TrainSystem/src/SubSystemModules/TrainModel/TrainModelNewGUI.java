@@ -353,17 +353,17 @@ public class TrainModelNewGUI extends JFrame {
 		contentPane.add(lblLight);
 		
 		labelTemperature.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		labelTemperature.setBounds(660, 449, 154, 20);
+		labelTemperature.setBounds(682, 478, 154, 20);
 		contentPane.add(labelTemperature);
 		tempSpinner.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		tempSpinner.setBounds(817, 447, 75, 26);
+		tempSpinner.setBounds(839, 476, 75, 26);
 		//tempSpinner.setValue(70);
 		contentPane.add(tempSpinner);
 		btnEmergencyBrake.setFont(new Font("Tahoma", Font.BOLD, 16));
 		
 		btnEmergencyBrake.setForeground(Color.RED);
-		btnEmergencyBrake.setBounds(672, 332, 220, 100);
+		btnEmergencyBrake.setBounds(682, 364, 220, 100);
 		stylizeButton(btnEmergencyBrake);
 		contentPane.add(btnEmergencyBrake);
 		btnEmergencyBrake.addActionListener(new ActionListener()
