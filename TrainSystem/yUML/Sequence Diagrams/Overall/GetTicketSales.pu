@@ -1,6 +1,6 @@
 @startuml
 
-title Dispatch Train to Block
+title Send Ticket Sales to CTC
 
 skinparam noteBorderColor #049595
 
