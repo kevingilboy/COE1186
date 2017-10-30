@@ -15,6 +15,7 @@ actor Dispatcher
 participant CtcGui
 participant ScheduleEditor
 participant Ctc
+participant Train
 end box
 
 participant TrainModel
@@ -33,10 +34,12 @@ deactivate ScheduleEditor
 Ctc -> CtcGui : repaint()
 deactivate CtcGui
 == Dispatch the Train ==
-Ctc -> Ctc : dispatchTrainFromQueue(Schedule)
+Ctc -> Train : new Train(Schedule)
+Train --> Ctc : Train
+Ctc -> CtcGui : repaint()
+
 Ctc -> TrainModel : dispatchTrain(line,startingBlock)
 Ctc -> TrainController : dispatchTrain(line,startingBlock,Schedule)
-
 
 activate TrainController
 TrainController -> TrackModel : getBlockSpeedLimits(line)
