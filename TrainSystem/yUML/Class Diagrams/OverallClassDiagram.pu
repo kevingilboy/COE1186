@@ -61,7 +61,7 @@ class Ctc{
   .
   .
   ..Ticket Sales..
-  +setTicketSales(int)
+  +addTicketSales(int)
 }
 class TrackController{
   +trkmdl : TrackModel
