@@ -123,25 +123,6 @@ package Module.TrainModel {
         getStationName() : String
         isSwitch() : Boolean
     }
-    
-    class TrainController {
-        -time : integer
-        -controlList : ArrayList
-        -positions : ArrayList
-        +mbo : MBO
-        +trnModel : TrainModel
-        +timeUpdate()
-        +addTrain()
-        +setCtcAuth()
-        +setBrakingDist()
-        +setActualSpeed()
-        +setPosition()
-        +setTime()
-        +suggestTrainSpeed()
-        +getPosition()
-        +getTrainController()
-    }
-
 
     class TrainModelNewGUI{
         +gpsAntennaStatusLabel : JLabel
@@ -182,7 +163,10 @@ Module <|. TrainModelList : implements
 TrainModelList "1..*"*-down- TrainModel : instantiates
 TrainModel "0..*"*- TrainModelNewGUI : instantiates
 TrainModel "1..*"-* Gps : contains
+<<<<<<< HEAD
+=======
 TrainModelList "0..*"*down- TrainController : monitors
+>>>>>>> master
 Gps "2..*"-* Block : monitors
 
 @enduml
