@@ -22,6 +22,11 @@ package Module.TrainModel {
     class TrainModelList {
         -trainID : String
         -trainModel : TrainModel
+        __
+        +time : SimTime
+        __
+        +updateList()
+        +timeUpdate(SimTime)
     }
 
     class TrainModel {
@@ -64,7 +69,6 @@ package Module.TrainModel {
         -trainAcceleration : double
         -gpsSignal : Gps
         __
-        +simulator : Simulator
         +trainController : TrainController
         +trainModelGUI : TrainModelNewGUI
         +trainList : Arraylist
@@ -178,7 +182,7 @@ Module <|. TrainModelList : implements
 TrainModelList "1..*"*-down- TrainModel : instantiates
 TrainModel "0..*"*- TrainModelNewGUI : instantiates
 TrainModel "1..*"-* Gps : contains
-TrainModel "0..*"*down- TrainController : monitors
+TrainModelList "0..*"*down- TrainController : monitors
 Gps "2..*"-* Block : monitors
 
 @enduml
