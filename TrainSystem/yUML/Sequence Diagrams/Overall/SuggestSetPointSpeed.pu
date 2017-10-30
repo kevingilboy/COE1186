@@ -1,6 +1,6 @@
 @startuml
 
-title Dispatch Train to Block
+title Suggest Setpoint Speed
 
 skinparam sequence {
   BackgroundColor transparent
