@@ -1,5 +1,12 @@
 @startuml
-scale 350 width
+title Simulator State Diagram
+skinparam state {
+  BackgroundColor transparent
+  BackgroundColor #e6ffcc
+  BorderColor 	#049595
+  ArrowColor #006666
+}
+
 [*] --> Initialization
 
 state "Module Initialization" as Initialization {
