@@ -22,7 +22,7 @@ package Shared{
 package Module.Ctc {
   class Ctc {
     -trains : Train[]
-    -tickets: int[][2]
+    -tickets: Ticket[]
 
     -throughput : double
     -schedulesInQueue : Schedule
@@ -48,7 +48,10 @@ package Module.Ctc {
     +setBlockStatus(String,String,String)
     +transmitSwitchState(String,String,boolean)
   }
-
+  class Ticket{
+    +time : SimTime
+    +number : int
+  }
   class Train{
     speed : int
     authority : int
@@ -98,9 +101,11 @@ Module--SimTime : imports
 
 Module <|. Ctc : implements
 
+
 Ctc "0..*" o-> Block : has knowledge of
 Ctc "0..*" o-> Schedule : contains in queue
 Ctc "0..*" o--> Train : monitors
+Ctc "0..*" o-> Ticket : keeps track of
 Ctc "1" *- CtcGui : instantiates
 
 CtcGui *- ScheduleEditorGui : instantiates
