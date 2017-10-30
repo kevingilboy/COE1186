@@ -22,13 +22,20 @@ package Shared{
 package Module.Ctc {
   class Ctc {
     -trains : Train[]
-    -throughput : int
+    -throughput : double
     -schedulesInQueue : Schedule
     -blocks : Block[]
+    __
+    --Schedule Creation and Queue--
+    -importSchedule(String)
     +addTrainToQueue(Schedule)
     -dispatchTrainFromQueue(String)
-    -importSchedule(String)
+    --Train Communication--
+    --Block Communication--
+    --Throughput--
+    +addTicketSales(int)
     -calculateThroughput(int)
+
     +transmitSuggestedSetpointSpeed(String,int)
     +transmitCtcAuthority(String,double)
     +addTicketSales(int)
@@ -38,7 +45,7 @@ package Module.Ctc {
     +receiveBlockStatus(String,String)
     +receiveSwitchState(String,String)
     +setBlockStatus(String,String,String)
-    +transmittSwitchState(String,String,boolean)
+    +transmitSwitchState(String,String,boolean)
   }
 
   class Train{
