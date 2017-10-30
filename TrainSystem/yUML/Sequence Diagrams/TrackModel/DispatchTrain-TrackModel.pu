@@ -1,0 +1,44 @@
+@startuml
+
+title Dispatch Train to Block
+
+skinparam sequence {
+  BackgroundColor transparent
+  ParticipantBackgroundColor #e6ffcc
+  ParticipantBorderColor 	#049595
+  PackageBorderCOlor  #049595
+  ArrowColor #006666
+  LifeLineBorderColor #c09cd9
+}
+
+participant Ctc
+participant TrainModel
+participant TrainController
+box
+	participant TrackModel
+	participant Block
+end box
+
+== Create the Schedule ==
+activate Ctc
+Ctc -> Ctc : Create Schedule
+Ctc -> Ctc : Add to Queue
+== Dispatch the Train ==
+Ctc -> TrainModel : dispatchTrain(line,startingBlock)
+Ctc -> TrainController : dispatchTrain(line,startingBlock,Schedule)
+deactivate Ctc
+
+activate TrainController
+	TrainController -> TrackModel : getBlockSpeedLimits(line)
+
+activate TrackModel
+group loop
+	TrackModel -> Block : getSpeedLimit()
+	Block --> TrackModel : speedLimit
+end
+TrackModel --> TrainController : speedLimits[]
+deactivate TrainController
+deactivate TrackModel
+
+
+@enduml
