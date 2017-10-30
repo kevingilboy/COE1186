@@ -1,0 +1,31 @@
+@startuml
+
+title Retrieve Speed and Authority Sequence Diagram
+skinparam sequence {
+  BackgroundColor transparent
+  ParticipantBackgroundColor #e6ffcc
+  ParticipantBorderColor 	#049595
+  PackageBorderCOlor  #049595
+  ArrowColor #006666
+  LifeLineBorderColor #c09cd9
+}
+
+participant "TrackModel" as A
+participant "TrainModel" as B
+participant "TrainModelGUI" as C
+participant "TrainController" as D
+
+A -> B : setSetpointSpeed()
+activate B
+deactivate A
+
+B -> C : setSetpointSpeed()
+activate C
+
+B -> D : getSetpointSpeed()
+
+D -> B : setPower()
+
+B -> C : updateTrainValues()
+
+@enduml

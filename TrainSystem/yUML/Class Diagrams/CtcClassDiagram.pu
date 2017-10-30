@@ -23,6 +23,7 @@ package Module.Ctc {
   class Ctc {
     -trains : Train[]
     -tickets: int[][2]
+
     -throughput : double
     -schedulesInQueue : Schedule
     -blocks : Block[]
@@ -32,6 +33,7 @@ package Module.Ctc {
     +addTrainToQueue(Schedule)
     -dispatchTrainFromQueue(String)
     --Train Communication--
+
     +transmitSuggestedSetpointSpeed(String,int)
     +transmitCtcAuthority(String,double)
     --Block Communication--
