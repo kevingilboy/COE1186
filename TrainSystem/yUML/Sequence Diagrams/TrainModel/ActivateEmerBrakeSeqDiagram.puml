@@ -9,10 +9,12 @@ skinparam sequence {
   ArrowColor #006666
   LifeLineBorderColor #c09cd9
 }
+box "Train Model"
 actor Passenger(s)
 
 participant "TrainModelGUI" as A
 participant "TrainModel" as B
+end box
 participant "TrainController" as C
 
 Passenger(s) -> A : Clicks "Emergency Brake" Button
