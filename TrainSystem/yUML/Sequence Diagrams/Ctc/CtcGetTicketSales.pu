@@ -15,16 +15,31 @@ skinparam sequence {
 }
 
 participant TrackModel
+box "CTC"
 participant Ctc
+participant Ticket
+participant CtcGui
+end box
 
 activate TrackModel
 TrackModel -> TrackModel : generateTicketSales()
 note left: If there is a train...
-TrackModel -> Ctc : addTicketSales(int)
+TrackModel -> Ctc : addTicketSales(numTickets)
 deactivate TrackModel
 
 activate Ctc
-Ctc -> Ctc : calculateThroughput()
+Ctc -> Ticket : new Ticket (numTickets,currTime)
+Ticket --> Ctc : Ticket
+Ctc -> Ctc : Push Ticket to Ticket queue
+group calculateThroughput
+Ctc -> Ctc : Peek at next Ticket in queue\nand remove if >1hr ago
+Ctc -> Ctc : Throughput = Σ tickets in queue
+Ctc -> CtcGui : repaint()
+end
+note right
+This section is run
+every clock cycle
+end note
 deactivate Ctc
 
 
