@@ -6,25 +6,28 @@ skinparam sequence {
   BackgroundColor transparent
   ParticipantBackgroundColor #e6ffcc
   ParticipantBorderColor 	#049595
+  BoxBorderColor #049595
   PackageBorderCOlor  #049595
   ArrowColor #006666
   LifeLineBorderColor #c09cd9
 }
 
-participant "TrainModel" as A
-participant "MBO" as B
+box "TrainModel"
+participant TrainModel
+end box
+participant MBO
 
 
-A -> B : getMboAntennaStatus()
-activate A
-activate B
+TrainModel -> MBO : getMboTrainModelntennaStatus()
+activate TrainModel
+activate MBO
 
-B --> A : Return State
+MBO--> TrainModel : Return State
 
-B -> A : getPos()
+MBO-> TrainModel : getPos()
 
-A --> B : Complete Request
-deactivate A
-deactivate B
+TrainModel --> MBO: Complete Request
+deactivate TrainModel
+deactivate MBO
 
 @enduml

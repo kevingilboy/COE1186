@@ -1,31 +1,57 @@
 @startuml
 
-title Retrieve Speed and Authority Sequence Diagram
+title Retrieve/Transmit Setpoint Speed/Authority
+
 skinparam sequence {
   BackgroundColor transparent
+  ActorBackgroundColor #e6ffcc
+  ActorBorderColor 	#049595
   ParticipantBackgroundColor #e6ffcc
   ParticipantBorderColor 	#049595
+  BoxBorderColor    #049595
   PackageBorderCOlor  #049595
   ArrowColor #006666
   LifeLineBorderColor #c09cd9
 }
 
-participant "TrackModel" as A
-participant "TrainModel" as B
-participant "TrainModelGUI" as C
-participant "TrainController" as D
+actor "Dispatcher"
+participant CtcGui
+participant Ctc
+participant TrackController
+participant TrackModel
+box "Train Model"
+participant TrainModel
+end box
+'participant Mbo
 
-A -> B : setSetpointSpeed()
-activate B
-deactivate A
+activate Dispatcher
+activate CtcGui
+Dispatcher -> CtcGui : Select train
+Dispatcher -> CtcGui : Set speed
+deactivate Dispatcher
 
-B -> C : setSetpointSpeed()
-activate C
+activate Ctc
+CtcGui -> Ctc : modifyTrainSpeed(Train,speed)
+deactivate CtcGui
+Ctc -> TrackController : transmitSuggestedSetpointSpeed(Train,speed)
 
-B -> D : getSetpointSpeed()
+activate TrackController
+TrackController -> TrackModel : transmitSuggestedSetpointSpeed(Train,speed)
+deactivate TrackController
 
-D -> B : setPower()
+activate TrackModel
+TrackModel -> TrainModel : setSuggestedSetpointSpeed(Train,speed)
+deactivate TrackModel
 
-B -> C : updateTrainValues()
+activate TrainModel
+TrainModel -> TrainController : setSpeed(Train,speed)
+
+activate TrainController
+TrainController --> TrainModel : Return power
+TrainModel --> TrainModel : Update velocity based on power input
+
+deactivate TrainController
+
+deactivate TrainModel
 
 @enduml
