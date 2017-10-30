@@ -1,6 +1,6 @@
 @startuml
 
-title Dispatch Train to Block
+title Set Train CTC Authority
 
 skinparam sequence {
   BackgroundColor transparent

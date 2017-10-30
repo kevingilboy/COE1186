@@ -1,6 +1,6 @@
 @startuml
 
-title Close Track For Maintenance & Repair Track
+title Toggle Switch
 
 skinparam sequence {
   BackgroundColor transparent
