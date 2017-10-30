@@ -1,0 +1,50 @@
+@startuml
+
+title Send Ticket Sales to CTC
+
+skinparam noteBorderColor #049595
+
+skinparam sequence {
+  BackgroundColor transparent
+  ParticipantBackgroundColor #e6ffcc
+  ParticipantBorderColor 	#049595
+  noteBorderColor 	#049595
+  PackageBorderCOlor  #049595
+  ArrowColor #006666
+  LifeLineBorderColor #c09cd9
+}
+
+box
+	participant TrackModel
+	participant Block
+	participant Station
+end box
+participant Ctc
+
+activate TrackModel
+activate Block
+TrackModel -> Block : getOccupancy()
+TrackModel -> Block : getStation()
+Block -> TrackModel : return block occupancy
+Block -> TrackModel : return station
+
+group if (occupied & hasStation)
+	Block -> Station : getTicketSales()
+
+	activate Station
+		Station -> Station : generateTicketSales()
+		Station --> Block : return ticketSales
+	deactivate Station
+
+	Block -> TrackModel : reportTicketSales()
+	deactivate Block
+
+TrackModel -> Ctc : addTicketSales(int)
+activate Ctc
+end
+deactivate TrackModel
+
+Ctc -> Ctc : calculateThroughput()
+
+
+@enduml
