@@ -26,7 +26,7 @@ TrackController -> TrackModel : transmitSuggestedSetpointSpeed(Train,speed)
 deactivate TrackController
 
 activate TrackModel
-TrackModel -> TrainModel : setSuggestedSetpointSpeed(Train,speed)
+TrackModel -> TrainModel : transmitSuggestedSetpointSpeed(Train,speed)
 deactivate TrackModel
 
 activate TrainModel
