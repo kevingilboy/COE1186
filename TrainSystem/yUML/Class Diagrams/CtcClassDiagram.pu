@@ -21,79 +21,96 @@ package Shared{
 }
 package Module.Ctc {
   class Ctc {
-    -trains : Train[]
+    -ctcGui : CtcGui
+    +trains : Train[]
+    +schedulesInQueue : Schedule
+    +blocks : Block[]
     -tickets: Ticket[]
-
     -throughput : double
-    -schedulesInQueue : Schedule
-    -blocks : Block[]
     __
-    --Schedule Creation and Queue--
-    -importSchedule(String)
+    ..Schedule Creation and Queue..
+    +importSchedule(String)
     +addTrainToQueue(Schedule)
-    -dispatchTrainFromQueue(String)
-    --Train Communication--
-
-    +transmitSuggestedSetpointSpeed(String,int)
-    +transmitCtcAuthority(String,double)
-    --Block Communication--
-    --Throughput--
-    -calculateThroughput(int)
-    +addTicketSales(int)
+    +dispatchTrainFromQueue(String)
     +updateSchedule(String,Schedule)
-    +receiveBlocks()
-    +receiveBlockOccupancy(String,String)
-    +receiveBlockStatus(String,String)
-    +receiveSwitchState(String,String)
-    +setBlockStatus(String,String,String)
-    +transmitSwitchState(String,String,boolean)
+    ..Train Communication..
+    -transmitSuggestedSetpointSpeed(String,int)
+    -transmitCtcAuthority(String,double)
+    ..Block Communication..
+    -receiveBlocks()
+    -receiveBlockOccupancy(String,String)
+    -receiveBlockStatus(String,String)
+    -receiveSwitchState(String,String)
+    -setBlockStatus(String,String,String)
+    -transmitSwitchState(String,String,boolean)
+    ..Throughput..
+    -calculateThroughput(int) : int
+    +addTicketSales(int)
+    +getThroughput() : double
+    ..Helpers..
+    -getQueuedScheduleByName(String) : Schedule
+    -getTrainByName(String) : Train
+    -getBlockByNumber(String,int) : Block
+  }
+  class CtcGui {
+    +ctc : Ctc
+    -createSchedule(Schedule) : Schedule
+    -editSchedule(Schedule) : Schedule
+    +repaint()
+  }
+  class ScheduleEditorGui {
+    -ctcGui : CtcGui
+    -submitScheduleToCtc()
   }
   class Ticket{
     +time : SimTime
     +number : int
+    +getExpirationTime() : SimTime
   }
   class Train{
-    speed : int
-    authority : int
-    nextStop : String
-    getSpeed() : int
-    getAuthority() : int
-    getSchedule() : Schedule
-    setSpeed(int)
-    setAuthority(int)
-    setSchedule(Schedule)
-  }
-  class CtcGui {
-    ctc : Ctc
-    createSchedule(Schedule) : Schedule
-    editSchedule(Schedule) : Schedule
-    repaint()
-  }
-  class ScheduleEditorGui {
-    ctcGui : CtcGui
-    -submitScheduleToCtc()
+    -schedule : Schedule
+    -line : String
+    -location : int
+    -speed : int
+    -authority : int
+    -nextStop : String
+    __
+    --Getters--
+    +getSchedule() : Schedule
+    +getNextStop() : String
+    +getLine() : String
+    +getSpeed() : int
+    +getAuthority() : I=int
+    ..Setters..
+    +setSchedule(Schedule)
+    +setSpeed(int)
+    +setAuthority(int)
   }
   class Schedule {
-    departureTime : SimTime
-    line : String
-    name : String
-    authority : int
-    dispatched : Boolean
-    toStringArray() : String
+    +stops : Stop[]
+    +departureTime : SimTime
+    +line : String
+    +name : String
+    +authority : int
+    +dispatched : Boolean
+    +toStringArray() : String
   }
   class Stop {
-    arrivalTime : SimTime
-    departureTime : SimTime
+    +location : Block
+    +arrivalTime : SimTime
+    +departureTime : SimTime
   }
   class Block{
-    label :String
-    line : String
-    isStation : Boolean
-    station : String
-    isSwitch : Boolean
-    isStation() : Boolean
-    getStationName() : String
-    isSwitch() : Boolean
+    ..General..
+    +line : String
+    +number : int
+    ..Station..
+    +isStation : Boolean
+    +stationName : String
+    ..Station..
+    +isSwitch : Boolean
+    +switchState : Boolean
+    __
   }
 }
 
@@ -101,19 +118,18 @@ Module--SimTime : imports
 
 Module <|. Ctc : implements
 
+Ctc o->"0..*" Block : has knowledge of
+Ctc o->"0..*" Schedule : contains in queue
+Ctc o-->"0..*" Train : monitors
+Ctc o->"0..*" Ticket : keeps track of
+Ctc *-"1" CtcGui : instantiates
 
-Ctc "0..*" o-> Block : has knowledge of
-Ctc "0..*" o-> Schedule : contains in queue
-Ctc "0..*" o--> Train : monitors
-Ctc "0..*" o-> Ticket : keeps track of
-Ctc "1" *- CtcGui : instantiates
+CtcGui *-"1" ScheduleEditorGui : instantiates
 
-CtcGui *- ScheduleEditorGui : instantiates
+Schedule o->"1..*" Stop : contains
+Stop o->"1" Block : located at
 
-Schedule "1.." o-> Stop : contains
-Stop "1" o-> Block : located at
-
-Train "1" *-> Schedule : is following
-Train "1" o-> Block : located at
+Train *->"1" Schedule : is following
+Train o->"1" Block : located at
 
 @enduml
