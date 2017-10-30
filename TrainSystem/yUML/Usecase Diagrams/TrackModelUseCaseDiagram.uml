@@ -11,20 +11,25 @@ skinparam arrowColor #006666
 :Dispatcher / CTC: as d
 :Track Controller: as tkc
 :Train Model: as tnm
+:Train Controller: as trc
 
-rectangle TrackModelGUI{
+rectangle TrackModel{
 	(Import Track Layout)
 	(View Block Attributes)
 	(View Track Failures)
 	(View Block Occupancy)
 	(View Light Status)
+	(Initialize Block Speed Limits)
+	(Initialize Track Coordinates)
 }
 
-d --> (Import Track Layout)
+d ---> (Import Track Layout)
 tkc ---> (View Block Attributes)
 tkc ---> (View Track Failures)
 tkc ---> (View Block Occupancy)
 tkc ---> (View Light Status)
 tnm ---> (View Block Attributes)
+trc ---> (Initialize Block Speed Limits)
+trc ---> (Initialize Track Coordinates)
 
 @enduml
