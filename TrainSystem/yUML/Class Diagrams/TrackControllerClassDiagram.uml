@@ -32,7 +32,7 @@ package Module.TrackControllers{
 		{method} - transmitLightState(String line, int blockId, boolean light)
 		{method} - transmitCrossingState(String line, int blockId, boolean crossing)
 		..
-		{method} + updateTime(int time)
+		{method} + timeUpdate(int time)
 		{method} - initializeWaysides() 
 	}
 
