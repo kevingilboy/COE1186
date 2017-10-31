@@ -1,6 +1,6 @@
 @startuml
 
-title Retrieve/Transmit Setpoint Speed
+title Suggest Setpoint Speed - Train Model
 
 skinparam sequence {
   BackgroundColor transparent
@@ -49,9 +49,9 @@ TrainModel -> TrainController : setSpeed(Train,speed)
 activate TrainController
 TrainController --> TrainModel : Return power
 TrainModel --> TrainModel : Update velocity based on power input
+deactivate TrainModel
 
 deactivate TrainController
 
-deactivate TrainModel
 
 @enduml
