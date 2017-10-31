@@ -1,0 +1,55 @@
+@startuml
+
+title Set New Driver Speed
+
+skinparam sequence {
+	BackgroundColor transparent
+	ParticipantBackgroundColor #e6ffcc
+	ParticipantBorderColor 	#049595
+	PackageBorderCOlor  #049595
+	ArrowColor #006666
+	LifeLineBorderColor #c09cd9
+}
+
+actor Driver
+participant TrainControllerGUI
+participant TrnController
+participant PIController
+participant TrainController
+participant TrainModel
+
+Driver -> TrainControllerGUI : Clicks "Set New Speed" Button
+activate TrainControllerGUI
+
+TrainControllerGUI -> TrnController : setSetpointSpeed(speed)
+activate TrnController
+
+TrnController -> TrainController : receiveActualSpeed(Train)
+activate TrainController
+
+TrainController -> TrainModel : getActualSpeed(Train)
+activate TrainModel
+
+TrainModel --> TrainController : Return train's speed
+
+TrainController --> TrnController : Return train's speed
+
+TrnController -> TrnController : calcPowerOutput(setpointSpeed, actualSpeed)
+
+TrnController -> PIController : getOutput(setpointSpeed, actualSpeed)
+activate PIController
+
+PIController --> TrnController : Return power output
+deactivate PIController
+
+TrnController -> TrainControllerGUI : setPower(power)
+deactivate TrainControllerGUI
+
+TrnController -> TrainController : transmitPower(Train, power)
+deactivate TrnController
+
+TrainController -> TrainModel : setPower(Train, power)
+deactivate TrainController
+deactivate TrainModel
+
+@enduml
