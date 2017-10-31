@@ -17,19 +17,19 @@ skinparam arrowColor #006666
 rectangle TrainModelGUI{
     (Dispatch Train)
 	(Activate Emergency Brake)
-    (Retrieve Speed Information)
-    (Retrieve Authority Information)
-    (Retrieve GPS Signal)
-    (Retrieve MBO Antenna Signal)
+    (Suggest Setpoint Speed)
+    (Set Train Authority)
+    (Set GPS Signal)
+    (Set MBO Antenna Signal)
 }
 
 ctc --> (Dispatch Train)
 p --> (Activate Emergency Brake)
-tkm --> (Retrieve GPS Signal)
-tnc --> (Retrieve GPS Signal)
-tnc --> (Retrieve Speed Information)
-tnc --> (Retrieve Authority Information)
-mbo --> (Retrieve MBO Antenna Signal)
+tkm --> (Set GPS Signal)
+tnc --> (Set GPS Signal)
+tnc --> (Suggest Setpoint Speed)
+tnc --> (Set Train Authority)
+mbo --> (Set MBO Antenna Signal)
 
 
     

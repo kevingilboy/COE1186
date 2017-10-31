@@ -1,6 +1,6 @@
 @startuml
 
-title Retrieve MBO Antenna Signal Sequence Diagram
+title Set MBO Antenna Signal
 
 skinparam sequence {
   BackgroundColor transparent
