@@ -27,7 +27,7 @@ activate CtcGui
 Dispatcher -> CtcGui : Create New Schedule
 activate ScheduleEditor
 CtcGui -> ScheduleEditor : initialize()
-Dispatcher -> ScheduleEditor : Create the Schedule
+...Create the Schedule...
 Dispatcher -> ScheduleEditor : Request Schedule be Added to Queue
 ScheduleEditor -> Ctc : addScheduleToQueue(Schedule)
 deactivate ScheduleEditor
@@ -36,7 +36,9 @@ deactivate CtcGui
 == Dispatch the Train ==
 Ctc -> Train : new Train(Schedule)
 Train --> Ctc : Train
+activate CtcGui
 Ctc -> CtcGui : repaint()
+deactivate CtcGui
 
 Ctc -> TrainModel : dispatchTrain(line,startingBlock)
 Ctc -> TrainController : dispatchTrain(line,startingBlock,Schedule)
