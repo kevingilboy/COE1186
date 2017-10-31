@@ -13,7 +13,10 @@ skinparam sequence {
 
 participant Ctc
 participant TrackController
-participant TrackModel
+box
+	participant TrackModel
+	participant Block
+end box
 participant TrainModel
 
 activate Ctc
@@ -26,12 +29,17 @@ TrackController -> TrackModel : transmitSuggestedSetpointSpeed(Train,speed)
 deactivate TrackController
 
 activate TrackModel
-TrackModel -> TrainModel : transmitSuggestedSetpointSpeed(Train,speed)
+TrackModel -> TrackModel : getOccupiedBlock(line)
+TrackModel -> Block : getSpeedLimit()
+activate Block
+Block --> TrackModel : return speed limit
+deactivate Block
+
+TrackModel -> TrainModel : setSuggestedSetpointSpeed(Train,speed)
 deactivate TrackModel
 
 activate TrainModel
 TrainModel -> TrainController : setSpeed(Train,speed)
-TrainModel -> TrainModel : Set velocity from power input
 
 activate TrainController
 TrainController --> TrainModel : Return power
