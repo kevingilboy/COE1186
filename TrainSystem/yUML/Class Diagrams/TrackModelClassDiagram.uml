@@ -26,7 +26,7 @@ package Module.TrackModel{
         -trackTemperature: int
         -blocks : Block[]
         +getBlock(int): Block
-        +getOccupiedBlock() : Block
+        +getOccupiedBlock(String) : Block
         +getNextBlock(String, int) : Block
         +getPreviousBlock(String, int) : Block
         +getBlockSpeedLimits(String) : int[]
