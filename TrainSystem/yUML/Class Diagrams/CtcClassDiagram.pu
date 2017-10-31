@@ -22,10 +22,12 @@ package Shared{
 package Module.Ctc {
   class Ctc {
     -ctcGui : CtcGui
+    -beginTime : SimTime
+    -currentTime : SimTime
     +trains : Train[]
     +schedulesInQueue : Schedule
     +blocks : Block[]
-    -tickets: Ticket[]
+    -runningTicketSales : int
     -throughput : double
     __
     ..Schedule Creation and Queue..
@@ -44,7 +46,7 @@ package Module.Ctc {
     -setBlockStatus(String,String,String)
     -transmitSwitchState(String,String,boolean)
     ..Throughput..
-    -calculateThroughput(int) : int
+    -calculateThroughput(int) : double
     +addTicketSales(int)
     +getThroughput() : double
     ..Helpers..
@@ -61,11 +63,6 @@ package Module.Ctc {
   class ScheduleEditorGui {
     -ctcGui : CtcGui
     -submitScheduleToCtc()
-  }
-  class Ticket{
-    +time : SimTime
-    +number : int
-    +getExpirationTime() : SimTime
   }
   class Train{
     -schedule : Schedule
@@ -121,7 +118,6 @@ Module <|. Ctc : implements
 Ctc o->"0..*" Block : has knowledge of
 Ctc o->"0..*" Schedule : contains in queue
 Ctc o-->"0..*" Train : monitors
-Ctc o->"0..*" Ticket : keeps track of
 Ctc *-"1" CtcGui : instantiates
 
 CtcGui *-"1" ScheduleEditorGui : instantiates

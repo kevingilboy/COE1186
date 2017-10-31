@@ -17,6 +17,7 @@ skinparam sequence {
 participant TrackModel
 box "CTC"
 participant Ctc
+participant Ticket
 participant CtcGui
 end box
 
@@ -27,9 +28,12 @@ TrackModel -> Ctc : addTicketSales(numTickets)
 deactivate TrackModel
 
 activate Ctc
-Ctc -> Ctc : Add ticket to runningTicketSales
+Ctc -> Ticket : new Ticket (numTickets,currTime)
+Ticket --> Ctc : Ticket
+Ctc -> Ctc : Push Ticket to Ticket queue
 group calculateThroughput()
-Ctc -> Ctc : Throughput = Σ tickets/(currTime-beginTime)
+Ctc -> Ctc : Peek at next Ticket in queue\nand remove if >1hr ago
+Ctc -> Ctc : Throughput = Σ tickets in queue
 Ctc -> CtcGui : repaint()
 end
 note right
