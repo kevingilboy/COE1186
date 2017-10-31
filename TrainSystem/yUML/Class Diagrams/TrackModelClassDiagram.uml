@@ -46,10 +46,13 @@ package Module.TrackModel{
         -direction : int
         -length : double
         -underground : boolean
-        -crossing : boolean
-        -station : Station
-        -switch : Switch
         -occupied : boolean
+        ..
+        -switch : Switch
+        -station : Station
+        -light : Light
+        -crossing : Crossing
+        -beacon : Beacon
         __
         +getOccupancy() : boolean
         +getLine() : String
@@ -60,7 +63,10 @@ package Module.TrackModel{
         +getDirection() : int
         +getLength() : double
         +getSwitch() : Switch
-        +getStation() : boolean
+        +getStation() : Station
+        +getCrossing : Crossing
+        +getLight() : Light
+        +getBeacon() : Beacon
         +getUndergroundState() : boolean
         ..
         +setBlockOccupancy(boolean)
