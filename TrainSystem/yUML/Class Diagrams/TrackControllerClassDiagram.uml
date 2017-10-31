@@ -32,7 +32,7 @@ package Module.TrackControllers{
 		{method} - transmitLightState(String line, int blockId, boolean light)
 		{method} - transmitCrossingState(String line, int blockId, boolean crossing)
 		..
-		{method} + timeUpdate(int time)
+		{method} + timeUpdate(SimTime)
 		{method} - initializeWaysides() 
 	}
 
@@ -56,14 +56,12 @@ package Module.TrackControllers{
 		{field} - switch : boolean
 		{field} - crossing : boolean
 		__
-		{method} - timeUpdate(int time)
-			'calls runPLC( ), guiUpdate( )
+		{method} - updateStates()
+			'calls runPLC( ), guiUpdate( ), trkctls.transmit...State( ) if occupancy has changed
 		{method} - runPLC(boolean occupancy)
-			'update states using PLC.logic and calls trkctls.transmit...State( )
+			'update states using PLC.logic
 		{method} - guiUpdate()
 			'calls GUI.displayInfo( )
-		..
-	
 	}
 
 	class WaysideControllerGUI {
@@ -73,12 +71,11 @@ package Module.TrackControllers{
 		{field} - plcPath : String
 		__
 		{method} - displayInfo()
-			'updates all values on gui
+			'updates all values on gui for selected block
 		{method} - getBlockInfo(String line, int blockId) : Block
 			'calls waysideController.recieveBlockInfo( ), displayInfo( )
 		{method} - uploadPLC()
-			'calls PLC.parsePLC(String path), waysideController.runPLC( )
-	
+			'calls PLC.parsePLC(String path)
 	}
 
 	class PLC {
