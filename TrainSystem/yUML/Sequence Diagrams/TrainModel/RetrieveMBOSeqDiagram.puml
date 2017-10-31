@@ -12,9 +12,7 @@ skinparam sequence {
   LifeLineBorderColor #c09cd9
 }
 
-box "TrainModel"
 participant TrainModel
-end box
 participant MBO
 
 
