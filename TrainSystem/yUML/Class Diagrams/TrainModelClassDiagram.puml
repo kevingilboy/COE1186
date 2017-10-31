@@ -19,7 +19,7 @@ package Shared{
   }
 }
 package Module.TrainModel {
-    class TrainModelList {
+    class TrainModel {
         -trainID : String
         -trainModel : TrainModel
         __
@@ -29,7 +29,7 @@ package Module.TrainModel {
         +timeUpdate(SimTime)
     }
 
-    class TrainModel {
+    class Train {
         -id : String
         -weight : double
         -height : double
@@ -158,14 +158,14 @@ package Module.TrainModel {
 
 Module--SimTime : imports
 
-Module <|. TrainModelList : implements
+Module <|. TrainModel : implements
 
-TrainModelList "1..*"*-down- TrainModel : instantiates
-TrainModel "0..*"*- TrainModelNewGUI : instantiates
-TrainModel "1..*"-* Gps : contains
+TrainModel "1..*"*-down- Train : instantiates
+Train "0..*"*- TrainModelNewGUI : instantiates
+Train "1..*"-* Gps : contains
 <<<<<<< HEAD
 =======
-TrainModelList "0..*"*down- TrainController : monitors
+TrainModel "0..*"*down- TrainController : monitors
 >>>>>>> master
 Gps "2..*"-* Block : monitors
 
