@@ -1,0 +1,35 @@
+@startuml
+
+title Activate Brakes
+
+skinparam sequence {
+	BackgroundColor transparent
+	ParticipantBackgroundColor #e6ffcc
+	ParticipantBorderColor 	#049595
+	PackageBorderCOlor  #049595
+	ArrowColor #006666
+	LifeLineBorderColor #c09cd9
+}
+
+actor Driver
+participant "TrainContollerGUI" as A
+participant "TrnController" as B
+participant “TrainController” as C
+participant "TrainModel" as D
+
+Driver -> A : Clicks “Service Brake On” Button
+activate A
+
+A -> B : sBrakesOn()
+deactivate A
+activate B
+
+B -> C : transmitService(Train,true)
+deactivate B
+activate C
+
+C -> D : setServiceBrakeStatus(Train,true)
+deactivate C
+
+
+@enduml

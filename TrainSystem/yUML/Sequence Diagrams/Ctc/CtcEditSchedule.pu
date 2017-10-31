@@ -1,0 +1,39 @@
+@startuml
+
+title Edit a Dispatched Train's Schedule
+
+skinparam sequence {
+  BackgroundColor transparent
+  ParticipantBackgroundColor #e6ffcc
+  ParticipantBorderColor 	#049595
+  PackageBorderCOlor  #049595
+  ArrowColor #006666
+  LifeLineBorderColor #c09cd9
+}
+
+box "CTC"
+actor Dispatcher
+participant CtcGui
+participant Ctc
+participant ScheduleEditor
+end box
+participant TrainController
+
+activate Dispatcher
+activate CtcGui
+Dispatcher -> CtcGui : Select Train
+CtcGui -> Ctc : getScheduleByTrainName(trainName)
+Ctc --> CtcGui : Schedule
+Dispatcher -> CtcGui : Click Modify Schedule
+CtcGui -> ScheduleEditor : new ScheduleEditor(trainName,Schedule)
+...Dispatcher edits schedule...
+ScheduleEditor -> Ctc : setSchedule(trainName,Schedule)
+deactivate CtcGui
+deactivate Dispatcher
+
+Ctc -> TrainController : setSchedule(trainName,Schedule)
+deactivate Ctc
+activate TrainController
+deactivate TrainController
+
+@enduml

@@ -1,20 +1,23 @@
 @startuml
-skinparam backgroundColor transparent
-skinparam arrowColor #000
-skinparam actorBorderColor #000
-skinparam usecaseBorderColor #000
-skinparam usecaseBackgroundColor #fff
+title Ctc Use Case Diagram
+skinparam backgroundColor transparent'
+skinparam usecaseBackgroundColor #e6ffcc
+skinparam usecaseBorderColor 	#049595
+skinparam actorBorderColor 	#049595
+skinparam packageBorderColor  #049595
+skinparam arrowColor #006666
 
 :Dispatcher: as d
 :Maintainer: as m
 (Monitor overall train system) as mots
-(Modify track status for maintenance) as mts
+(Modify track status for\nmaintenance) as mts
 d --> (Import a schedule)
-d --> (Schedule a new train)
-d --> (Dispatch a train)
-d --> (Update a train's schedule)
-d --> (Suggest train speed)
-d --> (Suggest train authority)
+d --> (Schedule a new\ntrain)
+d ---> (Dispatch a train)
+d --> (Update a train's\nschedule)
+d ---> (Suggest train\nspeed)
+d --> (Set train authority)
+d ---> (Toggle switch)
 d --> mots
 mots --> (View train location)
 mots --> (View train speed)

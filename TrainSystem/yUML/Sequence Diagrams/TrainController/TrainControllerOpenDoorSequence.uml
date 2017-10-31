@@ -1,0 +1,36 @@
+@startuml
+
+title Open Doors
+
+skinparam sequence {
+	BackgroundColor transparent
+	ParticipantBackgroundColor #e6ffcc
+	ParticipantBorderColor 	#049595
+	PackageBorderCOlor  #049595
+	ArrowColor #006666
+	LifeLineBorderColor #c09cd9
+}
+
+actor Driver
+participant "TrainContollerGUI" as A
+participant "TrnController" as B
+participant “TrainController” as C
+participant "TrainModel" as D
+
+Driver -> A : Clicks "Open Left Doors" Button
+activate A
+
+A -> B : openLeft()
+deactivate A
+activate B
+
+B -> C : transmitLeft(Train,true)
+deactivate B
+activate C
+
+C -> D : setLeft(Train,true)
+deactivate C
+
+
+
+@enduml

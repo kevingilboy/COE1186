@@ -46,10 +46,13 @@ package Module.TrackModel{
         -direction : int
         -length : double
         -underground : boolean
-        -crossing : boolean
-        -station : Station
-        -switch : Switch
         -occupied : boolean
+        ..
+        -switch : Switch
+        -station : Station
+        -light : Light
+        -crossing : Crossing
+        -beacon : Beacon
         __
         +getOccupancy() : boolean
         +getLine() : String
@@ -60,7 +63,10 @@ package Module.TrackModel{
         +getDirection() : int
         +getLength() : double
         +getSwitch() : Switch
-        +getStation() : boolean
+        +getStation() : Station
+        +getCrossing : Crossing
+        +getLight() : Light
+        +getBeacon() : Beacon
         +getUndergroundState() : boolean
         ..
         +setBlockOccupancy(boolean)
@@ -73,7 +79,7 @@ package Module.TrackModel{
         -portAlt : int
         +getState() : boolean
         +getHead() : boolean
-        +getPortNorm() : int 
+        +getPortNorm() : int
         +getPortAlt() : int
         +setState(boolean)
     }
@@ -90,7 +96,6 @@ package Module.TrackModel{
     class Light{
         -state : boolean
         -status : boolean
-        ..
         +getState() : boolean
         +getStatus() : boolean
         +setState()
@@ -99,21 +104,25 @@ package Module.TrackModel{
     class Crossing{
         -state : boolean
         -status : boolean
-        ..
         +getState() : boolean
         +getStatus() : boolean
         +setState()
+    }
+
+    class Beacon{
+        -info_32bit : int
+        getBeaconInfo() : int
     }
 
     class TrackModelGUI{
         -trackModel : TrackModel
         -currentBlock : Block
         +importTrack(string)
-        -displayBlockInfo(Block)    
+        -displayBlockInfo(Block)
         -setCurrentBlock(Block)
         -nextBlock(Block) : Block
         -previousBlock(Block) : Block
-        -showRailStatus(Block) 
+        -showRailStatus(Block)
         -showPowerStatus(Block)
         -showTrackCircuitStatus(Block)
         -setRailFailure(Block)
@@ -131,6 +140,7 @@ Block *--"0..1" Switch : may have
 Block *--"0..1" Station : may have
 Block *--"0..1" Light : may have
 Block *--"0..1" Crossing : may have
+Block *--"0..1" Beacon : may have
 Module -- SimTime : imports
 
 @enduml
