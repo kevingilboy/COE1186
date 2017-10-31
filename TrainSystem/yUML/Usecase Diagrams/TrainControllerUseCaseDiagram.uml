@@ -1,6 +1,12 @@
 @startuml
 
 title Train Controller Use Case Diagram
+'skinparam backgroundColor transparent'
+skinparam usecaseBackgroundColor #e6ffcc
+skinparam usecaseBorderColor 	#049595
+skinparam actorBorderColor 	#049595
+skinparam packageBorderColor  #049595
+skinparam arrowColor #006666
 
 rectangle TrainControllerGUI {
 	(Set New Speed)
@@ -10,6 +16,7 @@ rectangle TrainControllerGUI {
 	(Deactivate Brakes)
 	(Turn On Lights)
 	(Turn Off Lights)
+	(Set Temperature)
 }
 
 rectangle EngineerGUI {
@@ -27,7 +34,7 @@ Driver --> (Activate Brakes)
 Driver --> (Deactivate Brakes)
 Driver --> (Turn On Lights)
 Driver --> (Turn Off Lights)
-
+Driver --> (Set Temperature)
 
 left to right direction
 
