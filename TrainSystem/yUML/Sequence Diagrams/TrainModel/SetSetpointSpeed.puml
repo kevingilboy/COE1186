@@ -43,12 +43,14 @@ activate TrackModel
 TrackModel -> TrainModel : setSuggestedSetpointSpeed(Train,speed)
 deactivate TrackModel
 
+group updateTrainVals
 activate TrainModel
 TrainModel -> TrainController : setSpeed(Train,speed)
 
 activate TrainController
 TrainController --> TrainModel : Return power
 TrainModel --> TrainModel : Update velocity based on power input
+end
 deactivate TrainModel
 
 deactivate TrainController

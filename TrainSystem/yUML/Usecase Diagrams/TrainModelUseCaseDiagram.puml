@@ -8,23 +8,27 @@ skinparam actorBorderColor 	#049595
 skinparam packageBorderCOlor  #049595
 skinparam arrowColor #006666
 
-:Passenger(s): as p
-:Driver / Train Controller: as tnc
+:CTC: as ctc
+:Passenger: as p
+:Track Model: as tkm
+:Train Controller: as tnc
 :MBO: as mbo
 
 rectangle TrainModelGUI{
+    (Dispatch Train)
 	(Activate Emergency Brake)
-	(View Station Information)
-	(View Speed/Authority Information)
+    (Retrieve Speed Information)
+    (Retrieve Authority Information)
     (Retrieve GPS Signal)
     (Retrieve MBO Antenna Signal)
 }
 
+ctc --> (Dispatch Train)
 p --> (Activate Emergency Brake)
-p --> (View Station Information)
-tnc --> (View Station Information)
-tnc --> (View Speed/Authority Information)
+tkm --> (Retrieve GPS Signal)
 tnc --> (Retrieve GPS Signal)
+tnc --> (Retrieve Speed Information)
+tnc --> (Retrieve Authority Information)
 mbo --> (Retrieve MBO Antenna Signal)
 
 
