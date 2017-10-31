@@ -1,0 +1,33 @@
+@startuml
+
+title Set New P
+
+skinparam sequence {
+	BackgroundColor transparent
+	ParticipantBackgroundColor #e6ffcc
+	ParticipantBorderColor 	#049595
+	PackageBorderCOlor  #049595
+	ArrowColor #006666
+	LifeLineBorderColor #c09cd9
+}
+
+actor Engineer
+participant "TrainContollerGUI" as A
+participant "EngineerGUI" as B
+participant "PIController" as C
+
+Engineer -> A : Click "Open Engineer Panel" Button
+activate A
+
+A -> B : Click "Set New P" Button
+deactivate A
+activate B
+
+B -> C : setP(value)
+activate C
+
+C --> B : Acknowledgement
+deactivate C
+destroy B
+
+@enduml

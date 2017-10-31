@@ -1,0 +1,34 @@
+@startuml
+
+title Close Doors
+
+skinparam sequence {
+	BackgroundColor transparent
+	ParticipantBackgroundColor #e6ffcc
+	ParticipantBorderColor 	#049595
+	PackageBorderCOlor  #049595
+	ArrowColor #006666
+	LifeLineBorderColor #c09cd9
+}
+
+actor Driver
+participant "TrainContollerGUI" as A
+participant "TrnController" as B
+participant “TrainController” as C
+participant "TrainModel" as D
+
+Driver -> A : Clicks “Close Right Doors" Button
+activate A
+
+A -> B : closeRight()
+deactivate A
+activate B
+
+B -> C : transmitRight(Train,false)
+deactivate B
+activate C
+
+C -> D : setRight(Train,false)
+deactivate C
+
+@enduml
