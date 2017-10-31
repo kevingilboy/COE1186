@@ -31,7 +31,7 @@ activate Ctc
 Ctc -> Ticket : new Ticket (numTickets,currTime)
 Ticket --> Ctc : Ticket
 Ctc -> Ctc : Push Ticket to Ticket queue
-group calculateThroughput
+group calculateThroughput()
 Ctc -> Ctc : Peek at next Ticket in queue\nand remove if >1hr ago
 Ctc -> Ctc : Throughput = Σ tickets in queue
 Ctc -> CtcGui : repaint()
