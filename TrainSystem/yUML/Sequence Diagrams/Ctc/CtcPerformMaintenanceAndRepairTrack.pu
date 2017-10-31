@@ -11,12 +11,25 @@ skinparam sequence {
   LifeLineBorderColor #c09cd9
 }
 
+box "CTC"
+actor Dispatcher
+participant CtcGui
 participant Ctc
+end box
 participant TrackController
 participant TrackModel
 
+activate CtcGui
+activate Dispatcher
+Dispatcher -> CtcGui : Select Block
+CtcGui -> Ctc : getBlockByNumber(num)
 activate Ctc
-Ctc -> Ctc : Select Block
+Ctc --> CtcGui : Block
+Dispatcher -> CtcGui : Set block state to "maintenance" or "open"
+deactivate Dispatcher
+CtcGui -> Ctc : setBlockStatus(Block,"maintenance" or "open")
+deactivate CtcGui
+
 Ctc -> TrackController : setBlockStatus(Block,"maintenance" or "open")
 
 activate TrackController
@@ -28,10 +41,12 @@ TrackModel -> TrackModel : setMaintenance("maintenance" or "open")
 TrackModel --> TrackController : //new block status//
 deactivate TrackModel
 
-TrackController -> TrackController : updateBlockStatus(status)
 TrackController --> Ctc : //new block status//
 deactivate TrackController
 
 Ctc -> Ctc : updateBlockStatus(status)
+Ctc -> CtcGui : repaint()
+activate CtcGui
+deactivate CtcGui
 deactivate Ctc
 @enduml

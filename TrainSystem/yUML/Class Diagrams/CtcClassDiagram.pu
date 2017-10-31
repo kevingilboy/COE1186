@@ -25,7 +25,7 @@ package Module.Ctc {
     -beginTime : SimTime
     -currentTime : SimTime
     +trains : Train[]
-    +schedulesInQueue : Schedule
+    +schedulesInQueue : Schedule[]
     +blocks : Block[]
     -runningTicketSales : int
     -throughput : double
