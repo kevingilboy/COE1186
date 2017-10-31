@@ -18,15 +18,15 @@ participant TrainModel
 participant TrainController
 
 activate TrackModel
-TrackModel -> TrainModel : setBeacon(block, beacon info)
+TrackModel -> TrainModel : setBeacon(block, int_32)
 note left: If a train passes a beacon...
 deactivate TrackModel
 
 activate TrainModel
 TrainModel -> TrainModel : getTrainAtBlock(block)
-TrainModel -> TrainController : setBeacon(train, beacon info)
+TrainModel -> TrainController : setBeacon(train, int_32)
 deactivate TrainModel
 activate TrainController
-TrainController -> TrainController : decodeBeacon(train, beacon info)
+TrainController -> TrainController : decodeBeacon(train, int_32)
 
 @enduml
