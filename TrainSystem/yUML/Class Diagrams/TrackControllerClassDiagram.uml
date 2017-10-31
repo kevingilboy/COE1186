@@ -44,6 +44,8 @@ package Module.TrackControllers{
 
 	class WaysideController {
 		{field} - trkctls : TrackControllers
+		{field} - associatedLine : String
+		{field} - associatedBlocks : Array[int]
 		{field} - line : String
 		{field} - section : String
 		{field} - blockId : int
@@ -56,6 +58,7 @@ package Module.TrackControllers{
 		{field} - switch : boolean
 		{field} - crossing : boolean
 		__
+		{method} - recieveBlockInfo(String line, int blockId) : Block
 		{method} - updateStates()
 			'calls runPLC( ), guiUpdate( ), trkctls.transmit...State( ) if occupancy has changed
 		{method} - runPLC(boolean occupancy)
@@ -71,9 +74,7 @@ package Module.TrackControllers{
 		{field} - plcPath : String
 		__
 		{method} - displayInfo()
-			'updates all values on gui for selected block
-		{method} - getBlockInfo(String line, int blockId) : Block
-			'calls waysideController.recieveBlockInfo( ), displayInfo( )
+			'calls waysideController.receiveBlockInfo( )
 		{method} - uploadPLC()
 			'calls PLC.parsePLC(String path)
 	}
