@@ -24,18 +24,31 @@ participant TrainController
 
 activate TrackModel
 
-group if (occupied and hasBeacon){
-TrackModel -> TrainModel : setBeacon(block, beacon info)
-deactivate TrackModel
+
+activate Block
+TrackModel -> Block : getOccupancy()
+TrackModel -> Block : getBeacon()
+Block -> TrackModel : return block occupancy
+Block -> TrackModel : return beacon
+
+group if (occupied and hasBeacon)
+
+	Block -> Beacon : getBeaconInfo()
+	deactivate Block
+
+	Beacon --> TrackModel : return int_32
+	TrackModel -> TrainModel : setBeacon(block, int_32)
+
+	deactivate TrackModel
 
 end
 
 
 activate TrainModel
 TrainModel -> TrainModel : getTrainAtBlock(block)
-TrainModel -> TrainController : setBeacon(train, beacon info)
+TrainModel -> TrainController : setBeacon(train, int_32)
 deactivate TrainModel
 activate TrainController
-TrainController -> TrainController : decodeBeacon(train, beacon info)
+TrainController -> TrainController : decodeBeacon(train, int_32)
 
 @enduml
