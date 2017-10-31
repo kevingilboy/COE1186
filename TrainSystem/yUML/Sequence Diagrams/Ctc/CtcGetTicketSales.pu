@@ -23,7 +23,7 @@ end box
 
 activate TrackModel
 TrackModel -> TrackModel : generateTicketSales()
-note left: If there is a train...
+note left: If there is a train\narriving at station...
 TrackModel -> Ctc : addTicketSales(numTickets)
 deactivate TrackModel
 
