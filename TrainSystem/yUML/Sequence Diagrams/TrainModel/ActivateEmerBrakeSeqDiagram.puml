@@ -10,13 +10,13 @@ skinparam sequence {
   LifeLineBorderColor #c09cd9
 }
 
-actor Passenger(s)
+actor Passenger
 
 participant "TrainModelGUI" as A
-participant "TrainModel" as B
+participant "Train" as B
 participant "TrainController" as C
 
-Passenger(s) -> A : Clicks "Emergency Brake" Button
+Passenger -> A : Clicks "Emergency Brake" Button
 activate A
 
 A -> B : setEmergencyBrake()

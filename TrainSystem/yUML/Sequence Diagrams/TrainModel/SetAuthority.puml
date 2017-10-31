@@ -34,9 +34,7 @@ TrackModel -> TrainModel : transmitCtcAuthority(Train,authority)
 deactivate TrackModel
 
 activate TrainModel
-group updateTrainVals
 TrainModel -> TrainController : setCtcAuthority(Train,authority)
-end
 activate TrainController
 
 activate Mbo
