@@ -58,10 +58,10 @@ package Module.TrackControllers{
 		{field} - switch : boolean
 		{field} - crossing : boolean
 		__
-		{method} - recieveBlockInfo(String line, int blockId) : Block
-		{method} - updateStates()
+		{method} + recieveBlockInfo(String line, int blockId) : Block
+		{method} + updateStates()
 			'calls runPLC( ), guiUpdate( ), trkctls.transmit...State( ) if occupancy has changed
-		{method} - uploadPLC(String plcPath) : boolean
+		{method} + uploadPLC(String plcPath) : boolean
 			'calls PLC.uploadPLC()
 		{method} - runPLC(boolean occupancy)
 			'update states using PLC.logic
@@ -86,7 +86,7 @@ package Module.TrackControllers{
 		{field} - switchLogic : String
 		{field} - crossingLogic : String
 		__
-		{method} - parsePLC(String path) : boolean
+		{method} + parsePLC(String path) : boolean
 			'parses and updates logic values
 		{method} + getLightLogic()
 		{method} + getSwitchLogic()
