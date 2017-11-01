@@ -37,7 +37,7 @@ group If check if new authority is needed
 Ctc -> Ctc : currentAuthority = trainName.authority
 Ctc -> Ctc : newAuthority = calculateAuthority(trainName)
   group If currentAuthority != newAuthority
-  Ctc -> TrackController : transmitCtcAuthority(String,int)
+  Ctc -> TrackController : transmitCtcAuthority(String,double)
   hnote over TrackController: Execute rest of Transmit\nTrain Authority diagram
   end
 end
