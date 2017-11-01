@@ -17,23 +17,29 @@ participant CtcGui
 participant Ctc
 participant ScheduleEditor
 end box
-participant TrainController
+participant TrackController
 
 activate Dispatcher
 activate CtcGui
 Dispatcher -> CtcGui : Select Train
 CtcGui -> Ctc : getScheduleByTrainName(trainName)
+activate Ctc
 Ctc --> CtcGui : Schedule
 Dispatcher -> CtcGui : Click Modify Schedule
+deactivate Dispatcher
 CtcGui -> ScheduleEditor : new ScheduleEditor(trainName,Schedule)
+activate ScheduleEditor
 ...Dispatcher edits schedule...
 ScheduleEditor -> Ctc : setSchedule(trainName,Schedule)
+deactivate ScheduleEditor
 deactivate CtcGui
-deactivate Dispatcher
-
-Ctc -> TrainController : setSchedule(trainName,Schedule)
+group If check if new authority is needed
+Ctc -> Ctc : currentAuthority = trainName.authority
+Ctc -> Ctc : newAuthority = calculateAuthority(trainName)
+  group If currentAuthority != newAuthority
+  Ctc -> TrackController : transmitCtcAuthority(String,double)
+  hnote over TrackController: Execute rest of Transmit\nTrain Authority diagram
+  end
+end
 deactivate Ctc
-activate TrainController
-deactivate TrainController
-
 @enduml
