@@ -1,6 +1,6 @@
 @startuml
 
-title Select Wayside Controller
+title Upload PLC Code
 
 skinparam sequence {
   BackgroundColor transparent
