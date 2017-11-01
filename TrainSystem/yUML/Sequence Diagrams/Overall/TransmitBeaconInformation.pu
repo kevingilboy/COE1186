@@ -29,4 +29,6 @@ deactivate TrainModel
 activate TrainController
 TrainController -> TrainController : decodeBeacon(train, int_32)
 
+deactivate TrainController
 @enduml
+

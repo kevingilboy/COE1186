@@ -21,33 +21,42 @@ package Shared{
 }
 package Module.Ctc {
   class Ctc {
+    +simulator : Simulator
+    +trkctl : TrackController
+    +trnmdl : TrainModel
+    +trnctl : TrainController
     -ctcGui : CtcGui
+    -beginTime : SimTime
+    -currentTime : SimTime
     +trains : Train[]
-    +schedulesInQueue : Schedule
+    +schedulesInQueue : Schedule[]
     +blocks : Block[]
-    -tickets: Ticket[]
+    -runningTicketSales : int
     -throughput : double
     __
     ..Schedule Creation and Queue..
     +importSchedule(String)
-    +addTrainToQueue(Schedule)
+    +addScheduleToQueue(String,Schedule)
     +dispatchTrainFromQueue(String)
+    -dispatchTrainFromQueue(String,String,int)
+    -dispatchTrainFromQueue(String,String,int,String[])
     +updateSchedule(String,Schedule)
     ..Train Communication..
     -transmitSuggestedSetpointSpeed(String,int)
+    -transmitSuggestedSetpointSpeed(String,int)
     -transmitCtcAuthority(String,double)
     ..Block Communication..
-    -receiveBlocks()
-    -receiveBlockOccupancy(String,String)
-    -receiveBlockStatus(String,String)
-    -receiveSwitchState(String,String)
-    -setBlockStatus(String,String,String)
-    -transmitSwitchState(String,String,boolean)
+    -receiveBlockOccupancy(String,int)
+    -receiveBlockStatus(String,int)
+    -receiveSwitchState(String,int)
+    -transmitSwitchState(String,int,boolean)
+    -transmitBlockMaintenance(String,int) : Boolean
     ..Throughput..
-    -calculateThroughput(int) : int
+    -calculateThroughput() : double
     +addTicketSales(int)
     +getThroughput() : double
     ..Helpers..
+    -calculateAuthority(String) : double
     -getQueuedScheduleByName(String) : Schedule
     -getTrainByName(String) : Train
     -getBlockByNumber(String,int) : Block
@@ -62,29 +71,28 @@ package Module.Ctc {
     -ctcGui : CtcGui
     -submitScheduleToCtc()
   }
-  class Ticket{
-    +time : SimTime
-    +number : int
-    +getExpirationTime() : SimTime
-  }
   class Train{
     -schedule : Schedule
     -line : String
     -location : int
     -speed : int
     -authority : int
+    -passengers : int
     -nextStop : String
     __
-    --Getters--
+    ..Getters..
     +getSchedule() : Schedule
     +getNextStop() : String
     +getLine() : String
     +getSpeed() : int
-    +getAuthority() : I=int
+    +getAuthority() : int
+    +getPassengers() : int
     ..Setters..
     +setSchedule(Schedule)
     +setSpeed(int)
     +setAuthority(int)
+    +addPassengers(int)
+    +removePassengers(int)
   }
   class Schedule {
     +stops : Stop[]
@@ -121,7 +129,6 @@ Module <|. Ctc : implements
 Ctc o->"0..*" Block : has knowledge of
 Ctc o->"0..*" Schedule : contains in queue
 Ctc o-->"0..*" Train : monitors
-Ctc o->"0..*" Ticket : keeps track of
 Ctc *-"1" CtcGui : instantiates
 
 CtcGui *-"1" ScheduleEditorGui : instantiates
