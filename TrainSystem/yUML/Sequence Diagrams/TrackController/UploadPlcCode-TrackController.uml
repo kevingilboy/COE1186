@@ -1,0 +1,46 @@
+@startuml
+
+title Upload PLC Code
+
+skinparam sequence {
+  BackgroundColor transparent
+  ParticipantBackgroundColor #e6ffcc
+  ParticipantBorderColor 	#049595
+  PackageBorderCOlor  #049595
+  ArrowColor #006666
+  LifeLineBorderColor #c09cd9
+}
+
+actor "Wayside Engineer"
+box "Wayside Controller"
+participant WaysideControllerGUI
+participant JFileChooser
+participant WaysideController
+participant PLC
+end box
+
+group if (Wayside Controller Selected)
+	activate "Wayside Engineer"
+	"Wayside Engineer" -> WaysideControllerGUI : Click Upload PLC Button
+	deactivate "Wayside Engineer"
+
+	activate WaysideControllerGUI
+	WaysideControllerGUI -> JFileChooser : showOpenDialog()
+	
+	activate JFileChooser
+	JFileChooser --> WaysideControllerGUI : String plcPath
+	deactivate JFileChooser
+	WaysideControllerGUI -> WaysideController : uploadPLC(plcPath)
+
+	activate WaysideController
+	WaysideController -> PLC : parsePLC(plcPath)
+	
+	activate PLC
+	PLC --> WaysideController : Success
+	deactivate PLC
+	WaysideController --> WaysideControllerGUI : Success
+	deactivate WaysideController
+	deactivate WaysideControllerGUI
+end
+
+@enduml
