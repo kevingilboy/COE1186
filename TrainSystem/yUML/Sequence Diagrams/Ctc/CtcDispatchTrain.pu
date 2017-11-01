@@ -33,6 +33,7 @@ ScheduleEditor -> Ctc : addScheduleToQueue(Schedule)
 deactivate ScheduleEditor
 Ctc -> CtcGui : repaint()
 deactivate CtcGui
+...Wait for Dispatch Time or Manual Start...
 == Dispatch the Train ==
 Ctc -> Train : new Train(Schedule)
 Train --> Ctc : Train
