@@ -20,6 +20,7 @@ rectangle TrainModelGUI{
     (Suggest Setpoint Speed)
     (Set Train Authority)
     (Set GPS Signal)
+    (Transmit Beacon)
     (Set MBO Antenna Signal)
 }
 
@@ -27,6 +28,7 @@ ctc --> (Dispatch Train)
 p --> (Activate Emergency Brake)
 tkm --> (Set GPS Signal)
 tnc --> (Set GPS Signal)
+tnc --> (Transmit Beacon)
 tnc --> (Suggest Setpoint Speed)
 tnc --> (Set Train Authority)
 mbo --> (Set MBO Antenna Signal)

@@ -1,0 +1,35 @@
+@startuml
+
+title Transmit Beacon Information - Train Model
+
+skinparam noteBorderColor #049595
+
+skinparam sequence {
+	BackgroundColor transparent
+	ParticipantBackgroundColor #e6ffcc
+	ParticipantBorderColor 	#049595
+	PackageBorderCOlor  #049595
+	ArrowColor #006666
+	LifeLineBorderColor #c09cd9
+}
+
+participant TrackModel
+box "Train Model"
+participant TrainModel
+end box
+participant TrainController
+
+activate TrackModel
+TrackModel -> TrainModel : setBeacon(block, int_32)
+note left: If a train passes a beacon...
+deactivate TrackModel
+
+activate TrainModel
+TrainModel -> TrainModel : getTrainAtBlock(block)
+TrainModel -> TrainController : setBeacon(train, int_32)
+deactivate TrainModel
+
+activate TrainController
+TrainController -> TrainController : decodeBeacon(train, int_32)
+
+@enduml
