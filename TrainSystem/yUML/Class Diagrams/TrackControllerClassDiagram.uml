@@ -61,6 +61,8 @@ package Module.TrackControllers{
 		{method} - recieveBlockInfo(String line, int blockId) : Block
 		{method} - updateStates()
 			'calls runPLC( ), guiUpdate( ), trkctls.transmit...State( ) if occupancy has changed
+		{method} - uploadPLC(String plcPath) : boolean
+			'calls PLC.uploadPLC()
 		{method} - runPLC(boolean occupancy)
 			'update states using PLC.logic
 		{method} - guiUpdate()
@@ -76,7 +78,7 @@ package Module.TrackControllers{
 		{method} - displayInfo()
 			'calls waysideController.receiveBlockInfo( )
 		{method} - uploadPLC()
-			'calls PLC.parsePLC(String path)
+			'calls waysideController.uploadPLC(String plcPath)
 	}
 
 	class PLC {
@@ -84,8 +86,11 @@ package Module.TrackControllers{
 		{field} - switchLogic : String
 		{field} - crossingLogic : String
 		__
-		{method} - parsePLC(String path)
+		{method} - parsePLC(String path) : boolean
 			'parses and updates logic values
+		{method} + getLightLogic()
+		{method} + getSwitchLogic()
+		{method} + getCrossingLogic()
 	}
 }
 
