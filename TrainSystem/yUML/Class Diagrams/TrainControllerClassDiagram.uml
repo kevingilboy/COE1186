@@ -1,0 +1,205 @@
+@startuml
+
+title Train Controller Class Diagram
+'skinparam backgroundColor transparent'
+skinparam classBackgroundColor #e6ffcc
+skinparam classBorderColor 	#049595
+skinparam packageBorderColor  #049595
+skinparam arrowColor #006666
+
+package "Module.TrainController" {
+	class TrainController {
+		-time : SimTime
+		-prevTime : SimTime
+		-controlList : ArrayList<TrnController>
+		-redBlockSpeedLimits : int[]
+		-redBlockCoordinates : double[]
+		-greenBlockSpeedLimits : int[]
+		-greenBlockCoordinates : double[]
+		+manualMode : boolean
+		+mbo : MBO
+		+trnmdl : TrainModel
+		+trkmdl : TrackModel
+		+dispatchTrainToBlock(String, String, int, String[])
+		+setCtcAuthority(String, double)
+		+setMboAuthority(String, double)
+		+setSafeBrakingDistance(String, int)
+		+setSetpointSpeed(String, double)
+		+setEmergencyBrake(String, boolean)
+		+setSchedule(String, String[])
+		+setBeacon(String, int_32)
+		+getPosition(String) : String[2]
+		+transmitTrainPower(String, double)
+		+transmitLeft(String, boolean)
+		+transmitRight(String, boolean)
+		+transmitService(String, boolean)
+		+transmitEmergency(String, boolean)
+		+transmitLights(String, boolean)
+		+transmitTemperature(String, int)
+		+receiveTrainPosition(String) : String[2]
+		+receiveTrainActualSpeed(String) : double
+		-receiveMap()
+		-calcDeltaTime(SimTime, SimTime) : integer
+	}
+
+	class TrnController {
+		-iden : String
+		-line : String
+		-deltaTime : integer
+		-trnCtrl : TrainController
+		-pi : PIController
+		-controlGUI : TrainControlGUI
+		-ctcAuth : double
+		-mboAuth : double
+		-overallAuth : double
+		-blockSpeedLimits : int[]
+		-blockCoordinates : double[]
+		-schedule : String[]
+		-actualSpeed : double
+		-setpointSpeed : double
+		-speedLimit : double
+		-power : double
+		-rightDoor : boolean
+		-leftDoor : boolean
+		-lightState : boolean
+		-sBrakes : boolean
+		-eBrakes : boolean
+		-brakingDist : double
+		-position : double[2]
+		-beacon : int_32
+		-temperature : integer
+		+timeUpdate()
+		+openLeft()
+		+closeLeft()
+		+openRight()
+		+closeRight()
+		+lightsOn()
+		+lightOff()
+		+sBrakesOn()
+		+sBrakesOff()
+		+eBrakesOn()
+		+eBrakesOff()
+		+newTemperature(double)
+		+setCtcAuthority(double)
+		+setMboAuthority(double)
+		+setSafeBrakingDistance(double)
+		+setSetpointSpeed(double)
+		+setEmergencyBrake(boolean)
+		+setSchedule(String[])
+		+setTemperature(integer)
+		+setBeacon(double)
+		+setPosition(double[2])
+		+getPosition() : double[2]
+		+getActualSpeed() : double
+		-calcPowerOutput(double, double)
+		-calcAuth(double, double)
+		-brakingCheck(double, double)
+		-lightCheck(double[2])
+		-stationCheck(double[2])
+		-decodeBeacon(double)
+		-announceNear(int_32)
+		-announceArrive(String)
+	}
+
+	class TrainControllerGUI {
+		-speedField : JTextField
+		-setpointField : JTextField
+		-authField : JTextField
+		-newSpeedField : JTextField
+		-powerOutField : JTextField
+		-tempField : JTextField
+		-serviceOn : JRadioButton
+		-serviceOff : JRadioButton
+		-emergencyOn : JRadioButton
+		-emergencyOff : JRadioButton
+		-lightOn : JRadioButton
+		-lightOff : JRadioButton
+		-rightOpen : JRadioButton
+		-leftOpen : JRadioButton
+		-rightClose : JRadioButton
+		-leftClose : JRadioButton
+		-controller : TrnController
+		-engineerGUIButton : JButton
+		-eGUI : EngineerGUI
+		-pi : PIController
+		+guiUpdate()
+		+setSpeed(double)
+		+setSetpoint(double)
+		+setAuth(double)
+		+setPower(double)
+		+setTemp(integer)
+		+setLeft(boolean)
+		+setRight(boolean)
+		+setLights(boolean)
+		+setService(boolean)
+		+setEmergency(boolean)
+	}
+
+	class EngineerGUI {
+		-currentPField : JTextField
+		-newPField : JTextField
+		-setNewPButton : JButton
+		-currentIField : JTextField
+		-newIField : JTextField
+		-setNewIButton : JButton
+		-pi : PIController
+	}
+
+	class PIController {
+		-P : double
+		-I : double
+		-maxIOutput : double
+		-maxError : double
+		-errorSum : double
+		-maxOutput : double
+		-minOutput : double
+		-setpoint : double
+		-lastActual : double
+		-firstRun : boolean
+		-reversed : boolean
+		-outputRampRate : double
+		-lastOutput : double
+		-outputFilter : double
+		-setpointRange : double
+		-init()
+		-checkSigns()
+		-clamp(double, double, double)
+		-bounded(double, double, double)
+		+setP(double)
+		+setI(double)
+		+getP() : double
+		+getI() : double
+		+setMaxIOutput(double)
+		+setOutputLimits(double, double)
+		+setSetpoint(double)
+		+getOutput(double, double) : double
+		+reset()
+		+setSetpointRange(double)
+		+setOutputFilter(double)
+	}
+}
+
+package "Shared" {
+	interface Module {
+		+timeUpdate(SimTime) : boolean
+	}
+	
+	class SimTime {
+		+hr : int
+		+min : int
+		+sec : int
+		+toString() : String
+	}
+}
+
+left to right direction
+
+TrainController "1" o-left> "1..*" TrnController : stores
+TrnController "1" <--> "1" TrainControllerGUI : instantiates
+TrainControllerGUI "1" --> "1" EngineerGUI : instantiates
+EngineerGUI "1" <--> "1" PIController : communicates
+PIController "1" <|.. "1" TrnController : instantiates and utilizes
+SimTime -- Module : imports
+TrainController ..|> Module : implements
+
+@enduml
