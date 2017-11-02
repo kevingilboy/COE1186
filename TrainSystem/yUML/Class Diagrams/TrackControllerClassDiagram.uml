@@ -95,10 +95,10 @@ package Module.TrackControllers{
 }
 
 Module -- SimTime : imports
-TrackControllers .right.|> Module : implements
-TrackControllers o-down- "1..4" WaysideController : contains
-TrackControllers *-left- "1" TrackControllersGUI : instantiates
-WaysideController *-left- "1" WaysideControllerGUI : instantiates
-WaysideController *-down- "1" PLC : has
+TrackControllers .left.|> Module : implements
+TrackControllers o-right- "1..4" WaysideController : contains
+TrackControllers *-down- "1" TrackControllersGUI : instantiates
+WaysideController *-down- "1" WaysideControllerGUI : instantiates
+WaysideController *-right- "1" PLC : has
 
 @enduml
