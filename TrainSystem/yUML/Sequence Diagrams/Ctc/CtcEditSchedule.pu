@@ -34,7 +34,7 @@ ScheduleEditor -> Ctc : setSchedule(trainName,Schedule)
 deactivate ScheduleEditor
 deactivate CtcGui
 group If check if new authority is needed
-Ctc -> Ctc : currentAuthority = trainName.authority
+Ctc -> Ctc : currentAuthority = trainName.getAuthority()
 Ctc -> Ctc : newAuthority = calculateAuthority(trainName)
   group If currentAuthority != newAuthority
   Ctc -> TrackController : transmitCtcAuthority(String,double)
