@@ -32,8 +32,6 @@ package Module.TrainModel {
         +timeUpdate(SimTime)
         +getTrainAtBlock(Block)
         +setBeacon(trainID,int)
-        +trncntl : TrainController
-		+trkmdl : TrackModel
 		+dispatchTrainToBlock(String, String, int, String[])
 		+transmitCtcAuthority(String, double)
 		+suggestSetpointSpeed(String, double)
@@ -138,8 +136,8 @@ Module--SimTime : imports
 
 Module <|. TrainModel : implements
 
-TrainModel "1..*"*-down- Train : instantiates
-Train "0..*"*- TrainModelNewGUI : instantiates
+TrainModel "1..*"*-right- Train : instantiates
+Train "0..*"*-- TrainModelNewGUI : instantiates
 Train "1..*"-* Gps : contains
 
 @enduml
