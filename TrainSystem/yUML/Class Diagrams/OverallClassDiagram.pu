@@ -52,9 +52,9 @@ class Ctc{
   .
   -transmitDispatchTrainToBlock(String,String,int)
   -transmitDispatchTrainToBlock(String,String,int,String[])
-    -transmitEditedSchedule(String,String[])
+  .
   ..Interact with Blocks..
-  -receiveBlockInfo(String,int) : Block
+  -receiveBlockStatus(String,int)
   -transmitSwitchState(String,int,boolean)
   -transmitBlockMaintenance(String,int) : boolean
   .
@@ -111,7 +111,7 @@ class TrackModel{
 }
 class TrainModel{
   +trkmdl : TrackModel
-  .
+  +trnctl : TracinController
   .
   .
   __
@@ -147,7 +147,7 @@ class TrainController{
   +dispatchTrainToBlock(String,String,int,String[])
   +setSchedule(String,String[])
   .
-  receiveTrainPosition(String) : String[2]
+  -receiveTrainPosition(String) : String[2]
   -receiveTrainSpeed(String) : double
   -transmitTrainPower(String,double)
   +setSafeBreakingDistance(String,int)
@@ -164,17 +164,17 @@ class Mbo{
   .
   __
   ..Interact with Trains..
-  -receiveTrainPosition(String) : String[2]
-  -transmitSafeBreakingDistance(String,double)
+  .
+  .
   -transmitMboAuthority(String,double)
   .
   .
   .
   .
+  -receiveTrainPosition(String) : String[2]
   .
   .
-  .
-  .
+  -transmitSafeBreakingDistance(String,double)
   .
   .
   .
@@ -203,7 +203,7 @@ Module - SimTime : imports
 Ctc -> TrackController
 TrackController -> TrackModel
 TrackModel <-> TrainModel
-TrainModel <- TrainController
+TrainModel <-> TrainController
 TrainController <- Mbo
 
 TrainController -> TrackModel /'for getting map'/

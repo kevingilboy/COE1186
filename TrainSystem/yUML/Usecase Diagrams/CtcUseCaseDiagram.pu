@@ -7,23 +7,26 @@ skinparam actorBorderColor 	#049595
 skinparam packageBorderColor  #049595
 skinparam arrowColor #006666
 
+:Ctc Officer: as c
 :Dispatcher: as d
 :Maintainer: as m
+c <|-- d
+c <|-- m
 (Monitor overall train system) as mots
 (Modify track status for\nmaintenance) as mts
 d --> (Import a schedule)
-d --> (Schedule a new\ntrain)
+d --> (Manually schedule a \nnew train)
 d ---> (Dispatch a train)
-d --> (Update a train's\nschedule)
+d --> (Update a dispatched\ntrain's schedule)
 d ---> (Suggest train\nspeed)
 d --> (Set train authority)
 d ---> (Toggle switch)
 d --> mots
-mots --> (View train location)
-mots --> (View train speed)
-mots --> (View train authority)
+mots .->"<<include>>" (View train location)
+mots .->"<<include>>" (View train speed)
+mots .->"<<include>>" (View train authority)
 
 m --> mts
-mts -->"<<include>>" (Open the track)
-mts -->"<<include>>" (Close the track)
+mts .->"<<include>>" (Open the track)
+mts .->"<<include>>" (Close the track)
 @enduml

@@ -1,0 +1,26 @@
+@startuml
+title MBO Use Case Diagram
+
+skinparam usecaseBackgroundColor #e6ffcc
+skinparam usecaseBorderColor 	#049595
+skinparam actorBorderColor 	#049595
+skinparam packageBorderCOlor  #049595
+skinparam arrowColor #006666
+
+:Train Controller: as tc
+:MBO Analyst: as ma
+:Scheduler: as s
+
+rectangle MBOGui{
+	(View Data for Trains)
+	(Create Train Schedule)
+}
+
+ma --> (View Data for Trains)
+tc --> (Get Authority)
+tc --> (Get Safe Braking Distance)
+s --> (Create Train Schedule)
+(Get Authority) --> (Calculate Authority)
+(Create Train Schedule) --> (Calculate Authority)
+(Get Safe Braking Distance) --> (Calculate Safe Braking Distance)
+@enduml

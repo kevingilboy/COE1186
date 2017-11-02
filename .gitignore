@@ -3,4 +3,5 @@
 *.class
 .project
 .classpath
+.DS_Store
 /bin/

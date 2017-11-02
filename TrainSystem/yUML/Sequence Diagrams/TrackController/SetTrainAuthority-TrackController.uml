@@ -12,7 +12,9 @@ skinparam sequence {
 }
 
 participant Ctc
+box "Wayside Controller"
 participant TrackController
+end box
 participant TrackModel
 participant TrainModel
 participant Mbo

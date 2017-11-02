@@ -1,0 +1,44 @@
+@startuml
+
+title Suggest Setpoint Speed
+
+skinparam sequence {
+  BackgroundColor transparent
+  ParticipantBackgroundColor #e6ffcc
+  ParticipantBorderColor 	#049595
+  PackageBorderCOlor  #049595
+  ArrowColor #006666
+  LifeLineBorderColor #c09cd9
+}
+
+participant Ctc
+box "Wayside Controller"
+participant TrackController
+end box
+participant TrackModel
+participant TrainModel
+
+activate Ctc
+Ctc -> Ctc : Set suggested speed
+Ctc -> TrackController : transmitSuggestedSetpointSpeed(Train,speed)
+deactivate Ctc
+
+activate TrackController
+TrackController -> TrackModel : transmitSuggestedSetpointSpeed(Train,speed)
+deactivate TrackController
+
+activate TrackModel
+TrackModel -> TrainModel : transmitSuggestedSetpointSpeed(Train,speed)
+deactivate TrackModel
+
+activate TrainModel
+TrainModel -> TrainController : setSpeed(Train,speed)
+TrainModel -> TrainModel : Set velocity from power input
+
+activate TrainController
+TrainController --> TrainModel : Return power
+deactivate TrainController
+
+deactivate TrainModel
+
+@enduml

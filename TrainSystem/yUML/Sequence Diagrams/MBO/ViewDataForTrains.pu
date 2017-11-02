@@ -1,0 +1,24 @@
+@startuml
+
+title View Data for Trains
+
+skinparam sequence {
+  BackgroundColor transparent
+  ParticipantBackgroundColor #e6ffcc
+  ParticipantBorderColor 	#049595
+  PackageBorderCOlor  #049595
+  ArrowColor #006666
+  LifeLineBorderColor #c09cd9
+}
+
+participant MBOGui
+participant MBO
+
+== Query MBO Module for Data ==
+activate MBOGui
+activate MBO
+MBOGui -> MBO : getTrainData(String regex)
+MBO -> MBO : updateTrainInfo()
+MBO -> MBOGui : trainData[][]
+
+@enduml
