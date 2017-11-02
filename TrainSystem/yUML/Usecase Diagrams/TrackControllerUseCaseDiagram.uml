@@ -22,6 +22,8 @@ rectangle TrackControllersGUI{
 we --> (Select Wayside Controller)
 we --> (View Block Status)
 we --> (Upload PLC Code)
+d --> (Suggest Setpoint Speed)
+d --> (Transmit Authority)
 d --> (Set Switch State)
 d --> (Close Block for Maintenance)
 
