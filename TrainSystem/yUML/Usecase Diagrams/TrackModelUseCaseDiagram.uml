@@ -8,10 +8,14 @@ skinparam actorBorderColor 	#049595
 skinparam packageBorderColor  #049595
 skinparam arrowColor #006666
 
-:Dispatcher / CTC: as d
-:Track Controller: as tkc
-:Train Model: as tnm
-:Train Controller: as trc
+rectangle (Modules){
+	:Dispatcher / CTC: as d
+	:Track Controller: as tkc
+	:Train Model: as tnm
+	:Train Controller: as trc
+}
+
+:Track Model User: as tmu 
 
 rectangle TrackModel{
 	(Import Track Layout)
@@ -19,17 +23,23 @@ rectangle TrackModel{
 	(View Track Failures)
 	(View Block Occupancy)
 	(View Light Status)
-	(Initialize Block Speed Limits)
-	(Initialize Track Coordinates)
+	(Simulate Track Failures)
+	(Initialize Speed Limits & Coordinates)
 }
 
-d ---> (Import Track Layout)
-tkc ---> (View Block Attributes)
+d --> (Import Track Layout)
+tkc --> (View Block Attributes)
 tkc ---> (View Track Failures)
-tkc ---> (View Block Occupancy)
+tkc --> (View Block Occupancy)
 tkc ---> (View Light Status)
-tnm ---> (View Block Attributes)
-trc ---> (Initialize Block Speed Limits)
-trc ---> (Initialize Track Coordinates)
+tnm --> (View Block Attributes)
+trc ---> (Initialize Speed Limits & Coordinates)
+
+tmu -up-> (Import Track Layout)
+tmu -up-> (View Track Failures)
+tmu -up-> (View Block Occupancy)
+tmu -up-> (View Light Status)
+tmu -up-> (View Block Attributes)
+tmu -up-> (Simulate Track Failures)
 
 @enduml
