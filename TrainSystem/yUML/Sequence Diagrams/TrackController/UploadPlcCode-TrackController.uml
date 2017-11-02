@@ -28,6 +28,9 @@ group if (Wayside Controller Selected)
 	WaysideControllerGUI -> JFileChooser : showOpenDialog()
 	
 	activate JFileChooser
+	activate "Wayside Engineer"
+	"Wayside Engineer" -> JFileChooser : Select PLC File
+	deactivate "Wayside Engineer"
 	JFileChooser --> WaysideControllerGUI : String plcPath
 	deactivate JFileChooser
 	WaysideControllerGUI -> WaysideController : uploadPLC(plcPath)
