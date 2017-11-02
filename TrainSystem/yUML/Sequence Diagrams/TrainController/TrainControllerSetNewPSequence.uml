@@ -24,10 +24,6 @@ deactivate A
 activate B
 
 B -> C : setP(value)
-activate C
-
-C --> B : Acknowledgement
-deactivate C
-destroy B
+deactivate B
 
 @enduml

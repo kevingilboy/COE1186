@@ -1,6 +1,6 @@
 @startuml
 
-title Set Train CTC Authority
+title Set Train Authority
 
 skinparam sequence {
   BackgroundColor transparent

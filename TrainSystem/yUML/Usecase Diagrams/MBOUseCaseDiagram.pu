@@ -20,7 +20,4 @@ ma --> (View Data for Trains)
 tc --> (Get Authority)
 tc --> (Get Safe Braking Distance)
 s --> (Create Train Schedule)
-(Get Authority) --> (Calculate Authority)
-(Create Train Schedule) --> (Calculate Authority)
-(Get Safe Braking Distance) --> (Calculate Safe Braking Distance)
 @enduml

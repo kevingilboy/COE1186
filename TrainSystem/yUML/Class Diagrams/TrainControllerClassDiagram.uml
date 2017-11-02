@@ -16,6 +16,7 @@ package "Module.TrainController" {
 		-redBlockCoordinates : double[]
 		-greenBlockSpeedLimits : int[]
 		-greenBlockCoordinates : double[]
+		+manualMode : boolean
 		+mbo : MBO
 		+trnmdl : TrainModel
 		+trkmdl : TrackModel
@@ -102,6 +103,7 @@ package "Module.TrainController" {
 
 	class TrainControllerGUI {
 		-speedField : JTextField
+		-setpointField : JTextField
 		-authField : JTextField
 		-newSpeedField : JTextField
 		-powerOutField : JTextField
@@ -122,6 +124,7 @@ package "Module.TrainController" {
 		-pi : PIController
 		+guiUpdate()
 		+setSpeed(double)
+		+setSetpoint(double)
 		+setAuth(double)
 		+setPower(double)
 		+setTemp(integer)
@@ -191,11 +194,11 @@ package "Shared" {
 
 left to right direction
 
-TrainController "1" *--> "1..*" TrnController
-TrnController "1" --> "1" TrainControllerGUI
-TrainControllerGUI "1" --> "1" EngineerGUI
-EngineerGUI "1" <--> "1" PIController
-PIController "1" ..|> "1" TrnController : utilizes
+TrainController "1" o-left> "1..*" TrnController : stores
+TrnController "1" <--> "1" TrainControllerGUI : instantiates
+TrainControllerGUI "1" --> "1" EngineerGUI : instantiates
+EngineerGUI "1" <--> "1" PIController : communicates
+PIController "1" <|.. "1" TrnController : instantiates and utilizes
 SimTime -- Module : imports
 TrainController ..|> Module : implements
 
