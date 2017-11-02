@@ -12,7 +12,7 @@ skinparam sequence {
 }
 
 box "CTC"
-actor Dispatcher
+actor Maintainer
 participant CtcGui
 participant Ctc
 end box
@@ -20,12 +20,12 @@ participant TrackController
 participant TrackModel
 
 activate CtcGui
-activate Dispatcher
-Dispatcher -> CtcGui : Select Block
+activate Maintainer
+Maintainer -> CtcGui : Select Block
 CtcGui -> Ctc : getBlockByNumber(num)
 activate Ctc
 Ctc --> CtcGui : Block
-Dispatcher -> CtcGui : Set block state to "maintenance" or "open"
+Maintainer -> CtcGui : Set block state to "maintenance" or "open"
 deactivate Dispatcher
 CtcGui -> Ctc : setBlockStatus(Block,"maintenance" or "open")
 deactivate CtcGui
