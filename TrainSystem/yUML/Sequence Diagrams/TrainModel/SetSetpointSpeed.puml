@@ -43,7 +43,7 @@ activate TrackModel
 TrackModel -> TrainModel : setSuggestedSetpointSpeed(Train,speed)
 deactivate TrackModel
 
-group updateTrainVals
+group update per clock tick
 activate TrainModel
 TrainModel -> TrainController : setSpeed(Train,speed)
 

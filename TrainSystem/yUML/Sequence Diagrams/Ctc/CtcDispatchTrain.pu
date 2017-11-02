@@ -30,6 +30,7 @@ CtcGui -> ScheduleEditor : initialize()
 ...Create the Schedule...
 Dispatcher -> ScheduleEditor : Request Schedule be Added to Queue
 ScheduleEditor -> Ctc : addScheduleToQueue(Schedule)
+activate Ctc
 deactivate ScheduleEditor
 Ctc -> CtcGui : repaint()
 deactivate CtcGui
@@ -41,12 +42,14 @@ activate CtcGui
 Ctc -> CtcGui : repaint()
 deactivate CtcGui
 
-Ctc -> TrainModel : dispatchTrain(line,startingBlock)
-Ctc -> TrainController : dispatchTrain(line,startingBlock,Schedule)
-
+Ctc -> TrainModel : dispatchTrain(name,line,startingBlock)
+Ctc -> TrainController : dispatchTrain(name,line,startingBlock,Schedule)
+deactivate Ctc
 activate TrainController
 TrainController -> TrackModel : getBlockSpeedLimits(line)
+activate TrackModel
 TrackModel --> TrainController : speedLimits[]
+deactivate TrackModel
 deactivate TrainController
 
 @enduml

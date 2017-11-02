@@ -98,7 +98,7 @@ package Module.TrackModel{
         -status : boolean
         +getState() : boolean
         +getStatus() : boolean
-        +setState()
+        +setState(boolean)
     }
 
     class Crossing{
@@ -106,7 +106,7 @@ package Module.TrackModel{
         -status : boolean
         +getState() : boolean
         +getStatus() : boolean
-        +setState()
+        +setState(boolean)
     }
 
     class Beacon{
