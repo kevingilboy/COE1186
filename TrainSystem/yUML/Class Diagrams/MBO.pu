@@ -10,14 +10,13 @@ skinparam arrowColor #006666
 package "Module.MBO" {
 	class MBO {
 		-time:SimTime
-		+updateTime()
-		+getTrainData():Object[][]
+		+getTrainData(String regex):Object[][]
 		-receiveTrainPosition(String) : String[2]
  		-transmitSafeBreakingDistance(String,double)
  		-transmitMboAuthority(String,double)
 		-updateTrainInfo()
-		-calculateAuthority():double[2]
-		-calculateSafeBrakingDistance():double
+		-calculateAuthority(String):double[2]
+		-calculateSafeBrakingDistance(String):double
 	}
 
 	class MBOGui {
@@ -27,9 +26,9 @@ package "Module.MBO" {
 	class MBOScheduler {
 		-date:String
 		-desiredThroughput:int
-		+updateTrainSchedules()
-		+updateOperatorSchedules()
-		+generateSchedule(String filename)
+		+updateTrainSchedules(String[][])
+		+updateOperatorSchedules(String[][])
+		+generateSchedule(String,double)
 	}
 
 	class TrainInfo {

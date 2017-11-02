@@ -1,0 +1,26 @@
+@startuml
+
+title Create Train Schedule
+
+skinparam sequence {
+  BackgroundColor transparent
+  ParticipantBackgroundColor #e6ffcc
+  ParticipantBorderColor 	#049595
+  PackageBorderCOlor  #049595
+  ArrowColor #006666
+  LifeLineBorderColor #c09cd9
+}
+
+participant MBOGui
+participant MBOScheduler
+
+activate MBOGui
+activate MBOScheduler
+MBOGui -> MBOScheduler : updateTrainSchedules(String[][])
+MBOScheduler -> MBOGui : boolean operationSuccessful
+MBOGui -> MBOScheduler : updateOperatorSchedules(String[][])
+MBOScheduler -> MBOGui : boolean operationSuccessful
+MBOGui -> MBOScheduler : generateSchedule(String, double)
+MBOScheduler -> MBOGui : boolean operationSuccessful
+
+@enduml
