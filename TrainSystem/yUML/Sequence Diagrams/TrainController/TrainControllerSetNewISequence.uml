@@ -1,6 +1,6 @@
 @startuml
 
-title Set New P
+title Set New I
 
 skinparam sequence {
 	BackgroundColor transparent
@@ -19,11 +19,11 @@ participant "PIController" as C
 Engineer -> A : Click "Open Engineer Panel" Button
 activate A
 
-A -> B : Click "Set New P" Button
+A -> B : Click "Set New I" Button
 deactivate A
 activate B
 
-B -> C : setP(value)
+B -> C : setI(value)
 deactivate B
 
 @enduml
