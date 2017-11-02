@@ -11,7 +11,7 @@ package "Module.MBO" {
 	class MBO {
 		-time:SimTime
 		+getTrainData(String regex):Object[][]
-		-receiveTrainPosition(String) : String[2]
+		-receiveTrainPosition(String)
  		-transmitSafeBreakingDistance(String,double)
  		-transmitMboAuthority(String,double)
 		-updateTrainInfo()
@@ -26,9 +26,9 @@ package "Module.MBO" {
 	class MBOScheduler {
 		-date:String
 		-desiredThroughput:int
-		+updateTrainSchedules(String[][])
-		+updateOperatorSchedules(String[][])
-		+generateSchedule(String,double)
+		+updateTrainSchedules(String[][]):boolean
+		+updateOperatorSchedules(String[][]):boolean
+		+generateSchedule(String,double):String
 	}
 
 	class TrainInfo {
@@ -86,7 +86,7 @@ package "Shared" {
 
 left to right direction
 
-MBOGui "1" --* MBO : instantiates
+MBO "1" --* MBOGui : instantiates
 MBOGui "1" --* MBOScheduler : instantiates
 SimTime -- Module : imports
 MBO ..|> Module : implements
