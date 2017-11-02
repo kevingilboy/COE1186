@@ -24,11 +24,32 @@ package Module.TrainModel {
         -trainModel : TrainModel
         __
         +time : SimTime
+        +trncntrl : TrainController
+        +trkmdl : TrackModel
         __
-        +updateList()
+        -calcDeltaTime(SimTime, SimTime) : integer
+        -updateList()
         +timeUpdate(SimTime)
         +getTrainAtBlock(Block)
         +setBeacon(trainID,int)
+        +trncntl : TrainController
+		+trkmdl : TrackModel
+		+dispatchTrainToBlock(String, String, int, String[])
+		+transmitCtcAuthority(String, double)
+		+suggestSetpointSpeed(String, double)
+		+setEmergencyBrake(String, boolean)
+		+setSchedule(String, String[])
+		+setBeacon(String, int_32)
+		+getPosition(String) : String[2]
+		+setPower(String, double)
+		+setLeft(String, boolean)
+		+setRight(String, boolean)
+		+setService(String, boolean)
+		+setEmergency(String, boolean)
+		+setLights(String, boolean)
+		+setTemperature(String, int)
+		+setTrainPosition(String) : String[2]
+		+setTrainActualSpeed(String) : double
     }
 
     class Train {
@@ -71,12 +92,10 @@ package Module.TrainModel {
         -trainAcceleration : double
         -gpsSignal : Gps
         __
-        +trainController : TrainController
         +trainModelGUI : TrainModelNewGUI
-        +trainList : Arraylist
+        +trainList : TrainModel[]
         __
         -showTrainGUI()
-        -setValuesForDisplay(TrainModelNewGUI)
         -updateTrainValues()
         +CreateNewGUI(TrainModel)
         +activateFailureModeTest()
@@ -87,8 +106,8 @@ package Module.TrainModel {
         +setPos(double)
         +getPos()
         +getGrade(Block)
-        +setSetpointSpeed(double)
         +getSetpointSpeed()
+        +setSetpointSpeed()
         +getAuthority()
         +setAuthority(double)
         +setLightStatus(boolean)
@@ -100,61 +119,18 @@ package Module.TrainModel {
 
     class Gps{
         -line : String
-        -prevBlockID : Block
-        -prevSection : String
-        -currentBlockID : Block
-        -currBlockLength : double
-        -metersIn : double
-        -nextBlockID : Block
-        -nextBlockLength : double
+        -currPos : double[2]
         __
-        -setPrevBlock(Block)
-        -setCurrentBlock(Block)
-        -getNextBlock()
-        -setGpsPos(Block)
+        -setGpsPos(double[2])
         -getGpsPos()
     }
-    
-    class Block{
-        label :String
-        line : String
-        isStation : Boolean
-        station : String
-        isSwitch : Boolean
-        isStation() : Boolean
-        getStationName() : String
-        isSwitch() : Boolean
-    }
+
 
     class TrainModelNewGUI{
-        +gpsAntennaStatusLabel : JLabel
-        +mboAntennaStatusLabel : JLabel
-        +stationVal : JLabel
-        +rightDoorStatusLabel : Jlabel
-        +leftDoorStatusLabel : Jlabel
-        +timeVal : Jlabel
-        +lblAm : JLabel
-        +leftDoorStatusLabel : JLabel
-        +lightStatusLabel : JLabel
-        +numPassengersLbl : JLabel
-        +authorityVal : JLabel
-        +lblLine : JLabel
-        +heightVal : JLabel
-        +weightVal : JLabel
-        +lengthVal : JLabel
-        +widthVal : JLabel
-        +capacityVal : JLabel
-        +capacityVal : JLabel
-        +blockVal : JLabel
-        +gradeVal : Jlabel
-        +arrivalStatusLabel : JLabel
-        +currentSpeedLabel : Jlabel
-        +btnSendPowerCommand : JButton
-        +btnEmergencyBrake : JButton
-        +numCarsLabel : JLabel
-        +tempInCabin : JLabel
-        +powerInput : JLabel
         +trainModel : TrainModel
+        __
+        -setValuesForDisplay(TrainModel)
+        -setEmerBrakeButtonPressed()
     }
 }
 
@@ -165,6 +141,5 @@ Module <|. TrainModel : implements
 TrainModel "1..*"*-down- Train : instantiates
 Train "0..*"*- TrainModelNewGUI : instantiates
 Train "1..*"-* Gps : contains
-Gps "2..*"-* Block : monitors
 
 @enduml
