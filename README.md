@@ -12,10 +12,3 @@ Kevin Gilboy, Nick Petro, Kevin Le, Jennifer Patterson, Mike Kotcher, Dylan McGu
 5. **Train Controller** - Mike Kotcher
 6. **MBO** - Dylan McGuire
 7. **Dynamic Display** - Kevin Le
-
-### Folder Structure
-##### Sub-System Modules:
-`TrainSystem / src / SubSystemModules / <module> / <class>.java`
-
-##### yUML Documentation:
-`TrainSystem / yUML / Class Diagrams / <module> / <module_diagram>.yuml`
