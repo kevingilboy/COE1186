@@ -1,0 +1,33 @@
+@startuml
+
+title Simulate Track Failure
+
+skinparam noteBorderColor #049595
+
+skinparam sequence {
+	BackgroundColor transparent
+	ParticipantBackgroundColor #e6ffcc
+	ParticipantBorderColor 	#049595
+	PackageBorderCOlor  #049595
+	ArrowColor #006666
+	LifeLineBorderColor #c09cd9
+}
+
+actor TrackModelUser
+participant TrackModelGUI
+participant TrackModel
+participant Block
+
+
+TrackModelUser -> TrackModelGUI : Press "fail" button for specific block 
+activate TrackModelGUI
+TrackModelGUI -> TrackModel : getBlock(int)
+
+activate TrackModel
+TrackModel -> Block : setRailFailure(boolean)
+activate Block
+deactivate TrackModel
+Block --> TrackModelGUI : new block status (under maintenance)
+deactivate Block
+
+@enduml
