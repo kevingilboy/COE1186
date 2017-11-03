@@ -111,7 +111,7 @@ class TrackModel{
 }
 class TrainModel{
   +trkmdl : TrackModel
-  .
+  +trnctl : TracinController
   .
   .
   __
@@ -203,7 +203,7 @@ Module - SimTime : imports
 Ctc -> TrackController
 TrackController -> TrackModel
 TrackModel <-> TrainModel
-TrainModel <- TrainController
+TrainModel <-> TrainController
 TrainController <- Mbo
 
 TrainController -> TrackModel /'for getting map'/

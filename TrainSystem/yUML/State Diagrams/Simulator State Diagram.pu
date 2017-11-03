@@ -7,7 +7,7 @@ skinparam state {
   ArrowColor #006666
 }
 
-[*] --> Initialization
+[*] -> Initialization
 
 state "Module Initialization" as Initialization {
   [*] -> InitializeModules

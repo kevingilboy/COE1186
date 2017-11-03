@@ -12,18 +12,18 @@ skinparam arrowColor #006666
 :Passenger: as p
 :Track Model: as tkm
 :Train Controller: as tnc
-:MBO: as mbo
 
 rectangle TrainModelGUI{
-    (Dispatch Train)
 	(Activate Emergency Brake)
+}
+
+rectangle TrainModel{
+    (Dispatch Train)
     (Suggest Setpoint Speed)
     (Set Train Authority)
     (Set GPS Signal)
     (Transmit Beacon)
-    (Set MBO Antenna Signal)
 }
-
 ctc --> (Dispatch Train)
 p --> (Activate Emergency Brake)
 tkm --> (Set GPS Signal)
@@ -31,8 +31,5 @@ tnc --> (Set GPS Signal)
 tnc --> (Transmit Beacon)
 tnc --> (Suggest Setpoint Speed)
 tnc --> (Set Train Authority)
-mbo --> (Set MBO Antenna Signal)
 
-
-    
 @enduml
