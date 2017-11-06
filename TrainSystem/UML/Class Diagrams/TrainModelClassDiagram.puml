@@ -1,0 +1,143 @@
+@startuml
+
+title Train Model Class Diagram
+'skinparam backgroundColor transparent'
+skinparam classBackgroundColor #e6ffcc
+skinparam classBorderColor 	#049595
+skinparam packageBorderCOlor  #049595
+skinparam arrowColor #006666
+
+package Shared{
+  interface Module{
+    +timeUpdate(SimTime) : Boolean
+  }
+  class SimTime{
+    +hr : int
+    +min : int
+    +sec : int
+    +toString() : String
+  }
+}
+package Module.TrainModel {
+    class TrainModel {
+        -trainID : String
+        -trainModel : TrainModel
+        __
+        +time : SimTime
+        +trncntrl : TrainController
+        +trkmdl : TrackModel
+        __
+        -calcDeltaTime(SimTime, SimTime) : integer
+        -updateList()
+        +timeUpdate(SimTime)
+        +getTrainAtBlock(Block)
+        +setBeacon(trainID,int)
+		+dispatchTrainToBlock(String, String, int, String[])
+		+transmitCtcAuthority(String, double)
+		+suggestSetpointSpeed(String, double)
+		+setEmergencyBrake(String, boolean)
+		+setSchedule(String, String[])
+		+setBeacon(String, int_32)
+		+getPosition(String) : String[2]
+		+setPower(String, double)
+		+setLeft(String, boolean)
+		+setRight(String, boolean)
+		+setService(String, boolean)
+		+setEmergency(String, boolean)
+		+setLights(String, boolean)
+		+setTemperature(String, int)
+		+setTrainPosition(String) : String[2]
+		+setTrainActualSpeed(String) : double
+    }
+
+    class Train {
+        -id : String
+        -weight : double
+        -height : double
+        -length : double
+        -width : double
+        -numCars : int
+        -capacity : int
+        -lineColor : String
+        -grade : double
+        -gpsStatus : boolean
+        -mboStatus : boolean
+        -engineFailureStatus : boolean
+        -signalFailureStatus : boolean
+        -brakeFailureStatus : boolean
+        -nextStationID : String
+        -timeOfArrival : double
+        -arrivalStatus : boolean
+        -numPassengers : int
+        -currentSpeed : double
+        -CTCSpeed : double
+        -CTCAuthority : double
+        -powerOut : double
+        -leftDoorStatus : boolean
+        -rightDoorStatus : boolean
+        -lightsStatus : boolean
+        -temperature : int
+        -serviceBrake : boolean
+        -emerBrake : boolean
+        -trainActive : boolean
+        -force : double
+        -normalForce : double
+        -downwardForce : double
+        -totalForce : double
+        -friction : double
+        -slope : double
+        -finalSpeed : double
+        -trainAcceleration : double
+        -gpsSignal : Gps
+        __
+        +trainModelGUI : TrainModelNewGUI
+        +trainList : TrainModel[]
+        __
+        -showTrainGUI()
+        -updateTrainValues()
+        +CreateNewGUI(TrainModel)
+        +activateFailureModeTest()
+        +endFailureModeTest()
+        +getTrainController()
+        +updateTrainList()
+        +updateArrivalStatus()
+        +setPos(double)
+        +getPos()
+        +getGrade(Block)
+        +getSetpointSpeed()
+        +setSetpointSpeed()
+        +getAuthority()
+        +setAuthority(double)
+        +setLightStatus(boolean)
+        +setLeftDoorStatus(boolean)
+        +setRightDoorStatus(boolean)
+        +setTemperature(int)
+        +truncateTo(double‚int)
+    }
+
+    class Gps{
+        -line : String
+        -currPos : double[2]
+        __
+        -setGpsPos(double[2])
+        -getGpsPos()
+    }
+
+
+    class TrainModelNewGUI{
+        +trainModel : TrainModel
+        __
+        -setValuesForDisplay(TrainModel)
+        -setEmerBrakeButtonPressed()
+    }
+}
+
+Module--SimTime : imports
+
+Module <|. TrainModel : implements
+
+TrainModel "1..*"*-right- Train : instantiates
+Train "0..*"*-- TrainModelNewGUI : instantiates
+Train "1..*"-* Gps : contains
+
+@enduml

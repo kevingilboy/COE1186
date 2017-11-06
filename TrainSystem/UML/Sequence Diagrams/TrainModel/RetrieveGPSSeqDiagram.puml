@@ -1,0 +1,31 @@
+@startuml
+title Set GPS Signal
+participant Track Model
+participant TrainModel
+participant TrainController
+
+skinparam sequence {
+  BackgroundColor transparent
+  ParticipantBackgroundColor #e6ffcc
+  ParticipantBorderColor 	#049595
+  PackageBorderCOlor  #049595
+  ArrowColor #006666
+  LifeLineBorderColor #c09cd9
+}
+
+activate Track Model
+Track Model -> TrainModel : getGps()
+activate TrainModel
+
+
+TrainModel -> TrainController : setGps()
+activate TrainController
+
+TrainModel --> Track Model : Complete Request
+deactivate Track Model
+
+TrainController --> TrainModel : Received Message
+deactivate TrainModel
+deactivate TrainController
+
+@enduml

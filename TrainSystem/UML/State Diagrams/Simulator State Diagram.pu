@@ -1,0 +1,43 @@
+@startuml
+title Simulator State Diagram
+skinparam state {
+  BackgroundColor transparent
+  BackgroundColor #e6ffcc
+  BorderColor 	#049595
+  ArrowColor #006666
+}
+
+[*] -> Initialization
+
+state "Module Initialization" as Initialization {
+  [*] -> InitializeModules
+  state "Initialize Modules" as InitializeModules: Call constructor of each Module
+  InitializeModules -> PassReferences : Initialized
+
+  state "Pass Cross-References" as PassReferences: Distribute references between modules to\nestablish allowable routes of communication
+  PassReferences --> Simulation : Ready
+}
+
+state "Simulation" as Simulation{
+  [*] -> InitializeTime
+
+  state "Initialize Start/End Time" as InitializeTime : Current Time := Start Time
+  InitializeTime -right-> CheckTime : Begin
+
+  state "Check Time" as CheckTime
+  CheckTime --> NotifyModules : 1. If CurrentTime<EndTime
+
+  state "Notify modules that\n1 sec passed" as NotifyModules : Call Module.updateTime(Time)\nwithin each module
+  NotifyModules-right->WaitForUpdates
+
+  WaitForUpdates-->WaitForUpdates : 1. While(>=1 has not returned)
+
+  state "Lock until modules \nreturn true" as WaitForUpdates : Ensures no race conditions
+  WaitForUpdates-up->Sleep: 2.
+
+  state "Sleep for x sec" as Sleep : x is 1 / speedup
+  Sleep-up->CheckTime: Increment Time
+
+}
+  CheckTime -right-> [*] : 2.
+@enduml

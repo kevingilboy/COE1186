@@ -1,0 +1,31 @@
+@startuml
+
+title Set MBO Antenna Signal
+
+skinparam sequence {
+  BackgroundColor transparent
+  ParticipantBackgroundColor #e6ffcc
+  ParticipantBorderColor 	#049595
+  BoxBorderColor #049595
+  PackageBorderCOlor  #049595
+  ArrowColor #006666
+  LifeLineBorderColor #c09cd9
+}
+
+participant TrainModel
+participant MBO
+
+
+TrainModel -> MBO : getMboTrainModelntennaStatus()
+activate TrainModel
+activate MBO
+
+MBO--> TrainModel : Return State
+
+MBO-> TrainModel : getPos()
+
+TrainModel --> MBO: Complete Request
+deactivate TrainModel
+deactivate MBO
+
+@enduml

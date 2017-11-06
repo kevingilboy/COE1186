@@ -1,0 +1,56 @@
+@startuml
+
+title Set Train Authority
+
+skinparam sequence {
+  BackgroundColor transparent
+  ParticipantBackgroundColor #e6ffcc
+  ParticipantBorderColor 	#049595
+  PackageBorderCOlor  #049595
+  ArrowColor #006666
+  LifeLineBorderColor #c09cd9
+}
+
+participant Ctc
+participant TrackController
+participant TrackModel
+participant TrainModel
+box
+	participant TrainController
+	participant TrnController
+end box
+participant Mbo
+
+activate Ctc
+Ctc -> Ctc : Determine authority
+Ctc -> TrackController : transmitCtcAuthority(Train,authority)
+deactivate Ctc
+
+activate TrackController
+TrackController -> TrackModel : transmitCtcAuthority(Train,authority)
+deactivate TrackController
+
+activate TrackModel
+TrackModel -> TrainModel : transmitCtcAuthority(Train,authority)
+deactivate TrackModel
+
+activate TrainModel
+TrainModel -> TrainController : setCtcAuthority(Train,authority)
+deactivate TrainModel
+activate TrainController
+
+TrainController -> TrnController : setCtcAuthority(authority)
+activate TrnController
+
+activate Mbo
+Mbo -> Mbo : Determine authority
+Mbo -> TrainController : setMboAuthority(Train, authority)
+deactivate Mbo
+
+TrainController -> TrnController : setMboAuthority(authority)
+deactivate TrainController
+
+TrnController --> TrnController : setAuthority(ctcAuthority,mboAuthority)
+deactivate TrnController
+
+@enduml

@@ -1,0 +1,75 @@
+@startuml
+
+title Update States
+
+skinparam sequence {
+  BackgroundColor transparent
+  ParticipantBackgroundColor #e6ffcc
+  ParticipantBorderColor 	#049595
+  PackageBorderCOlor  #049595
+  ArrowColor #006666
+  LifeLineBorderColor #c09cd9
+}
+
+participant Simulator
+box "Wayside Controller"
+participant TrackControllers
+participant WaysideController
+participant PLC
+participant WaysideControllerGUI
+end box
+participant TrackModel
+
+activate Simulator
+Simulator -> TrackControllers : timeUpdate(SimTime)
+deactivate Simulator
+
+group loop waysideControllers
+	activate TrackControllers
+	TrackControllers -> WaysideController : updateStates()
+	
+	group loop associatedBlocks
+		activate WaysideController 
+		WaysideController -> TrackControllers : receiveBlockInfo(line, blockId)
+		TrackControllers -> TrackModel : getBlockInfo(line, blockId)
+	
+		activate TrackModel
+		TrackModel --> TrackControllers : Block
+		deactivate TrackModel
+		TrackControllers --> WaysideController : Block
+		WaysideController -> WaysideController : runPLC(occupancy)
+		WaysideController -> PLC : getLogic()
+		
+		activate PLC
+		PLC --> WaysideController : String logic
+		deactivate PLC
+		
+		group if(newState != currentState)
+			WaysideController -> TrackControllers : transmitState(line, blockId, state)
+			TrackControllers -> TrackModel : setState(line, blockId, state)
+			activate TrackModel
+			TrackModel --> TrackControllers : Success
+			deactivate TrackModel
+		end
+		
+		group if(Wayside Controller Selected)
+			WaysideController -> WaysideControllerGUI : displayInfo()
+
+			activate WaysideControllerGUI
+			WaysideControllerGUI -> WaysideController : receiveBlockInfo(line, blockId)
+			WaysideController -> TrackControllers : receiveBlockInfo(line, blockId)
+			TrackControllers -> TrackModel : getBlockInfo(line, blockId)
+			
+			activate TrackModel
+			TrackModel --> TrackControllers : Block
+			deactivate TrackModel
+			TrackControllers --> WaysideController : Block
+			WaysideController --> WaysideControllerGUI : Block
+			deactivate WaysideControllerGUI
+		end
+	end
+	deactivate WaysideController
+end
+deactivate TrackControllers
+
+@enduml

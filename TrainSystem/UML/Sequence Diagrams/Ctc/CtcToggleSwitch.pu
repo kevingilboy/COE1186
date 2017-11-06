@@ -1,0 +1,50 @@
+@startuml
+
+title Toggle Switch
+
+skinparam sequence {
+  BackgroundColor transparent
+  ParticipantBackgroundColor #e6ffcc
+  ParticipantBorderColor 	#049595
+  PackageBorderCOlor  #049595
+  ArrowColor #006666
+  LifeLineBorderColor #c09cd9
+}
+
+box "CTC"
+actor Dispatcher
+participant CtcGui
+participant Ctc
+end box
+participant TrackController
+participant TrackModel
+
+activate CtcGui
+activate Dispatcher
+Dispatcher -> CtcGui : Select Block
+CtcGui -> Ctc : getBlockByNumber(num)
+activate Ctc
+Ctc --> CtcGui : Block
+Dispatcher -> CtcGui : Set switch state to "default" or "alternate"
+deactivate Dispatcher
+CtcGui -> Ctc : setSwitchStatus(Block,direction)
+deactivate CtcGui
+
+Ctc -> TrackController : setSwitchStatus(Block,direction)
+activate TrackController
+TrackController -> TrackModel : setSwitchStatus(Block,direction)
+
+activate TrackModel
+TrackModel -> TrackModel : setSwitchStatus(direction)
+TrackModel --> TrackController : //new switch status//
+deactivate TrackModel
+
+TrackController --> Ctc : //new switch status//
+deactivate TrackController
+
+Ctc -> Ctc : updateSwitchStatus(Block,status)
+Ctc -> CtcGui : repaint()
+activate CtcGui
+deactivate CtcGui
+deactivate Ctc
+@enduml
