@@ -16,6 +16,11 @@ rectangle MBOGui{
 	(Create Train Schedule)
 }
 
+rectangle MBO {
+	(Get Authority)
+	(Get Safe Braking Distance)
+}
+
 ma --> (View Data for Trains)
 tc --> (Get Authority)
 tc --> (Get Safe Braking Distance)

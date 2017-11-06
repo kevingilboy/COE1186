@@ -90,10 +90,10 @@ MBO "1" --* MBOGui : instantiates
 MBOGui "1" --* MBOScheduler : instantiates
 SimTime -- Module : imports
 MBO ..|> Module : implements
-MBO *--> "1.." TrainInfo
-MBO *--> "1.." BlockInfo
-MBOScheduler *--> "1.." TrainSchedule
-MBOScheduler *--> "1.." OperatorSchedule
+MBO *--> "1.." TrainInfo : contains
+MBO *--> "1.." BlockInfo : contains
+MBOScheduler *--> "1.." TrainSchedule : contains
+MBOScheduler *--> "1.." OperatorSchedule : contains
 
 @enduml
 
