@@ -5,22 +5,26 @@ public class SimTime {
 	public int min;
 	public int sec;
 	
-	public SimTime(int hours, int minutes) {
+	public SimTime(int hours, int minutes, int seconds) {
 		hr = hours;
 		min = minutes;
-		sec = 0;
+		sec = seconds;
+	}
+	
+	public SimTime(SimTime time) {
+		hr = time.hr;
+		min = time.min;
+		sec = time.sec;
 	}
 	
 	public SimTime(String time) {
-		if(time.length()==4) {
-			hr = Integer.parseInt(time.substring(0,2));
-			min = Integer.parseInt(time.substring(2,4));
-			sec = 0;
-		}
-		else if(time.length()==3) {
-			hr = Integer.parseInt(time.substring(0,1));
-			min = Integer.parseInt(time.substring(1,3));
-			sec = 0;
+		if(time.length()==8) {
+			String[] parts = time.split(":");
+			if(parts.length==3) {
+				hr =  Integer.parseInt(parts[0]);
+				min = Integer.parseInt(parts[1]);
+				sec = Integer.parseInt(parts[2]);
+			}
 		}
 	}
 	
@@ -39,6 +43,21 @@ public class SimTime {
 		}
 	}
 	
+	public boolean equals(SimTime x) {
+		if (hr == x.hr && min == x.min && sec == x.sec) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static double hoursBetween(SimTime a, SimTime b) {
+		double aTimeInHr = a.hr + a.min/60.0 + a.sec/3600.0;
+		double bTimeInHr = b.hr + b.min/60.0 + b.sec/3600.0;
+		
+		double hoursBetween = bTimeInHr-aTimeInHr;
+		
+		return hoursBetween;
+	}
 	
 	public String toString() {
 		return(String.format("%02d",hr)+":"+String.format("%02d",min)+":"+String.format("%02d",sec));
