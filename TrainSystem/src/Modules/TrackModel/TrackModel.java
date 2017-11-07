@@ -7,18 +7,32 @@ import Simulator.Simulator;
 import Modules.TrainModel.TrainModel;
 import Modules.Ctc.Ctc;
 
+import java.util.*;
+
 public class TrackModel implements Module{
+	
+	/* references to other modules */
 	public Simulator simulator;
 	public Ctc ctc;
 	public TrainModel trainModel;
 
-	public TrackModel(){
+	/* Track Model class references */
+	private ArrayList<Block> blocks = new ArrayList<Block>();
 
+	/* Constructor */
+	public TrackModel(){
+		String trackModelStartupMessage = "Track Model Instantiated!";
+		System.out.println(trackModelStartupMessage);
 	}
 
+	/* update the track model from the simulation clock tick */
 	@Override
-	public boolean updateTime(SimTime time) {
-
+	public boolean updateTime(SimTime time){
 		return true;
+	}
+
+	/* Main method for standalone operation */
+	public static void main(String[] args){
+		new TrackModel();
 	}
 }
