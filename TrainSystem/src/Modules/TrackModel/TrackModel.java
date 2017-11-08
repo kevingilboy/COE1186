@@ -17,18 +17,20 @@ public class TrackModel implements Module{
 	public TrainModel trainModel;
 
 	/* Track Model class references */
+	public DynamicDisplay display = new DynamicDisplay();
 	public TrackCsvParser trackParser = new TrackCsvParser();
 	private ArrayList<Block> blocks = new ArrayList<Block>();
 
 	/* Constructor */
 	public TrackModel(){
-		String filePath = "Modules/TrackModel/Track Layout/GreenLineFinal.csv";
-		blocks = trackParser.parse(filePath);
+		String greenline = "Modules/TrackModel/Track Layout/GreenLineFinal.csv";
+		blocks = trackParser.parse(greenline);
 	}
 
 	/* update the track model from the simulation clock tick */
 	@Override
 	public boolean updateTime(SimTime time){
+		// ...
 		return true;
 	}
 

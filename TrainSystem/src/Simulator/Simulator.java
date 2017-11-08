@@ -89,6 +89,7 @@ public class Simulator {
 			
 			//Update all modules
 			ctc.updateTime(currentTime);
+			trackModel.updateTime(currentTime);
 			
 			//Increment time
 			currentTime.incrementSecond();
