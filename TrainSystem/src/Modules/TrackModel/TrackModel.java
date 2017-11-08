@@ -24,6 +24,7 @@ public class TrackModel implements Module{
 	public TrackModel(){
 		String filePath = "Modules/TrackModel/Track Layout/GreenLineFinal.csv";
 		blocks = trackParser.parse(filePath);
+		trackParser.showParsedTrack();
 	}
 
 	/* update the track model from the simulation clock tick */
