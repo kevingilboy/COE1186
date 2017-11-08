@@ -89,7 +89,11 @@ public class Simulator {
 			
 			//Update all modules
 			ctc.updateTime(currentTime);
+			trackController.updateTime(currentTime);
 			trackModel.updateTime(currentTime);
+			trainModel.updateTime(currentTime);
+			trainController.updateTime(currentTime);
+			mbo.updateTime(currentTime);
 			
 			//Increment time
 			currentTime.incrementSecond();
