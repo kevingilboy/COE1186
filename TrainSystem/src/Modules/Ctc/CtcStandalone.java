@@ -3,6 +3,8 @@ package Modules.Ctc;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import Shared.SimTime;
+
 public class CtcStandalone extends CtcCore{
 	private CtcStandalone ctc;
 	private Timer timer;
