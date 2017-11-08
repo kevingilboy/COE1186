@@ -1,7 +1,7 @@
 package Modules.TrackModel;
 
 public class Block{
-	
+
 	public boolean STATUS_WORKING = true;
 	public boolean STATUS_NOT_WORKING = false;
 
@@ -14,6 +14,7 @@ public class Block{
 	private String line;
 	private String section;
 	private int id;
+	private double length;
 	private double grade;
 	private double elevation;
 	private double cumElevation;
@@ -27,12 +28,13 @@ public class Block{
 	private boolean underground;
 
 	public Block(){
-		this(	"", "", 0, 0, 0, 0, 0, 0, null, null, null, null, null, false, false);
+		this(	"", "", 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, false, false);
 	}
 
 	public Block(	String line,
 					String section,
 					int id,
+					double length,
 					double grade,
 					double elevation,
 					double cumElevation,
@@ -48,6 +50,7 @@ public class Block{
 		this.line = line;
 		this.section = section;
 		this.id = id;
+		this.length = length;
 		this.grade = grade;
 		this.elevation = elevation;
 		this.cumElevation = cumElevation;
@@ -72,6 +75,10 @@ public class Block{
 
 	public int getId(){
 		return id;
+	}
+
+	public double getLength(){
+		return length;
 	}
 
 	public double getGrade(){

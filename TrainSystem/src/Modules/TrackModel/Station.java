@@ -6,6 +6,9 @@ public class Station{
 
 	public int MIN_GENERATED_TICKET_SALES = 10;
 	public int MAX_GENERATED_TICKET_SALES = 50;
+	public boolean DOOR_SIDE_RIGHT = true;
+	public boolean DOOR_SIDE_LEFT = false;
+	public boolean DOOR_SIDE_NONE = false;
 
 	private String id;
 	private int ticketSales;
@@ -29,12 +32,24 @@ public class Station{
 		return id;
 	}
 
+	public void setId(String id){
+		this.id = id;
+	}
+
 	public boolean getDoorSideDirectionPositive(){
 		return doorSideDirectionPositive;
 	}
 
 	public boolean getDoorSideDirectionNegative(){
 		return doorSideDirectionNegative;
+	}
+
+	public void setDoorSideDirectionPositive(boolean direction){
+		this.doorSideDirectionPositive = direction;
+	}
+
+	public void setDoorSideDirectionNegative(boolean direction){
+		this.doorSideDirectionNegative = direction;
 	}
 
 	public int getTicketSales(){
@@ -48,4 +63,5 @@ public class Station{
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 		return randomNum;
 	}
+
 }
