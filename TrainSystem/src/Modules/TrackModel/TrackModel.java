@@ -17,12 +17,13 @@ public class TrackModel implements Module{
 	public TrainModel trainModel;
 
 	/* Track Model class references */
+	public TrackCsvParser trackParser = new TrackCsvParser();
 	private ArrayList<Block> blocks = new ArrayList<Block>();
 
 	/* Constructor */
 	public TrackModel(){
-		String trackModelStartupMessage = "Track Model Instantiated!";
-		System.out.println(trackModelStartupMessage);
+		String filePath = "Modules/TrackModel/Track Layout/GreenLineFinal.csv";
+		blocks = trackParser.parse(filePath);
 	}
 
 	/* update the track model from the simulation clock tick */
