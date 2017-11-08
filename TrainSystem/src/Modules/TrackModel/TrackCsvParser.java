@@ -53,7 +53,7 @@ public class TrackCsvParser{
 					if (!(blockData[11].equals("0"))){
 						station = new Station();
 						
-						String stationDelimeter = ".";
+						String stationDelimeter = "\\.";
 						String [] stationData = blockData[11].split(stationDelimeter);
 
 						station.setId(stationData[0]);
@@ -89,13 +89,15 @@ public class TrackCsvParser{
 				Switch switch_ 			= null;
 				try{
 					if (!(blockData[12].equals("0"))){
+
 						switch_ = new Switch();
 
-						String switchDelimeter = ".";
+						String switchDelimeter = "\\.";
 						String [] switchData = blockData[12].split(switchDelimeter);
 
 						boolean edgeType;
-						if (switchData[0] == "HEAD"){
+
+						if (switchData[0].equals("HEAD")){
 							edgeType = switch_.EDGE_TYPE_HEAD;
 						} else {
 							edgeType = switch_.EDGE_TYPE_TAIL;
