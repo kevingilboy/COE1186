@@ -130,6 +130,34 @@ public class TrackCsvParser{
 
 				boolean occupied 		= false;
 
+
+				/* Parse Coordinates Cell */
+				double[] x_coordinates = new double[(int)length];
+				double[] y_coordinates = new double[(int)length];
+
+				/*
+				 
+				Tell Kevin G. to change format of MATLAB output: x0.y0;x1.y1;....;xn.yn;
+
+				Having "(xn,yn)" makes for additional parsing layer for parenthesis,
+				and the comma in between x and y is interpretted as a cell-seperation
+				since the whole file is comma seperated (being a csv...)
+
+				*/
+				
+				/*
+				String coordDelimiter = ";";
+				String xyDelimiter = ",";
+
+				String[] coordStrs = (blockData[15]).split(coordDelimiter);
+
+				// Remove "(" and ")" from parsed coordinate strings
+				for (int i = 0; i < coordStrs.length; i++){
+					x_coordinates[i] = Double.parseDouble((coordStrs[i].split(xyDelimiter))[0]);
+					y_coordinates[i] = Double.parseDouble((coordStrs[i].split(xyDelimiter))[1]);
+				}
+				*/
+
 				Block currentBlock = new Block(	line,
 												section,
 												id,
@@ -145,7 +173,9 @@ public class TrackCsvParser{
 												switch_,
 												beacon,
 												underground,	
-												occupied);
+												occupied,
+												x_coordinates,
+												y_coordinates);
 
 				blocks.add(currentBlock);
 
