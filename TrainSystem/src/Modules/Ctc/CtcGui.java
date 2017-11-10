@@ -1,5 +1,12 @@
 package Modules.Ctc;
 
+import Modules.TrackModel.Block;
+import Modules.TrackModel.Light;
+import Modules.TrackModel.Crossing;
+import Modules.TrackModel.Station;
+import Modules.TrackModel.Switch;
+import Modules.TrackModel.Beacon;
+
 import java.awt.EventQueue;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -632,7 +639,7 @@ public class CtcGui {
 		btnCloseTrack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Block block = getSelectedBlock();
-				block.status = false;
+				//block.setStatus(false);
 				updateSelectedBlock();
 			}
 		});
@@ -644,7 +651,7 @@ public class CtcGui {
 		btnRepairBlock.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Block block = getSelectedBlock();
-				block.status = true;
+				//block.setStatus(true);
 				updateSelectedBlock();
 			}
 		});
@@ -656,7 +663,7 @@ public class CtcGui {
 		selectedBlockToggle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Block block = getSelectedBlock();
-				block.altSwitchState = selectedBlockToggle.isSelected();
+				block.getSwitch().setState(selectedBlockToggle.isSelected());
 			}
 		});
 		selectedBlockToggle.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -791,11 +798,11 @@ public class CtcGui {
 	private void updateSelectedBlock() {
 		Block block = getSelectedBlock();
 		
-		if(block.status==true) {
+		if(block.STATUS_WORKING==true) {
 			//Track is open, check if switch
-			if(block.switchBlock.equals("SWITCH")) {
+			if(block.getSwitch() != null) {
 				selectedBlockToggle.setEnabled(true);
-				selectedBlockToggle.setSelected(block.altSwitchState);
+				selectedBlockToggle.setSelected(block.getSwitch().getState());
 			}
 			else {
 				selectedBlockToggle.setEnabled(false);
@@ -814,7 +821,7 @@ public class CtcGui {
 			setIndicator(selectedBlockStatusIndicator,"red");
 		}
 		
-		if(block.occupied==true) {
+		if(block.getOccupied() == true) {
 			setIndicator(selectedBlockOccupiedIndicator,"green");
 		}
 		else {

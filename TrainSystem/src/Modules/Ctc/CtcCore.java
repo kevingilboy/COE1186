@@ -4,12 +4,23 @@ package Modules.Ctc;
 import Shared.Module;
 import Shared.SimTime;
 
+//Temporary import while TM is under development
+//Once project is complete, I will need the Block, Switch, Station, and Beacon classes kept locally
+import Modules.TrackModel.TrackCsvParser;
+import Modules.TrackModel.Block;
+import Modules.TrackModel.Light;
+import Modules.TrackModel.Crossing;
+import Modules.TrackModel.Station;
+import Modules.TrackModel.Switch;
+import Modules.TrackModel.Beacon;
+
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class CtcCore implements Module,TimeControl {
-	public CtcCore ctcCore;
+	public CtcCore ctc;
 
 	public CtcGui gui;
 	public SimTime startTime;
@@ -18,6 +29,8 @@ public abstract class CtcCore implements Module,TimeControl {
 	
 	public HashMap<String,Train> trains = new HashMap<>();
 	public HashMap<String,Schedule> schedules = new HashMap<>();
+
+	public TrackCsvParser trackParser = new TrackCsvParser();
 	public Block[] redBlocks;
 	public Block[] greenBlocks;
 	
@@ -29,7 +42,7 @@ public abstract class CtcCore implements Module,TimeControl {
 			EventQueue.invokeAndWait(new Runnable() {
 				public void run() {
 					try {
-						gui = new CtcGui(ctcCore);
+						gui = new CtcGui(ctc);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -39,6 +52,14 @@ public abstract class CtcCore implements Module,TimeControl {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void initializeBlocks() {
+		ArrayList<Block> redBlocksAL = trackParser.parse("Modules/Ctc/RedLineFinal.csv");
+		redBlocks = redBlocksAL.toArray(new Block[redBlocksAL.size()]);
+		
+		ArrayList<Block> greenBlocksAL = trackParser.parse("Modules/Ctc/GreenLineFinal.csv");
+		greenBlocks = greenBlocksAL.toArray(new Block[greenBlocksAL.size()]);
 	}
 	
 	public boolean updateTime(SimTime time) {
