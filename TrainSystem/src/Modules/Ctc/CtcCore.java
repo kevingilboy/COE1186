@@ -1,4 +1,3 @@
-//Kevin Gilboy
 package Modules.Ctc;
 
 import Shared.Module;
