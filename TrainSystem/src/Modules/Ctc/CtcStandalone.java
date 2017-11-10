@@ -1,6 +1,7 @@
 package Modules.Ctc;
 
 import java.util.Timer;
+import Shared.SimTime;
 import java.util.TimerTask;
 
 public class CtcStandalone extends CtcCore{
