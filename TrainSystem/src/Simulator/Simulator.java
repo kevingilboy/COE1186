@@ -1,5 +1,6 @@
 package Simulator;
 
+import Shared.Module;
 import Shared.SimTime;
 
 import Modules.Ctc.Ctc;
@@ -19,8 +20,10 @@ public class Simulator {
 	public SimTime endTime = new SimTime("21:00:00");
 	
 	private Timer timer;
-	private boolean running = false;
+	private boolean simulationRunning = false;
+	private boolean timerTaskRunning = false;
 	
+	private Module[] modules;
 	private Ctc ctc;
 	private TrackController trackController;
 	private TrackModel trackModel;
@@ -37,6 +40,8 @@ public class Simulator {
 		trainController = new TrainController();
 		trainModel = new TrainModel();
 		mbo = new Mbo();
+		
+		modules = new Module[]{ctc,trackController,trackModel,trainController,trainModel,mbo};
 		
 		//Pass cross references
 		ctc.simulator = this;
@@ -62,22 +67,27 @@ public class Simulator {
 	}
 	
 	public void pause() {
+		//Cancel the timer
 	    this.timer.cancel();
 	    
-	    running = false;
+	    simulationRunning = false;
 	}
 	
 	public void play() {
+		//Create the timer
 	    this.timer = new Timer();
 	    TimerTask runSimulation = new incrementTime();
 	    this.timer.schedule( runSimulation, 0, 1000/speedup );
 	    
-	    running = true;
+	    simulationRunning = true;
 	}
 	
 	public void setSpeedup(int newSpeed) {
+		//Store the new speed
 		speedup = newSpeed;
-		if(running) {
+		
+		//If running, restart it to implement new speedup
+		if(simulationRunning) {
 			pause();
 			play();
 		}
@@ -85,18 +95,26 @@ public class Simulator {
 	
 	private class incrementTime extends TimerTask{
 		public void run(){
-			//System.out.println(currentTime.toString());
+			//Make sure previous second has finished before continuing
+			if(timerTaskRunning) {
+				return;
+			}
+			
+			//Lock the timer
+			timerTaskRunning = true;
 			
 			//Update all modules
-			ctc.updateTime(currentTime);
-			trackController.updateTime(currentTime);
-			trackModel.updateTime(currentTime);
-			trainModel.updateTime(currentTime);
-			trainController.updateTime(currentTime);
-			mbo.updateTime(currentTime);
+
+			for(Module module : modules) {
+				//Wait for module to finish updating before proceeding
+				while(!module.updateTime(currentTime)) {};
+			}
 			
 			//Increment time
 			currentTime.incrementSecond();
+			
+			//Unlock the timer
+			timerTaskRunning = false;
 		}
 	}
 	
