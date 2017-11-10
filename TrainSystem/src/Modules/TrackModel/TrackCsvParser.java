@@ -32,6 +32,7 @@ public class TrackCsvParser{
 			while ((currentLine = br.readLine()) != null){
 				String [] blockData = currentLine.split(delimeter);
 
+				/* Parse cells 0-8 */
 				String line 			= blockData[0];
 				String section 			= blockData[1]; 
 				int id 					= Integer.parseInt(blockData[2]);
@@ -42,16 +43,19 @@ public class TrackCsvParser{
 				int speedLimit 			= Integer.parseInt(blockData[7]);
 				int direction 			= Integer.parseInt(blockData[8]);
 				
+				/* Parse cell 9 */
 				Light light 			= null;
 				if ((Integer.parseInt(blockData[9])) != 0){
 					light = new Light();
 				}
 
+				/* Parse cell 10 */
 				Crossing crossing 		= null;
 				if ((Integer.parseInt(blockData[10])) != 0){
 					crossing = new Crossing();
 				}
 
+				/* Parse cell 11 */
 				Station station 		= null;
 				try{
 					if (!(blockData[11].equals("0"))){
@@ -90,6 +94,7 @@ public class TrackCsvParser{
 					// ...
 				}
 				
+				/* Parse cell 12 */
 				Switch switch_ 			= null;
 				try{
 					if (!(blockData[12].equals("0"))){
@@ -117,12 +122,14 @@ public class TrackCsvParser{
 					// ...
 				}
 
+				/* Parse cell 13 */
 				Beacon beacon 			= null;
 				if ((Integer.parseInt(blockData[13])) != 0){
 					beacon = new Beacon();
 					beacon.setInfo(Integer.parseInt(blockData[13]));
 				}
 
+				/* Parse cell 14 */
 				boolean underground 	= false;
 				if ((Integer.parseInt(blockData[14])) != 0){
 					underground = true;
@@ -130,34 +137,21 @@ public class TrackCsvParser{
 
 				boolean occupied 		= false;
 
-
-				/* Parse Coordinates Cell */
+				/* Parse cell 15 */
 				double[] x_coordinates = new double[(int)length];
 				double[] y_coordinates = new double[(int)length];
 
-				/*
-				 
-				Tell Kevin G. to change format of MATLAB output: x0.y0;x1.y1;....;xn.yn;
-
-				Having "(xn,yn)" makes for additional parsing layer for parenthesis,
-				and the comma in between x and y is interpretted as a cell-seperation
-				since the whole file is comma seperated (being a csv...)
-
-				*/
-				
-				/*
 				String coordDelimiter = ";";
-				String xyDelimiter = ",";
+				String xyDelimiter = "_";
 
-				String[] coordStrs = (blockData[15]).split(coordDelimiter);
+				String[] coords = (blockData[15]).split(coordDelimiter);
 
-				// Remove "(" and ")" from parsed coordinate strings
-				for (int i = 0; i < coordStrs.length; i++){
-					x_coordinates[i] = Double.parseDouble((coordStrs[i].split(xyDelimiter))[0]);
-					y_coordinates[i] = Double.parseDouble((coordStrs[i].split(xyDelimiter))[1]);
+				for (int i = 0; i < coords.length; i++){
+					x_coordinates[i] = Double.parseDouble((coords[i].split(xyDelimiter))[0]);
+					y_coordinates[i] = Double.parseDouble((coords[i].split(xyDelimiter))[1]);
 				}
-				*/
 
+				/* Generate block from currently parsed CSV line */
 				Block currentBlock = new Block(	line,
 												section,
 												id,
@@ -177,6 +171,7 @@ public class TrackCsvParser{
 												x_coordinates,
 												y_coordinates);
 
+				/* Add block to list of blocks */
 				blocks.add(currentBlock);
 
 			} // end while(readline())

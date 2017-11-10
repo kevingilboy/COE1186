@@ -4,6 +4,8 @@ public class Block{
 
 	public boolean STATUS_WORKING = true;
 	public boolean STATUS_NOT_WORKING = false;
+	public boolean STATUS_MAINTENANCE = STATUS_NOT_WORKING;
+	public boolean STATUS_REPAIRED = STATUS_WORKING;
 
 	private boolean railStatus = STATUS_WORKING;
 	private boolean powerStatus = STATUS_WORKING;
@@ -31,7 +33,7 @@ public class Block{
 	private double[] y_coordinates; 
 
 	public Block(){
-		this(	"", "", 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, false, false, null, null);
+		this("", "", 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, false, false, null, null);
 	}
 
 	public Block(	String line,
@@ -148,7 +150,19 @@ public class Block{
 		double[] coordinates = new double[2];
 		coordinates[0] = x_coordinates[m];
 		coordinates[1] = y_coordinates[m];
-		return coordinates;
+		return coordinates`;
+	}
+
+	public void setMaintenance(boolean status){
+		if (!status == STATUS_MAINTENANCE){
+			railStatus = STATUS_MAINTENANCE;
+			powerStatus = STATUS_MAINTENANCE;
+			trackCircuitStatus = STATUS_MAINTENANCE;
+		} else {
+			railStatus = STATUS_REPAIRED;
+			powerStatus = STATUS_REPAIRED;
+			trackCircuitStatus = STATUS_REPAIRED;
+		}
 	}
 
 	public void setOccupancy(boolean occupancy){
