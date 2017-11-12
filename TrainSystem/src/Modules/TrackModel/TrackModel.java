@@ -17,14 +17,15 @@ public class TrackModel implements Module{
 	public TrainModel trainModel;
 
 	/* Track Model class references */
-	public DynamicDisplay display = new DynamicDisplay();
+	// public DynamicDisplay display = new DynamicDisplay();
 	public TrackCsvParser trackParser = new TrackCsvParser();
 	private ArrayList<Block> blocks = new ArrayList<Block>();
 
 	/* Constructor */
 	public TrackModel(){
-		String greenline = "Modules/TrackModel/Track Layout/GreenLineFinal.csv";
-		blocks = trackParser.parse(greenline);
+		String redline = "Modules/TrackModel/Track Layout/RedLineFinal.csv";
+		blocks = trackParser.parse(redline);
+		System.out.println("Parsed!");
 	}
 
 	/* update the track model from the simulation clock tick */

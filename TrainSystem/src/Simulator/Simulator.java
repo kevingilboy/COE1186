@@ -104,6 +104,7 @@ public class Simulator {
 			timerTaskRunning = true;
 			
 			//Update all modules
+
 			for(Module module : modules) {
 				//Wait for module to finish updating before proceeding
 				while(!module.updateTime(currentTime)) {};
