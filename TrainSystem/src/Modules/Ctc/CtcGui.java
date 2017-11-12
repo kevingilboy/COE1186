@@ -639,7 +639,7 @@ public class CtcGui {
 		btnCloseTrack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Block block = getSelectedBlock();
-				//block.setStatus(false);
+				block.setMaintenance(true);
 				updateSelectedBlock();
 			}
 		});
@@ -651,7 +651,7 @@ public class CtcGui {
 		btnRepairBlock.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Block block = getSelectedBlock();
-				//block.setStatus(true);
+				block.setMaintenance(false);
 				updateSelectedBlock();
 			}
 		});
@@ -904,12 +904,12 @@ public class CtcGui {
 		//checkQueueForDisaptches();
 		
 		//Update the locations of trains
-		updateDispatchedTable();
+		//updateDispatchedTable();
 	}
 	
 	final Runnable openScheduleEditor = new Runnable() {
 	    public void run() {
-	        scheduleEditor = new ScheduleEditor(scheduleForScheduleEditor);
+	        scheduleEditor = new ScheduleEditor(ctc,scheduleForScheduleEditor);
 	        scheduleEditor.frame.setVisible(true);
 	        scheduleEditor.frame.setResizable(false);
 	    }

@@ -48,7 +48,6 @@ public abstract class CtcCore implements Module,TimeControl {
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -110,7 +109,7 @@ public abstract class CtcCore implements Module,TimeControl {
 	}
 	
 	public void addTrain(String name, Schedule schedule) {
-		Train train = new Train();
+		Train train = new Train(schedule);
 		trains.put(name, train);
 	}
 	
