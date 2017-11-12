@@ -4,31 +4,36 @@ public class Block{
 
 	public boolean STATUS_WORKING = true;
 	public boolean STATUS_NOT_WORKING = false;
+	public boolean STATUS_MAINTENANCE = STATUS_NOT_WORKING;
+	public boolean STATUS_REPAIRED = STATUS_WORKING;
 
 	private boolean railStatus = STATUS_WORKING;
 	private boolean powerStatus = STATUS_WORKING;
 	private boolean trackCircuitStatus = STATUS_WORKING;
 
 	private boolean occupied;
+	
+	private String line; // [0]
+	private String section; // [1]	
+	private int id; // [2]
+	private double length; // [3]
+	private double grade; // [4]
+	private double elevation; // [5]
+	private double cumElevation; // [6] 
+	private int speedLimit; // [7]
+	private int direction; // [8]
+	private Light light; // [9]
+	private Crossing crossing; // [10]
+	private Station station; // [11]
+	private Switch switch_; // [12]
+	private Beacon beacon; // [13]
+	private boolean underground; // [14]
 
-	private String line;
-	private String section;
-	private int id;
-	private double length;
-	private double grade;
-	private double elevation;
-	private double cumElevation;
-	private int speedLimit;
-	private int direction;
-	private Light light;
-	private Crossing crossing;
-	private Station station;
-	private Switch switch_;
-	private Beacon beacon;
-	private boolean underground;
+	private double[] x_coordinates; // [15]
+	private double[] y_coordinates; 
 
 	public Block(){
-		this(	"", "", 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, false, false);
+		this("", "", 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, false, false, null, null);
 	}
 
 	public Block(	String line,
@@ -46,7 +51,9 @@ public class Block{
 					Switch switch_,
 					Beacon beacon,
 					boolean underground,	
-					boolean occupied	){
+					boolean occupied,	
+					double[] x_coordinates,
+					double[] y_coordinates	){
 		this.line = line;
 		this.section = section;
 		this.id = id;
@@ -63,6 +70,8 @@ public class Block{
 		this.beacon = beacon;
 		this.underground = underground;
 		this.occupied = occupied;
+		this.x_coordinates = x_coordinates;
+		this.y_coordinates = y_coordinates;
 	}
 
 	public String getLine(){
@@ -127,6 +136,33 @@ public class Block{
 
 	public boolean getOccupied(){
 		return occupied;
+	}
+
+	public double[] getXCoordinates(){
+		return x_coordinates;
+	}
+
+	public double[] getYCoordinates(){
+		return y_coordinates;
+	}
+
+	public double[] getCoordinatesAtMeter(int m){
+		double[] coordinates = new double[2];
+		coordinates[0] = x_coordinates[m];
+		coordinates[1] = y_coordinates[m];
+		return coordinates`;
+	}
+
+	public void setMaintenance(boolean status){
+		if (!status == STATUS_MAINTENANCE){
+			railStatus = STATUS_MAINTENANCE;
+			powerStatus = STATUS_MAINTENANCE;
+			trackCircuitStatus = STATUS_MAINTENANCE;
+		} else {
+			railStatus = STATUS_REPAIRED;
+			powerStatus = STATUS_REPAIRED;
+			trackCircuitStatus = STATUS_REPAIRED;
+		}
 	}
 
 	public void setOccupancy(boolean occupancy){
