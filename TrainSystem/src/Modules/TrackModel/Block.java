@@ -165,6 +165,10 @@ public class Block{
 		}
 	}
 
+	public void getStatus(){
+		return railStatus;
+	}
+
 	public void setOccupancy(boolean occupancy){
 		this.occupied = occupancy;
 	}
