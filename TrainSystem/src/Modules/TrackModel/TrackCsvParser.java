@@ -36,7 +36,7 @@ public class TrackCsvParser{
 				String line 			= blockData[0];
 				String section 			= blockData[1]; 
 				int id 					= Integer.parseInt(blockData[2]);
-				double length 			= Double.parseDouble(blockData[3]);
+				double length 			= Math.ceil(Double.parseDouble(blockData[3]));
 				double grade 			= Double.parseDouble(blockData[4]);
 				double elevation 		= Double.parseDouble(blockData[5]);
 				double cumElevation 	= Double.parseDouble(blockData[6]);

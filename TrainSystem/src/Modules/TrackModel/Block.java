@@ -150,7 +150,7 @@ public class Block{
 		double[] coordinates = new double[2];
 		coordinates[0] = x_coordinates[m];
 		coordinates[1] = y_coordinates[m];
-		return coordinates`;
+		return coordinates;
 	}
 
 	public void setMaintenance(boolean status){
@@ -163,6 +163,10 @@ public class Block{
 			powerStatus = STATUS_REPAIRED;
 			trackCircuitStatus = STATUS_REPAIRED;
 		}
+	}
+
+	public void getStatus(){
+		return railStatus;
 	}
 
 	public void setOccupancy(boolean occupancy){
