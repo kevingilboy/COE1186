@@ -165,8 +165,8 @@ public class Block{
 		}
 	}
 
-	public void getStatus(){
-		return railStatus;
+	public boolean getStatus(){
+		return (railStatus || powerStatus || trackCircuitStatus);
 	}
 
 	public void setOccupancy(boolean occupancy){
