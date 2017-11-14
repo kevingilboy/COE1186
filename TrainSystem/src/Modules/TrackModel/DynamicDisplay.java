@@ -22,13 +22,13 @@ import java.util.*;
 public class DynamicDisplay{
 
 	// Dimensions of the track layout view
-	public int VERTICAL_FRAME_PADDING = 0;
+	public int VERTICAL_FRAME_PADDING = 10;
 	public int TRACK_LAYOUT_WIDTH = 334;
 	public int TRACK_LAYOUT_HEIGHT = 448;
 
 	// Dimensions of the overall GUI, currently set to the
 	// dimensions of the track layout view
-	public int DYNAMIC_FRAME_WIDTH = TRACK_LAYOUT_WIDTH;
+	public int DYNAMIC_FRAME_WIDTH = TRACK_LAYOUT_WIDTH + VERTICAL_FRAME_PADDING;
 	public int DYNAMIC_FRAME_HEIGHT = TRACK_LAYOUT_HEIGHT + VERTICAL_FRAME_PADDING;
 	public Color DYNAMIC_FRAME_BG_COLOR = new Color(33, 33, 33);
 
@@ -36,10 +36,12 @@ public class DynamicDisplay{
 	private JFrame f;
 	private JPanel dynamicTrackView;
 
+	private static ArrayList<Block> blocks;
+
 	// Instantiate dynamic display when Track Model blocks have
 	// been generated from parsed layout file
 	public DynamicDisplay(ArrayList<Block> blocks){
-
+		this.blocks = blocks;
 		dynamicTrackView = new TrackRenderWindow(TRACK_LAYOUT_WIDTH, TRACK_LAYOUT_HEIGHT, blocks);
 		initializeFrame();
 	}
@@ -51,10 +53,12 @@ public class DynamicDisplay{
 		f = new JFrame("Dynamic Simulation Display");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setSize(DYNAMIC_FRAME_WIDTH, DYNAMIC_FRAME_HEIGHT);
-		f.setLayout(null);
 		f.setUndecorated(true);
+		f.setBackground(Color.BLACK);
+		f.setLayout(null);
 		f.setLocationRelativeTo(null);
 		f.setResizable(false);
+		f.add(new JLabel("test label"));
 		f.setVisible(true);
 
 		// Make the frame draggable
@@ -79,6 +83,15 @@ public class DynamicDisplay{
         }
 
         public void mouseReleased(MouseEvent e) {
+        	// Toggle all switches on mouse release
+        	/* 
+        	for (int i = 0; i < blocks.size(); i++){
+        		if (blocks.get(i).getSwitch() != null){
+        			boolean currState = blocks.get(i).getSwitch().getState();
+        			blocks.get(i).getSwitch().setState(!currState);
+        		}
+        	}
+        	*/ 
             mouseDownCompCoords = null;
         }
 
