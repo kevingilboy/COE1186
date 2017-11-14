@@ -27,7 +27,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
     
     // Track data structure whose information will be
     // used for the dynamic rendering
-    ArrayList<Block> blocks = new ArrayList<Block>();
+    ArrayList<Block> blocks;
     Color lineColor;
     int blockPos = 0;
     int meterPos = 0;
@@ -152,7 +152,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         // Draw the currently occupied block position
         // on top of the train
         g2d.setFont(new Font("default", Font.BOLD, 12));
-        g2d.drawString(blocks.get(blockPos).getSection() + Integer.toString(blocks.get(blockPos).getId()) + ", " + Integer.toString(meterPos),
+        g2d.drawString(blocks.get(blockPos).getSection() + Integer.toString(blocks.get(blockPos).getId() + 1) + ", " + Integer.toString(meterPos),
                         (int)x_coord - 30, 
                         (int)y_coord - 5);
         g2d.setFont(new Font("default", Font.PLAIN, 12));

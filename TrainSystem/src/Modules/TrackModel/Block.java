@@ -6,10 +6,13 @@ public class Block{
 	public boolean STATUS_NOT_WORKING = false;
 	public boolean STATUS_MAINTENANCE = STATUS_NOT_WORKING;
 	public boolean STATUS_REPAIRED = STATUS_WORKING;
+	public static int DIRECTION_INCREASING_ID = 1;
+	public static int DIRECTION_DECREASING_ID = -1;
 
 	private boolean railStatus = STATUS_WORKING;
 	private boolean powerStatus = STATUS_WORKING;
 	private boolean trackCircuitStatus = STATUS_WORKING;
+
 
 	private boolean occupied;
 	
@@ -54,6 +57,7 @@ public class Block{
 					boolean occupied,	
 					double[] x_coordinates,
 					double[] y_coordinates	){
+	
 		this.line = line;
 		this.section = section;
 		this.id = id;
@@ -165,8 +169,8 @@ public class Block{
 		}
 	}
 
-	public void getStatus(){
-		return railStatus;
+	public boolean getStatus(){
+		return (railStatus || powerStatus || trackCircuitStatus);
 	}
 
 	public void setOccupancy(boolean occupancy){
