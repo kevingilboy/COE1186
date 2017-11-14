@@ -36,12 +36,13 @@ public class TrackModel implements Module{
 		greenLineBlocks = (new TrackCsvParser()).parse(greenLineFile);
 
 		// Instantiate dyPamic displays for each track
+		//new DynamicDisplay(greenLineBlocks);
 		new DynamicDisplay(redLineBlocks);
-		new DynamicDisplay(greenLineBlocks);
 
 		//------------------ TESTING TRACK ITERATOR ----------------------------
-		greenLineBlocks.get(28 - 1).getSwitch().setState(Switch.STATE_NORMAL);
-
+		// greenLineBlocks.get(28 - 1).getSwitch().setState(Switch.STATE_ALTERNATE);
+		// 
+		/*
 		int shift = 1;
 		int prev = 149 - shift;
 		int curr = 150 - shift;
@@ -50,7 +51,7 @@ public class TrackModel implements Module{
 		System.out.println("prev = " + Integer.toString(prev + shift) +
 			 			   ", curr = " + Integer.toString(curr + shift) + 
 			 			   ", next = " + Integer.toString(next + shift));
-
+		*/
 	}
 
 	// Access a specific block on track specified by line and block ID
