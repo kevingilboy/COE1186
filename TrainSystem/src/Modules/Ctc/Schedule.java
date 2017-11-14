@@ -19,20 +19,26 @@ public class Schedule {
 		
 		dispatched = false;
 		line = Line.GREEN;
-		departureTime = new SimTime("0845");
-		stops.add(new Stop("Shadyside","08:47:00","08:49:00"));
-		stops.add(new Stop("Herron Ave","08:53:00","08:55:00"));
-		stops.add(new Stop("Swissvale","09:01:00","09:02:00"));
+		departureTime = new SimTime("08:45:00");
+		//stops.add(new Stop(Line.GREEN.blocks[3],new SimTime("08:47:00")));
 	}
 
 	public Object[][] toStringArray() {
 		Object[][] grid = new Object[stops.size()][3];
 		for(int i=0;i<stops.size();i++) {
 			Stop stop = stops.get(i);
-			grid[i][0] = stop.block;
-			grid[i][1] = stop.arrivalTime.toString();
-			grid[i][2] = stop.departureTime.toString();
+			grid[i][0] = stop.block.getId();
+			grid[i][1] = stop.timeToDwell.toString();
 		}
 		return grid;
+	}
+
+	public void setName(String name) {
+		this.name = name;	
+	}
+
+	public void setDepartureTime(SimTime time) {
+		this.departureTime = time;
+		//TODO recalculate dwells
 	}
 }

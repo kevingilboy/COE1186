@@ -5,6 +5,7 @@ import Modules.TrackModel.Light;
 import Modules.TrackModel.Crossing;
 import Modules.TrackModel.Station;
 import Modules.TrackModel.Switch;
+import Shared.SimTime;
 import Modules.TrackModel.Beacon;
 
 import java.awt.EventQueue;
@@ -26,6 +27,8 @@ import java.awt.Image;
 import java.awt.SystemColor;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class CtcGui {
 	private CtcCore ctc;
@@ -45,6 +48,7 @@ public class CtcGui {
 	/**
 	 * Creator tables
 	 */
+	private JButton addToDispatchToQueue;
 	private ScheduleJTable trainCreationTable;
 	private JTextField trainCreationDepartTime;
 	private JComboBox<Line> trainCreationLine;
@@ -175,14 +179,36 @@ public class CtcGui {
 		lblManualTrainCreation.setBounds(-14, 142, 468, 33);
 		contentPane.add(lblManualTrainCreation);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(18, 403, 221, 210);
-		contentPane.add(scrollPane_1);
+		trainCreationName = new JTextField();
+		trainCreationName.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				String name = trainCreationName.getText();
+				if(name!=null && name!="") {
+					trainCreationTable.schedule.setName(name);
+				}
+				enableTrainCreationComponents();
+			}
+		});
+		trainCreationName.setColumns(10);
+		trainCreationName.setBounds(18, 366, 52, 39);
+		frame.getContentPane().add(trainCreationName);
 		
-		trainCreationTable = new ScheduleJTable();
-		trainCreationTable.addBlankRow();
-		trainCreationTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
-		scrollPane_1.setViewportView(trainCreationTable);
+		JLabel lblLine = new JLabel("Line");
+		lblLine.setFont(new Font("SansSerif", Font.ITALIC, 14));
+		lblLine.setBounds(102, 344, 45, 33);
+		contentPane.add(lblLine);
+			
+		trainCreationLine = new JComboBox<Line>();
+		trainCreationLine.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				trainCreationTable.setSchedule(new Schedule());
+				enableTrainCreationComponents();
+			}
+		});
+		trainCreationLine.setModel(new DefaultComboBoxModel<Line>(Line.values()));
+		trainCreationLine.setBounds(80, 366, 80, 39);
+		contentPane.add(trainCreationLine);
 		
 		JLabel lblDepartAt = new JLabel("Depart @");
 		lblDepartAt.setFont(new Font("SansSerif", Font.ITALIC, 14));
@@ -190,22 +216,23 @@ public class CtcGui {
 		contentPane.add(lblDepartAt);
 		
 		trainCreationDepartTime = new JTextField();
-		trainCreationDepartTime.setText("N/A");
+		trainCreationDepartTime.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				String time = trainCreationDepartTime.getText();
+				if(SimTime.isValid(time)) {
+					trainCreationTable.schedule.setDepartureTime(new SimTime(time));
+					trainCreationTable.fireScheduleChanged();
+				}
+				enableTrainCreationComponents();
+			}
+		});
 		trainCreationDepartTime.setBounds(173, 366, 66, 39);
 		contentPane.add(trainCreationDepartTime);
 		trainCreationDepartTime.setColumns(10);
 		
-		JLabel lblLine = new JLabel("Line");
-		lblLine.setFont(new Font("SansSerif", Font.ITALIC, 14));
-		lblLine.setBounds(99, 344, 45, 33);
-		contentPane.add(lblLine);
-			
-		trainCreationLine = new JComboBox<Line>();
-		trainCreationLine.setModel(new DefaultComboBoxModel<Line>(Line.values()));
-		trainCreationLine.setBounds(92, 366, 52, 39);
-		contentPane.add(trainCreationLine);
-		
-		JButton addToDispatchToQueue = new JButton("<html><center>Add Schedule<br>To Queue \u2192</center></html>");
+		addToDispatchToQueue = new JButton("<html><center>Add Schedule<br>To Queue \u2192</center></html>");
+		addToDispatchToQueue.setEnabled(false);
 		addToDispatchToQueue.setFont(new Font("Dialog", Font.PLAIN, 16));
 		addToDispatchToQueue.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -220,6 +247,17 @@ public class CtcGui {
 		});
 		addToDispatchToQueue.setBounds(251, 475, 171, 67);
 		contentPane.add(addToDispatchToQueue);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setEnabled(false);
+		scrollPane_1.setBounds(18, 403, 221, 210);
+		contentPane.add(scrollPane_1);
+		
+		trainCreationTable = new ScheduleJTable();
+		trainCreationTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		scrollPane_1.setViewportView(trainCreationTable);
+		trainCreationTable.setSchedule(new Schedule());
+		enableTrainCreationComponents();
 		
 		/**
 		 * MID FRAME
@@ -248,7 +286,7 @@ public class CtcGui {
 					int row = line.queueTable.rowAtPoint(e.getPoint());
 					String trainName = (String) line.queueData.getValueAt(row, 0);
 					Schedule schedule = ctc.getScheduleByName(trainName);
-					openScheduleInTable(queueSelectedTable,schedule);
+					queueSelectedTable.setSchedule(schedule);
 				}
 			});
 			scrollPane.setViewportView(line.queueTable);
@@ -346,7 +384,7 @@ public class CtcGui {
 					int row = line.dispatchedTable.rowAtPoint(e.getPoint());
 					String trainName = (String) line.dispatchedData.getValueAt(row, 0);
 					Schedule schedule = ctc.getTrainByName(trainName).schedule;
-					openScheduleInTable(dispatchSelectedTable,schedule);
+					dispatchSelectedTable.setSchedule(schedule);
 				}
 			});
 			scrollPane.setViewportView(line.dispatchedTable);
@@ -404,12 +442,6 @@ public class CtcGui {
 		lblSelectedTrainsSchedule.setFont(new Font("SansSerif", Font.PLAIN, 18));
 		lblSelectedTrainsSchedule.setBounds(464, 367, 456, 33);
 		frame.getContentPane().add(lblSelectedTrainsSchedule);
-		
-		trainCreationName = new JTextField();
-		trainCreationName.setText("N/A");
-		trainCreationName.setColumns(10);
-		trainCreationName.setBounds(18, 366, 52, 39);
-		frame.getContentPane().add(trainCreationName);
 		
 		JLabel lblName = new JLabel("Name");
 		lblName.setFont(new Font("SansSerif", Font.ITALIC, 14));
@@ -587,6 +619,68 @@ public class CtcGui {
 		frame.getContentPane().add(lblSpeedup);
 	}
 	
+	/*
+	 * CREATION TABLE
+	 */
+	private void enableTrainCreationComponents() {
+		String name = trainCreationName.getText();
+		String time = trainCreationDepartTime.getText();
+		
+		trainCreationTable.setEnabled(name!=null && name!="" && SimTime.isValid(time));
+
+		addToDispatchToQueue.setEnabled(trainCreationTable.schedule.stops.size()>0);
+	}
+	
+	/*
+	 * QUEUE TABLE
+	 */
+	private void updateQueueTable(){
+		//Clear the red and green tables
+		for(Line line : Line.values()) {
+			line.queueData.setDataVector(queueTrainInitialData, queueTrainColumnNames);
+		}
+		
+		//Cycle through each dispatched train's schedule
+		Schedule schedule;
+		for(String trainName:ctc.schedules.keySet()) {
+			schedule = ctc.getScheduleByName(trainName);
+			Object[] row = {schedule.name,schedule.departureTime.toString()};
+			schedule.line.queueData.addRow(row);
+		}
+
+		//Update the tables in the GUI
+		for(Line line : Line.values()) {
+			line.queueData.fireTableDataChanged();
+		}
+	}
+	
+	/*
+	 * DISPATCH TABLE
+	 */
+	private void updateDispatchedTable(){
+		//Clear the red and green tables
+		for(Line line : Line.values()) {
+			line.dispatchedData.setDataVector(dispatchedTrainsInitialData, dispatchedTrainsColumnNames);
+		}
+
+		//Cycle through each dispatched train's schedule
+		Train train;
+		for(String trainName:ctc.trains.keySet()) {
+			train = ctc.getTrainByName(trainName);
+			//Object[] row; //build the row here, but for now we fake the functionality below
+			Object[] row = {train.name,train.location,train.speed,train.authority+" mi",train.passengers};
+			train.line.dispatchedData.addRow(row);
+		}
+
+		//Update the tables in the GUI
+		for(Line line : Line.values()) {
+			line.dispatchedData.fireTableDataChanged();
+		}
+	}
+
+	/*
+	 * BLOCKS
+	 */
 	protected void setBlockSpinnerLimits() {
 		Line line = (Line)blockLineComboBox.getSelectedItem();
 
@@ -595,11 +689,10 @@ public class CtcGui {
 	}
 
 	private Block getSelectedBlock() {
-		Block block = null;
-		int blockNumber = (int) blockNumberSpinner.getValue();
 		Line line = (Line)blockLineComboBox.getSelectedItem();
+		int blockNumber = (int) blockNumberSpinner.getValue();
 		
-		block = line.blocks[blockNumber];
+		Block block = line.blocks[blockNumber];
 
 		return block;
 	}
@@ -643,31 +736,9 @@ public class CtcGui {
 		label.setIcon(new ImageIcon(imgStatus));
 	}
 
-	private void openScheduleInTable(ScheduleJTable table, Schedule schedule) {
-		//data.fireTableDataChanged();
-		//table.schedule = schedule;						
-	}
-	
-	private void updateQueueTable(){
-		//Clear the red and green tables
-		for(Line line : Line.values()) {
-			line.queueData.setDataVector(queueTrainInitialData, queueTrainColumnNames);
-		}
-		
-		//Cycle through each dispatched train's schedule
-		Schedule schedule;
-		for(String trainName:ctc.schedules.keySet()) {
-			schedule = ctc.getScheduleByName(trainName);
-			Object[] row = {schedule.name,schedule.departureTime.toString()};
-			schedule.line.queueData.addRow(row);
-		}
-
-		//Update the tables in the GUI
-		for(Line line : Line.values()) {
-			line.queueData.fireTableDataChanged();
-		}
-	}
-
+	/*
+	 * HELPERS
+	 */
 	private Line getLineByName(String s) {
 		s = s.toLowerCase();
 		Line line = null;
@@ -677,28 +748,7 @@ public class CtcGui {
 			}
 		}
 		return line;
-	}
-	
-	private void updateDispatchedTable(){
-		//Clear the red and green tables
-		for(Line line : Line.values()) {
-			line.dispatchedData.setDataVector(dispatchedTrainsInitialData, dispatchedTrainsColumnNames);
-		}
-
-		//Cycle through each dispatched train's schedule
-		Train train;
-		for(String trainName:ctc.trains.keySet()) {
-			train = ctc.getTrainByName(trainName);
-			//Object[] row; //build the row here, but for now we fake the functionality below
-			Object[] row = {train.name,train.location,train.speed,train.authority+" mi",train.passengers};
-			train.line.dispatchedData.addRow(row);
-		}
-
-		//Update the tables in the GUI
-		for(Line line : Line.values()) {
-			line.dispatchedData.fireTableDataChanged();
-		}
-	}
+	}	
 	
 	public void repaint() {
 		//Update Throughput Label
@@ -715,25 +765,5 @@ public class CtcGui {
 		
 		//Update the locations of trains
 		//updateDispatchedTable();
-	}
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new CtcGui(null);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 }

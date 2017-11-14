@@ -34,4 +34,15 @@ public class ScheduleJTable extends JTable{
 		this.setModel(new DefaultTableModel(null,columns));
 		schedule = null;
 	}
+
+	public void fireScheduleChanged() {
+		((DefaultTableModel) this.getModel()).setDataVector(schedule.toStringArray(), columns);
+		addBlankRow();
+		((DefaultTableModel) this.getModel()).fireTableDataChanged();	
+	}
+
+	public void setSchedule(Schedule schedule) {
+		this.schedule = schedule;		
+		fireScheduleChanged();
+	}
 }
