@@ -36,7 +36,7 @@ public class TrackModel implements Module{
 		greenLineBlocks = (new TrackCsvParser()).parse(greenLineFile);
 
 		// Instantiate dyPamic displays for each track
-		//new DynamicDisplay(greenLineBlocks);
+		new DynamicDisplay(greenLineBlocks);
 		new DynamicDisplay(redLineBlocks);
 
 		//------------------ TESTING TRACK ITERATOR ----------------------------

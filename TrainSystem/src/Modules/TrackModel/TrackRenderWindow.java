@@ -195,6 +195,11 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         double y_coord = xy_coords[1];
         g2d.fillRect((int)x_coord-1, (int)y_coord-1, 5, 5);
 
+        // Draw vertical and horizontal lines tracking the train
+        g2d.setColor(Color.DARK_GRAY);
+        g2d.drawLine(0, (int)y_coord, 334, (int)y_coord);
+        g2d.drawLine((int)x_coord, 0, (int)x_coord, 448);
+
         // Draw the coordinates of the train's current location 
         // on top of the train
         g2d.setColor(Color.white);
