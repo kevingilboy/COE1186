@@ -155,13 +155,9 @@ public class Train {
     
     public TrainModelGUI CreateNewGUI() {
         //Create a GUI object
-        TrainModelGUI trainModelGUI = new TrainModelGUI(this);
-        
-        //Initialize the GUI
-        this.setValuesForDisplay(trainModelGUI);
-        
-        this.trainModelGUI = trainModelGUI;
-        return  trainModelGUI;  //Return the GUI object
+    	trainModelGUI = new TrainModelGUI(this);
+    	setValuesForDisplay(trainModelGUI);
+    	return trainModelGUI;
     }
     
     public void showTrainGUI() {
