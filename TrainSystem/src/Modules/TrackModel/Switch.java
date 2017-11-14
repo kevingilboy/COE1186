@@ -2,12 +2,12 @@ package Modules.TrackModel;
 
 public class Switch{
 
-	public boolean STATE_NORMAL = true;
-	public boolean STATUE_ALTERNATE = false;
-	public boolean STATUS_WORKING = true;
-	public boolean STATUS_NOT_WORKING = false;
-	public boolean EDGE_TYPE_HEAD = true;
-	public boolean EDGE_TYPE_TAIL = false;
+	public static boolean STATE_NORMAL = true;
+	public static boolean STATE_ALTERNATE = false;
+	public static boolean STATUS_WORKING = true;
+	public static boolean STATUS_NOT_WORKING = false;
+	public static boolean EDGE_TYPE_HEAD = true;
+	public static boolean EDGE_TYPE_TAIL = false;
 	
 	private boolean state;
 	private boolean status;
