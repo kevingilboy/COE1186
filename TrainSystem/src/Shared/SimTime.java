@@ -59,7 +59,7 @@ public class SimTime {
 		return hoursBetween;
 	}
 	
-	public boolean isValid(String timeString) {
+	public static boolean isValid(String timeString) {
 		String[] components = timeString.split(":");
 		if (components.length==3) {
 			int h = Integer.parseInt(components[0]);
