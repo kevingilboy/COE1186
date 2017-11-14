@@ -131,7 +131,6 @@ public class ScheduleEditor {
 			public void actionPerformed(ActionEvent e) {
 				currentSchedule.name = nameInput.getText();
 				currentSchedule.line = (String) lineSelect.getSelectedItem();
-				currentSchedule.authority = 0;
 				
 				frame.dispose();
 				editing = false;

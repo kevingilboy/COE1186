@@ -9,7 +9,6 @@ public class Schedule {
 	public SimTime departureTime;
 	public String line;
 	public String name;
-	public int authority;
 	public boolean dispatched;
 	
 	public Schedule() {
@@ -20,9 +19,9 @@ public class Schedule {
 		
 		dispatched = false;
 		departureTime = new SimTime("0845");
-		stops.add(new Stop("Shadyside","0847","0849"));
-		stops.add(new Stop("Herron Ave","0853","0855"));
-		stops.add(new Stop("Swissvale","0901","0902"));
+		stops.add(new Stop("Shadyside","08:47:00","08:49:00"));
+		stops.add(new Stop("Herron Ave","08:53:00","08:55:00"));
+		stops.add(new Stop("Swissvale","09:01:00","09:02:00"));
 	}
 
 	public Object[][] toStringArray() {

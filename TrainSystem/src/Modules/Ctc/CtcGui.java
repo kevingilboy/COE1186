@@ -32,9 +32,6 @@ public class CtcGui {
 	
 	private JFrame frame;
 	
-	private Object[] selectedTrainColumnNames = {"Stop","Arrival","Departure"};
-	private Object[][] selectedTrainInitialData = new Object[11][selectedTrainColumnNames.length];
-	
 	private JLabel lblThroughputAmt;
 	
 	/**
@@ -49,22 +46,20 @@ public class CtcGui {
 	private DefaultTableModel dispatchedRedData;
 	private JTable dispatchedRedTable;
 
-	private DefaultTableModel dispatchSelectedData;
 	private ScheduleJTable dispatchSelectedTable;
 		
 	/**
 	 * Creator tables
 	 */
 	private ScheduleJTable trainCreationTable;
-	private DefaultTableModel trainCreationData;
 	private JTextField trainCreationDepartTime;
-	private JTextField trainCreationLine;
+	private JComboBox trainCreationLine;
 	private JTextField trainCreationName;
 	
 	/**
 	 * Queue tables
 	 */
-	private Object[] queueTrainColumnNames = {"Train","Authority","Departure"};
+	private Object[] queueTrainColumnNames = {"Train","Departure"};
 	private Object[][] queueTrainInitialData = new Object[0][queueTrainColumnNames.length];
 
 	private JTable queueRedTable;
@@ -74,29 +69,25 @@ public class CtcGui {
 	private DefaultTableModel queueGreenData;
 	
 	private ScheduleJTable queueSelectedTable;
-	private DefaultTableModel queueSelectedData;
+	private JButton btnRevertQueueSchedule;
+	private JButton btnSaveQueueSchedule;
+	private JButton btnDeleteQueueSchedule;
 	
 	private JSpinner blockNumberSpinner;
 	private JComboBox<String> blockLineComboBox;
-	JToggleButton selectedBlockToggle;
-	JButton btnRepairBlock;
-	JButton btnCloseTrack;
-	JLabel selectedBlockOccupiedIndicator;
-	JLabel selectedBlockStatusIndicator;
+	private JToggleButton selectedBlockToggle;
+	private JButton btnRepairBlock;
+	private JButton btnCloseTrack;
+	private JLabel selectedBlockOccupiedIndicator;
+	private JLabel selectedBlockStatusIndicator;
 	
-	JLabel lblSpeedup;
-	JButton btnPause;
-	JButton btnPlay;
-	int currentSpeedupIndex = 0;
-	int[] availableSpeedups = {1,2,4,8,16};
-	JButton btnDecSpeed;
-	JButton btnIncSpeed;
-	
-	/**
-	 * Threads
-	 */
-	public ScheduleEditor scheduleEditor;
-	public Schedule scheduleForScheduleEditor = null;
+	private JLabel lblSpeedup;
+	private JButton btnPause;
+	private JButton btnPlay;
+	private int currentSpeedupIndex = 0;
+	private int[] availableSpeedups = {1,2,4,8,16,32};
+	private JButton btnDecSpeed;
+	private JButton btnIncSpeed;
 
 	/**
 	 * Constants
@@ -109,20 +100,6 @@ public class CtcGui {
 	 */
 	private JLabel clockLabel = new JLabel("00:00:00");
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new CtcGui(null);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.
@@ -214,8 +191,8 @@ public class CtcGui {
 		scrollPane_1.setBounds(18, 403, 221, 210);
 		contentPane.add(scrollPane_1);
 		
-		trainCreationData = new DefaultTableModel(selectedTrainInitialData,selectedTrainColumnNames);
-		trainCreationTable = new ScheduleJTable(trainCreationData);
+		trainCreationTable = new ScheduleJTable();
+		trainCreationTable.addBlankRow();
 		trainCreationTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
 		scrollPane_1.setViewportView(trainCreationTable);
 		
@@ -236,47 +213,10 @@ public class CtcGui {
 		lblLine.setBounds(99, 344, 45, 33);
 		contentPane.add(lblLine);
 			
-		trainCreationLine = new JTextField();
+		trainCreationLine = new JComboBox();
 		trainCreationLine.setEditable(false);
-		trainCreationLine.setText("N/A");
-		trainCreationLine.setColumns(10);
 		trainCreationLine.setBounds(92, 366, 52, 39);
 		contentPane.add(trainCreationLine);
-		
-		JButton editToDispatchSchedule = new JButton("<html><center>Create/Edit<br>Schedule</center></html>");
-		editToDispatchSchedule.setFont(new Font("Dialog", Font.PLAIN, 16));
-		editToDispatchSchedule.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				scheduleForScheduleEditor = trainCreationTable.schedule;
-				Thread scheduleEditorThread = new Thread() {
-					public void run() {
-						try {
-							SwingUtilities.invokeAndWait(openScheduleEditor);
-						}
-						catch (Exception e) {
-							e.printStackTrace();
-						}
-				         
-						while(scheduleEditor.editing==true) {
-							try {
-								Thread.sleep(200);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
-						Schedule schedule = scheduleEditor.currentSchedule;
-						trainCreationLine.setText(schedule.line);
-						trainCreationDepartTime.setText(schedule.departureTime.toString());
-						openScheduleInTable(trainCreationTable,trainCreationData,schedule);
-						
-						System.out.println("Finished on " + Thread.currentThread());
-					}
-				};
-				scheduleEditorThread.start();				
-			}
-		});
-		editToDispatchSchedule.setBounds(251, 403, 171, 64);
-		contentPane.add(editToDispatchSchedule);
 		
 		JButton addToDispatchToQueue = new JButton("<html><center>Add Schedule<br>To Queue \u2192</center></html>");
 		addToDispatchToQueue.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -287,11 +227,11 @@ public class CtcGui {
 				updateQueueTable();
 				
 				//Remove from the creator
-				trainCreationData.setDataVector(selectedTrainInitialData,selectedTrainColumnNames);
-				openScheduleInTable(trainCreationTable,trainCreationData,null);
+				trainCreationTable.clear();
+				trainCreationTable.addBlankRow();
 			}
 		});
-		addToDispatchToQueue.setBounds(251, 509, 171, 67);
+		addToDispatchToQueue.setBounds(251, 475, 171, 67);
 		contentPane.add(addToDispatchToQueue);
 		
 		/**
@@ -320,7 +260,7 @@ public class CtcGui {
 				int row = queueGreenTable.rowAtPoint(e.getPoint());
 				String trainName = (String) queueGreenData.getValueAt(row, 0);
 				Schedule schedule = ctc.getScheduleByName(trainName);
-				openScheduleInTable(queueSelectedTable,queueSelectedData,schedule);
+				openScheduleInTable(queueSelectedTable,schedule);
 			}
 		});
 		scrollPane_3.setViewportView(queueGreenTable);
@@ -336,7 +276,7 @@ public class CtcGui {
 				int row = queueRedTable.rowAtPoint(e.getPoint());
 				String trainName = (String) queueRedData.getValueAt(row, 0);
 				Schedule schedule = ctc.getScheduleByName(trainName);
-				openScheduleInTable(queueSelectedTable,queueSelectedData,schedule);
+				openScheduleInTable(queueSelectedTable,schedule);
 			}
 		});
 		scrollPane_2.setViewportView(queueRedTable);
@@ -346,64 +286,31 @@ public class CtcGui {
 		scrollPane_4.setBounds(476, 403, 221, 210);
 		contentPane.add(scrollPane_4);
 		
-		queueSelectedData = new DefaultTableModel(selectedTrainInitialData,selectedTrainColumnNames);
-		queueSelectedTable = new ScheduleJTable(queueSelectedData);
+		queueSelectedTable = new ScheduleJTable();
 		queueSelectedTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
 		scrollPane_4.setViewportView(queueSelectedTable);
 		
-		JButton editQueueSchedule = new JButton("Edit Schedule");
-		editQueueSchedule.setFont(new Font("Dialog", Font.PLAIN, 16));
-		editQueueSchedule.addActionListener(new ActionListener() {
+		btnSaveQueueSchedule = new JButton("Save Changes");
+		btnSaveQueueSchedule.setEnabled(false);
+		btnSaveQueueSchedule.setFont(new Font("Dialog", Font.PLAIN, 16));
+		btnSaveQueueSchedule.setBounds(713, 412, 171, 26);
+		contentPane.add(btnSaveQueueSchedule);
+		
+		btnRevertQueueSchedule = new JButton("Revert Changes");
+		btnRevertQueueSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String trainName="";
-				int row;
-				String line = queueTabbedPane.getTitleAt(queueTabbedPane.getSelectedIndex());
-				
-				//Get the train name
-				if(line=="Red") {
-					row = queueRedTable.getSelectedRow();
-					if(row<0) return;
-					trainName = (String) queueRedData.getValueAt(row, 0);
-				}
-				else if(line=="Green") {
-					row = queueGreenTable.getSelectedRow();
-					if(row<0) return;
-					trainName = (String) queueGreenData.getValueAt(row, 0);
-				}
-
-				scheduleForScheduleEditor = ctc.getScheduleByName(trainName);
-
-				Thread scheduleEditorThread = new Thread() {
-					public void run() {
-						try {
-							SwingUtilities.invokeAndWait(openScheduleEditor);
-							while(scheduleEditor.editing==true) {
-								try {
-									Thread.sleep(200);
-								} catch (InterruptedException e) {
-									e.printStackTrace();
-								}
-							}
-							Schedule schedule = scheduleEditor.currentSchedule;
-							ctc.addSchedule(schedule.name,schedule);
-							updateQueueTable();
-							
-							System.out.println("Finished on " + Thread.currentThread());
-						}
-						catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				};
-				scheduleEditorThread.start();				
+				//TODO revert schedule
 			}
 		});
-		editQueueSchedule.setBounds(714, 403, 171, 41);
-		contentPane.add(editQueueSchedule);
+		btnRevertQueueSchedule.setEnabled(false);
+		btnRevertQueueSchedule.setFont(new Font("Dialog", Font.PLAIN, 16));
+		btnRevertQueueSchedule.setBounds(713, 437, 171, 26);
+		frame.getContentPane().add(btnRevertQueueSchedule);
 		
-		JButton deleteQueueSchedule = new JButton("Delete selected");
-		deleteQueueSchedule.setFont(new Font("Dialog", Font.PLAIN, 16));
-		deleteQueueSchedule.addActionListener(new ActionListener() {
+		btnDeleteQueueSchedule = new JButton("Delete selected");
+		btnDeleteQueueSchedule.setEnabled(false);
+		btnDeleteQueueSchedule.setFont(new Font("Dialog", Font.PLAIN, 16));
+		btnDeleteQueueSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String line = queueTabbedPane.getTitleAt(queueTabbedPane.getSelectedIndex());
 				String trainName="";
@@ -416,19 +323,17 @@ public class CtcGui {
 					trainName = (String) queueGreenData.getValueAt(row, 0);
 				}
 				ctc.removeScheduleByName(trainName);
-
-				queueSelectedData.setDataVector(selectedTrainInitialData,selectedTrainColumnNames);
-				openScheduleInTable(queueSelectedTable,queueSelectedData,null);
 				updateQueueTable();
-				
+
+				queueSelectedTable.clear();
 			}
 		});
-		deleteQueueSchedule.setBounds(714, 456, 171, 41);
-		contentPane.add(deleteQueueSchedule);
+		btnDeleteQueueSchedule.setBounds(713, 475, 171, 41);
+		contentPane.add(btnDeleteQueueSchedule);
 		
-		JButton dispatchQueueSchedule = new JButton("Dispatch Now \u2192");
-		dispatchQueueSchedule.setFont(new Font("Dialog", Font.PLAIN, 16));
-		dispatchQueueSchedule.addActionListener(new ActionListener() {
+		JButton btnDispatchQueueSchedule = new JButton("Dispatch Now \u2192");
+		btnDispatchQueueSchedule.setFont(new Font("Dialog", Font.PLAIN, 16));
+		btnDispatchQueueSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String line = queueTabbedPane.getTitleAt(queueTabbedPane.getSelectedIndex());
 				String trainName="";
@@ -441,17 +346,17 @@ public class CtcGui {
 					trainName = (String) queueGreenData.getValueAt(row, 0);
 				}
 				Schedule schedule = ctc.removeScheduleByName(trainName);
+				updateQueueTable();
+				
 				ctc.addTrain(trainName,schedule);
 				schedule.dispatched = true;
-				
-				queueSelectedData.setDataVector(selectedTrainInitialData,selectedTrainColumnNames);
-				openScheduleInTable(queueSelectedTable,queueSelectedData,null);
-				updateQueueTable();
 				updateDispatchedTable();
+				
+				queueSelectedTable.clear();		
 			}
 		});
-		dispatchQueueSchedule.setBounds(714, 509, 171, 67);
-		contentPane.add(dispatchQueueSchedule);
+		btnDispatchQueueSchedule.setBounds(713, 528, 171, 67);
+		contentPane.add(btnDispatchQueueSchedule);
 		
 		
 			
@@ -480,7 +385,7 @@ public class CtcGui {
 				int row = dispatchedRedTable.rowAtPoint(e.getPoint());
 				String trainName = (String) dispatchedRedData.getValueAt(row, 0);
 				Schedule schedule = ctc.getTrainByName(trainName).schedule;
-				openScheduleInTable(dispatchSelectedTable,dispatchSelectedData,schedule);
+				openScheduleInTable(dispatchSelectedTable,schedule);
 			}
 		});
 		
@@ -494,7 +399,7 @@ public class CtcGui {
 				int row = dispatchedGreenTable.rowAtPoint(e.getPoint());
 				String trainName = (String) dispatchedGreenData.getValueAt(row, 0);
 				Schedule schedule = ctc.getTrainByName(trainName).schedule;
-				openScheduleInTable(dispatchSelectedTable,dispatchSelectedData,schedule);
+				openScheduleInTable(dispatchSelectedTable,schedule);
 			}
 		});
 		dispatchedGreenScrollPane.setViewportView(dispatchedGreenTable);
@@ -506,8 +411,7 @@ public class CtcGui {
 		scrollPane.setBounds(942, 403, 221, 210);
 		contentPane.add(scrollPane);
 		
-		dispatchSelectedData = new DefaultTableModel(selectedTrainInitialData,selectedTrainColumnNames);
-		dispatchSelectedTable = new ScheduleJTable(dispatchSelectedData);
+		dispatchSelectedTable = new ScheduleJTable();
 		dispatchSelectedTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
 		scrollPane.setViewportView(dispatchSelectedTable);
 		
@@ -537,32 +441,9 @@ public class CtcGui {
 					trainName = (String) dispatchedGreenData.getValueAt(row, 0);
 				}
 
-				scheduleForScheduleEditor = ctc.getTrainByName(trainName).schedule;
-
-				Thread scheduleEditorThread = new Thread() {
-					public void run() {
-						try {
-							SwingUtilities.invokeAndWait(openScheduleEditor);
-						}
-						catch (Exception e) {
-							e.printStackTrace();
-						}
-				         
-						while(scheduleEditor.editing==true) {
-							try {
-								Thread.sleep(200);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
-						Schedule schedule = scheduleEditor.currentSchedule;
-						ctc.addTrain(schedule.name,schedule);
-						updateDispatchedTable();
-						
-						System.out.println("Finished on " + Thread.currentThread());
-					}
-				};
-				scheduleEditorThread.start();				
+				Schedule schedule = ctc.getTrainByName(trainName).schedule;
+				ctc.addTrain(schedule.name,schedule);
+				updateDispatchedTable();			
 			}
 		});
 		editSelectedDispatchedTrainSchedule.setBounds(1179, 403, 171, 41);
@@ -753,7 +634,7 @@ public class CtcGui {
 		btnPause.setBounds(690, 35, 82, 32);
 		frame.getContentPane().add(btnPause);
 		
-		JButton btnIncSpeed = new JButton("<html><center>&gt&gt</center></html>");
+		btnIncSpeed = new JButton("<html><center>&gt&gt</center></html>");
 		btnIncSpeed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currentSpeedupIndex = Math.min(currentSpeedupIndex+1,availableSpeedups.length-1);
@@ -834,12 +715,9 @@ public class CtcGui {
 		label.setIcon(new ImageIcon(imgStatus));
 	}
 
-	private void openScheduleInTable(ScheduleJTable table,DefaultTableModel data, Schedule schedule) {
-		if(schedule!=null) {
-			data.setDataVector(schedule.toStringArray(), selectedTrainColumnNames);
-		}
-		data.fireTableDataChanged();
-		table.schedule = schedule;						
+	private void openScheduleInTable(ScheduleJTable table, Schedule schedule) {
+		//data.fireTableDataChanged();
+		//table.schedule = schedule;						
 	}
 	
 	private void updateQueueTable(){
@@ -851,7 +729,7 @@ public class CtcGui {
 		Schedule schedule;
 		for(String trainName:ctc.schedules.keySet()) {
 			schedule = ctc.getScheduleByName(trainName);
-			Object[] row = {schedule.name,schedule.authority,schedule.departureTime.toString()};
+			Object[] row = {schedule.name,schedule.departureTime.toString()};
 			if(schedule.line=="Red") {
 				queueRedData.addRow(row);
 			}
@@ -871,16 +749,16 @@ public class CtcGui {
 		dispatchedGreenData.setDataVector(dispatchedTrainsInitialData,dispatchedTrainsColumnNames);
 
 		//Cycle through each dispatched train's schedule
-		Schedule schedule;
+		Train train;
 		for(String trainName:ctc.trains.keySet()) {
-			schedule = ctc.getTrainByName(trainName).schedule;
+			train = ctc.getTrainByName(trainName);
 			//Object[] row; //build the row here, but for now we fake the functionality below
-			if(schedule.line=="Red") {
-				Object[] row = {schedule.name,"C9","0",schedule.authority+" mi","0"};
+			if(train.schedule.line=="Red") {
+				Object[] row = {train.name,"C9","0",train.authority+" mi","0"};
 				dispatchedRedData.addRow(row);
 			}
-			else if(schedule.line=="Green"){
-				Object[] row = {schedule.name,"J62","0",schedule.authority+" mi","0"};
+			else if(train.schedule.line=="Green"){
+				Object[] row = {train.name,"J62","0",train.authority+" mi","0"};
 				dispatchedGreenData.addRow(row);
 			}
 		}
@@ -907,11 +785,23 @@ public class CtcGui {
 		//updateDispatchedTable();
 	}
 	
-	final Runnable openScheduleEditor = new Runnable() {
-	    public void run() {
-	        scheduleEditor = new ScheduleEditor(ctc,scheduleForScheduleEditor);
-	        scheduleEditor.frame.setVisible(true);
-	        scheduleEditor.frame.setResizable(false);
-	    }
-	};
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					new CtcGui(null);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 }

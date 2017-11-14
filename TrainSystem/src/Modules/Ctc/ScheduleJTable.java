@@ -5,6 +5,9 @@ import javax.swing.table.DefaultTableModel;
 
 @SuppressWarnings("serial")
 public class ScheduleJTable extends JTable{	
+	private static Object[] columns = {"Stop","Time to Station"};
+	private static Object[] blankRow = new Object[columns.length];
+	
 	public Schedule schedule = null;
 	
 	public ScheduleJTable(Object[][] data, Object[] cols) {
@@ -14,5 +17,21 @@ public class ScheduleJTable extends JTable{
 	public ScheduleJTable(DefaultTableModel tm) {
 		super(tm);
 	}
-
+	
+	public ScheduleJTable() {
+		super(new DefaultTableModel(null,columns));
+	}
+	
+	public void addBlankRow() {
+		((DefaultTableModel) this.getModel()).addRow(blankRow);
+	}
+	
+	public void repaint() {
+		
+	}
+	
+	public void clear() {
+		this.setModel(new DefaultTableModel(null,columns));
+		schedule = null;
+	}
 }
