@@ -2,6 +2,7 @@ package Modules.Ctc;
 
 public class Train {
 	public String name;
+	public Line line;
 	public int location;
 	public int speed;
 	public int authority;
@@ -9,6 +10,7 @@ public class Train {
 	
 	public Train(Schedule schedule) {
 		this.schedule = schedule;
+		this.line = schedule.line;
 	}
 
 }

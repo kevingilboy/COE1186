@@ -30,8 +30,6 @@ public abstract class CtcCore implements Module,TimeControl {
 	public HashMap<String,Schedule> schedules = new HashMap<>();
 
 	public TrackCsvParser trackParser = new TrackCsvParser();
-	public Block[] redBlocks;
-	public Block[] greenBlocks;
 	
 	public int runningTicketSales;
 	public double throughput;
@@ -53,11 +51,10 @@ public abstract class CtcCore implements Module,TimeControl {
 	}
 	
 	public void initializeBlocks() {
-		ArrayList<Block> redBlocksAL = trackParser.parse("Modules/Ctc/RedLineFinal.csv");
-		redBlocks = redBlocksAL.toArray(new Block[redBlocksAL.size()]);
-		
-		ArrayList<Block> greenBlocksAL = trackParser.parse("Modules/Ctc/GreenLineFinal.csv");
-		greenBlocks = greenBlocksAL.toArray(new Block[greenBlocksAL.size()]);
+		for(Line line : Line.values()) {
+			ArrayList<Block> blocks = trackParser.parse("Modules/Ctc/"+line.toString()+"LineFinal.csv");
+			line.blocks = blocks.toArray(new Block[blocks.size()]);
+		}
 	}
 	
 	public boolean updateTime(SimTime time) {

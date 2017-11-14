@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Schedule {
 	public ArrayList<Stop> stops;
 	public SimTime departureTime;
-	public String line;
+	public Line line;
 	public String name;
 	public boolean dispatched;
 	
@@ -18,6 +18,7 @@ public class Schedule {
 		stops = new ArrayList<Stop>();
 		
 		dispatched = false;
+		line = Line.GREEN;
 		departureTime = new SimTime("0845");
 		stops.add(new Stop("Shadyside","08:47:00","08:49:00"));
 		stops.add(new Stop("Herron Ave","08:53:00","08:55:00"));

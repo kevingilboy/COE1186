@@ -40,12 +40,6 @@ public class CtcGui {
 	private Object[] dispatchedTrainsColumnNames = {"Train","Location","Speed","Authority","Passengers"};
 	private Object[][] dispatchedTrainsInitialData = new Object[0][dispatchedTrainsColumnNames.length];
 
-	private DefaultTableModel dispatchedGreenData;
-	private JTable dispatchedGreenTable;
-
-	private DefaultTableModel dispatchedRedData;
-	private JTable dispatchedRedTable;
-
 	private ScheduleJTable dispatchSelectedTable;
 		
 	/**
@@ -53,7 +47,7 @@ public class CtcGui {
 	 */
 	private ScheduleJTable trainCreationTable;
 	private JTextField trainCreationDepartTime;
-	private JComboBox trainCreationLine;
+	private JComboBox<Line> trainCreationLine;
 	private JTextField trainCreationName;
 	
 	/**
@@ -61,12 +55,6 @@ public class CtcGui {
 	 */
 	private Object[] queueTrainColumnNames = {"Train","Departure"};
 	private Object[][] queueTrainInitialData = new Object[0][queueTrainColumnNames.length];
-
-	private JTable queueRedTable;
-	private DefaultTableModel queueRedData;
-	
-	private JTable queueGreenTable;
-	private DefaultTableModel queueGreenData;
 	
 	private ScheduleJTable queueSelectedTable;
 	private JButton btnRevertQueueSchedule;
@@ -74,7 +62,7 @@ public class CtcGui {
 	private JButton btnDeleteQueueSchedule;
 	
 	private JSpinner blockNumberSpinner;
-	private JComboBox<String> blockLineComboBox;
+	private JComboBox<Line> blockLineComboBox;
 	private JToggleButton selectedBlockToggle;
 	private JButton btnRepairBlock;
 	private JButton btnCloseTrack;
@@ -88,7 +76,7 @@ public class CtcGui {
 	private int[] availableSpeedups = {1,2,4,8,16,32};
 	private JButton btnDecSpeed;
 	private JButton btnIncSpeed;
-
+	
 	/**
 	 * Constants
 	 */
@@ -202,7 +190,6 @@ public class CtcGui {
 		contentPane.add(lblDepartAt);
 		
 		trainCreationDepartTime = new JTextField();
-		trainCreationDepartTime.setEditable(false);
 		trainCreationDepartTime.setText("N/A");
 		trainCreationDepartTime.setBounds(173, 366, 66, 39);
 		contentPane.add(trainCreationDepartTime);
@@ -213,8 +200,8 @@ public class CtcGui {
 		lblLine.setBounds(99, 344, 45, 33);
 		contentPane.add(lblLine);
 			
-		trainCreationLine = new JComboBox();
-		trainCreationLine.setEditable(false);
+		trainCreationLine = new JComboBox<Line>();
+		trainCreationLine.setModel(new DefaultComboBoxModel<Line>(Line.values()));
 		trainCreationLine.setBounds(92, 366, 52, 39);
 		contentPane.add(trainCreationLine);
 		
@@ -249,38 +236,23 @@ public class CtcGui {
 		queueTabbedPane.setBounds(489, 174, 406, 187);
 		contentPane.add(queueTabbedPane);
 		
-		JScrollPane scrollPane_3 = new JScrollPane();
-		queueTabbedPane.addTab("Green", null, scrollPane_3, null);
-		queueGreenData = new DefaultTableModel(queueTrainInitialData,queueTrainColumnNames);
-		queueGreenTable = new JTable(queueGreenData);
-		queueGreenTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
-		queueGreenTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int row = queueGreenTable.rowAtPoint(e.getPoint());
-				String trainName = (String) queueGreenData.getValueAt(row, 0);
-				Schedule schedule = ctc.getScheduleByName(trainName);
-				openScheduleInTable(queueSelectedTable,schedule);
-			}
-		});
-		scrollPane_3.setViewportView(queueGreenTable);
-		
-		JScrollPane scrollPane_2 = new JScrollPane();
-		queueTabbedPane.addTab("Red", null, scrollPane_2, null);
-		queueRedData = new DefaultTableModel(queueTrainInitialData,queueTrainColumnNames);
-		queueRedTable = new JTable(queueRedData);
-		queueRedTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
-		queueRedTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int row = queueRedTable.rowAtPoint(e.getPoint());
-				String trainName = (String) queueRedData.getValueAt(row, 0);
-				Schedule schedule = ctc.getScheduleByName(trainName);
-				openScheduleInTable(queueSelectedTable,schedule);
-			}
-		});
-		scrollPane_2.setViewportView(queueRedTable);
-		
+		for(Line line : Line.values()) {
+			JScrollPane scrollPane = new JScrollPane();
+			queueTabbedPane.addTab(line.toString(), null, scrollPane, null);
+			line.queueData = new DefaultTableModel(queueTrainInitialData,queueTrainColumnNames);
+			line.queueTable = new JTable(line.queueData);
+			line.queueTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
+			line.queueTable.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					int row = line.queueTable.rowAtPoint(e.getPoint());
+					String trainName = (String) line.queueData.getValueAt(row, 0);
+					Schedule schedule = ctc.getScheduleByName(trainName);
+					openScheduleInTable(queueSelectedTable,schedule);
+				}
+			});
+			scrollPane.setViewportView(line.queueTable);
+		}
 		
 		JScrollPane scrollPane_4 = new JScrollPane();
 		scrollPane_4.setBounds(476, 403, 221, 210);
@@ -312,16 +284,10 @@ public class CtcGui {
 		btnDeleteQueueSchedule.setFont(new Font("Dialog", Font.PLAIN, 16));
 		btnDeleteQueueSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String line = queueTabbedPane.getTitleAt(queueTabbedPane.getSelectedIndex());
-				String trainName="";
-				if(line=="Red") {
-					int row = queueRedTable.getSelectedRow();
-					trainName = (String) queueRedData.getValueAt(row, 0);
-				}
-				else if(line=="Green") {
-					int row = queueGreenTable.getSelectedRow();
-					trainName = (String) queueGreenData.getValueAt(row, 0);
-				}
+				Line line = getLineByName(queueTabbedPane.getTitleAt(queueTabbedPane.getSelectedIndex()));
+				int row = line.queueTable.getSelectedRow();
+				String trainName = (String) line.queueData.getValueAt(row, 0);
+				
 				ctc.removeScheduleByName(trainName);
 				updateQueueTable();
 
@@ -335,16 +301,10 @@ public class CtcGui {
 		btnDispatchQueueSchedule.setFont(new Font("Dialog", Font.PLAIN, 16));
 		btnDispatchQueueSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String line = queueTabbedPane.getTitleAt(queueTabbedPane.getSelectedIndex());
-				String trainName="";
-				if(line=="Red") {
-					int row = queueRedTable.getSelectedRow();
-					trainName = (String) queueRedData.getValueAt(row, 0);
-				}
-				else if(line=="Green") {
-					int row = queueGreenTable.getSelectedRow();
-					trainName = (String) queueGreenData.getValueAt(row, 0);
-				}
+				Line line = getLineByName(queueTabbedPane.getTitleAt(queueTabbedPane.getSelectedIndex()));
+				int row = line.queueTable.getSelectedRow();
+				String trainName = (String) line.queueData.getValueAt(row, 0);
+
 				Schedule schedule = ctc.removeScheduleByName(trainName);
 				updateQueueTable();
 				
@@ -374,38 +334,24 @@ public class CtcGui {
 		tabbedPane.setBounds(946, 174, 425, 187);
 		contentPane.add(tabbedPane);
 		
-		JScrollPane dispatchedRedScrollPane = new JScrollPane();
-		
-		dispatchedRedData = new DefaultTableModel(dispatchedTrainsInitialData,dispatchedTrainsColumnNames);
-		dispatchedRedTable = new JTable(dispatchedRedData);
-		dispatchedRedTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
-		dispatchedRedTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int row = dispatchedRedTable.rowAtPoint(e.getPoint());
-				String trainName = (String) dispatchedRedData.getValueAt(row, 0);
-				Schedule schedule = ctc.getTrainByName(trainName).schedule;
-				openScheduleInTable(dispatchSelectedTable,schedule);
-			}
-		});
-		
-		JScrollPane dispatchedGreenScrollPane = new JScrollPane();
-		dispatchedGreenData = new DefaultTableModel(dispatchedTrainsInitialData,dispatchedTrainsColumnNames);
-		dispatchedGreenTable = new JTable(dispatchedGreenData);
-		dispatchedGreenTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
-		dispatchedGreenTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int row = dispatchedGreenTable.rowAtPoint(e.getPoint());
-				String trainName = (String) dispatchedGreenData.getValueAt(row, 0);
-				Schedule schedule = ctc.getTrainByName(trainName).schedule;
-				openScheduleInTable(dispatchSelectedTable,schedule);
-			}
-		});
-		dispatchedGreenScrollPane.setViewportView(dispatchedGreenTable);
-		tabbedPane.addTab("Green", null, dispatchedGreenScrollPane, null);
-		dispatchedRedScrollPane.setViewportView(dispatchedRedTable);
-		tabbedPane.addTab("Red", null, dispatchedRedScrollPane, null);
+		for(Line line : Line.values()) {
+			JScrollPane scrollPane = new JScrollPane();
+			
+			line.dispatchedData = new DefaultTableModel(dispatchedTrainsInitialData,dispatchedTrainsColumnNames);
+			line.dispatchedTable = new JTable(line.dispatchedData);
+			line.dispatchedTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
+			line.dispatchedTable.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					int row = line.dispatchedTable.rowAtPoint(e.getPoint());
+					String trainName = (String) line.dispatchedData.getValueAt(row, 0);
+					Schedule schedule = ctc.getTrainByName(trainName).schedule;
+					openScheduleInTable(dispatchSelectedTable,schedule);
+				}
+			});
+			scrollPane.setViewportView(line.dispatchedTable);
+			tabbedPane.addTab(line.toString(), null, scrollPane, null);
+		}
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(942, 403, 221, 210);
@@ -425,22 +371,11 @@ public class CtcGui {
 		editSelectedDispatchedTrainSchedule.setFont(new Font("Dialog", Font.PLAIN, 16));
 		editSelectedDispatchedTrainSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String trainName="";
-				int row;
-				String line = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
+				Line line = getLineByName(tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
+				int row = line.dispatchedTable.getSelectedRow();
+				if(row<0) return;
+				String trainName = (String) line.dispatchedData.getValueAt(row, 0);
 				
-				//Get the train name
-				if(line=="Red") {
-					row = dispatchedRedTable.getSelectedRow();
-					if(row<0) return;
-					trainName = (String) dispatchedRedData.getValueAt(row, 0);
-				}
-				else if(line=="Green") {
-					row = dispatchedGreenTable.getSelectedRow();
-					if(row<0) return;
-					trainName = (String) dispatchedGreenData.getValueAt(row, 0);
-				}
-
 				Schedule schedule = ctc.getTrainByName(trainName).schedule;
 				ctc.addTrain(schedule.name,schedule);
 				updateDispatchedTable();			
@@ -472,7 +407,6 @@ public class CtcGui {
 		
 		trainCreationName = new JTextField();
 		trainCreationName.setText("N/A");
-		trainCreationName.setEditable(false);
 		trainCreationName.setColumns(10);
 		trainCreationName.setBounds(18, 366, 52, 39);
 		frame.getContentPane().add(trainCreationName);
@@ -571,29 +505,18 @@ public class CtcGui {
 		setIndicator(selectedBlockStatusIndicator,"grey");
 		frame.getContentPane().add(selectedBlockStatusIndicator);
 		
-		blockLineComboBox = new JComboBox<String>();
+		blockLineComboBox = new JComboBox<Line>();
 		blockLineComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(blockLineComboBox.getSelectedItem()=="Green") {
-					blockNumberSpinner.setModel(new SpinnerNumberModel(1, 1, ctc.greenBlocks.length-1, 1));
-				}
-				else if(blockLineComboBox.getSelectedItem()=="Red") {
-					blockNumberSpinner.setModel(new SpinnerNumberModel(1, 1, ctc.redBlocks.length-1, 1));
-				}
-				blockNumberSpinner.setValue(1);
+				setBlockSpinnerLimits();
 			}
 		});
-		blockLineComboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"Green", "Red"}));
+		blockLineComboBox.setModel(new DefaultComboBoxModel<Line>(Line.values()));
 		blockLineComboBox.setBounds(558, 687, 71, 26);
 		frame.getContentPane().add(blockLineComboBox);
 		
 		blockNumberSpinner = new JSpinner();
-		if(blockLineComboBox.getSelectedItem()=="Green") {
-			blockNumberSpinner.setModel(new SpinnerNumberModel(1, 1, ctc.greenBlocks.length-1, 1));
-		}
-		else if(blockLineComboBox.getSelectedItem()=="Red") {
-			blockNumberSpinner.setModel(new SpinnerNumberModel(1, 1, ctc.redBlocks.length-1, 1));
-		}
+		setBlockSpinnerLimits();
 		blockNumberSpinner.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent evt) {
 				updateSelectedBlock();
@@ -664,15 +587,20 @@ public class CtcGui {
 		frame.getContentPane().add(lblSpeedup);
 	}
 	
+	protected void setBlockSpinnerLimits() {
+		Line line = (Line)blockLineComboBox.getSelectedItem();
+
+		blockNumberSpinner.setModel(new SpinnerNumberModel(1, 1, line.blocks.length-1, 1));
+		blockNumberSpinner.setValue(1);
+	}
+
 	private Block getSelectedBlock() {
 		Block block = null;
 		int blockNumber = (int) blockNumberSpinner.getValue();
-		if(blockLineComboBox.getSelectedItem()=="Green") {
-			block = ctc.greenBlocks[blockNumber];
-		}
-		else if(blockLineComboBox.getSelectedItem()=="Red") {
-			block = ctc.redBlocks[blockNumber];					
-		}
+		Line line = (Line)blockLineComboBox.getSelectedItem();
+		
+		block = line.blocks[blockNumber];
+
 		return block;
 	}
 	
@@ -722,50 +650,54 @@ public class CtcGui {
 	
 	private void updateQueueTable(){
 		//Clear the red and green tables
-		queueRedData.setDataVector(queueTrainInitialData, queueTrainColumnNames);
-		queueGreenData.setDataVector(queueTrainInitialData, queueTrainColumnNames);
+		for(Line line : Line.values()) {
+			line.queueData.setDataVector(queueTrainInitialData, queueTrainColumnNames);
+		}
 		
 		//Cycle through each dispatched train's schedule
 		Schedule schedule;
 		for(String trainName:ctc.schedules.keySet()) {
 			schedule = ctc.getScheduleByName(trainName);
 			Object[] row = {schedule.name,schedule.departureTime.toString()};
-			if(schedule.line=="Red") {
-				queueRedData.addRow(row);
-			}
-			else if(schedule.line=="Green"){
-				queueGreenData.addRow(row);
-			}
+			schedule.line.queueData.addRow(row);
 		}
 
 		//Update the tables in the GUI
-		queueRedData.fireTableDataChanged();
-		queueGreenData.fireTableDataChanged();
+		for(Line line : Line.values()) {
+			line.queueData.fireTableDataChanged();
+		}
 	}
 
+	private Line getLineByName(String s) {
+		s = s.toLowerCase();
+		Line line = null;
+		for(Line l : Line.values()) {
+			if(s.equals(l.toString().toLowerCase())){
+				line = l;
+			}
+		}
+		return line;
+	}
+	
 	private void updateDispatchedTable(){
 		//Clear the red and green tables
-		dispatchedRedData.setDataVector(dispatchedTrainsInitialData,dispatchedTrainsColumnNames);
-		dispatchedGreenData.setDataVector(dispatchedTrainsInitialData,dispatchedTrainsColumnNames);
+		for(Line line : Line.values()) {
+			line.dispatchedData.setDataVector(dispatchedTrainsInitialData, dispatchedTrainsColumnNames);
+		}
 
 		//Cycle through each dispatched train's schedule
 		Train train;
 		for(String trainName:ctc.trains.keySet()) {
 			train = ctc.getTrainByName(trainName);
 			//Object[] row; //build the row here, but for now we fake the functionality below
-			if(train.schedule.line=="Red") {
-				Object[] row = {train.name,"C9","0",train.authority+" mi","0"};
-				dispatchedRedData.addRow(row);
-			}
-			else if(train.schedule.line=="Green"){
-				Object[] row = {train.name,"J62","0",train.authority+" mi","0"};
-				dispatchedGreenData.addRow(row);
-			}
+			Object[] row = {train.name,"C9","0",train.authority+" mi","0"};
+			train.line.dispatchedData.addRow(row);
 		}
 
 		//Update the tables in the GUI
-		queueRedData.fireTableDataChanged();
-		queueGreenData.fireTableDataChanged();
+		for(Line line : Line.values()) {
+			line.dispatchedData.fireTableDataChanged();
+		}
 	}
 	
 	public void repaint() {

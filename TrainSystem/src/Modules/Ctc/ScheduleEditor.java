@@ -130,7 +130,7 @@ public class ScheduleEditor {
 		btnCreateSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currentSchedule.name = nameInput.getText();
-				currentSchedule.line = (String) lineSelect.getSelectedItem();
+				currentSchedule.line = Line.RED;
 				
 				frame.dispose();
 				editing = false;
@@ -143,12 +143,12 @@ public class ScheduleEditor {
 	private void setUpBlockColumn(ScheduleJTable table) {
 		JComboBox<String> blockCB = new JComboBox<String>();
 		if((String) lineSelect.getSelectedItem() == "Red") {
-			for(Block block :ctc.redBlocks) {
+			for(Block block :Line.RED.blocks) {
 				blockCB.addItem(Integer.toString(block.getId()));
 			}
 		}
 		else {
-			for(Block block :ctc.greenBlocks) {
+			for(Block block :Line.GREEN.blocks) {
 				blockCB.addItem(Integer.toString(block.getId()));
 			}
 		}
