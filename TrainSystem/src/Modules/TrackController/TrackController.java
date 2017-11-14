@@ -10,6 +10,9 @@ public class TrackController implements Module{
 	public TrackModel trackModel;
 	public String associatedLine;
 	public int[] associatedBlocks;
+	//Subclass variables
+	private TrackControllerGUI tcgui;
+	private PLC tcplc;
 	//Set internally
 	private String line;
 	private String section;
@@ -24,8 +27,12 @@ public class TrackController implements Module{
 	private boolean occupancy;
 
 	//Constructor
-	public TrackController(){
-
+	public TrackController(String associatedLine, int[] associatedBlocks){
+		tcgui = new TrackControllerGUI();
+		tcplc = new PLC();
+		this.associatedLine = associatedLine;
+		this.associatedBlocks = associatedBlocks;
+		
 	}
 
 	@Override
