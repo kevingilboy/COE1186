@@ -96,15 +96,28 @@ public abstract class CtcCore implements Module,TimeControl {
 	/*
 	 * SETTERS
 	 */
-	
+
 	/*
-	 * ADDERS
+	 * TICKETS
 	 */
 	public void addTicketSales(int tickets) {
 		runningTicketSales+=tickets;
 		calculateThroughput();
 	}
 	
+	public void addPassengers(String trainName, int number) {
+		Train train = getTrainByName(trainName);
+		train.passengers += number;
+	}
+	
+	public void removePassengers(String trainName, int number) {
+		Train train = getTrainByName(trainName);
+		train.passengers -= number;
+	}
+	
+	/*
+	 * ADDERS
+	 */	
 	public void addTrain(String name, Schedule schedule) {
 		Train train = new Train(schedule);
 		trains.put(name, train);

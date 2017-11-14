@@ -7,6 +7,7 @@ public class Train {
 	public int speed;
 	public int authority;
 	public Schedule schedule;
+	public int passengers;
 	
 	public Train(Schedule schedule) {
 		this.schedule = schedule;

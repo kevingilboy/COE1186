@@ -690,7 +690,7 @@ public class CtcGui {
 		for(String trainName:ctc.trains.keySet()) {
 			train = ctc.getTrainByName(trainName);
 			//Object[] row; //build the row here, but for now we fake the functionality below
-			Object[] row = {train.name,"C9","0",train.authority+" mi","0"};
+			Object[] row = {train.name,train.location,train.speed,train.authority+" mi",train.passengers};
 			train.line.dispatchedData.addRow(row);
 		}
 
