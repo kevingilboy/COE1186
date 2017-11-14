@@ -19,6 +19,9 @@ public class Simulator {
 	public SimTime currentTime = new SimTime("07:00:00");
 	public SimTime endTime = new SimTime("21:00:00");
 	
+	public double temperature;
+	public String weather;
+	
 	private Timer timer;
 	private boolean simulationRunning = false;
 	private boolean timerTaskRunning = false;
@@ -61,6 +64,9 @@ public class Simulator {
 		trainController.trainModel = trainModel;
 
 		mbo.trainController = trainController;
+		
+		temperature = 69;
+		weather = "Sunny";
 		
 		//Start timer
 		play();
