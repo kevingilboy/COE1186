@@ -19,9 +19,14 @@ import Modules.TrackModel.*;
 public class TrainModel implements Module{
 	public TrackModel trackModel;
 	public static HashMap<String, Train> trainList;
+	Train train = new Train("GREEN", "Train 1", this);
+	public SimTime currentTime = new SimTime("00:00:00");
+	//Instantiate a GUI for this train
+    TrainModelGUI trainModelGUI = train.CreateNewGUI();
 
 	public TrainModel(){
 		trainList = new HashMap<String, Train>();
+        train.showTrainGUI();
 	}
 
 	/**
@@ -29,7 +34,12 @@ public class TrainModel implements Module{
 	 */
 	@Override
 	public boolean updateTime(SimTime time) {
-
+		currentTime = time;
+		train.updateVelocity();
+        train.setValuesForDisplay(trainModelGUI);
+        if(trainModelGUI.isDisplayable() == false) {
+            //System.exit(0);
+        }
 		return true;
 	}
 	
@@ -37,7 +47,7 @@ public class TrainModel implements Module{
 		
 	//}
 	
-	public static void runTrainModel () throws InterruptedException {
+	/*public static void runTrainModel () throws InterruptedException {
         Train train = new Train("GREEN", "Train 1");
         //Instantiate a GUI for this train
         TrainModelGUI trainModelGUI = train.CreateNewGUI(train);
@@ -54,11 +64,8 @@ public class TrainModel implements Module{
             }
             Thread.sleep(1000 - millis % 1000);
         }
-    }
-	
-	public static void main(String[] args) throws InterruptedException {
-		runTrainModel();
-	}
+    }*/
+
 	
 	private void updateList() {
 		

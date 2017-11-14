@@ -34,6 +34,7 @@ public class Train {
     // Declaring a variables for the GUI
     public TrainModelGUI trainModelGUI;
     public JFrame trainModelFrame;
+    public TrainModel trnMdl;
     
     // Declaring variables in order of sections they appear in on the GUI
     
@@ -92,8 +93,8 @@ public class Train {
     private double finalSpeed;
     private double trainAcceleration;
     
-    public Train(String line, String trainID) {
-    	
+    public Train(String line, String trainID, TrainModel tm) {
+    	this.trnMdl = tm;
     	this.trainActive = true;
     	this.trainID = trainID;
     	// Train Specs
@@ -152,12 +153,12 @@ public class Train {
     	this.trainModelGUI = null;
     }
     
-    public TrainModelGUI CreateNewGUI(Train train) {
+    public TrainModelGUI CreateNewGUI() {
         //Create a GUI object
-        TrainModelGUI trainModelGUI = new TrainModelGUI(train);
+        TrainModelGUI trainModelGUI = new TrainModelGUI(this);
         
         //Initialize the GUI
-        train.setValuesForDisplay(trainModelGUI);
+        this.setValuesForDisplay(trainModelGUI);
         
         this.trainModelGUI = trainModelGUI;
         return  trainModelGUI;  //Return the GUI object
@@ -174,7 +175,7 @@ public class Train {
 
     
     public void setValuesForDisplay(TrainModelGUI tmGUI) {
-    	tmGUI.tempLabel.setText(Integer.toString(this.temperature));
+    	tmGUI.tempLabel.setText(Integer.toString(this.temperature)+"°F");
          
         this.powerIn = tmGUI.returnPowerInput();
          
@@ -201,8 +202,8 @@ public class Train {
      	tmGUI.mboAntennaStatusLabel.setText("ON");
      	tmGUI.stationVal.setText("Pioneer");
      	tmGUI.rightDoorStatusLabel.setText("CLOSED");
-     	tmGUI.timeVal.setText("9:15");
-        tmGUI.lblAm.setText("AM");
+     	tmGUI.timeVal.setText(trnMdl.currentTime.toString());
+        //tmGUI.lblAm.setText("AM");
      	tmGUI.leftDoorStatusLabel.setText("OPEN");
      	tmGUI.lightStatusLabel.setText("OFF");
      	tmGUI.numPassengers.setText("20");
