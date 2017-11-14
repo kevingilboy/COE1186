@@ -63,6 +63,7 @@ public class Simulator {
 		trainController.trainModel = trainModel;
 
 		mbo.trainController = trainController;
+		mbo.trainModel = trainModel;
 		
 		temperature = 69;
 		weather = "Sunny";
