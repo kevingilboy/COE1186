@@ -59,6 +59,21 @@ public class SimTime {
 		return hoursBetween;
 	}
 	
+	public boolean isValid(String timeString) {
+		String[] components = timeString.split(":");
+		if (components.length==3) {
+			int h = Integer.parseInt(components[0]);
+			int m = Integer.parseInt(components[1]);
+			int s = Integer.parseInt(components[2]);
+			if(h>=0 && h<60 &&
+					m>=0 && m<60 &&
+					s>=0 && s<60) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public String toString() {
 		return(String.format("%02d",hr)+":"+String.format("%02d",min)+":"+String.format("%02d",sec));
 	}
