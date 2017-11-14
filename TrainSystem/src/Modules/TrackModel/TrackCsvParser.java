@@ -35,8 +35,8 @@ public class TrackCsvParser{
 				/* Parse cells 0-8 */
 				String line 			= blockData[0];
 				String section 			= blockData[1]; 
-				int id 					= Integer.parseInt(blockData[2]);
-				double length 			= Double.parseDouble(blockData[3]);
+				int id 					= Integer.parseInt(blockData[2]) - 1; // Subtract 1 for indexing
+				double length 			= Math.ceil(Double.parseDouble(blockData[3]));
 				double grade 			= Double.parseDouble(blockData[4]);
 				double elevation 		= Double.parseDouble(blockData[5]);
 				double cumElevation 	= Double.parseDouble(blockData[6]);
@@ -113,8 +113,8 @@ public class TrackCsvParser{
 						}
 
 						switch_.setEdgeType(edgeType);
-						switch_.setPortNormal(Integer.parseInt(switchData[1]));
-						switch_.setPortAlternate(Integer.parseInt(switchData[2]));
+						switch_.setPortNormal(Integer.parseInt(switchData[1]) - 1); // Subtract 1 for indexing
+						switch_.setPortAlternate(Integer.parseInt(switchData[2]) - 1); // Subtract 1 for indexing
 					}
 				} catch (NumberFormatException e){
 					// ...
