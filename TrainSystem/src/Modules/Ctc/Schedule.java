@@ -22,7 +22,7 @@ public class Schedule {
 	
 	public void addStop(int index, Block block) {
 		//If stop does not exist, then add it. Else replace the current stop
-		if(stops.get(index)==null) {
+		if(index>=stops.size()) {
 			stops.add(index,new Stop(block));
 		}
 		else {

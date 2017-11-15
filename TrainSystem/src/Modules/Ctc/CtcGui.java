@@ -29,6 +29,12 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class CtcGui {
 	private CtcCore ctc;
@@ -254,6 +260,11 @@ public class CtcGui {
 		contentPane.add(scrollPane_1);
 		
 		trainCreationTable = new ScheduleJTable();
+		trainCreationTable.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent arg0) {
+				enableTrainCreationComponents();
+			}
+		});
 		trainCreationTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
 		scrollPane_1.setViewportView(trainCreationTable);
 		trainCreationTable.setSchedule(new Schedule((Line)trainCreationLine.getSelectedItem()));
