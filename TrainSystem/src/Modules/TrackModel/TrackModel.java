@@ -40,18 +40,18 @@ public class TrackModel implements Module{
 		new DynamicDisplay(redLineBlocks);
 
 		//------------------ TESTING TRACK ITERATOR ----------------------------
-		// greenLineBlocks.get(28 - 1).getSwitch().setState(Switch.STATE_ALTERNATE);
+		//greenLineBlocks.get(28 - 1).getSwitch().setState(Switch.STATE_ALTERNATE);
 		// 
-		/*
+		
 		int shift = 1;
-		int prev = 149 - shift;
-		int curr = 150 - shift;
-		int next = nextBlock("green", curr, prev);
+		int prev = 0 - shift;
+		int curr = 77 - shift;
+		int next = nextBlock("red", curr, prev);
 		
 		System.out.println("prev = " + Integer.toString(prev + shift) +
 			 			   ", curr = " + Integer.toString(curr + shift) + 
 			 			   ", next = " + Integer.toString(next + shift));
-		*/
+		
 	}
 
 	// Access a specific block on track specified by line and block ID
