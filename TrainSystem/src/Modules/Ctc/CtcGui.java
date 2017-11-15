@@ -182,9 +182,9 @@ public class CtcGui {
 		trainCreationName = new JTextField();
 		trainCreationName.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyTyped(KeyEvent arg0) {
+			public void keyReleased(KeyEvent arg0) {
 				String name = trainCreationName.getText();
-				if(name!=null && name!="") {
+				if(name!=null && !name.equals("")) {
 					trainCreationTable.schedule.setName(name);
 				}
 				enableTrainCreationComponents();
@@ -218,7 +218,7 @@ public class CtcGui {
 		trainCreationDepartTime = new JTextField();
 		trainCreationDepartTime.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyTyped(KeyEvent e) {
+			public void keyReleased(KeyEvent e) {
 				String time = trainCreationDepartTime.getText();
 				if(SimTime.isValid(time)) {
 					trainCreationTable.schedule.setDepartureTime(new SimTime(time));
@@ -625,10 +625,11 @@ public class CtcGui {
 	private void enableTrainCreationComponents() {
 		String name = trainCreationName.getText();
 		String time = trainCreationDepartTime.getText();
-		
-		trainCreationTable.setEnabled(name!=null && name!="" && SimTime.isValid(time));
+		Boolean validProps = name!=null && !name.equals("") && SimTime.isValid(time);
+		System.out.println(name);
+		trainCreationTable.setEnabled(validProps);
 
-		addToDispatchToQueue.setEnabled(trainCreationTable.schedule.stops.size()>0);
+		addToDispatchToQueue.setEnabled(validProps && trainCreationTable.schedule.stops.size()>0);
 	}
 	
 	/*

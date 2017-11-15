@@ -20,9 +20,23 @@ public class Schedule {
 		dispatched = false;
 		line = Line.GREEN;
 		departureTime = new SimTime("08:45:00");
-		//stops.add(new Stop(Line.GREEN.blocks[3],new SimTime("08:47:00")));
+		stops.add(new Stop(Line.GREEN.blocks[3],new SimTime("08:47:00")));
 	}
 
+
+	public void setName(String name) {
+		this.name = name;	
+	}
+
+	public void setDepartureTime(SimTime time) {
+		this.departureTime = time;
+		recalculateDwell();
+	}
+	
+	private void recalculateDwell() {
+		//TODO make this
+	}
+	
 	public Object[][] toStringArray() {
 		Object[][] grid = new Object[stops.size()][3];
 		for(int i=0;i<stops.size();i++) {
@@ -31,14 +45,5 @@ public class Schedule {
 			grid[i][1] = stop.timeToDwell.toString();
 		}
 		return grid;
-	}
-
-	public void setName(String name) {
-		this.name = name;	
-	}
-
-	public void setDepartureTime(SimTime time) {
-		this.departureTime = time;
-		//TODO recalculate dwells
 	}
 }
