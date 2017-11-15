@@ -7,8 +7,8 @@ public class Stop {
 	public Block block;
 	public SimTime timeToDwell;
 	
-	public Stop(Block block,SimTime timeToDwell) {
+	public Stop(Block block) {
 		this.block = block;
-		this.timeToDwell = new SimTime(timeToDwell);
+		this.timeToDwell = null;
 	}
 }

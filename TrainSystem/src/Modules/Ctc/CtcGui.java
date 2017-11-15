@@ -202,7 +202,7 @@ public class CtcGui {
 		trainCreationLine = new JComboBox<Line>();
 		trainCreationLine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				trainCreationTable.setSchedule(new Schedule());
+				trainCreationTable.setSchedule(new Schedule((Line)trainCreationLine.getSelectedItem()));
 				enableTrainCreationComponents();
 			}
 		});
@@ -256,7 +256,7 @@ public class CtcGui {
 		trainCreationTable = new ScheduleJTable();
 		trainCreationTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
 		scrollPane_1.setViewportView(trainCreationTable);
-		trainCreationTable.setSchedule(new Schedule());
+		trainCreationTable.setSchedule(new Schedule((Line)trainCreationLine.getSelectedItem()));
 		enableTrainCreationComponents();
 		
 		/**
@@ -347,7 +347,6 @@ public class CtcGui {
 				updateQueueTable();
 				
 				ctc.addTrain(trainName,schedule);
-				schedule.dispatched = true;
 				updateDispatchedTable();
 				
 				queueSelectedTable.clear();		
@@ -626,7 +625,6 @@ public class CtcGui {
 		String name = trainCreationName.getText();
 		String time = trainCreationDepartTime.getText();
 		Boolean validProps = name!=null && !name.equals("") && SimTime.isValid(time);
-		System.out.println(name);
 		trainCreationTable.setEnabled(validProps);
 
 		addToDispatchToQueue.setEnabled(validProps && trainCreationTable.schedule.stops.size()>0);

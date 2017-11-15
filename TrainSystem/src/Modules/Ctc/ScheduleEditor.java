@@ -52,7 +52,7 @@ public class ScheduleEditor {
 		this.ctc = ctc;
 		initialize();	
 		if(schedule==null) {
-			currentSchedule = new Schedule();
+			currentSchedule = new Schedule(null);
 		}
 		else {
 			currentSchedule = schedule;
@@ -60,9 +60,6 @@ public class ScheduleEditor {
 			nameInput.setEnabled(false);
 			btnCreateSchedule.setText("Save Edits");
 
-			if(currentSchedule.dispatched==true){
-				lineSelect.setEnabled(false);
-			}
 		}		
 	}
 

@@ -4,23 +4,36 @@ import Shared.SimTime;
 
 import java.util.ArrayList;
 
+import Modules.TrackModel.Block;
+
 public class Schedule {
-	public ArrayList<Stop> stops;
-	public SimTime departureTime;
 	public Line line;
-	public String name;
-	public boolean dispatched;
+	public ArrayList<Stop> stops;
 	
-	public Schedule() {
-		/*
-		 * Hardcode some stops for now
-		 */
+	public SimTime departureTime;
+	
+	public String name;
+
+	
+	public Schedule(Line line) {
+		this.line = line;
 		stops = new ArrayList<Stop>();
-		
-		dispatched = false;
-		line = Line.GREEN;
-		departureTime = new SimTime("08:45:00");
-		stops.add(new Stop(Line.GREEN.blocks[3],new SimTime("08:47:00")));
+	}
+	
+	public void addStop(int index, Block block) {
+		//If stop does not exist, then add it. Else replace the current stop
+		if(stops.get(index)==null) {
+			stops.add(index,new Stop(block));
+		}
+		else {
+			stops.set(index,new Stop(block));
+		}
+		calculateDwellTimes();
+	}
+	
+	public void removeStop(int index) {
+		stops.remove(index);
+		calculateDwellTimes();
 	}
 
 
@@ -30,11 +43,14 @@ public class Schedule {
 
 	public void setDepartureTime(SimTime time) {
 		this.departureTime = time;
-		recalculateDwell();
+		calculateDwellTimes();
 	}
 	
-	private void recalculateDwell() {
-		//TODO make this
+	private void calculateDwellTimes() {
+		//TODO replace hardcoded dwell times
+		for(Stop stop : stops) {
+			stop.timeToDwell = new SimTime(00,06,00);
+		}
 	}
 	
 	public Object[][] toStringArray() {
