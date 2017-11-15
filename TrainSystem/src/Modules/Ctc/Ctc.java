@@ -20,6 +20,10 @@ public class Ctc extends CtcCore{
 
 		initializeBlocks();
 		startGui();
+		while(gui==null) {
+			
+		}
+		return;
 	}
 	
 	@Override
