@@ -248,7 +248,11 @@ public class CtcGui {
 				
 				//Remove from the creator
 				trainCreationTable.clear();
-				trainCreationTable.addBlankRow();
+				trainCreationName.setText("");
+				trainCreationDepartTime.setText("");
+				
+				trainCreationTable.setSchedule(new Schedule((Line)trainCreationLine.getSelectedItem()));
+				enableTrainCreationComponents();
 			}
 		});
 		addToDispatchToQueue.setBounds(251, 475, 171, 67);
