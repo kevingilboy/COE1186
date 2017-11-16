@@ -13,14 +13,15 @@ public class Train {
 	
 	public Train(Schedule schedule) {
 		this.schedule = schedule;
+		this.name = schedule.name;
 		this.line = schedule.line;
 		this.passengers = 0;
 		
 		if(line==Line.RED) {
-			location = line.blocks[77];
+			location = line.blocks[76];
 		}
 		else if(line == Line.GREEN) {
-			location = line.blocks[152];
+			location = line.blocks[151];
 		}
 	}
 

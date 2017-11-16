@@ -358,18 +358,16 @@ public class CtcGui {
 				int row = line.queueTable.getSelectedRow();
 				String trainName = (String) line.queueData.getValueAt(row, 0);
 
-				Schedule schedule = ctc.removeScheduleByName(trainName);
+				ctc.dispatchTrain(trainName);
+				
 				updateQueueTable();
-				
-				ctc.addTrain(trainName,schedule);
 				updateDispatchedTable();
+				queueSelectedTable.clear();
 				
-				queueSelectedTable.clear();		
 			}
 		});
 		btnDispatchQueueSchedule.setBounds(713, 528, 171, 67);
 		contentPane.add(btnDispatchQueueSchedule);
-		
 		
 			
 		/**
@@ -668,6 +666,17 @@ public class CtcGui {
 		}
 	}
 	
+	private void checkQueueForDisaptches() {
+		for(Schedule schedule : ctc.schedules.values()) {
+			if(schedule.departureTime.equals(ctc.currentTime)) {
+				ctc.dispatchTrain(schedule.name);
+				updateQueueTable();
+				updateDispatchedTable();
+				queueSelectedTable.clear();	
+			}	
+		}
+	}
+	
 	/*
 	 * DISPATCH TABLE
 	 */
@@ -682,7 +691,7 @@ public class CtcGui {
 		for(String trainName:ctc.trains.keySet()) {
 			train = ctc.getTrainByName(trainName);
 			//Object[] row; //build the row here, but for now we fake the functionality below
-			Object[] row = {train.name,train.location,train.speed,train.authority+" mi",train.passengers};
+			Object[] row = {train.name,train.location.getId(),train.speed,train.authority+" mi",train.passengers};
 			train.line.dispatchedData.addRow(row);
 		}
 
@@ -764,6 +773,7 @@ public class CtcGui {
 		return line;
 	}	
 	
+	
 	public void repaint() {
 		//Update Throughput Label
 		lblThroughputAmt.setText(Double.toString(ctc.throughput));
@@ -775,9 +785,11 @@ public class CtcGui {
 		updateSelectedBlock();
 		
 		//Dispatch trains who are scheduled to be dispatched
-		//checkQueueForDisaptches();
+		checkQueueForDisaptches();
 		
 		//Update the locations of trains
 		//updateDispatchedTable();
 	}
+
+	
 }

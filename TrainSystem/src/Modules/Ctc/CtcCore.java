@@ -79,6 +79,11 @@ public abstract class CtcCore implements Module,TimeControl {
 		double timeElapsed = SimTime.hoursBetween(startTime, currentTime);
 		throughput = runningTicketSales/timeElapsed;
 	}
+	
+	protected void dispatchTrain(String name) {
+		Schedule schedule = removeScheduleByName(name);
+		ctc.addTrain(name,schedule);
+	}
 
 	/*
 	 * GETTERS
