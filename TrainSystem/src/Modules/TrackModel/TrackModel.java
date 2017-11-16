@@ -36,8 +36,8 @@ public class TrackModel implements Module{
 		greenLineBlocks = (new TrackCsvParser()).parse(greenLineFile);
 
 		// Instantiate dyPamic displays for each track
-		// new DynamicDisplay(greenLineBlocks);
 		new DynamicDisplay(redLineBlocks);
+		new DynamicDisplay(greenLineBlocks);
 	}
 
 	// Access a specific block on track specified by line and block ID
