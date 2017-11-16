@@ -28,8 +28,8 @@ public class TrackController implements Module{
 
 	//Constructor
 	public TrackController(String associatedLine, int[] associatedBlocks){
-		tcgui = new TrackControllerGUI();
-		tcplc = new PLC();
+		this.tcgui = new TrackControllerGUI(this);
+		this.tcplc = new PLC();
 		this.associatedLine = associatedLine;
 		this.associatedBlocks = associatedBlocks;
 		
