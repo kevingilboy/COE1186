@@ -219,6 +219,15 @@ public class TrainModelGUI extends JFrame {
 		menuBar.add(mnSelectTrain);
 		
 		mnSelectTrain.add(menuTrainlist);
+		/*menuTrainlist.addMenuKeyListener(MenuKeyListener l)
+		{
+		  public void actionPerformed(ActionEvent e)
+		  {
+			  // send the power command through when the button is pressed
+
+			  setPowerIn = Integer.parseInt(powerSpinner.getValue().toString());
+		  }
+		});*/
 		
 		menuBar.add(mnHelp);
 		
@@ -572,4 +581,5 @@ public class TrainModelGUI extends JFrame {
 	public void addTraintoGUIList(Train train) {
 		mnSelectTrain.add(train.getTrainID());
 	}
+
 }
