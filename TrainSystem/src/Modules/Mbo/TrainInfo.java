@@ -3,11 +3,11 @@ package Modules.Mbo;
 public class TrainInfo {
 	
 	private String name;
-	private double[2] position;
+	private double[] position;
 	private LocalDateTime timeSignalReceived;
-	private double[2] previousPosition;
+	private double[] previousPosition;
 	private LocalDateTime timePreviousSignalReceived;
-	private double[2] velocity;
+	private double[] velocity;
 	private double speed;
 	private double authority;
 	private LocalDateTime timeSignalTransmitted;
