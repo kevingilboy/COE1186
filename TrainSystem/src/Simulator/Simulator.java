@@ -1,14 +1,13 @@
 package Simulator;
 
-import Shared.Module;
-import Shared.SimTime;
+import Shared.*;
 
-import Modules.Ctc.Ctc;
-import Modules.TrackController.TrackController;
-import Modules.TrackModel.TrackModel;
-import Modules.TrainModel.TrainModel;
-import Modules.TrainController.TrainController;
-import Modules.Mbo.Mbo;
+import Modules.Ctc.*;
+import Modules.TrackController.*;
+import Modules.TrackModel.*;
+import Modules.TrainModel.*;
+import Modules.TrainController.*;
+import Modules.Mbo.*;
 
 import java.util.Timer;
 import java.util.TimerTask;
