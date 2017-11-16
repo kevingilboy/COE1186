@@ -24,6 +24,11 @@ public class TrainModel implements Module{
 	private String line = "GREEN";
 	//Instantiate a GUI for this train
 
+	/**
+	 * Constructor of the Train Model class
+	 * This calss is backed by a HashMap that stores trains as objects with keys as the
+	 * built in java hash of the Train ID strings
+	 */
 	public TrainModel(){
 		trainList = new HashMap<Integer, Train>();
 		//Train train = new Train(line, "Train 1", this);
@@ -31,6 +36,9 @@ public class TrainModel implements Module{
 		//instantiateGUI(train);
         this.getTrain("Train 1").showTrainGUI();
         dispatchTrain("Train 2", line);
+        dispatchTrain("Train 3", line);
+        dispatchTrain("Train 4", line);
+        dispatchTrain("Train 5", line);
 	}
 
 	/**
@@ -42,13 +50,15 @@ public class TrainModel implements Module{
 		//setPower("Train 1", pow+10);
 		powSum += 10;
 		setPower("Train 1", powSum);
+		setPower("Train 2", powSum-20);
+		setPower("Train 3", powSum*2);
+		setPower("Train 4", powSum+20);
+		setPower("Train 5", powSum+50);
 		for(Train t : trainList.values()) {
 			t.updateVelocity();
 	        t.setValuesForDisplay();
 		}
-        //if(trainModelGUI.isDisplayable() == false) {
-            //System.exit(0);
-        //}
+        
 		return true;
 	}
 	
@@ -63,15 +73,22 @@ public class TrainModel implements Module{
 		instantiateGUI(newTrain);
 	}
 	
+	/**
+	 * Instantiates a specified train Gui when passed a train object
+	 * This was, when every train is dispatched, its GUi is already available to be displayed if the user
+	 * selects a train from the list.
+	 * 
+	 * @param train
+	 */
 	private void instantiateGUI(Train train) {
 		TrainModelGUI trainModelGUI = train.CreateNewGUI();
 		for(Train t : trainList.values()) {
 			// adds all the active trains to the new train's GUI
-			//if (train == t) {
-			//	continue;
-			//} else {
-			trainModelGUI.addTraintoGUIList(t);
-			//}
+			if (train == t) {
+				continue;
+			} else {
+				trainModelGUI.addTraintoGUIList(t);
+			}
 			// adds this new train to all the other train's GUI lists
 			if(trainList.size() > 1) {
 				TrainModelGUI otherGUI = t.getTrainGUI();
@@ -86,46 +103,24 @@ public class TrainModel implements Module{
 		return trainList.get(ID.hashCode());
 	}
 	
-	
-	
-	/*public static void runTrainModel () throws InterruptedException {
-        Train train = new Train("GREEN", "Train 1");
-        //Instantiate a GUI for this train
-        TrainModelGUI trainModelGUI = train.CreateNewGUI(train);
-        train.showTrainGUI();
-        
-        //Constantly update velocity then the GUI
-        while(true){
-        	long millis = System.currentTimeMillis();
-            //code to run
-            train.updateVelocity();
-            train.setValuesForDisplay(trainModelGUI);
-            if(trainModelGUI.isDisplayable() == false) {
-                System.exit(0);
-            }
-            Thread.sleep(1000 - millis % 1000);
-        }
-    }*/
-
-	
 	/*private int calcDeltaTime(SimTime start, SimTime end) {
 		return start-end; // TODO: Ask Kevin how we would be doing this
 	}*/
 	
-	/*public Train getTrainAtBlock(Block block) {
+	public Train getTrainAtBlock(Block block) {
 		// TODO: Should I iterate through every single entry in the hashmap to find the
 		// train at the specified block?
-		return;
-	}*/
+		for(Train t : trainList.values()) {
+			if(t.getBlock() == block) {
+				return t;
+			}
+		}
+		return null;
+	}
 	
 	public void setBeacon(String trainID, int beaconVal) {
 		
 	}
-	
-	public void dispatchTrainToBlock(String trainID, Train train, Block block) {
-		trainList.put(trainID.hashCode(), train);
-	}
-	
 	
 	public double transmitCtcAuthority(String trainID, double authority) {
 		return authority;
