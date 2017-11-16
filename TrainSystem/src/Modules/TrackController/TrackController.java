@@ -34,6 +34,12 @@ public class TrackController implements Module{
 		this.associatedBlocks = associatedBlocks;
 		
 	}
+	
+	public TrackController(){
+		this.tcgui = new TrackControllerGUI(this);
+		this.tcplc = new PLC();
+		
+	}
 
 	@Override
 	public boolean updateTime(SimTime time) {
@@ -42,14 +48,20 @@ public class TrackController implements Module{
 	}
 	//Internal Functions
 	private void receiveBlockInfo(String line, int blockId){
-		hasLight = trackModel.getBlock(line, blockId);
-		lightState = trackModel.getBlock(line, blockId);
-		hasSwitch = trackModel.getBlock(line, blockId);
-		switchState = trackModel.getBlock(line, blockId);
-		hasCrossing = trackModel.getBlock(line, blockId);
-		crossingState = trackModel.getBlock(line, blockId);
-		status = trackModel.getBlock(line, blockId);
-		occupancy = trackModel.getBlock(line, blockId);
+		if (trackModel.getBlock(line, blockId).getLight() != null){
+			hasLight = true;
+			lightState = trackModel.getBlock(line, blockId).getLight().getState();
+		}
+		if (trackModel.getBlock(line, blockId).getSwitch() != null){
+			hasSwitch = true;
+			switchState = trackModel.getBlock(line, blockId).getSwitch().getState();
+		}
+		if (trackModel.getBlock(line, blockId).getCrossing() != null){
+			hasCrossing = true;
+			crossingState = trackModel.getBlock(line, blockId).getCrossing().getState();
+		}
+		status = trackModel.getBlock(line, blockId).getStatus();
+		occupancy = trackModel.getBlock(line, blockId).getOccupied();
 	}
 	
 	private void updateStates(){
@@ -70,11 +82,11 @@ public class TrackController implements Module{
 	
 	//CTC Functions
 	public void transmitSuggestedTrainSetpointSpeed(String trainName, int speed){
-		trackModel.transmitSuggestedTrainSetpointSpeed(trainName, speed);
+		//trackModel.transmitSuggestedTrainSetpointSpeed(trainName, speed);
 	}
 	
 	public void transmitCtcAuthority(String trainName, int authority){
-		trackModel.transmitCtcAuthority(trainName, authority);
+		//trackModel.transmitCtcAuthority(trainName, authority);
 	}
 	
 	public Block receiveBlockInfoForCtc(String line, int blockId){
