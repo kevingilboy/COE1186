@@ -37,7 +37,7 @@ public class TrainModelGUI extends JFrame {
 	private Line2D verticalLine3;
 	private Line2D verticalLine4;
 	private boolean arrivalStatus = true;
-	private int setPowerIn;
+	//private int setPowerIn;
 	private boolean serviceBrake = false;
 	private boolean emerBrake = false;
 
@@ -172,15 +172,6 @@ public class TrainModelGUI extends JFrame {
 		//double currSpeed = trainModel.setTrainValues();
 		//System.out.println(currSpeed);
 	}
-	
-	/**
-	 * Returns the power the user of the train model selects to input
-	 * 
-	 * Author jpatterson
-	 */
-	/*public int returnPowerInput() {
-		return setPowerIn;
-	}*/
 	
 	public boolean serviceBrakeStatus() {
 		return serviceBrake;
