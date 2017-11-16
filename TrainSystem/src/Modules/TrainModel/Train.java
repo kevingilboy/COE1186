@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -129,7 +130,7 @@ public class Train {
         this.currentSpeed = 0;
         this.CTCSpeed = 0;
         this.CTCAuthority = 100; // 100 miles
-        this.powerOut = 0.0;
+        //this.powerOut = 0.0;
         this.powerIn = 0.0;
         
         // Train Operations
@@ -160,7 +161,7 @@ public class Train {
     	return trainModelGUI;
     }
     
-    private TrainModelGUI getTrainGUI() {
+    public TrainModelGUI getTrainGUI() {
     	return this.trainModelGUI;
     }
     
@@ -176,8 +177,6 @@ public class Train {
     
     public void setValuesForDisplay() {
     	this.trainModelGUI.tempLabel.setText(Integer.toString(this.temperature)+"°F");
-         
-        this.powerIn = this.trainModelGUI.returnPowerInput();
          
         if(this.trainModelGUI.serviceBrakeStatus()) {	// if the brakes were applied (button pressed)
         	this.serviceBrake = true;
@@ -312,24 +311,36 @@ public class Train {
     	
     }
     
-    public void getGrade() {
-    	
+    public void setGrade(double g) {
+    	this.grade = g;
     }
     
-    public void getSetpoint() {
-    	
+    public double getGrade() {
+    	return this.grade;
+    }
+    
+    public double getSetpoint() {
+    	return this.CTCSpeed;
     }
     
     public void setSetpoint(double setpoint) {
-    	
+    	this.CTCSpeed = setpoint;
     }
     
-    public void getAuthority() {
-    	
+    public void setPower(double pow) {
+    	this.powerIn = pow;
+    }
+    
+    public double getVelocity() {
+    	return this.currentSpeed;
+    }
+    
+    public double getAuthority() {
+    	return this.CTCAuthority;
     }
     
     public void setAuthority(double authority) {
-    	
+    	this.CTCAuthority = authority;
     }
     
     public void setLightStatus(boolean lights) {
@@ -346,5 +357,15 @@ public class Train {
     
     public void setTemperature(int temp) {
     	
+    }
+    
+    public int setNumDeparting(int numPassengers) {
+    	Random rand = new Random();
+
+    	int  n = rand.nextInt(numPassengers);
+    	if (numPassengers - n >= 0) {
+    		return numPassengers - n;
+    	}
+    	return 0;
     }
 }

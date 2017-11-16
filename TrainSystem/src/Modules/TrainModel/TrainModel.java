@@ -20,14 +20,18 @@ public class TrainModel implements Module{
 	public TrackModel trackModel;
 	public static HashMap<Integer, Train> trainList;
 	public SimTime currentTime = new SimTime("00:00:00");
+	double powSum = 0.0;
+	private String line = "GREEN";
 	//Instantiate a GUI for this train
 
 	public TrainModel(){
 		trainList = new HashMap<Integer, Train>();
-		Train train = new Train("GREEN", "Train 1", this);
-		dispatchTrain(train.getTrainID(), train);
+		//Train train = new Train(line, "Train 1", this);
+		dispatchTrain("Train 1", line);
 		//instantiateGUI(train);
-        train.showTrainGUI();
+        this.getTrain("Train 1").showTrainGUI();
+        //Train train2 = new Train("GREEN", "Train 2", this);
+        //dispatchTrain(train2.getTrainID(), train);
 	}
 
 	/**
@@ -36,6 +40,9 @@ public class TrainModel implements Module{
 	@Override
 	public boolean updateTime(SimTime time) {
 		currentTime = time;
+		//setPower("Train 1", pow+10);
+		powSum += 10;
+		setPower("Train 1", powSum);
 		for(Train t : trainList.values()) {
 			t.updateVelocity();
 	        t.setValuesForDisplay();
@@ -51,20 +58,35 @@ public class TrainModel implements Module{
 	 * @param trainID
 	 * @param train
 	 */
-	public void dispatchTrain(String trainID, Train train) {
-		trainList.put(trainID.hashCode(), train);
-		instantiateGUI(train);
+	public void dispatchTrain(String trainID, String line) {
+		Train newTrain = new Train(line, trainID, this);
+		trainList.put(trainID.hashCode(), newTrain);
+		instantiateGUI(newTrain);
 	}
 	
 	private void instantiateGUI(Train train) {
 		TrainModelGUI trainModelGUI = train.CreateNewGUI();
-		trainModelGUI.addTraintoGUIList(train);
+		for(Train t : trainList.values()) {
+			// adds all the active trains to the new train's GUI
+			//if (train == t) {
+			//	continue;
+			//} else {
+			trainModelGUI.addTraintoGUIList(t);
+			//}
+			// adds this new train to all the other train's GUI lists
+			if(trainList.size() > 1) {
+				TrainModelGUI otherGUI = t.getTrainGUI();
+				otherGUI.addTraintoGUIList(train);	
+			}
+		}
+		//trainModelGUI.addTraintoGUIList(train);
 		//return trainModelGUI;
 	}
 	
 	public Train getTrain(String ID) {
 		return trainList.get(ID.hashCode());
 	}
+	
 	
 	
 	/*public static void runTrainModel () throws InterruptedException {
@@ -156,7 +178,7 @@ public class TrainModel implements Module{
 	}
 	
 	public void setPower(String trainID, double powerCommand) {
-		
+		this.getTrain(trainID).setPower(powerCommand);
 	}
 	
 	public void setDoors(String trainID, boolean left, boolean right) {
