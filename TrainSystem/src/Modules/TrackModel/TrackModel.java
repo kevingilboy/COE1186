@@ -36,22 +36,8 @@ public class TrackModel implements Module{
 		greenLineBlocks = (new TrackCsvParser()).parse(greenLineFile);
 
 		// Instantiate dyPamic displays for each track
-		new DynamicDisplay(greenLineBlocks);
+		// new DynamicDisplay(greenLineBlocks);
 		new DynamicDisplay(redLineBlocks);
-
-		//------------------ TESTING TRACK ITERATOR ----------------------------
-		//greenLineBlocks.get(28 - 1).getSwitch().setState(Switch.STATE_ALTERNATE);
-		// 
-		
-		int shift = 1;
-		int prev = 0 - shift;
-		int curr = 77 - shift;
-		int next = nextBlock("red", curr, prev);
-		
-		System.out.println("prev = " + Integer.toString(prev + shift) +
-			 			   ", curr = " + Integer.toString(curr + shift) + 
-			 			   ", next = " + Integer.toString(next + shift));
-		
 	}
 
 	// Access a specific block on track specified by line and block ID
@@ -68,23 +54,18 @@ public class TrackModel implements Module{
 		return block;
 	}
 
-	// Get the next block for the train to move to
-	// based on the current block and previous blocks
-	// occupied by a train (no train needs to be specified)
-	public int nextBlock(String line, int currBlockID, int prevBlockID){
-		TrackIterator trackIterator = null;
-		int nextBlockID;
+	// Access the entire ArrayList of blocks in a track specified
+	// by the line
+	public ArrayList<Block> getTrack(String line){
+		ArrayList<Block> track = null;
 
-		// The TrackIterator class determines the next block based on the
-		// track's current configuration of switches and track statuses
 		if (line.toLowerCase() == "green"){
-			trackIterator = new TrackIterator(greenLineBlocks, currBlockID, prevBlockID);
+			track = greenLineBlocks;
 		} else if (line.toLowerCase() == "red"){
-			trackIterator = new TrackIterator(redLineBlocks, currBlockID, prevBlockID);
+			track = redLineBlocks;
 		}
 
-		nextBlockID = trackIterator.nextBlock();
-		return nextBlockID;
+		return track;
 	}
 
 	// Respond to the Simulator's regularly call to this modules's updateTime()

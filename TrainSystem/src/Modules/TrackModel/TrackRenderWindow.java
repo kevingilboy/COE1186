@@ -1,5 +1,7 @@
 package Modules.TrackModel;
 
+import Modules.TrainModel;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -29,6 +31,8 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
     // used for the dynamic rendering
     ArrayList<Block> blocks;
     Color lineColor;
+    Position pos;
+
     int blockPos = 0;
     int meterPos = 0;
 
@@ -36,6 +40,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         initializeWindow(width, height);
         initializeTimer();
         initializeTrack(blocks);
+        pos = new Position(blocks);
     }
 
     // Initialize the window in the context 
@@ -189,7 +194,15 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         // position along the track, will later just appear at
         // the current block position occupied in the simulation)
         g2d.setColor(Color.white);
+        double[] xy_coords = pos.getCoordinates();
+        double x_coord = xy_coords[0];
+        double y_coord = xy_coords[1];
+        g2d.fillRect((int)x_coord-1, (int)y_coord-1, 5, 5);
 
+        pos.moveTrain(10);
+
+
+        /*
         double[] xy_coords = blocks.get(blockPos).getCoordinatesAtMeter(meterPos);
         double x_coord = xy_coords[0];
         double y_coord = xy_coords[1];
@@ -226,6 +239,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                 blockPos = 0;
             }
         }
+        */
     }
 
     // Calls paintComponent(Graphics g) every time
