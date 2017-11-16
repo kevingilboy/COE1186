@@ -19,8 +19,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class CtcCore implements Module,TimeControl {
-	public CtcCore ctc;
-
+	public CtcCore ctcCore;
+	public Ctc ctc;
+	public CtcStandalone ctcStandalone;
+	
 	public CtcGui gui;
 	public SimTime startTime;
 	public SimTime currentTime;
@@ -123,6 +125,8 @@ public abstract class CtcCore implements Module,TimeControl {
 		
 		Train train = new Train(schedule);
 		trains.put(name, train);
+		
+		
 	}
 	
 	public void addSchedule(String name, Schedule schedule) {

@@ -37,8 +37,8 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 public class CtcGui {
-	private CtcCore ctc;
-	
+	private Ctc ctc;
+
 	private JFrame frame;
 	
 	private JLabel lblThroughputAmt;
@@ -102,7 +102,7 @@ public class CtcGui {
 	/**
 	 * Create the application.
 	 */
-	public CtcGui(CtcCore ctc) {
+	public CtcGui(Ctc ctc) {
 		this.ctc = ctc;
 		try {
 			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");

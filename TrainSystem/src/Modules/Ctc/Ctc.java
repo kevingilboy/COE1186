@@ -26,6 +26,16 @@ public class Ctc extends CtcCore{
 		return;
 	}
 	
+	public void dispatchTrain(String name) {
+		Schedule schedule = removeScheduleByName(name);
+		
+		Train train = new Train(schedule);
+		trains.put(name, train);
+		
+		trainModel.dispatchTrain(name, train.line.toString().toUpperCase());
+		trainController.dispatchTrain(name, train.line.toString().toUpperCase());
+	}
+	
 	@Override
 	public void pause() {
 	    simulator.pause();

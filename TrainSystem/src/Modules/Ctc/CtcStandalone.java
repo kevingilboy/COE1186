@@ -11,7 +11,8 @@ public class CtcStandalone extends CtcCore{
 	private boolean running = false;
 	
 	public CtcStandalone() {
-		ctc = this;
+		ctcCore = this;
+		ctcStandalone = this;
 		startTime = new SimTime("07:00:00");
 		currentTime = new SimTime(startTime);
 		initializeBlocks();
