@@ -156,66 +156,70 @@ public class Train {
     public TrainModelGUI CreateNewGUI() {
         //Create a GUI object
     	trainModelGUI = new TrainModelGUI(this);
-    	setValuesForDisplay(trainModelGUI);
+    	setValuesForDisplay();
     	return trainModelGUI;
+    }
+    
+    private TrainModelGUI getTrainGUI() {
+    	return this.trainModelGUI;
     }
     
     public void showTrainGUI() {
         //Make sure to set it visible//Initialize a JFrame to hold the GUI in (Since it is only a JPanel)
-        this.trainModelGUI.setTitle(this.trainID);
+        this.getTrainGUI().setTitle(this.getTrainID());
         //trainModelFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         //trainModelFrame.getContentPane().add(this.trainModelGUI);
         //this.trainModelGUI.pack();
-        this.trainModelGUI.setVisible(true);     //Make sure to set it visible
+        this.getTrainGUI().setVisible(true);     //Make sure to set it visible
     }
 
     
-    public void setValuesForDisplay(TrainModelGUI tmGUI) {
-    	tmGUI.tempLabel.setText(Integer.toString(this.temperature)+"°F");
+    public void setValuesForDisplay() {
+    	this.trainModelGUI.tempLabel.setText(Integer.toString(this.temperature)+"°F");
          
-        this.powerIn = tmGUI.returnPowerInput();
+        this.powerIn = this.trainModelGUI.returnPowerInput();
          
-        if(tmGUI.serviceBrakeStatus()) {	// if the brakes were applied (button pressed)
+        if(this.trainModelGUI.serviceBrakeStatus()) {	// if the brakes were applied (button pressed)
         	this.serviceBrake = true;
         } else {
         	this.serviceBrake = false;
         }
-        if(tmGUI.emerBrakeStatus()) {	// if the e brake was pushed (button pressed)
+        if(this.trainModelGUI.emerBrakeStatus()) {	// if the e brake was pushed (button pressed)
         	this.emerBrake = true;
         } else {
         	this.emerBrake = false;
         }
 
-        tmGUI.numCarsSpinner.setText(Integer.toString(this.trainCars));
-        tmGUI.heightVal.setText(Double.toString(truncateTo(this.trainHeight, 2)));
-        tmGUI.widthVal.setText(Double.toString(truncateTo(this.trainWidth, 2)));
-        tmGUI.lengthVal.setText(Double.toString(truncateTo(this.trainLength, 2)));
-        tmGUI.weightVal.setText(Double.toString(truncateTo(this.trainWeight, 2)));
-        tmGUI.capacityVal.setText(Integer.toString(this.trainCapacity));
-        tmGUI.powerVal.setText(Double.toString(this.powerIn));
+        this.trainModelGUI.numCarsSpinner.setText(Integer.toString(this.trainCars));
+        this.trainModelGUI.heightVal.setText(Double.toString(truncateTo(this.trainHeight, 2)));
+        this.trainModelGUI.widthVal.setText(Double.toString(truncateTo(this.trainWidth, 2)));
+        this.trainModelGUI.lengthVal.setText(Double.toString(truncateTo(this.trainLength, 2)));
+        this.trainModelGUI.weightVal.setText(Double.toString(truncateTo(this.trainWeight, 2)));
+        this.trainModelGUI.capacityVal.setText(Integer.toString(this.trainCapacity));
+        this.trainModelGUI.powerVal.setText(Double.toString(this.powerIn));
         
-        tmGUI.gpsAntennaStatusLabel.setText("ON");
-     	tmGUI.mboAntennaStatusLabel.setText("ON");
-     	tmGUI.stationVal.setText("Pioneer");
-     	tmGUI.rightDoorStatusLabel.setText("CLOSED");
-     	tmGUI.timeVal.setText(trnMdl.currentTime.toString());
-        //tmGUI.lblAm.setText("AM");
-     	tmGUI.leftDoorStatusLabel.setText("OPEN");
-     	tmGUI.lightStatusLabel.setText("OFF");
-     	tmGUI.numPassengers.setText("20");
-     	tmGUI.authorityVal.setText("100");
-     	tmGUI.serviceLabel.setText("OFF");
-     	tmGUI.emergencyLabel.setText("OFF");
+        this.trainModelGUI.gpsAntennaStatusLabel.setText("ON");
+     	this.trainModelGUI.mboAntennaStatusLabel.setText("ON");
+     	this.trainModelGUI.stationVal.setText("Pioneer");
+     	this.trainModelGUI.rightDoorStatusLabel.setText("CLOSED");
+     	this.trainModelGUI.timeVal.setText(trnMdl.currentTime.toString());
+        //this.trainModelGUI.lblAm.setText("AM");
+     	this.trainModelGUI.leftDoorStatusLabel.setText("OPEN");
+     	this.trainModelGUI.lightStatusLabel.setText("OFF");
+     	this.trainModelGUI.numPassengers.setText("20");
+     	this.trainModelGUI.authorityVal.setText("100");
+     	this.trainModelGUI.serviceLabel.setText("OFF");
+     	this.trainModelGUI.emergencyLabel.setText("OFF");
 
-     	tmGUI.arrivalStatusLabel.setText("ARRIVING");
-     	tmGUI.currentSpeedLabel.setText(Double.toString(truncateTo((this.currentSpeed*SECONDS_PER_HOUR/METERS_PER_MILE), 2)));
+     	this.trainModelGUI.arrivalStatusLabel.setText("ARRIVING");
+     	this.trainModelGUI.currentSpeedLabel.setText(Double.toString(truncateTo((this.currentSpeed*SECONDS_PER_HOUR/METERS_PER_MILE), 2)));
          
      	if (this.lineColor.equals("GREEN")) {
-     		tmGUI.lblLine.setText(lineColor);
-     		tmGUI.lblLine.setForeground(Color.GREEN);
+     		this.trainModelGUI.lblLine.setText(lineColor);
+     		this.trainModelGUI.lblLine.setForeground(Color.GREEN);
      	} else {
-     		tmGUI.lblLine.setText("RED");
-     		tmGUI.lblLine.setForeground(Color.RED);
+     		this.trainModelGUI.lblLine.setText("RED");
+     		this.trainModelGUI.lblLine.setForeground(Color.RED);
         }
     }
     
@@ -282,6 +286,10 @@ public class Train {
         int truncatedNumberInt = (int)( unroundedNumber * Math.pow( 10, decimalPlaces ) );
         double truncatedNumber = (double)( truncatedNumberInt / Math.pow( 10, decimalPlaces ) );
         return truncatedNumber;
+    }
+    
+    public String getTrainID() {
+    	return this.trainID;
     }
     
     public void activateFailureModeTest() {

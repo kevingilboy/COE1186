@@ -81,6 +81,7 @@ public class TrainModelGUI extends JFrame {
 	public JPanel brakeFailPanel = new JPanel();
 	public JMenu mnFile = new JMenu("File");
 	public JMenu mnSelectTrain = new JMenu("Select Train");
+	public JMenuItem menuTrainlist = new JMenuItem("");
 	public JMenu mnHelp = new JMenu("Help");
 	
 	public JLabel gpsAntennaStatusLabel = new JLabel();
@@ -217,8 +218,7 @@ public class TrainModelGUI extends JFrame {
 		
 		menuBar.add(mnSelectTrain);
 		
-		JMenuItem mntmTrainlist = new JMenuItem("TrainList");
-		mnSelectTrain.add(mntmTrainlist);
+		mnSelectTrain.add(menuTrainlist);
 		
 		menuBar.add(mnHelp);
 		
@@ -567,5 +567,9 @@ public class TrainModelGUI extends JFrame {
 	 */
 	public void stylizeToggleButton(JToggleButton b){
 		Border thickBorder = new LineBorder(Color.WHITE, 3);
+	}
+	
+	public void addTraintoGUIList(Train train) {
+		mnSelectTrain.add(train.getTrainID());
 	}
 }
