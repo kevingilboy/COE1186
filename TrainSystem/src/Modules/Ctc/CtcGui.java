@@ -417,23 +417,6 @@ public class CtcGui {
 		lblSelectedTrainSchedule.setBounds(920, 367, 456, 33);
 		contentPane.add(lblSelectedTrainSchedule);
 		
-		JButton editSelectedDispatchedTrainSchedule = new JButton("Edit Schedule");
-		editSelectedDispatchedTrainSchedule.setFont(new Font("Dialog", Font.PLAIN, 16));
-		editSelectedDispatchedTrainSchedule.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Line line = getLineByName(tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
-				int row = line.dispatchedTable.getSelectedRow();
-				if(row<0) return;
-				String trainName = (String) line.dispatchedData.getValueAt(row, 0);
-				
-				Schedule schedule = ctc.getTrainByName(trainName).schedule;
-				ctc.addTrain(schedule.name,schedule);
-				updateDispatchedTable();			
-			}
-		});
-		editSelectedDispatchedTrainSchedule.setBounds(1179, 403, 171, 41);
-		contentPane.add(editSelectedDispatchedTrainSchedule);
-		
 		JButton btnimportschedule = new JButton("<html><center>Import<br>Schedule</center></html>");
 		btnimportschedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
