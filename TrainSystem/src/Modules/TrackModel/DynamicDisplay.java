@@ -63,8 +63,8 @@ public class DynamicDisplay{
 
 		// Make the frame draggable
 		FrameDragListener frameDragListener = new FrameDragListener(f);
-		f.addMouseListener(frameDragListener);
-		f.addMouseMotionListener(frameDragListener);
+		dynamicTrackView.addMouseListener(frameDragListener);
+		dynamicTrackView.addMouseMotionListener(frameDragListener);
 
 		// Add the dynamic track view panel
 		f.add(dynamicTrackView);
