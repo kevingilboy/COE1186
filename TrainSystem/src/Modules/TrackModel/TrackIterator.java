@@ -100,6 +100,8 @@ public class TrackIterator{
 					int direction = 0;
 
 					if (currBlock.getSection() == prevBlock.getSection()){
+
+						System.out.println("TEST <0>.............");
 						
 						if ((currBlockID - prevBlockID) > 0){
 							direction = Block.DIRECTION_INCREASING_ID;
@@ -111,22 +113,55 @@ public class TrackIterator{
 						// HEAD block is on a different section
 						
 						if (currTrack.get(currBlockID + 1).getSection() == currBlock.getSection()){
+								
+							System.out.println("TEST <1>.............");
+							System.out.print("currTrack.get(currBlockID + 1).getSection() = ");
+							System.out.println(currTrack.get(currBlockID + 1).getSection());
+							System.out.print("currBlock.getSection() = ");
+							System.out.println(currBlock.getSection());
+
 							if ((currTrack.get(currBlockID + 1).getId() - currBlockID) > 0){
 								direction = Block.DIRECTION_INCREASING_ID;
 							} else if ((currTrack.get(currBlockID + 1).getId() - currBlockID) < 0){
 								direction = Block.DIRECTION_DECREASING_ID;
 							}
 						} else if (currTrack.get(currBlockID - 1).getSection() == currBlock.getSection()){
+
+							System.out.println("TEST <2>.............");
+							System.out.print("currTrack.get(currBlockID - 1).getSection() = ");
+							System.out.println(currTrack.get(currBlockID - 1).getSection());
+							System.out.print("currBlock.getSection() = ");
+							System.out.println(currBlock.getSection());
+
 							if ((currBlockID - currTrack.get(currBlockID - 1).getId()) > 0){
 								direction = Block.DIRECTION_INCREASING_ID;
 							} else if ((currBlockID - currTrack.get(currBlockID - 1).getId()) < 0){
 								direction = Block.DIRECTION_DECREASING_ID;
 							}
 						} else {
-							// Handle case where tail block is on a section of block length 1... :(
+							// Handle case where tail block moved to a different section? 
+
+							System.out.println("TEST <3>.............");
+							System.out.print("currTrack.get(currBlockID + 1).getSection() = ");
+							System.out.println(currTrack.get(currBlockID + 1).getSection());
+							System.out.print("currTrack.get(currBlockID - 1).getSection() = ");
+							System.out.println(currTrack.get(currBlockID - 1).getSection());
+							System.out.print("currBlock.getSection() = ");
+							System.out.println(currBlock.getSection());
+
+							// THIS IS DEFINITELY WRONG...
+							if (s.getPortNormal() > currBlockID){
+								direction = Block.DIRECTION_DECREASING_ID;		
+							} else if (s.getPortNormal() < currBlockID) {
+								direction = Block.DIRECTION_INCREASING_ID;
+							}
 						}
 
+						System.out.println("TEST <4>.............");
+
+						System.out.print("NEXT BEFORE: "); System.out.print(nextID);
 						nextID = currBlockID + direction;
+						System.out.print(", NEXT AFTER: "); System.out.println(nextID);
 					}
 				}
 				 

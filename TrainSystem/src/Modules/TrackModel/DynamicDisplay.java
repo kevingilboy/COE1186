@@ -84,14 +84,14 @@ public class DynamicDisplay{
 
         public void mouseReleased(MouseEvent e) {
         	// Toggle all switches on mouse release
-        	/* 
+        	
         	for (int i = 0; i < blocks.size(); i++){
         		if (blocks.get(i).getSwitch() != null){
         			boolean currState = blocks.get(i).getSwitch().getState();
         			blocks.get(i).getSwitch().setState(!currState);
         		}
         	}
-        	*/ 
+        	 
             mouseDownCompCoords = null;
         }
 
