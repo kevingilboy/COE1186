@@ -1,6 +1,6 @@
 package Modules.TrackModel;
 
-import Modules.TrainModel.Position;
+import Modules.TrainModel;
 
 import java.awt.Color;
 import java.awt.Dimension;
