@@ -30,8 +30,7 @@ public class TrainModel implements Module{
 		dispatchTrain("Train 1", line);
 		//instantiateGUI(train);
         this.getTrain("Train 1").showTrainGUI();
-        //Train train2 = new Train("GREEN", "Train 2", this);
-        //dispatchTrain(train2.getTrainID(), train);
+        dispatchTrain("Train 2", line);
 	}
 
 	/**
