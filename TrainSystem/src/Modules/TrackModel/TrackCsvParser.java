@@ -32,26 +32,30 @@ public class TrackCsvParser{
 			while ((currentLine = br.readLine()) != null){
 				String [] blockData = currentLine.split(delimeter);
 
+				/* Parse cells 0-8 */
 				String line 			= blockData[0];
 				String section 			= blockData[1]; 
-				int id 					= Integer.parseInt(blockData[2]);
-				double length 			= Double.parseDouble(blockData[3]);
+				int id 					= Integer.parseInt(blockData[2]) - 1; // Subtract 1 for indexing
+				double length 			= Math.ceil(Double.parseDouble(blockData[3]));
 				double grade 			= Double.parseDouble(blockData[4]);
 				double elevation 		= Double.parseDouble(blockData[5]);
 				double cumElevation 	= Double.parseDouble(blockData[6]);
 				int speedLimit 			= Integer.parseInt(blockData[7]);
 				int direction 			= Integer.parseInt(blockData[8]);
 				
+				/* Parse cell 9 */
 				Light light 			= null;
 				if ((Integer.parseInt(blockData[9])) != 0){
 					light = new Light();
 				}
 
+				/* Parse cell 10 */
 				Crossing crossing 		= null;
 				if ((Integer.parseInt(blockData[10])) != 0){
 					crossing = new Crossing();
 				}
 
+				/* Parse cell 11 */
 				Station station 		= null;
 				try{
 					if (!(blockData[11].equals("0"))){
@@ -90,6 +94,7 @@ public class TrackCsvParser{
 					// ...
 				}
 				
+				/* Parse cell 12 */
 				Switch switch_ 			= null;
 				try{
 					if (!(blockData[12].equals("0"))){
@@ -108,8 +113,8 @@ public class TrackCsvParser{
 						}
 
 						switch_.setEdgeType(edgeType);
-						switch_.setPortNormal(Integer.parseInt(switchData[1]));
-						switch_.setPortAlternate(Integer.parseInt(switchData[2]));
+						switch_.setPortNormal(Integer.parseInt(switchData[1]) - 1); // Subtract 1 for indexing
+						switch_.setPortAlternate(Integer.parseInt(switchData[2]) - 1); // Subtract 1 for indexing
 					}
 				} catch (NumberFormatException e){
 					// ...
@@ -117,12 +122,14 @@ public class TrackCsvParser{
 					// ...
 				}
 
+				/* Parse cell 13 */
 				Beacon beacon 			= null;
 				if ((Integer.parseInt(blockData[13])) != 0){
 					beacon = new Beacon();
 					beacon.setInfo(Integer.parseInt(blockData[13]));
 				}
 
+				/* Parse cell 14 */
 				boolean underground 	= false;
 				if ((Integer.parseInt(blockData[14])) != 0){
 					underground = true;
@@ -130,6 +137,21 @@ public class TrackCsvParser{
 
 				boolean occupied 		= false;
 
+				/* Parse cell 15 */
+				double[] x_coordinates = new double[(int)length];
+				double[] y_coordinates = new double[(int)length];
+
+				String coordDelimiter = ";";
+				String xyDelimiter = "_";
+
+				String[] coords = (blockData[15]).split(coordDelimiter);
+
+				for (int i = 0; i < coords.length; i++){
+					x_coordinates[i] = Double.parseDouble((coords[i].split(xyDelimiter))[0]);
+					y_coordinates[i] = Double.parseDouble((coords[i].split(xyDelimiter))[1]);
+				}
+
+				/* Generate block from currently parsed CSV line */
 				Block currentBlock = new Block(	line,
 												section,
 												id,
@@ -145,8 +167,11 @@ public class TrackCsvParser{
 												switch_,
 												beacon,
 												underground,	
-												occupied);
+												occupied,
+												x_coordinates,
+												y_coordinates);
 
+				/* Add block to list of blocks */
 				blocks.add(currentBlock);
 
 			} // end while(readline())
