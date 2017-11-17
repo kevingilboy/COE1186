@@ -74,6 +74,7 @@ public class TrnController {
 		passEBrakes = controller.receivePassengerEmergency(trainID);
 		currentBlock = controller.receiveTrainPosition(trainID);
 		currentBlockInfo = mapInfo.get(currentBlock - 1);
+		speedLimit = currentBlockInfo.getSpeedLimit();
 		if (driveMode == 0) {		//if auto
 			setpointSpeed = controller.receiveSetpointSpeed(trainID);
 			if (inStation) {
@@ -97,8 +98,8 @@ public class TrnController {
 				calcAuth();
 				calcPowerOutput();
 				if (currentBlock != 0) {
-					stationCheck(currentBlockInfo);
-					if (lightCheck(currentBlockInfo)) {
+					stationCheck();
+					if (lightCheck()) {
 						lightsOn();
 					}
 					else {
@@ -248,7 +249,7 @@ public class TrnController {
 	}
 	
 	private boolean brakingCheck() {
-		if (overallAuth <= safeBrakingDistance) {
+		if (overallAuth <= safeBrakingDistance || distToStation <= safeBrakingDistance) {
 			return true;
 		}
 		else {
@@ -256,8 +257,8 @@ public class TrnController {
 		}
 	}
 	
-	private boolean lightCheck(BlockInfo B) {
-		if (B.isUnderground()) {
+	private boolean lightCheck() {
+		if (currentBlockInfo.isUnderground()) {
 			return true;
 		}
 		else {
@@ -265,14 +266,14 @@ public class TrnController {
 		}
 	}
 	
-	private void stationCheck(BlockInfo B) {
+	private void stationCheck() {
 		if (actualSpeed == 0) {
-			if (B.getStationName != "") {
+			if (currentBlockInfo.getStationName != "") {
 				inStation = true;
-				announceArrived(B.getStationName);
+				announceArrived(currentBlockInfo.getStationName);
 				//get train direction somehow
-				if (B.getDirection == 1 || B.getDirection == -1) {
-					if (positiveDirection) {
+				if (currentBlockInfo.getDirection == 1 || currentBlockInfo.getDirection == -1) {
+					if (currentBlockInfo.getPositive()) {
 						openRight();
 					}
 					else {
@@ -281,7 +282,7 @@ public class TrnController {
 				}
 				else {
 					if (trainDirection == 1) {
-						if (positiveDirection) {
+						if (currentBlockInfo.getPositive()) {
 							openRight();
 						}
 						else {
@@ -289,7 +290,7 @@ public class TrnController {
 						}
 					}
 					else {
-						if (positiveDirection) {
+						if (currentBlockInfo.getNegative()) {
 							openRight();
 						}
 						else {
