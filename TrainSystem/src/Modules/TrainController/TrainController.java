@@ -7,6 +7,7 @@ import Shared.SimTime;
 
 import Modules.TrackModel.TrackModel;
 import Modules.TrainModel.TrainModel;
+import Modules.TrackModel.Block;
 
 public class TrainController implements Module {
 	public TrackModel trackModel;
@@ -107,6 +108,7 @@ public class TrainController implements Module {
 	private void receiveMap()
 	{
 		//dafuq
+		ArrayList<Block> redBlocks = 
 	}
 
 	@Override
