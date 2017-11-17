@@ -8,16 +8,17 @@ import Shared.SimTime;
 public class TrnController {
 	private String trainID;
 	private String line;
-	private String currentStation;
+	//private String currentStation;
 	private PIController pi;
 	private TrainControllerGUI controlGUI;
 	private TrainController controller;
-	//private int deltaTime;
 	private int driveMode;		//0 is auto, 1 is manual
 	private int blockMode;		//0 is moving, 1 is fixed
 	private int temperature;
 	private int beacon;
 	private int stationTimeCounter;
+	private int currentBlock;
+	private int trainDirection;
 	private double ctcAuth;
 	private double mboAuth;
 	private double distToStation;
@@ -34,13 +35,14 @@ public class TrnController {
 	private boolean eBrakes;
 	private boolean passEBrakes;
 	private boolean inStation;
-	private double position[2];
-	//private mapInfo
+	private ArrayList<BlockInfo> mapInfo;
+	private BlockInfo currentBlockInfo;
 	
-	public TrnController(String id, String ln, int startBlock, TrainController C) {
+	public TrnController(String id, String ln, TrainController C, ArrayList<BlockInfo> map) {
 		trainID = id;
 		line = ln;
-		currentStation = null;
+		//currentStation = null;
+		currentBlock = 0;	//yard
 		controller = C;
 		pi = new PIController(//p and i values HERE);
 		controlGUI = new TrainControllerGUI(pi, this, trainID);
@@ -62,13 +64,16 @@ public class TrnController {
 		eBrakes = false;
 		passEBrakes = false;
 		temperature = 70;
+		mapInfo = map;
+		trainDirection = 0;
 	}
 	
 	public boolean timeUpdate() {
 		actualSpeed = controller.receiveTrainActualSpeed(trainID);
 		ctcAuth = controller.receiveCtcAuthority(trainID);
 		passEBrakes = controller.receivePassengerEmergency(trainID);
-		position = controller.receiveTrainPosition(trainID);
+		currentBlock = controller.receiveTrainPosition(trainID);
+		currentBlockInfo = mapInfo.get(currentBlock - 1);
 		if (driveMode == 0) {		//if auto
 			setpointSpeed = controller.receiveSetpointSpeed(trainID);
 			if (inStation) {
@@ -89,13 +94,16 @@ public class TrnController {
 				sBrakesOn();
 			}
 			else {
+				calcAuth();
 				calcPowerOutput();
-				stationCheck();
-				if (lightCheck()) {
-					lightsOn();
-				}
-				else {
-					lightsOff();
+				if (currentBlock != 0) {
+					stationCheck(currentBlockInfo);
+					if (lightCheck(currentBlockInfo)) {
+						lightsOn();
+					}
+					else {
+						lightsOff();
+					}
 				}
 			}
 		}
@@ -213,12 +221,6 @@ public class TrnController {
 		beacon = value;
 	}
 	
-	/*public void
-	
-	public double getActualSpeed() {
-		return controller.receiveTrainActualSpeed(trainID);
-	}*/
-	
 	private void calcPowerOutput()
 	{
 		if (sBrakes || eBrakes) {
@@ -247,9 +249,6 @@ public class TrnController {
 	
 	private boolean brakingCheck() {
 		if (overallAuth <= safeBrakingDistance) {
-			//engineOff();
-			//sBrakesOn();
-			controlGUI.setPower(power);
 			return true;
 		}
 		else {
@@ -257,38 +256,57 @@ public class TrnController {
 		}
 	}
 	
-	private boolean lightCheck() {
-		//somehow access stored map data
-		//if underground {
+	private boolean lightCheck(BlockInfo B) {
+		if (B.isUnderground()) {
 			return true;
-		//}
-		//else {
+		}
+		else {
 			return false;
-		//}
+		}
 	}
 	
-	private void stationCheck()
-	{
+	private void stationCheck(BlockInfo B) {
 		if (actualSpeed == 0) {
-			//somehow access stored map data
-			//if current block equals station {
+			if (B.getStationName != "") {
 				inStation = true;
-				announceArrived(currentStation);
-				//open doors, side derived map info
-				//move
-			//}
+				announceArrived(B.getStationName);
+				//get train direction somehow
+				if (B.getDirection == 1 || B.getDirection == -1) {
+					if (positiveDirection) {
+						openRight();
+					}
+					else {
+						openLeft();
+					}
+				}
+				else {
+					if (trainDirection == 1) {
+						if (positiveDirection) {
+							openRight();
+						}
+						else {
+							openLeft();
+						}
+					}
+					else {
+						if (positiveDirection) {
+							openRight();
+						}
+						else {
+							openLeft();
+						}
+					}
+				}
+			}
 		}
 	}
 	
 	private void decodeBeacon(int beacon)
 	{
 		String stationName;
-		//get station name
-		if (stationName == currentStation) {
-			currentStation = null;
-		}
-		else {
-			currentStation = stationName;
+		if (beacon != 0)
+		{
+			//get station name from beacon
 			announceApproach(stationName);
 		}
 	}

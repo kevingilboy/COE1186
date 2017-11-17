@@ -8,49 +8,46 @@ import Shared.SimTime;
 import Modules.TrackModel.TrackModel;
 import Modules.TrainModel.TrainModel;
 import Modules.TrackModel.Block;
+import Modules.TrackModel.Station;
 
 public class TrainController implements Module {
 	public TrackModel trackModel;
 	public TrainModel trainModel;
 	private SimTime time;
 	private SimTime prevTime;
-	private ArrayList<TrnController> controlList;
-	
+	private HashMap<Integer, TrnController> controlList;
+	private ArrayList<BlockInfo> redInfo;
+	private ArrayList<BlockInfo> greenInfo;
 
 	public TrainController(TrackModel tkmodel, TrainModel tnmodel) {
 		trackModel = tkmodel;
 		trainModel = tnmodel;
-		controlList = new ArrayList<TrnController>();
+		controlList = new HashMap<Integer, TrnController>();
 		receiveMap();
-		//GET MAP INFO HERE
 	}
 	
 	public void dispatchTrain(String trainID, String line) {
-		controlList.add(new TrnController(trainID, line, startBlock, this);
+		if (line == "red") {
+			controlList.put(trainID.hashCode(), new TrnController(trainID, line, this, redInfo);
+		}
+		else {
+			controlList.put(trainID.hashCode(), new TrnController(trainID, line, this, greenInfo);
+		}
 	}
 	
 	public void setMboAuthority(String trainID, double auth) {
-		for (TrnController C : controlList) {
-			if (C.getID == trainID) {
-				C.setMboAuthority(auth);
-			}
-		}
+		TrnController C = controlList.get(trainID.hashCode());
+		C.setMboAuthority(auth);
 	}
 	
 	public void setSafeBrakingDistance(String trainID, double dist) {
-		for (TrnController C : controlList) {
-			if (C.getID == trainID) {
-				C.setSafeBrakingDistance(dist);
-			}
-		}
+		TrnController C = controlList.get(trainID.hashCode());
+		C.setSafeBrakingDistance(dist);
 	}
 	
 	public void setBeacon(String trainID, double value) {
-		for (TrnController C : controlList) {
-			if (C.getID == trainID) {
-				C.setBeacon(value);
-			}
-		}
+		TrnController C = controlList.get(trainID.hashCode());
+		C.setBeacon(value);
 	}
 	
 	public void transmitPower(String trainID, double power) {
@@ -101,14 +98,24 @@ public class TrainController implements Module {
 		return trainModel.getEmergencyBrake(trainID);
 	}
 	
-	public double[] receiveTrainPosition(String trainID) {
+	public int receiveTrainPosition(String trainID) {
 		return trainModel.getPosition(trainID);
 	}
 	
-	private void receiveMap()
-	{
-		//dafuq
-		ArrayList<Block> redBlocks = 
+	private void receiveMap() {
+		ArrayList<Block> redBlocks = trackModel.getTrack("red");
+		ArrayList<Block> greenBlocks = trackModel.getTrack("green");
+		redInfo = new ArrayList<BlockInfo>(77);
+		greenInfo = new ArrayList<BlockInfo>(152);
+		Station S;
+		for (Block B : redBlocks) {
+			S = B.getStation();
+			redInfo.set(B.getID() - 1, new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), S.getID(), S.getDoorSideDirectionPositive(), S.getDoorSideDirectionNegative(), B.getDirection()));
+		}
+		for (Block B : greenBlocks) {
+			S = B.getStation();
+			greenInfo.set(B.getID() - 1, new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), S.getID(), S.getDoorSideDirectionPositive(), S.getDoorSideDirectionNegative(), B.getDirection()));
+		}
 	}
 
 	@Override
