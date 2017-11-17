@@ -68,8 +68,9 @@ public class TrainModel implements Module{
 	 * @param train
 	 */
 	public void dispatchTrain(String trainID, String line) {
-		Train newTrain = new Train(line, trainID, this);
+		Train newTrain = new Train(line, trainID, this, this.trackModel);
 		trainList.put(trainID.hashCode(), newTrain);
+		//trackModel.dispatchTrain(trainID, line, );
 		instantiateGUI(newTrain);
 	}
 	
