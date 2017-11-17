@@ -42,7 +42,7 @@ public class TrackController implements Module{
 
 	@Override
 	public boolean updateTime(SimTime time) {
-		
+		updateStates();
 		return true;
 	}
 	//Internal Functions
