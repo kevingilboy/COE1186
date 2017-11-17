@@ -40,7 +40,6 @@ public class PLC{
 						case 3: crossingLogic[i] = Integer.parseInt(logicStatement[i]);
 							break;
 						default: return false;
-							break;
 					}
 				}
 			}
