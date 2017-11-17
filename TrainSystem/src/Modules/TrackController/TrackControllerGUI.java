@@ -269,7 +269,7 @@ public class TrackControllerGUI extends JFrame{
 			JFileChooser c = new JFileChooser();
 			String plcPath = c.getCurrentDirectory().toString() + "/" + c.getSelectedFile().getName();
 			System.out.println("path = " + plcPath);
-			boolean parserSuccess = tc.tcplc.parsePLC(plcPath);
+			boolean parserSuccess = tc.getTcplc().parsePLC(plcPath);
 	    }
 	}
 	

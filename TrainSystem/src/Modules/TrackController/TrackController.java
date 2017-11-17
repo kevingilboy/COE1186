@@ -80,6 +80,10 @@ public class TrackController implements Module{
 		
 	}
 	
+	public PLC getTcplc() {
+		return tcplc;
+	}
+	
 	//CTC Functions
 	public void transmitSuggestedTrainSetpointSpeed(String trainName, int speed){
 		//trackModel.transmitSuggestedTrainSetpointSpeed(trainName, speed);
@@ -89,9 +93,9 @@ public class TrackController implements Module{
 		//trackModel.transmitCtcAuthority(trainName, authority);
 	}
 	
-	public Block receiveBlockInfoForCtc(String line, int blockId){
+	/*public Block receiveBlockInfoForCtc(String line, int blockId){
 		return trackModel.getBlock(line, blockId);
-	}
+	}*/
 	
 	public void transmitBlockMaintenance(String line, int blockId, boolean maintenance){
 		trackModel.getBlock(line, blockId).setMaintenance(maintenance);
