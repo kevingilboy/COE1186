@@ -9,7 +9,7 @@ public class TrackController implements Module{
 	//Set by other modules
 	public TrackModel trackModel;
 	public String associatedLine;
-	public int[] associatedBlocks;
+	public String[] associatedBlocks;
 	//Subclass variables
 	private TrackControllerGUI tcgui;
 	private PLC tcplc;
@@ -27,7 +27,7 @@ public class TrackController implements Module{
 	private boolean occupancy;
 
 	//Constructor
-	public TrackController(String associatedLine, int[] associatedBlocks){
+	public TrackController(String associatedLine, String[] associatedBlocks){
 		this.tcgui = new TrackControllerGUI(this);
 		this.tcplc = new PLC();
 		this.associatedLine = associatedLine;
@@ -36,18 +36,17 @@ public class TrackController implements Module{
 	}
 	
 	public TrackController(){
-		this.tcgui = new TrackControllerGUI(this);
-		this.tcplc = new PLC();
-		
+		//initialize first track controller -- Maybe remove the initialization 
+		//from the simulator so that CTC initializes all of them?
 	}
 
 	@Override
 	public boolean updateTime(SimTime time) {
-
+		
 		return true;
 	}
 	//Internal Functions
-	private void receiveBlockInfo(String line, int blockId){
+	public void receiveBlockInfo(String line, int blockId){
 		if (trackModel.getBlock(line, blockId).getLight() != null){
 			hasLight = true;
 			lightState = trackModel.getBlock(line, blockId).getLight().getState();
@@ -65,23 +64,62 @@ public class TrackController implements Module{
 	}
 	
 	private void updateStates(){
-		
+		for(int i=0; i < associatedBlocks.length; i++){
+			receiveBlockInfo(line, Integer.parseInt(associatedBlocks[i]));
+			runPLC();
+			if(Integer.parseInt(associatedBlocks[i]) == tcgui.getSelectedBlockId()){
+				tcgui.displayInfo();
+			}
+		}
 	}
 	
-	private boolean uploadPLC(String plcPath){
-		return true;
-	}
-	
-	private void runPLC(boolean occupancy){
-		
+	private void runPLC(){
+		boolean holdLightState;
+		boolean holdSwitchState;
+		boolean holdCrossingState;
+		if(hasLight){
+			if(/*tcplc.getLightLogic()*/true){
+				holdLightState = true;
+			} else {
+				holdLightState = false;
+			}
+			if(holdLightState != lightState){
+				transmitLightState(line, blockId, holdLightState);
+			}
+		}
+		if(hasSwitch){
+			if(/*tcplc.getSwitchLogic()*/true){
+				holdSwitchState = true;
+			} else {
+				holdSwitchState = false;
+			}
+			if(holdSwitchState != switchState){
+				transmitLightState(line, blockId, holdSwitchState);
+			}
+		}
+		if(hasCrossing){
+			if(/*tcplc.getCrossingLogic()*/true){
+				holdCrossingState = true;
+			} else {
+				holdCrossingState = false;
+			}
+			if(holdCrossingState != crossingState){
+				transmitCrossingState(line, blockId, holdCrossingState);
+			}
+		}
 	}
 	
 	private void guiUpdate(){
-		
+		tcgui.displayInfo();
 	}
 	
+	//Getters and Setters
 	public PLC getTcplc() {
 		return tcplc;
+	}
+	
+	public String[] getAssociatedBlocks(){
+		return associatedBlocks;
 	}
 	
 	//CTC Functions
