@@ -88,7 +88,6 @@ public class TrainModelGUI extends JFrame {
 			
 	    }
 	});
-	public JMenu mnHelp = new JMenu("Help");
 	
 	public JLabel gpsAntennaStatusLabel = new JLabel();
 	public JLabel mboAntennaStatusLabel = new JLabel();
@@ -216,17 +215,6 @@ public class TrainModelGUI extends JFrame {
 		menuBar.add(mnSelectTrain);
 		
 		mnSelectTrain.add(menuTrainlist);
-		/*menuTrainlist.addMenuKeyListener(MenuKeyListener l)
-		{
-		  public void actionPerformed()
-		  {
-			  // send the power command through when the button is pressed
-
-			  setPowerIn = Integer.parseInt(powerSpinner.getValue().toString());
-		  }
-		});*/
-		
-		menuBar.add(mnHelp);
 		
 		
 		lblSpecifications.setFont(new Font("Tahoma", Font.BOLD, 18));

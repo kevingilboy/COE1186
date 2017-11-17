@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -10,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.UIManager;
 
 import Modules.TrackModel.Block;
+import Modules.TrackModel.TrackModel;
 
 public class Train {
 	public final double TRAIN_WEIGHT = 163600; 	// currently in lbs
@@ -33,6 +35,7 @@ public class Train {
     public final double METERS_PER_MILE = 1609.34;    
     public final double FEET_PER_METER = 3.28;         
     public final double KG_PER_POUND = 0.454; 
+    public final String DEGREE = "\u00b0";
     
     public final int DEPARTING = 0;
     public final int ARRIVING = 1;
@@ -42,6 +45,9 @@ public class Train {
     public TrainModelGUI trainModelGUI;
     public JFrame trainModelFrame;
     public TrainModel trnMdl;
+    public TrackModel trkMdl;
+    public ArrayList<Block> track;
+    public Position position;
     
     // Declaring variables in order of sections they appear in on the GUI
     
@@ -103,12 +109,15 @@ public class Train {
     private double finalSpeed;
     private double trainAcceleration;
     
-    public Train(String line, String trainID, TrainModel tm) {
+    public Train(String line, String trainID, TrainModel tm, TrackModel tkmdl) {
+    	this.trkMdl = tkmdl;
+    	//this.track = trkMdl.getTrack(line);
+    	//this.position = new Position(track);
     	this.trnMdl = tm;
     	this.trainActive = true;
     	this.trainID = trainID;
     	// Train Specs
-    	this.trainCars = 2;
+    	this.trainCars = 1;
     	this.trainCapacity = TRAIN_CAPACITY * this.trainCars;
         this.trainHeight = TRAIN_HEIGHT;
         this.trainWeight = TRAIN_WEIGHT * this.trainCars;
@@ -138,7 +147,7 @@ public class Train {
         
         // Speed/Authority
         this.currentSpeed = 0;
-        this.CTCSpeed = 0;
+        this.CTCSpeed = 45;
         this.CTCAuthority = 100; // 100 miles
         this.powerIn = 0.0;
         
@@ -195,7 +204,7 @@ public class Train {
      * Check all values for updates and reflect these updates on the GUI per clock tick
      */
     public void setValuesForDisplay() {
-    	this.trainModelGUI.tempLabel.setText(Integer.toString(this.temperature)+"°F");
+    	this.trainModelGUI.tempLabel.setText(Integer.toString(this.temperature) + DEGREE + "F");
          
         if(this.trainModelGUI.serviceBrakeStatus()) {	// if the brakes were applied (button pressed)
         	this.serviceBrake = true;
@@ -228,8 +237,14 @@ public class Train {
      	this.trainModelGUI.authorityVal.setText("100");
      	this.trainModelGUI.serviceLabel.setText("OFF");
      	this.trainModelGUI.emergencyLabel.setText("OFF");
-
-     	this.trainModelGUI.arrivalStatusLabel.setText("ARRIVING");
+     	
+     	if(this.arrivalStatus == ARRIVING) {
+     		this.trainModelGUI.arrivalStatusLabel.setText("ARRIVING");
+     	} else if (this.arrivalStatus == EN_ROUTE) {
+     		this.trainModelGUI.arrivalStatusLabel.setText("EN ROUTE");
+     	} else {
+     		this.trainModelGUI.arrivalStatusLabel.setText("DEPARTING");
+     	}
      	this.trainModelGUI.currentSpeedLabel.setText(Double.toString(truncateTo((this.currentSpeed*SECONDS_PER_HOUR/METERS_PER_MILE), 2)));
          
      	if (this.lineColor.equals("GREEN")) {
@@ -305,6 +320,8 @@ public class Train {
     	// resetting the current speed based on our calculations
     	this.currentSpeed =  this.finalSpeed;
     	//System.out.println(finalSpeed);
+    	
+    	// TODO: add pos.moveTrain(double []pos) method call to tell the position class how far to move the train
     }
     
     /**
@@ -373,6 +390,18 @@ public class Train {
      */
     public Block getBlock() {
     	return currentBlock;
+    }
+    
+    public void setBlock() {
+    	
+    }
+    
+    public void getMetersIntoBlock() {
+    	
+    }
+    
+    public void setMetersIntoBlock() {
+    	
     }
     
     /**
