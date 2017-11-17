@@ -1,3 +1,5 @@
+//Michael Kotcher
+
 package Modules.TrainController;
 
 import Shared.Module;
@@ -18,19 +20,12 @@ public class TrainController implements Module {
 		trackModel = tkmodel;
 		trainModel = tnmodel;
 		controlList = new ArrayList<TrnController>();
+		receiveMap();
 		//GET MAP INFO HERE
 	}
 	
-	public void dispatchTrainToBlock(String trainID, String line, int startBlock {
+	public void dispatchTrain(String trainID, String line) {
 		controlList.add(new TrnController(trainID, line, startBlock, this);
-	}
-	
-	public void setCtcAuthority(String trainID, double auth) {
-		for (TrnController C : controlList) {
-			if (C.getID == trainID) {
-				C.setCtcAuthority(auth);
-			}
-		}
 	}
 	
 	public void setMboAuthority(String trainID, double auth) {
@@ -45,22 +40,6 @@ public class TrainController implements Module {
 		for (TrnController C : controlList) {
 			if (C.getID == trainID) {
 				C.setSafeBrakingDistance(dist);
-			}
-		}
-	}
-	
-	public void setSetpointSpeed(String trainID, double speed) {
-		for (TrnController C : controlList) {
-			if (C.getID == trainID) {
-				C.setSetpointSpeed(speed);
-			}
-		}
-	}
-	
-	public void setEmergencyBrake(String trainID, boolean status) {
-		for (TrnController C : controlList) {
-			if (C.getID == trainID) {
-				C.setEmergencyBrake(status);
 			}
 		}
 	}
@@ -101,15 +80,39 @@ public class TrainController implements Module {
 		trainModel.setTemperature(trainID, temperature);
 	}
 	
-	public double receiveTrainActualSpeed(String trainID)
-	{
+	public void transmitAnnouncement(String trainID, String announcement) {
+		trainModel.setAnnouncement(trainID, announcement);
+	}
+	
+	public double receiveTrainActualSpeed(String trainID) {
 		return trainModel.getActualSpeed(trainID);
+	}
+	
+	public double receiveSetpointSpeed(String trainID) {
+		return trainModel.getSetpointSpeed(trainID);
+	}
+	
+	public double receiveCtcAuthority(String trainID) {
+		return trainModel.getCtcAuthority(trainID);
+	}
+	
+	public boolean receivePassengerEmergency(String trainID) {
+		return trainModel.getEmergencyBrake(trainID);
+	}
+	
+	public double[] receiveTrainPosition(String trainID) {
+		return trainModel.getPosition(trainID);
+	}
+	
+	private void receiveMap()
+	{
+		//dafuq
 	}
 
 	@Override
 	public boolean updateTime(SimTime time) {
 		for (TrnController T : controlList) {
-			T.updateTime(time
+			T.updateTime();
 		}
 		return true;
 	}

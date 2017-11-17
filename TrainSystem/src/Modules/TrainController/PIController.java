@@ -1,5 +1,8 @@
+//Michael Kotcher
 //This is a Java translation of the MiniPID open source controller
 //https://github.com/tekdemo/MiniPID
+
+package Modules.TrainController;
 
 public class PIController {
 	private double P;
@@ -237,11 +240,11 @@ public class PIController {
 		setpointRange = range;
 	}
 	
-	public void setOutputFilter(double strength) {		//Not used
+	/*public void setOutputFilter(double strength) {		//Not used
 		if (strength == 0 || bounded(strength, 0, 1)) {
 			outputFilter = strength;
 		}
-	}
+	}*/
 	
 	private double clamp(double value, double min, double max) {
 		if (value > max) {
