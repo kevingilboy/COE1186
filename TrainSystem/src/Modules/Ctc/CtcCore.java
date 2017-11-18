@@ -16,6 +16,7 @@ import Modules.TrackModel.Beacon;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public abstract class CtcCore implements Module,TimeControl {
@@ -55,6 +56,7 @@ public abstract class CtcCore implements Module,TimeControl {
 	public void initializeBlocks() {
 		for(Line line : Line.values()) {
 			ArrayList<Block> blocks = trackParser.parse("Modules/Ctc/"+line.toString()+"LineFinal.csv");
+			line.blocksAL = blocks;
 			line.blocks = blocks.toArray(new Block[blocks.size()]);
 		}
 	}
