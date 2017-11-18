@@ -71,6 +71,8 @@ public class ScheduleJTable extends JTable{
 	private void addComboBoxToColumn() {
 		//Create the ComboBox and add the line blocks to it
 		JComboBox<String> blockCB = new JComboBox<String>();
+		blockCB.addItem("");
+		blockCB.addItem("-REMOVE-");
 		for(Block block : schedule.line.blocks) {
 			blockCB.addItem(Integer.toString(block.getId()));
 		}
@@ -81,8 +83,21 @@ public class ScheduleJTable extends JTable{
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {					
 					int row = table.getSelectedRow();
-	
-					schedule.addStop(row, schedule.line.blocks[Integer.parseInt((String)blockCB.getSelectedItem())]);
+					String blockText = (String)blockCB.getSelectedItem();
+					
+					if(blockText.equals("-REMOVE-")) {
+						if(row<schedule.stops.size()) {
+							schedule.removeStop(row);
+						}
+						
+						if(schedule.stops.size()==0) {
+							addBlankRow();
+						}
+					}
+					else if(!blockText.equals("")){
+						schedule.addStop(row, schedule.line.blocks[Integer.parseInt(blockText)]);
+					}
+					
 					fireScheduleChanged();
 				}
 			}
