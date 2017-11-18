@@ -54,11 +54,15 @@ public class Position{
 
 		coordinates = track.get(currentBlockID).getCoordinatesAtMeter((int)blockMeterPosition);
 		inverseCoordinates = track.get(currentBlockID).getCoordinatesAtMeter(   
-														(int)(track.get(currentBlockID).getLength()) - (int)blockMeterPosition - 1);
+							(int)(track.get(currentBlockID).getLength()) - (int)blockMeterPosition - 1);
 
-		int direction = 0;
-
+		// TODO:
+		// 
+		// return "direction" from nextBlock() method calculated in TrackIterator's nextBlock, 
+		// adding in the logic below as additional state machine logic. The return value of 
+		// nextBlock() should be an int array: [nextBlockID, direction]
 		
+		int direction = 0;
 		if (currentBlockID != track.get(track.size() - 1).getId()){
 			if (nextBlockID > currentBlockID){
 				direction = 1;
@@ -70,7 +74,6 @@ public class Position{
 				if ( (track.get(currentBlockID).getSwitch().getEdge() == Switch.EDGE_TYPE_HEAD) && 
 					(previousBlockID > currentBlockID) && 
 					(previousBlockID != track.get(track.size()-1).getId()) ){
-
 					direction = -1;
 				}
 
@@ -79,11 +82,9 @@ public class Position{
 					(track.get(previousBlockID).getSwitch() == null) &&
 					(previousBlockID != track.get(track.size()-1).getId()) ){
 
-					
 					direction = 1;
 				}
 			}
-
 		} else {
 			direction = 1;
 		}
@@ -96,10 +97,15 @@ public class Position{
 		return coordinates;
 	}
 
+	// Returns the current coordinates of the train 
+	// moving in the negative direction along a block
+	// (higher meter value to lower meter value).
+	// This method is only used by the TrackRenderWindow.
 	public double[] getInverseCoordinates(){
 		return inverseCoordinates;
 	}
 
+	// Returns the current block occupied by the train
 	public int getCurrentBlock(){
 		return currentBlockID;
 	}
