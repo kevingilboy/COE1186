@@ -55,6 +55,7 @@ public class CtcGui {
 	private Object[][] dispatchedTrainsInitialData = new Object[0][dispatchedTrainsColumnNames.length];
 
 	private ScheduleJTable dispatchSelectedTable;
+	private JButton btnSuggestSpeed;
 		
 	/**
 	 * Creator tables
@@ -74,6 +75,7 @@ public class CtcGui {
 	private ScheduleJTable queueSelectedTable;
 	private JButton btnDeleteQueueSchedule;
 	private JTextField queueDepartTime;
+	private JButton btnDispatchQueueSchedule;
 	
 	/**
 	 * Block select variables
@@ -104,6 +106,7 @@ public class CtcGui {
 	 * Real Time
 	 */
 	private JLabel clockLabel = new JLabel("00:00:00");
+	private JTextField suggestedSpeed;
 
 
 	/**
@@ -162,11 +165,6 @@ public class CtcGui {
 		/**
 		 * TOP BAR
 		 */
-
-		JLabel hazardIcon = new JLabel();
-		hazardIcon.setIcon(new ImageIcon(CtcGui.class.getResource("/javax/swing/plaf/metal/icons/ocean/warning.png")));
-		hazardIcon.setBounds(509, 657, 37, 32);
-		frame.getContentPane().add(hazardIcon);
 		
 		clockLabel.setFont(new Font("Courier New",Font.BOLD,28));
 		clockLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -182,9 +180,101 @@ public class CtcGui {
 		lblThroughputAmt.setBounds(724, 97, 89, 33);
 		contentPane.add(lblThroughputAmt);
 		
+		btnPlay = new JButton("<html><center>Play</center></html>");
+		btnPlay.setEnabled(false);
+		btnPlay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnPause.setEnabled(true);
+				btnPlay.setEnabled(false);
+				ctc.play();
+			}
+		});
+		btnPlay.setFont(new Font("Dialog", Font.PLAIN, 16));
+		btnPlay.setBounds(612, 35, 82, 32);
+		frame.getContentPane().add(btnPlay);
+		
+		btnPause = new JButton("<html><center>Pause</center></html>");
+		btnPause.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnPause.setEnabled(false);
+				btnPlay.setEnabled(true);
+				ctc.pause();
+			}
+		});
+		btnPause.setFont(new Font("Dialog", Font.PLAIN, 16));
+		btnPause.setBounds(690, 35, 82, 32);
+		frame.getContentPane().add(btnPause);
+		
+		btnIncSpeed = new JButton("<html><center>&gt&gt</center></html>");
+		btnIncSpeed.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				currentSpeedupIndex = Math.min(currentSpeedupIndex+1,availableSpeedups.length-1);
+				lblSpeedup.setText(Integer.toString(availableSpeedups[currentSpeedupIndex])+"X");
+				ctc.setSpeedup(availableSpeedups[currentSpeedupIndex]);
+			}
+		});
+		btnIncSpeed.setFont(new Font("Dialog", Font.PLAIN, 16));
+		btnIncSpeed.setBounds(712, 68, 60, 32);
+		frame.getContentPane().add(btnIncSpeed);
+		
+		btnDecSpeed = new JButton("<html><center>&lt&lt</center></html>");
+		btnDecSpeed.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				currentSpeedupIndex = Math.max(currentSpeedupIndex-1,0);
+				lblSpeedup.setText(Integer.toString(availableSpeedups[currentSpeedupIndex])+"X");
+				ctc.setSpeedup(availableSpeedups[currentSpeedupIndex]);
+			}
+		});
+		btnDecSpeed.setFont(new Font("Dialog", Font.PLAIN, 16));
+		btnDecSpeed.setBounds(612, 68, 60, 32);
+		frame.getContentPane().add(btnDecSpeed);
+		
+		lblSpeedup = new JLabel("1X");
+		lblSpeedup.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSpeedup.setBounds(673, 67, 39, 33);
+		frame.getContentPane().add(lblSpeedup);
+		
 		/**
 		 * LEFT FRAME
 		 */
+		
+		JButton btnimportschedule = new JButton("<html><center>Import<br>Schedule</center></html>");
+		btnimportschedule.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fc = new JFileChooser();
+				FileFilter filter = new FileNameExtensionFilter("CSV file", new String[] {"csv"});
+				fc.setFileFilter(filter);
+				fc.showSaveDialog(frame);
+				//File file = fc.getSelectedFile();
+				//TODO import CSV file and add schedule to queue
+			}
+		});
+		btnimportschedule.setFont(new Font("Dialog", Font.PLAIN, 16));
+		btnimportschedule.setBounds(144, 221, 163, 64);
+		frame.getContentPane().add(btnimportschedule);
+		
+		JLabel lblSelectedTrainsSchedule = new JLabel("Selected Train's Schedule");
+		lblSelectedTrainsSchedule.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSelectedTrainsSchedule.setFont(new Font("SansSerif", Font.PLAIN, 18));
+		lblSelectedTrainsSchedule.setBounds(464, 367, 456, 33);
+		frame.getContentPane().add(lblSelectedTrainsSchedule);
+		
+		JLabel lblName = new JLabel("Name");
+		lblName.setFont(new Font("SansSerif", Font.ITALIC, 14));
+		lblName.setBounds(25, 344, 45, 33);
+		frame.getContentPane().add(lblName);
+		
+		JLabel lblAutomatic = new JLabel("Automatic");
+		lblAutomatic.setHorizontalAlignment(SwingConstants.CENTER);
+		lblAutomatic.setFont(new Font("SansSerif", Font.PLAIN, 18));
+		lblAutomatic.setBounds(-14, 187, 477, 33);
+		frame.getContentPane().add(lblAutomatic);
+		
+		JLabel lblManual = new JLabel("Manual");
+		lblManual.setHorizontalAlignment(SwingConstants.CENTER);
+		lblManual.setFont(new Font("SansSerif", Font.PLAIN, 18));
+		lblManual.setBounds(-14, 297, 477, 33);
+		frame.getContentPane().add(lblManual);
 		
 		JLabel lblManualTrainCreation = new JLabel("<html><u>Train Creation</u></htm>");
 		lblManualTrainCreation.setHorizontalAlignment(SwingConstants.CENTER);
@@ -311,6 +401,8 @@ public class CtcGui {
 					queueSelectedTable.setSchedule(schedule);
 					queueDepartTime.setText(schedule.departureTime.toString());
 					btnDeleteQueueSchedule.setEnabled(true);
+					btnDispatchQueueSchedule.setEnabled(true);
+					queueDepartTime.setEnabled(true);
 				}
 			});
 			scrollPane.setViewportView(line.queueTable);
@@ -344,6 +436,7 @@ public class CtcGui {
 		contentPane.add(btnDeleteQueueSchedule);
 		
 		queueDepartTime = new JTextField();
+		queueDepartTime.setEnabled(false);
 		queueDepartTime.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
@@ -351,14 +444,7 @@ public class CtcGui {
 				if(SimTime.isValid(time)) {
 					queueSelectedTable.schedule.setDepartureTime(new SimTime(time));
 					queueSelectedTable.fireScheduleChanged();
-					updateQueueTable();
-					for(int i=0;i<queueSelectedTable.schedule.line.queueData.getColumnCount();i++) {
-						if(queueSelectedTable.schedule.line.queueData.getValueAt(i, 0).equals(queueSelectedTable.schedule.name)) {
-							queueSelectedTable.schedule.line.queueTable.setRowSelectionInterval(i, i);
-							break;
-						}
-					}
-					
+					updateQueueTable();					
 				}
 			}
 		});
@@ -377,7 +463,8 @@ public class CtcGui {
 		lblOr.setBounds(714, 494, 171, 33);
 		frame.getContentPane().add(lblOr);
 		
-		JButton btnDispatchQueueSchedule = new JButton("Dispatch Now \u2192");
+		btnDispatchQueueSchedule = new JButton("Dispatch Now \u2192");
+		btnDispatchQueueSchedule.setEnabled(false);
 		btnDispatchQueueSchedule.setFont(new Font("Dialog", Font.PLAIN, 16));
 		btnDispatchQueueSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -387,10 +474,12 @@ public class CtcGui {
 
 				ctc.dispatchTrain(trainName);
 				
-				updateQueueTable();
-				updateDispatchedTable();
 				queueSelectedTable.clear();
 				queueDepartTime.setText("");
+				
+				updateQueueTable();
+				updateDispatchedTable();
+				
 				btnDeleteQueueSchedule.setEnabled(false);	
 			}
 		});
@@ -425,6 +514,8 @@ public class CtcGui {
 					String trainName = (String) line.dispatchedData.getValueAt(row, 0);
 					Schedule schedule = ctc.getTrainByName(trainName).schedule;
 					dispatchSelectedTable.setSchedule(schedule);
+					btnSuggestSpeed.setEnabled(true);
+					suggestedSpeed.setEnabled(true);
 				}
 			});
 			scrollPane.setViewportView(line.dispatchedTable);
@@ -445,43 +536,31 @@ public class CtcGui {
 		lblSelectedTrainSchedule.setBounds(920, 367, 456, 33);
 		contentPane.add(lblSelectedTrainSchedule);
 		
-		JButton btnimportschedule = new JButton("<html><center>Import<br>Schedule</center></html>");
-		btnimportschedule.addActionListener(new ActionListener() {
+		JLabel lblSuggestSpeed = new JLabel("<html>Suggest<br>speed (mph)</html>");
+		lblSuggestSpeed.setFont(new Font("SansSerif", Font.ITALIC, 14));
+		lblSuggestSpeed.setBounds(1175, 442, 89, 33);
+		frame.getContentPane().add(lblSuggestSpeed);
+		
+		suggestedSpeed = new JTextField();
+		suggestedSpeed.setEnabled(false);
+		suggestedSpeed.setColumns(10);
+		suggestedSpeed.setBounds(1260, 439, 52, 39);
+		frame.getContentPane().add(suggestedSpeed);
+		
+		btnSuggestSpeed = new JButton("Send");
+		btnSuggestSpeed.setEnabled(false);
+		btnSuggestSpeed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser fc = new JFileChooser();
-				FileFilter filter = new FileNameExtensionFilter("CSV file", new String[] {"csv"});
-				fc.setFileFilter(filter);
-				fc.showSaveDialog(frame);
-				//File file = fc.getSelectedFile();
-				//TODO import CSV file and add schedule to queue
+				//TODO send suggested speed
 			}
 		});
-		btnimportschedule.setFont(new Font("Dialog", Font.PLAIN, 16));
-		btnimportschedule.setBounds(144, 221, 163, 64);
-		frame.getContentPane().add(btnimportschedule);
+		btnSuggestSpeed.setFont(new Font("Dialog", Font.PLAIN, 16));
+		btnSuggestSpeed.setBounds(1319, 441, 66, 32);
+		frame.getContentPane().add(btnSuggestSpeed);
 		
-		JLabel lblSelectedTrainsSchedule = new JLabel("Selected Train's Schedule");
-		lblSelectedTrainsSchedule.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSelectedTrainsSchedule.setFont(new Font("SansSerif", Font.PLAIN, 18));
-		lblSelectedTrainsSchedule.setBounds(464, 367, 456, 33);
-		frame.getContentPane().add(lblSelectedTrainsSchedule);
-		
-		JLabel lblName = new JLabel("Name");
-		lblName.setFont(new Font("SansSerif", Font.ITALIC, 14));
-		lblName.setBounds(25, 344, 45, 33);
-		frame.getContentPane().add(lblName);
-		
-		JLabel lblAutomatic = new JLabel("Automatic");
-		lblAutomatic.setHorizontalAlignment(SwingConstants.CENTER);
-		lblAutomatic.setFont(new Font("SansSerif", Font.PLAIN, 18));
-		lblAutomatic.setBounds(-14, 187, 477, 33);
-		frame.getContentPane().add(lblAutomatic);
-		
-		JLabel lblManual = new JLabel("Manual");
-		lblManual.setHorizontalAlignment(SwingConstants.CENTER);
-		lblManual.setFont(new Font("SansSerif", Font.PLAIN, 18));
-		lblManual.setBounds(-14, 297, 477, 33);
-		frame.getContentPane().add(lblManual);
+		/**
+		 * BOTTOM FRAME
+		 */
 		
 		JLabel logoPineapple = new JLabel();
 		Image img = new ImageIcon(this.getClass().getResource("pineapple_icon.png")).getImage();
@@ -494,6 +573,11 @@ public class CtcGui {
 		lbltrackStatusAnd.setFont(new Font("SansSerif", Font.BOLD, 20));
 		lbltrackStatusAnd.setBounds(383, 651, 163, 63);
 		frame.getContentPane().add(lbltrackStatusAnd);
+
+		JLabel hazardIcon = new JLabel();
+		hazardIcon.setIcon(new ImageIcon(CtcGui.class.getResource("/javax/swing/plaf/metal/icons/ocean/warning.png")));
+		hazardIcon.setBounds(509, 657, 37, 32);
+		frame.getContentPane().add(hazardIcon);
 		
 		JLabel selectedBlockLine = new JLabel("Line");
 		selectedBlockLine.setFont(new Font("SansSerif", Font.ITALIC, 14));
@@ -587,60 +671,6 @@ public class CtcGui {
 		panel.setBounds(709, 638, 325, 101);
 		frame.getContentPane().add(panel);
 		
-		btnPlay = new JButton("<html><center>Play</center></html>");
-		btnPlay.setEnabled(false);
-		btnPlay.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				btnPause.setEnabled(true);
-				btnPlay.setEnabled(false);
-				ctc.play();
-			}
-		});
-		btnPlay.setFont(new Font("Dialog", Font.PLAIN, 16));
-		btnPlay.setBounds(612, 35, 82, 32);
-		frame.getContentPane().add(btnPlay);
-		
-		btnPause = new JButton("<html><center>Pause</center></html>");
-		btnPause.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				btnPause.setEnabled(false);
-				btnPlay.setEnabled(true);
-				ctc.pause();
-			}
-		});
-		btnPause.setFont(new Font("Dialog", Font.PLAIN, 16));
-		btnPause.setBounds(690, 35, 82, 32);
-		frame.getContentPane().add(btnPause);
-		
-		btnIncSpeed = new JButton("<html><center>&gt&gt</center></html>");
-		btnIncSpeed.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				currentSpeedupIndex = Math.min(currentSpeedupIndex+1,availableSpeedups.length-1);
-				lblSpeedup.setText(Integer.toString(availableSpeedups[currentSpeedupIndex])+"X");
-				ctc.setSpeedup(availableSpeedups[currentSpeedupIndex]);
-			}
-		});
-		btnIncSpeed.setFont(new Font("Dialog", Font.PLAIN, 16));
-		btnIncSpeed.setBounds(712, 68, 60, 32);
-		frame.getContentPane().add(btnIncSpeed);
-		
-		btnDecSpeed = new JButton("<html><center>&lt&lt</center></html>");
-		btnDecSpeed.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				currentSpeedupIndex = Math.max(currentSpeedupIndex-1,0);
-				lblSpeedup.setText(Integer.toString(availableSpeedups[currentSpeedupIndex])+"X");
-				ctc.setSpeedup(availableSpeedups[currentSpeedupIndex]);
-			}
-		});
-		btnDecSpeed.setFont(new Font("Dialog", Font.PLAIN, 16));
-		btnDecSpeed.setBounds(612, 68, 60, 32);
-		frame.getContentPane().add(btnDecSpeed);
-		
-		lblSpeedup = new JLabel("1X");
-		lblSpeedup.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSpeedup.setBounds(673, 67, 39, 33);
-		frame.getContentPane().add(lblSpeedup);
-		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_1.setBackground(UIManager.getColor("Panel.background"));
@@ -655,8 +685,11 @@ public class CtcGui {
 		String name = trainCreationName.getText();
 		String time = trainCreationDepartTime.getText();
 		Boolean validProps = name!=null && !name.equals("") && SimTime.isValid(time);
+		
+		//If valid name and time, allow schedule editing
 		trainCreationTable.setEnabled(validProps);
 
+		//If valid name and time, and schedule has one stop then allow schedule to be dispatched
 		addToDispatchToQueue.setEnabled(validProps && trainCreationTable.schedule.stops.size()>0);
 	}
 	
@@ -671,8 +704,8 @@ public class CtcGui {
 		
 		//Cycle through each dispatched train's schedule
 		Schedule schedule;
-		for(String trainName:ctc.schedules.keySet()) {
-			schedule = ctc.getScheduleByName(trainName);
+		for(String name:ctc.schedules.keySet()) {
+			schedule = ctc.getScheduleByName(name);
 			Object[] row = {schedule.name,schedule.departureTime.toString()};
 			schedule.line.queueData.addRow(row);
 		}
@@ -680,6 +713,16 @@ public class CtcGui {
 		//Update the tables in the GUI
 		for(Line line : Line.values()) {
 			line.queueData.fireTableDataChanged();
+		}
+		
+		//If a schedule was selected, restore the selection in the table
+		if(queueSelectedTable.schedule!=null) {
+			for(int i=0;i<queueSelectedTable.schedule.line.queueData.getColumnCount();i++) {
+				if(queueSelectedTable.schedule.line.queueData.getValueAt(i, 0).equals(queueSelectedTable.schedule.name)) {
+					queueSelectedTable.schedule.line.queueTable.setRowSelectionInterval(i, i);
+					break;
+				}
+			}
 		}
 	}
 	
@@ -689,7 +732,13 @@ public class CtcGui {
 				ctc.dispatchTrain(schedule.name);
 				updateQueueTable();
 				updateDispatchedTable();
-				queueSelectedTable.clear();	
+				if(queueSelectedTable.schedule!=null && queueSelectedTable.schedule.name==schedule.name) {
+					queueSelectedTable.clear();	
+					queueDepartTime.setText("");
+					btnDispatchQueueSchedule.setEnabled(false);
+					queueDepartTime.setEnabled(false);
+					btnDeleteQueueSchedule.setEnabled(false);
+				}				
 			}	
 		}
 	}
@@ -715,6 +764,16 @@ public class CtcGui {
 		//Update the tables in the GUI
 		for(Line line : Line.values()) {
 			line.dispatchedData.fireTableDataChanged();
+		}
+		
+		//If a schedule was selected, restore the selection in the table
+		if(dispatchSelectedTable.schedule!=null) {
+			for(int i=0;i<dispatchSelectedTable.schedule.line.queueData.getColumnCount();i++) {
+				if(dispatchSelectedTable.schedule.line.queueData.getValueAt(i, 0).equals(dispatchSelectedTable.schedule.name)) {
+					dispatchSelectedTable.schedule.line.queueTable.setRowSelectionInterval(i, i);
+					break;
+				}
+			}
 		}
 	}
 
