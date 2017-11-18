@@ -1,8 +1,7 @@
-//Kevin Gilboy
-
 package Modules.Ctc;
 
 import Simulator.Simulator;
+
 import Modules.TrackController.TrackController;
 import Modules.TrackModel.TrackModel;
 import Modules.TrainModel.TrainModel;
@@ -14,24 +13,28 @@ public class Ctc extends CtcCore{
 	public TrackController trackController = null;
 	public TrackModel trackModel = null;
 	public TrainModel trainModel = null;
-	public TrainController trainController = null;	
-
+	public TrainController trainController = null;
+	
 	public Ctc() {
-		ctcCore = this;
+		ctc = this;
 
 		initializeBlocks();
 		startGui();
+		while(gui==null) {
+			
+		}
+		return;
 	}
-
-	public void initializeBlocks() {
-		//TODO replace below with loading from train model
+	
+	public void dispatchTrain(String name) {
+		Schedule schedule = removeScheduleByName(name);
 		
-		//while(trainModel==null) {}
+		Train train = new Train(schedule);
+		trains.put(name, train);
 		
-		redBlocks = Block.parseFile("Modules/Ctc/redline.csv");
-		greenBlocks = Block.parseFile("Modules/Ctc/greenline.csv");
-		//redBlocks = trainModel.getBlocks("Red");
-		//greenBlocks = trainModel.getBlocks("Green");
+		trainModel.dispatchTrain(name, train.line.toString().toUpperCase());
+		//UNCOMMENT ONCE MIKE ADDS
+		//trainController.dispatchTrain(name, train.line.toString().toUpperCase()); 
 	}
 	
 	@Override

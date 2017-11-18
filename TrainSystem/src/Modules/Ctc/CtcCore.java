@@ -1,16 +1,29 @@
-//Kevin Gilboy
 package Modules.Ctc;
 
 import Shared.Module;
 import Shared.SimTime;
 
+//Temporary import while TM is under development
+//Once project is complete, I will need the Block, Switch, Station, and Beacon classes kept locally
+import Modules.TrackModel.TrackCsvParser;
+import Modules.TrackModel.Block;
+import Modules.TrackModel.Light;
+import Modules.TrackModel.Crossing;
+import Modules.TrackModel.Station;
+import Modules.TrackModel.Switch;
+import Modules.TrackModel.Beacon;
+
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public abstract class CtcCore implements Module,TimeControl {
 	public CtcCore ctcCore;
-
+	public Ctc ctc;
+	public CtcStandalone ctcStandalone;
+	
 	public CtcGui gui;
 	public SimTime startTime;
 	public SimTime currentTime;
@@ -18,8 +31,8 @@ public abstract class CtcCore implements Module,TimeControl {
 	
 	public HashMap<String,Train> trains = new HashMap<>();
 	public HashMap<String,Schedule> schedules = new HashMap<>();
-	public Block[] redBlocks;
-	public Block[] greenBlocks;
+
+	public TrackCsvParser trackParser = new TrackCsvParser();
 	
 	public int runningTicketSales;
 	public double throughput;
@@ -29,15 +42,22 @@ public abstract class CtcCore implements Module,TimeControl {
 			EventQueue.invokeAndWait(new Runnable() {
 				public void run() {
 					try {
-						gui = new CtcGui(ctcCore);
+						gui = new CtcGui(ctc);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	public void initializeBlocks() {
+		for(Line line : Line.values()) {
+			ArrayList<Block> blocks = trackParser.parse("Modules/Ctc/"+line.toString()+"LineFinal.csv");
+			line.blocksAL = blocks;
+			line.blocks = blocks.toArray(new Block[blocks.size()]);
 		}
 	}
 	
@@ -80,18 +100,35 @@ public abstract class CtcCore implements Module,TimeControl {
 	/*
 	 * SETTERS
 	 */
-	
+
 	/*
-	 * ADDERS
+	 * TICKETS
 	 */
 	public void addTicketSales(int tickets) {
 		runningTicketSales+=tickets;
 		calculateThroughput();
 	}
 	
-	public void addTrain(String name, Schedule schedule) {
-		Train train = new Train();
+	public void addPassengers(String trainName, int number) {
+		Train train = getTrainByName(trainName);
+		train.passengers += number;
+	}
+	
+	public void removePassengers(String trainName, int number) {
+		Train train = getTrainByName(trainName);
+		train.passengers -= number;
+	}
+	
+	/*
+	 * ADDERS
+	 */	
+	public void dispatchTrain(String name) {
+		Schedule schedule = removeScheduleByName(name);
+		
+		Train train = new Train(schedule);
 		trains.put(name, train);
+		
+		
 	}
 	
 	public void addSchedule(String name, Schedule schedule) {

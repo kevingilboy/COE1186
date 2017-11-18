@@ -4,14 +4,15 @@ import java.util.Timer;
 import Shared.SimTime;
 import java.util.TimerTask;
 
+import Shared.SimTime;
+
 public class CtcStandalone extends CtcCore{
-	private CtcStandalone ctc;
 	private Timer timer;
 	private boolean running = false;
 	
 	public CtcStandalone() {
 		ctcCore = this;
-		ctc = this;
+		ctcStandalone = this;
 		startTime = new SimTime("07:00:00");
 		currentTime = new SimTime(startTime);
 		initializeBlocks();
@@ -20,12 +21,6 @@ public class CtcStandalone extends CtcCore{
 		play();
 	}
 	
-
-	
-	public void initializeBlocks() {
-		redBlocks = Block.parseFile("redline.csv");
-		greenBlocks = Block.parseFile("greenline.csv");
-	}
 	
 	public static void main(String[] args) {
 		new CtcStandalone();
