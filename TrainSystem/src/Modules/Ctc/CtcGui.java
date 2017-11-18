@@ -35,6 +35,11 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import javax.swing.border.LineBorder;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.MatteBorder;
+import javax.swing.border.EtchedBorder;
 
 public class CtcGui {
 	private Ctc ctc;
@@ -67,10 +72,12 @@ public class CtcGui {
 	private Object[][] queueTrainInitialData = new Object[0][queueTrainColumnNames.length];
 	
 	private ScheduleJTable queueSelectedTable;
-	private JButton btnRevertQueueSchedule;
-	private JButton btnSaveQueueSchedule;
 	private JButton btnDeleteQueueSchedule;
+	private JTextField queueDepartTime;
 	
+	/**
+	 * Block select variables
+	 */
 	private JSpinner blockNumberSpinner;
 	private JComboBox<Line> blockLineComboBox;
 	private JToggleButton selectedBlockToggle;
@@ -302,6 +309,8 @@ public class CtcGui {
 					String trainName = (String) line.queueData.getValueAt(row, 0);
 					Schedule schedule = ctc.getScheduleByName(trainName);
 					queueSelectedTable.setSchedule(schedule);
+					queueDepartTime.setText(schedule.departureTime.toString());
+					btnDeleteQueueSchedule.setEnabled(true);
 				}
 			});
 			scrollPane.setViewportView(line.queueTable);
@@ -314,23 +323,6 @@ public class CtcGui {
 		queueSelectedTable = new ScheduleJTable();
 		queueSelectedTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
 		scrollPane_4.setViewportView(queueSelectedTable);
-		
-		btnSaveQueueSchedule = new JButton("Save Changes");
-		btnSaveQueueSchedule.setEnabled(false);
-		btnSaveQueueSchedule.setFont(new Font("Dialog", Font.PLAIN, 16));
-		btnSaveQueueSchedule.setBounds(713, 412, 171, 26);
-		contentPane.add(btnSaveQueueSchedule);
-		
-		btnRevertQueueSchedule = new JButton("Revert Changes");
-		btnRevertQueueSchedule.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//TODO revert schedule
-			}
-		});
-		btnRevertQueueSchedule.setEnabled(false);
-		btnRevertQueueSchedule.setFont(new Font("Dialog", Font.PLAIN, 16));
-		btnRevertQueueSchedule.setBounds(713, 437, 171, 26);
-		frame.getContentPane().add(btnRevertQueueSchedule);
 		
 		btnDeleteQueueSchedule = new JButton("Delete selected");
 		btnDeleteQueueSchedule.setEnabled(false);
@@ -345,10 +337,45 @@ public class CtcGui {
 				updateQueueTable();
 
 				queueSelectedTable.clear();
+				queueDepartTime.setText("");
 			}
 		});
-		btnDeleteQueueSchedule.setBounds(713, 475, 171, 41);
+		btnDeleteQueueSchedule.setBounds(713, 402, 171, 41);
 		contentPane.add(btnDeleteQueueSchedule);
+		
+		queueDepartTime = new JTextField();
+		queueDepartTime.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				String time = queueDepartTime.getText();
+				if(SimTime.isValid(time)) {
+					queueSelectedTable.schedule.setDepartureTime(new SimTime(time));
+					queueSelectedTable.fireScheduleChanged();
+					updateQueueTable();
+					for(int i=0;i<queueSelectedTable.schedule.line.queueData.getColumnCount();i++) {
+						if(queueSelectedTable.schedule.line.queueData.getValueAt(i, 0).equals(queueSelectedTable.schedule.name)) {
+							queueSelectedTable.schedule.line.queueTable.setRowSelectionInterval(i, i);
+							break;
+						}
+					}
+					
+				}
+			}
+		});
+		queueDepartTime.setColumns(10);
+		queueDepartTime.setBounds(819, 467, 66, 39);
+		frame.getContentPane().add(queueDepartTime);
+		
+		JLabel lblAutoDepart = new JLabel("Auto Depart @");
+		lblAutoDepart.setFont(new Font("SansSerif", Font.ITALIC, 14));
+		lblAutoDepart.setBounds(716, 470, 136, 33);
+		frame.getContentPane().add(lblAutoDepart);
+		
+		JLabel lblOr = new JLabel("- or -");
+		lblOr.setHorizontalAlignment(SwingConstants.CENTER);
+		lblOr.setFont(new Font("SansSerif", Font.ITALIC, 14));
+		lblOr.setBounds(714, 494, 171, 33);
+		frame.getContentPane().add(lblOr);
 		
 		JButton btnDispatchQueueSchedule = new JButton("Dispatch Now \u2192");
 		btnDispatchQueueSchedule.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -363,10 +390,11 @@ public class CtcGui {
 				updateQueueTable();
 				updateDispatchedTable();
 				queueSelectedTable.clear();
-				
+				queueDepartTime.setText("");
+				btnDeleteQueueSchedule.setEnabled(false);	
 			}
 		});
-		btnDispatchQueueSchedule.setBounds(713, 528, 171, 67);
+		btnDispatchQueueSchedule.setBounds(714, 520, 171, 67);
 		contentPane.add(btnDispatchQueueSchedule);
 		
 			
@@ -612,6 +640,12 @@ public class CtcGui {
 		lblSpeedup.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSpeedup.setBounds(673, 67, 39, 33);
 		frame.getContentPane().add(lblSpeedup);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_1.setBackground(UIManager.getColor("Panel.background"));
+		panel_1.setBounds(704, 455, 191, 145);
+		frame.getContentPane().add(panel_1);
 	}
 	
 	/*
@@ -674,7 +708,7 @@ public class CtcGui {
 		for(String trainName:ctc.trains.keySet()) {
 			train = ctc.getTrainByName(trainName);
 			//Object[] row; //build the row here, but for now we fake the functionality below
-			Object[] row = {train.name,train.location.getId(),train.speed,train.authority+" mi",train.passengers};
+			Object[] row = {train.name,train.line.blocks[train.location],train.speed,train.authority+" mi",train.passengers};
 			train.line.dispatchedData.addRow(row);
 		}
 
@@ -773,6 +807,4 @@ public class CtcGui {
 		//Update the locations of trains
 		//updateDispatchedTable();
 	}
-
-	
 }
