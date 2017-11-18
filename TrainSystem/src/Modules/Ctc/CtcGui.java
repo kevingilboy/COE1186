@@ -552,8 +552,8 @@ public class CtcGui {
 		btnSuggestSpeed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String speed = suggestedSpeed.getText();
-				if(!speed.contains("[a-zA-Z]+")) {
-					ctc.transmitSuggestedSpeed(speed);
+				if(speed.contains("[0-9]+")) {
+					ctc.transmitSuggestedSpeed(dispatchSelectedTable.schedule.name, Integer.parseInt(speed));
 				}
 			}
 		});
@@ -867,6 +867,6 @@ public class CtcGui {
 		checkQueueForDisaptches();
 		
 		//Update the locations of trains
-		//updateDispatchedTable();
+		updateDispatchedTable();
 	}
 }
