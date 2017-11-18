@@ -63,24 +63,24 @@ public class SimTime {
 		//Split into its parts
 		String[] components = timeString.split(":");
 		if (components.length==3) {
-			//Need to check for blank Strings
-			boolean hasBlank = false;
+			//Need to check for blank Strings and short Strings
 			for(String component : components) {
 				if(component.equals("")) {
-					hasBlank = true;
+					return false;
+				}
+				if(component.length()!=2) {
+					return false;
 				}
 			}
 			
-			if(!hasBlank) {
-				//Check if all in the right bounds
-				int h = Integer.parseInt(components[0]);
-				int m = Integer.parseInt(components[1]);
-				int s = Integer.parseInt(components[2]);
-				if(h>=0 && h<24 &&
-						m>=0 && m<60 &&
-						s>=0 && s<60) {
-					return true;
-				}
+			//Check if all in the right bounds
+			int h = Integer.parseInt(components[0]);
+			int m = Integer.parseInt(components[1]);
+			int s = Integer.parseInt(components[2]);
+			if(h>=0 && h<24 &&
+					m>=0 && m<60 &&
+					s>=0 && s<60) {
+				return true;
 			}
 		}
 		return false;
