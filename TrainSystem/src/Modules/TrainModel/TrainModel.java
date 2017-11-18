@@ -22,6 +22,7 @@ public class TrainModel implements Module{
 	public SimTime currentTime = new SimTime("00:00:00");
 	double powSum = 0.0;
 	private String line = "GREEN";
+	private int i = 0;
 	//Instantiate a GUI for this train
 
 	/**
@@ -30,15 +31,9 @@ public class TrainModel implements Module{
 	 * built in java hash of the Train ID strings
 	 */
 	public TrainModel(){
+		// while(trackModel == null) {}
 		trainList = new HashMap<Integer, Train>();
-		//Train train = new Train(line, "Train 1", this);
-		dispatchTrain("Train 1", line);
-		//instantiateGUI(train);
-        this.getTrain("Train 1").showTrainGUI();
-        dispatchTrain("Train 2", line);
-        dispatchTrain("Train 3", line);
-        dispatchTrain("Train 4", line);
-        dispatchTrain("Train 5", line);
+		// Train train = new Train(line, "Train 1", this);
 	}
 
 	/**
@@ -47,6 +42,17 @@ public class TrainModel implements Module{
 	@Override
 	public boolean updateTime(SimTime time) {
 		currentTime = time;
+		i++;
+		// this is just for test
+		if(i == 1) {
+			dispatchTrain("Train 1", line);
+			// instantiateGUI(train);
+	        this.getTrain("Train 1").showTrainGUI();
+	        dispatchTrain("Train 2", line);
+	        dispatchTrain("Train 3", line);
+	        dispatchTrain("Train 4", line);
+	        dispatchTrain("Train 5", line);
+		}
 		//setPower("Train 1", pow+10);
 		powSum += 10;
 		setPower("Train 1", powSum);

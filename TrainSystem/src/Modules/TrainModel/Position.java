@@ -21,7 +21,6 @@ public class Position{
 
 	public Position(ArrayList<Block> track){
 		this.track = track;
-
 		// Initialize position from this track's YARD (out) block,
 		// where all trains should be dispatched from. Upon
 		// dispatch, a train should instantiate a Position class

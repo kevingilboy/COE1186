@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.UIManager;
 
 import Modules.TrackModel.Block;
+import Modules.TrackModel.Station;
 import Modules.TrackModel.TrackModel;
 
 public class Train {
@@ -79,6 +80,7 @@ public class Train {
     // Station Control
     //private Station nextStation;
     private double timeOfArrival;
+    //private Station nextStation;
     private int arrivalStatus;
     private int numPassengers;
     private boolean atStation;
@@ -108,11 +110,13 @@ public class Train {
     private double slope;
     private double finalSpeed;
     private double trainAcceleration;
+    private double distTravelled;
     
     public Train(String line, String trainID, TrainModel tm, TrackModel tkmdl) {
     	this.trkMdl = tkmdl;
-    	//this.track = trkMdl.getTrack(line);
-    	//this.position = new Position(track);
+    	this.lineColor = line;
+    	this.track = this.trkMdl.getTrack(this.lineColor);
+    	this.position = new Position(track);
     	this.trnMdl = tm;
     	this.trainActive = true;
     	this.trainID = trainID;
@@ -125,9 +129,8 @@ public class Train {
         this.trainWidth = TRAIN_WIDTH;
         
         // Track Information
-        //private Block currentBlock;
-        //private Block nextBlock;
-        this.lineColor = line;
+        this.currentBlock = new Block();
+        this.nextBlock = new Block();
         this.grade = 0;
         this.currentSpeedLimit = 0;
         this.GPSAntenna = false;
@@ -139,7 +142,7 @@ public class Train {
         this.brakeFailureActive = false;
         
         // Station Control
-        //private Station nextStation;
+        //this.nextStation = new Station();
         this.timeOfArrival = 0;
         this.arrivalStatus = EN_ROUTE;
         this.numPassengers = 0;
@@ -319,9 +322,10 @@ public class Train {
     	
     	// resetting the current speed based on our calculations
     	this.currentSpeed =  this.finalSpeed;
+    	this.distTravelled = this.currentSpeed * 1; // speed times the time between clock ticks = distance travelled
     	//System.out.println(finalSpeed);
     	
-    	// TODO: add pos.moveTrain(double []pos) method call to tell the position class how far to move the train
+    	this.position.moveTrain(this.distTravelled); // method call to tell the position class how far to move the train
     }
     
     /**
@@ -369,19 +373,27 @@ public class Train {
      * Set the current x and y positions of the current train
      * @param pos
      */
-    public void setPosition(double[] pos) {
+    public void setCoordinates(double[] pos) {
     	this.currentX = pos[0];
     	this.currentY = pos[1];
     }
     
     /**
-     * Returns the current x and y coordinates of this train
+     * Returns the current x and y coordinates of this train in a double array
      */
-    public double[] getPosition() {
+    public double[] getCoordinates() {
     	double []position = new double[2];
     	position [0] = this.currentX;
     	position[1] = this.currentY;
     	return position;
+    }
+    
+    public Position getPosition(){
+        return this.position;
+    }
+    
+    public void setPosition(Position pos) {
+    	this.position = pos;
     }
     
     /**
