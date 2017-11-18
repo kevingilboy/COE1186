@@ -551,7 +551,10 @@ public class CtcGui {
 		btnSuggestSpeed.setEnabled(false);
 		btnSuggestSpeed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO send suggested speed
+				String speed = suggestedSpeed.getText();
+				if(!speed.contains("[a-zA-Z]+")) {
+					ctc.transmitSuggestedSpeed(speed);
+				}
 			}
 		});
 		btnSuggestSpeed.setFont(new Font("Dialog", Font.PLAIN, 16));
