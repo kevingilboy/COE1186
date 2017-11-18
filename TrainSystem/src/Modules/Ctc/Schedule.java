@@ -46,7 +46,6 @@ public class Schedule {
 
 	public void setDepartureTime(SimTime time) {
 		this.departureTime = time;
-		calculateDwellTimes();
 	}
 	
 	private void calculateDwellTimes() {
