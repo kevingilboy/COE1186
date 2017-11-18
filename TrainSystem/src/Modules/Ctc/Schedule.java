@@ -2,7 +2,10 @@ package Modules.Ctc;
 
 import Shared.SimTime;
 
+import Modules.TrackModel.TrackIterator;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import Modules.TrackModel.Block;
 
@@ -47,9 +50,27 @@ public class Schedule {
 	}
 	
 	private void calculateDwellTimes() {
-		//TODO replace hardcoded dwell times
+		int currBlockId = line.yardOutNext;
+		int prevBlockId = -1;
+		
+		TrackIterator ti;
+		
 		for(Stop stop : stops) {
-			stop.timeToDwell = new SimTime(00,06,00);
+			double runningTime = 0;
+			while(stop.block.getId() != currBlockId) {				
+				runningTime += line.blocks[currBlockId].getSpeedLimit()/1000.0 * line.blocks[currBlockId].getLength();
+				
+				ti = new TrackIterator(line.blocksAL, currBlockId, prevBlockId);
+				prevBlockId = currBlockId;
+				currBlockId = ti.nextBlock();
+			}
+			int hr = (int)runningTime/3600;
+			int min = (int)(runningTime%3600)/60;
+			int sec = (int)runningTime%60;
+			stop.timeToDwell = new SimTime(hr,min,sec);
+		}
+		for(Stop stop : stops) {			
+			//stop.timeToDwell = new SimTime(00,06,00);
 		}
 	}
 	

@@ -1,28 +1,34 @@
 package Modules.Ctc;
 
 import Modules.TrackModel.Block;
+import Modules.TrackModel.TrackIterator;
 
 public class Train {
 	public String name;
 	public Line line;
-	public Block location;
+	public int currLocation;
+	public int prevLocation;
 	public int speed;
 	public int authority;
 	public Schedule schedule;
 	public int passengers;
+	
+	public TrackIterator ti;
 	
 	public Train(Schedule schedule) {
 		this.schedule = schedule;
 		this.name = schedule.name;
 		this.line = schedule.line;
 		this.passengers = 0;
-		
+		prevLocation = -1;
 		if(line==Line.RED) {
-			location = line.blocks[76];
+			currLocation = 76;
 		}
 		else if(line == Line.GREEN) {
-			location = line.blocks[151];
+			currLocation = 151;
 		}
+		
+		ti = new TrackIterator(line.blocksAL,currLocation,prevLocation);
 	}
 
 }
