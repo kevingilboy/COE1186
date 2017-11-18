@@ -69,9 +69,6 @@ public class Schedule {
 			int sec = (int)runningTime%60;
 			stop.timeToDwell = new SimTime(hr,min,sec);
 		}
-		for(Stop stop : stops) {			
-			//stop.timeToDwell = new SimTime(00,06,00);
-		}
 	}
 	
 	public Object[][] toStringArray() {
