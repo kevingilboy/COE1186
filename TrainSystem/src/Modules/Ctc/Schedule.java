@@ -5,7 +5,6 @@ import Shared.SimTime;
 import Modules.TrackModel.TrackIterator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import Modules.TrackModel.Block;
 
@@ -36,6 +35,8 @@ public class Schedule {
 	
 	public void removeStop(int index) {
 		stops.remove(index);
+		
+		//Recalc dwell times in case a stop is removed from the middle of the schedule
 		calculateDwellTimes();
 	}
 
@@ -48,21 +49,30 @@ public class Schedule {
 		this.departureTime = time;
 	}
 	
+	/**
+	 * This function calculates time between stops
+	 */
 	private void calculateDwellTimes() {
 		int currBlockId = line.yardOutNext;
 		int prevBlockId = -1;
 		
 		TrackIterator ti;
 		
+		//Cycle through each stop
 		for(Stop stop : stops) {
+			//Store the cumulative travel time in runningTime
 			double runningTime = 0;
-			while(stop.block.getId() != currBlockId) {				
+			
+			//Loop until the stop is reached by the iterator
+			while(stop.block.getId() != currBlockId) {	
 				runningTime += line.blocks[currBlockId].getSpeedLimit()/1000.0 * line.blocks[currBlockId].getLength();
 				
 				ti = new TrackIterator(line.blocksAL, currBlockId, prevBlockId);
 				prevBlockId = currBlockId;
 				currBlockId = ti.nextBlock();
 			}
+			
+			//Set the dwell time
 			int hr = (int)runningTime/3600;
 			int min = (int)(runningTime%3600)/60;
 			int sec = (int)runningTime%60;
@@ -70,6 +80,9 @@ public class Schedule {
 		}
 	}
 	
+	/**
+	 * Convert the schedule to a 2D object array for JTable viewing
+	 */
 	public Object[][] toStringArray() {
 		Object[][] grid = new Object[stops.size()][3];
 		for(int i=0;i<stops.size();i++) {

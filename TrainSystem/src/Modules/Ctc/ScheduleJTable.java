@@ -18,7 +18,6 @@ public class ScheduleJTable extends JTable{
 	private ScheduleJTable table = this;
 	public Schedule schedule = null;
 	
-	private DefaultCellEditor editor;
 	
 	public ScheduleJTable(Object[][] data, Object[] cols) {
 		super(data,cols);
@@ -32,6 +31,9 @@ public class ScheduleJTable extends JTable{
 		super(new DefaultTableModel(null,columns));
 	}
 	
+	/**
+	 * This blank row allows stops to be added
+	 */
 	public void addBlankRow() {
 		((DefaultTableModel) this.getModel()).addRow(blankRow);
 	}
@@ -46,19 +48,34 @@ public class ScheduleJTable extends JTable{
 		fireScheduleChanged();
 	}
 	
+	/**
+	 * Update the JTable with the newest schedule, add a blank row
+	 */
 	public void fireScheduleChanged() {
+		//Populate table with schedule
 		((DefaultTableModel) this.getModel()).setDataVector(schedule.toStringArray(), columns);
+		
+		//Add a row for new stops
 		addBlankRow();
+		
+		//Add ComboBoxes to the stop selection column
 		addComboBoxToColumn();
+		
+		//Trigger changes to be rendered visually
 		((DefaultTableModel) this.getModel()).fireTableDataChanged();
 	}
 	
+	/**
+	 * Adds a combo box to the stops column for users to specify a stop
+	 */
 	private void addComboBoxToColumn() {
+		//Create the ComboBox and add the line blocks to it
 		JComboBox<String> blockCB = new JComboBox<String>();
 		for(Block block : schedule.line.blocks) {
 			blockCB.addItem(Integer.toString(block.getId()));
 		}
 		
+		//Add a listener to the ComboBox, add stop when state changes
 		blockCB.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
@@ -70,26 +87,14 @@ public class ScheduleJTable extends JTable{
 				}
 			}
 		});
-		editor = new DefaultCellEditor(blockCB);
+		
+		//Put the ComboBox into the JTable cell
+		DefaultCellEditor editor = new DefaultCellEditor(blockCB);
 		this.getColumnModel().getColumn(0).setCellEditor(editor);
+		
+		//Add a tooltip
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         renderer.setToolTipText("Click for combo box");
         this.getColumnModel().getColumn(0).setCellRenderer(renderer);
 	}
-	
-	/*@Override
-    public TableCellEditor getCellEditor(int row, int column)
-    {
-		int modelColumn = convertColumnIndexToModel( column );
-		int modelRow = convertRowIndexToModel( row );
-		if (modelColumn == 0) {
-			String val = (String)this.getValueAt(modelRow, modelColumn);
-			if(val!=null) {
-				schedule.addStop(modelRow, schedule.line.blocks[Integer.parseInt(val)]);
-				fireScheduleChanged();
-			}
-		}
-		
-		return super.getCellEditor(row, column);
-    }*/
 }

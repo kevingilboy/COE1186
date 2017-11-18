@@ -20,6 +20,8 @@ public class Train {
 		this.name = schedule.name;
 		this.line = schedule.line;
 		this.passengers = 0;
+		
+		//Set up locations for the iterator
 		prevLocation = -1;
 		if(line==Line.RED) {
 			currLocation = 76;
