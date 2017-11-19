@@ -27,7 +27,7 @@ public class TrainController implements Module {
 	}
 	
 	public void dispatchTrain(String trainID, String line) {
-		if (line == "red") {
+		if (line.equals("RED")) {
 			controlList.put(trainID.hashCode(), new TrnController(trainID, line, this, redInfo);
 		}
 		else {
@@ -99,7 +99,7 @@ public class TrainController implements Module {
 	}
 	
 	public int receiveTrainPosition(String trainID) {
-		return trainModel.getPosition(trainID);
+		return trainModel.getPosition(trainID).getCurrentBlock();
 	}
 	
 	private void receiveMap() {
