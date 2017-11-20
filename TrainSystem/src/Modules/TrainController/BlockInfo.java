@@ -1,3 +1,5 @@
+package Modules.TrainController;
+
 public class BlockInfo
 {
 	private double speedLimit;
