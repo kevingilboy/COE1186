@@ -14,19 +14,15 @@ import java.util.ArrayList;
 import java.util.Hashmap;
 
 public class TrainController implements Module {
+	private HashMap<Integer, TrnController> controlList;
 	public TrackModel trackModel;
 	public TrainModel trainModel;
-	private SimTime time;
-	private SimTime prevTime;
-	private HashMap<Integer, TrnController> controlList;
 	private ArrayList<BlockInfo> redInfo;
 	private ArrayList<BlockInfo> greenInfo;
+	private SimTime time;
 
 	public TrainController() {
-		//trackModel = tkmodel;
-		//trainModel = tnmodel;
 		controlList = new HashMap<Integer, TrnController>();
-		receiveMap();
 	}
 	
 	public void dispatchTrain(String trainID, String line) {
@@ -36,14 +32,6 @@ public class TrainController implements Module {
 		else {
 			controlList.put(trainID.hashCode(), new TrnController(trainID, line, this, greenInfo);
 		}
-	}
-	
-	public void setTrackModel(TrackModel tkmodel) {
-		trackModel = tkmodel;
-	}
-	
-	public void setTrainModel(TrainModel tnmodel) {
-		trainModel = tnmodel;
 	}
 	
 	public void setMboAuthority(String trainID, double auth) {
@@ -66,19 +54,19 @@ public class TrainController implements Module {
 	}
 	
 	public void transmitLeft(String trainID, boolean status) {
-		trainModel.setLeft(trainID, status);
+		//trainModel.setLeft(trainID, status);
 	}
 	
 	public void transmitRight(String trainID, boolean status) {
-		trainModel.setRight(trainID, status);
+		//trainModel.setRight(trainID, status);
 	}
 	
 	public void transmitService(String trainID, boolean status) {
-		trainModel.setService(trainID, status);
+		trainModel.setServiceBrake(trainID, status);
 	}
 	
 	public void transmitEmergency(String trainID, boolean status) {
-		trainModel.setEmergency(trainID, status);
+		trainModel.setDriverEmergencyBrake(trainID, status);
 	}
 	
 	public void transmitLights(String trainID, boolean status) {
@@ -86,34 +74,34 @@ public class TrainController implements Module {
 	}
 	
 	public void transmitTemperature(String trainID, int temperature) {
-		trainModel.setTemperature(trainID, temperature);
+		trainModel.setTemp(trainID, temperature);
 	}
 	
 	public void transmitAnnouncement(String trainID, String announcement) {
-		trainModel.setAnnouncement(trainID, announcement);
+		//trainModel.setAnnouncement(trainID, announcement);
 	}
 	
 	public double receiveTrainActualSpeed(String trainID) {
-		return trainModel.getActualSpeed(trainID);
+		//return trainModel.getActualSpeed(trainID);
 	}
 	
 	public double receiveSetpointSpeed(String trainID) {
-		return trainModel.getSetpointSpeed(trainID);
+		//return trainModel.getSetpointSpeed(trainID);
 	}
 	
 	public double receiveCtcAuthority(String trainID) {
-		return trainModel.getCtcAuthority(trainID);
+		//return trainModel.getCtcAuthority(trainID);
 	}
 	
 	public boolean receivePassengerEmergency(String trainID) {
-		return trainModel.getEmergencyBrake(trainID);
+		//return trainModel.getEmergencyBrake(trainID);
 	}
 	
 	public int receiveTrainPosition(String trainID) {
-		return trainModel.getPosition(trainID).getCurrentBlock();
+		//return trainModel.getPosition(trainID).getCurrentBlock();
 	}
 	
-	private void receiveMap() {
+	public void receiveMap() {
 		ArrayList<Block> redBlocks = trackModel.getTrack("red");
 		ArrayList<Block> greenBlocks = trackModel.getTrack("green");
 		redInfo = new ArrayList<BlockInfo>(77);
