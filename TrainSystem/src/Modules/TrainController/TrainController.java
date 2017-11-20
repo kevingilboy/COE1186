@@ -11,7 +11,7 @@ import Modules.TrackModel.Block;
 import Modules.TrackModel.Station;
 
 import java.util.ArrayList;
-import java.util.Hashmap;
+import java.util.HashMap;
 
 public class TrainController implements Module {
 	private HashMap<Integer, TrnController> controlList;
@@ -109,11 +109,11 @@ public class TrainController implements Module {
 		Station S;
 		for (Block B : redBlocks) {
 			S = B.getStation();
-			redInfo.set(B.getID() - 1, new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), S.getID(), S.getDoorSideDirectionPositive(), S.getDoorSideDirectionNegative(), B.getDirection()));
+			redInfo.set(B.getId() - 1, new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), S.getId(), S.getDoorSideDirectionPositive(), S.getDoorSideDirectionNegative(), B.getDirection()));
 		}
 		for (Block B : greenBlocks) {
 			S = B.getStation();
-			greenInfo.set(B.getID() - 1, new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), S.getID(), S.getDoorSideDirectionPositive(), S.getDoorSideDirectionNegative(), B.getDirection()));
+			greenInfo.set(B.getId() - 1, new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), S.getId(), S.getDoorSideDirectionPositive(), S.getDoorSideDirectionNegative(), B.getDirection()));
 		}
 	}
 
