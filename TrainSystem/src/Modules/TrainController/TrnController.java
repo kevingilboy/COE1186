@@ -46,7 +46,7 @@ public class TrnController {
 		//currentStation = null;
 		currentBlock = 0;	//yard
 		controller = C;
-		pi = new PIController(5, 5;
+		pi = new PIController(5, 5);
 		controlGUI = new TrnControllerGUI(pi, this, trainID);
 		driveMode = 0;
 		blockMode = 0;
@@ -70,15 +70,15 @@ public class TrnController {
 		trainDirection = 0;
 	}
 	
-	public boolean updateTime() {
-		actualSpeed = controller.receiveTrainActualSpeed(trainID);
-		ctcAuth = controller.receiveCtcAuthority(trainID);
-		passEBrakes = controller.receivePassengerEmergency(trainID);
-		currentBlock = controller.receiveTrainPosition(trainID);
+	public void updateTime() {
+		//actualSpeed = controller.receiveTrainActualSpeed(trainID);
+		//ctcAuth = controller.receiveCtcAuthority(trainID);
+		//passEBrakes = controller.receivePassengerEmergency(trainID);
+		//currentBlock = controller.receiveTrainPosition(trainID);
 		currentBlockInfo = mapInfo.get(currentBlock - 1);
 		speedLimit = currentBlockInfo.getSpeedLimit();
 		if (driveMode == 0) {		//if auto
-			setpointSpeed = controller.receiveSetpointSpeed(trainID);
+			//setpointSpeed = controller.receiveSetpointSpeed(trainID);
 			if (inStation) {
 				stationTimeCounter++;
 				if (stationTimeCounter == 120)
@@ -306,7 +306,7 @@ public class TrnController {
 	
 	private void decodeBeacon(int beacon)
 	{
-		String stationName;
+		String stationName = "";
 		if (beacon != 0)
 		{
 			//get station name from beacon
