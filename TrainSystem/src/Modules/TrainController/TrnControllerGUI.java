@@ -1,6 +1,6 @@
 //Michael Kotcher
 
-//package Modules.TrainController;
+package Modules.TrainController;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -67,9 +67,9 @@ public class TrnControllerGUI {
 	
 	//private PIController pi;
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		new TrnControllerGUI("Train 1");
-	}
+	}*/
 	
 	public TrnControllerGUI(/*PIController p, TrnController c, */String s) {
 		trainID = s;

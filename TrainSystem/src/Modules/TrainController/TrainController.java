@@ -10,6 +10,9 @@ import Modules.TrainModel.TrainModel;
 import Modules.TrackModel.Block;
 import Modules.TrackModel.Station;
 
+import java.util.ArrayList;
+import java.util.Hashmap;
+
 public class TrainController implements Module {
 	public TrackModel trackModel;
 	public TrainModel trainModel;
@@ -19,9 +22,9 @@ public class TrainController implements Module {
 	private ArrayList<BlockInfo> redInfo;
 	private ArrayList<BlockInfo> greenInfo;
 
-	public TrainController(TrackModel tkmodel, TrainModel tnmodel) {
-		trackModel = tkmodel;
-		trainModel = tnmodel;
+	public TrainController() {
+		//trackModel = tkmodel;
+		//trainModel = tnmodel;
 		controlList = new HashMap<Integer, TrnController>();
 		receiveMap();
 	}
@@ -33,6 +36,14 @@ public class TrainController implements Module {
 		else {
 			controlList.put(trainID.hashCode(), new TrnController(trainID, line, this, greenInfo);
 		}
+	}
+	
+	public void setTrackModel(TrackModel tkmodel) {
+		trackModel = tkmodel;
+	}
+	
+	public void setTrainModel(TrainModel tnmodel) {
+		trainModel = tnmodel;
 	}
 	
 	public void setMboAuthority(String trainID, double auth) {

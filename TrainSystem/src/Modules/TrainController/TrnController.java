@@ -10,7 +10,7 @@ public class TrnController {
 	private String line;
 	//private String currentStation;
 	private PIController pi;
-	private TrainControllerGUI controlGUI;
+	private TrnControllerGUI controlGUI;
 	private TrainController controller;
 	private int driveMode;		//0 is auto, 1 is manual
 	private int blockMode;		//0 is moving, 1 is fixed
@@ -45,7 +45,7 @@ public class TrnController {
 		currentBlock = 0;	//yard
 		controller = C;
 		pi = new PIController(//p and i values HERE);
-		controlGUI = new TrainControllerGUI(pi, this, trainID);
+		controlGUI = new TrnControllerGUI(pi, this, trainID);
 		driveMode = 0;
 		blockMode = 0;
 		beacon = 0;
