@@ -1,3 +1,5 @@
+package Modules.TrainController;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,9 +32,9 @@ public class EngineerGUI {
 	
 	//private PIController pi;
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		new EngineerGUI("Train 1");
-	}
+	}*/
 	
 	public EngineerGUI(/*PIController p, */String s) {
 		//pi = p;
