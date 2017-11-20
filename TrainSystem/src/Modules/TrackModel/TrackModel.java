@@ -10,6 +10,7 @@ import Shared.SimTime;
 
 import Simulator.Simulator;
 import Modules.TrainModel.TrainModel;
+import Modules.TrainModel.Position;
 import Modules.Ctc.Ctc;
 
 import java.util.*;
@@ -29,6 +30,16 @@ public class TrackModel implements Module{
 	String redLineFile = "Modules/TrackModel/Track Layout/RedLineFinal.csv";
 	String greenLineFile = "Modules/TrackModel/Track Layout/GreenLineFinal.csv";
 
+	DynamicDisplay greenLineDisplay;
+	DynamicDisplay redLineDisplay;
+
+	private ArrayList<String> redTrainIDs = new ArrayList<String>();
+	private ArrayList<Position> redPositions = new ArrayList<Position>();
+
+	
+	private ArrayList<String> greenTrainIDs = new ArrayList<String>();
+	private ArrayList<Position> greenPositions = new ArrayList<Position>();
+
 	public TrackModel(){	
 
 		// Parse CSV files and store in block collection structure
@@ -36,21 +47,8 @@ public class TrackModel implements Module{
 		greenLineBlocks = (new TrackCsvParser()).parse(greenLineFile);
 
 		// Instantiate dyPamic displays for each track
-		new DynamicDisplay(redLineBlocks);
-		new DynamicDisplay(greenLineBlocks);
-
-		//------------------ TESTING TRACK ITERATOR ----------------------------
-		greenLineBlocks.get(28 - 1).getSwitch().setState(Switch.STATE_NORMAL);
-
-		int shift = 1;
-		int prev = 149 - shift;
-		int curr = 150 - shift;
-		int next = nextBlock("green", curr, prev);
-		
-		System.out.println("prev = " + Integer.toString(prev + shift) +
-			 			   ", curr = " + Integer.toString(curr + shift) + 
-			 			   ", next = " + Integer.toString(next + shift));
-
+		greenLineDisplay = new DynamicDisplay(redLineBlocks);
+		redLineDisplay = new DynamicDisplay(greenLineBlocks);
 	}
 
 	// Access a specific block on track specified by line and block ID
@@ -67,23 +65,18 @@ public class TrackModel implements Module{
 		return block;
 	}
 
-	// Get the next block for the train to move to
-	// based on the current block and previous blocks
-	// occupied by a train (no train needs to be specified)
-	public int nextBlock(String line, int currBlockID, int prevBlockID){
-		TrackIterator trackIterator = null;
-		int nextBlockID;
+	// Access the entire ArrayList of blocks in a track specified
+	// by the line
+	public ArrayList<Block> getTrack(String line){
+		ArrayList<Block> track = null;
 
-		// The TrackIterator class determines the next block based on the
-		// track's current configuration of switches and track statuses
 		if (line.toLowerCase() == "green"){
-			trackIterator = new TrackIterator(greenLineBlocks, currBlockID, prevBlockID);
+			track = greenLineBlocks;
 		} else if (line.toLowerCase() == "red"){
-			trackIterator = new TrackIterator(redLineBlocks, currBlockID, prevBlockID);
+			track = redLineBlocks;
 		}
 
-		nextBlockID = trackIterator.nextBlock();
-		return nextBlockID;
+		return track;
 	}
 
 	// Respond to the Simulator's regularly call to this modules's updateTime()
@@ -96,5 +89,28 @@ public class TrackModel implements Module{
 	// Main method for standalone operation of the Track Model
 	public static void main(String[] args){
 		new TrackModel();
+	}
+
+
+	// INTER-MODULE COMMUNICATION CLASSES
+	public void dispatchTrain(String line, String trainID, Position pos){
+		
+		if (line.toLowerCase() == "red"){
+			redTrainIDs.add(trainID);
+			redPositions.add(pos);
+			redLineDisplay.dispatchTrain(trainID, pos);
+		} else if (line.toLowerCase() == "green"){
+			greenTrainIDs.add(trainID);
+			greenPositions.add(pos);
+			greenLineDisplay.dispatchTrain(trainID, pos);
+		}
+	}
+
+	public void transmitCtcAuthority(String trainName, int authority){
+		// ...
+	}
+
+	public void transmitSuggestedTrainSetpointSpeed(String trainName, int speed){
+		// ...
 	}
 }

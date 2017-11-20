@@ -20,6 +20,7 @@ import java.awt.geom.Line2D;
 
 import javax.swing.JButton;
 import javax.swing.JMenu;
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JSpinner;
 import java.awt.Color;
@@ -36,7 +37,7 @@ public class TrainModelGUI extends JFrame {
 	private Line2D verticalLine3;
 	private Line2D verticalLine4;
 	private boolean arrivalStatus = true;
-	private int setPowerIn;
+	//private int setPowerIn;
 	private boolean serviceBrake = false;
 	private boolean emerBrake = false;
 
@@ -81,7 +82,12 @@ public class TrainModelGUI extends JFrame {
 	public JPanel brakeFailPanel = new JPanel();
 	public JMenu mnFile = new JMenu("File");
 	public JMenu mnSelectTrain = new JMenu("Select Train");
-	public JMenu mnHelp = new JMenu("Help");
+	public JMenuItem menuTrainlist = new JMenuItem(new AbstractAction("") {
+		public void actionPerformed(ActionEvent e) {
+	        // Button pressed logic goes here
+			
+	    }
+	});
 	
 	public JLabel gpsAntennaStatusLabel = new JLabel();
 	public JLabel mboAntennaStatusLabel = new JLabel();
@@ -166,15 +172,6 @@ public class TrainModelGUI extends JFrame {
 		//System.out.println(currSpeed);
 	}
 	
-	/**
-	 * Returns the power the user of the train model selects to input
-	 * 
-	 * Author jpatterson
-	 */
-	public int returnPowerInput() {
-		return setPowerIn;
-	}
-	
 	public boolean serviceBrakeStatus() {
 		return serviceBrake;
 	}
@@ -217,10 +214,7 @@ public class TrainModelGUI extends JFrame {
 		
 		menuBar.add(mnSelectTrain);
 		
-		JMenuItem mntmTrainlist = new JMenuItem("TrainList");
-		mnSelectTrain.add(mntmTrainlist);
-		
-		menuBar.add(mnHelp);
+		mnSelectTrain.add(menuTrainlist);
 		
 		
 		lblSpecifications.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -462,11 +456,6 @@ public class TrainModelGUI extends JFrame {
 		capacityVal.setBounds(154, 225, 69, 20);
 		contentPane.add(capacityVal);
 		
-		/*speedLimitVal.setHorizontalAlignment(SwingConstants.RIGHT);
-		speedLimitVal.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		speedLimitVal.setBounds(464, 175, 69, 20);
-		contentPane.add(speedLimitVal);*/
-		
 		gpsAntennaStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		gpsAntennaStatusLabel.setBounds(515, 480, 69, 20);
 		contentPane.add(gpsAntennaStatusLabel);
@@ -482,10 +471,6 @@ public class TrainModelGUI extends JFrame {
 		timeVal.setFont(new Font("Tahoma", Font.BOLD, 16));
 		timeVal.setBounds(204, 399, 121, 20);
 		contentPane.add(timeVal);
-		
-		//lblAm.setFont(new Font("Tahoma", Font.BOLD, 16));
-		//lblAm.setBounds(255, 399, 34, 20);
-		//contentPane.add(lblAm);
 		
 		leftDoorStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		leftDoorStatusLabel.setBounds(515, 399, 69, 20);
@@ -568,4 +553,21 @@ public class TrainModelGUI extends JFrame {
 	public void stylizeToggleButton(JToggleButton b){
 		Border thickBorder = new LineBorder(Color.WHITE, 3);
 	}
+	
+	public void addTraintoGUIList(Train train) {
+		/*public JMenuItem menuTrainlist = new JMenuItem(new AbstractAction("") {
+			public void actionPerformed(ActionEvent e) {
+		        // Button pressed logic goes here
+				
+		    }
+		});*/
+		mnSelectTrain.add(new JMenuItem(new AbstractAction(train.getTrainID()) {
+			public void actionPerformed(ActionEvent e) {
+		        // Button pressed logic goes here
+				setEnabled(true);
+				train.showTrainGUI();
+		    }
+		}));
+	}
+
 }

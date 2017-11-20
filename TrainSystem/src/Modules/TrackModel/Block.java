@@ -176,4 +176,16 @@ public class Block{
 	public void setOccupancy(boolean occupancy){
 		this.occupied = occupancy;
 	}
+
+	public String toString(){
+		String sectionStr = getSection();
+		String idStr = Integer.toString(getId());
+		String stationStr = "";
+
+		if (getStation() != null){
+			stationStr = " (" +  getStation().getId() + ")";
+		}
+
+		return (sectionStr + idStr + stationStr);
+	}
 }

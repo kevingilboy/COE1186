@@ -3,10 +3,15 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.UIManager;
+
+import Modules.TrackModel.Block;
+import Modules.TrackModel.TrackModel;
 
 public class Train {
 	public final double TRAIN_WEIGHT = 163600; 	// currently in lbs
@@ -30,11 +35,19 @@ public class Train {
     public final double METERS_PER_MILE = 1609.34;    
     public final double FEET_PER_METER = 3.28;         
     public final double KG_PER_POUND = 0.454; 
+    public final String DEGREE = "\u00b0";
+    
+    public final int DEPARTING = 0;
+    public final int ARRIVING = 1;
+    public final int EN_ROUTE = 2;
     
     // Declaring a variables for the GUI
     public TrainModelGUI trainModelGUI;
     public JFrame trainModelFrame;
     public TrainModel trnMdl;
+    public TrackModel trkMdl;
+    public ArrayList<Block> track;
+    public Position position;
     
     // Declaring variables in order of sections they appear in on the GUI
     
@@ -48,8 +61,10 @@ public class Train {
     private int trainCapacity;
     
     // Track Information
-    //private Block currentBlock;
-    //private Block nextBlock;
+    private Block currentBlock;
+    private Block nextBlock;
+    private double currentX;
+    private double currentY;
     private String lineColor;
     private double grade = 0;
     private int currentSpeedLimit;
@@ -64,14 +79,14 @@ public class Train {
     // Station Control
     //private Station nextStation;
     private double timeOfArrival;
-    private boolean arrivalStatus;
+    private int arrivalStatus;
     private int numPassengers;
+    private boolean atStation;
     
     // Speed/Authority
     private double currentSpeed;
     private double CTCSpeed;
     private double CTCAuthority;
-    private double powerOut;
     private double powerIn;
     
     // Train Operations
@@ -81,6 +96,7 @@ public class Train {
     private int temperature;
     private boolean serviceBrake;
     private boolean emerBrake;
+    private boolean driverEmerBrake;
     
     // Other Variables not associated with GUI outputs
     private boolean trainActive;
@@ -93,12 +109,15 @@ public class Train {
     private double finalSpeed;
     private double trainAcceleration;
     
-    public Train(String line, String trainID, TrainModel tm) {
+    public Train(String line, String trainID, TrainModel tm, TrackModel tkmdl) {
+    	this.trkMdl = tkmdl;
+    	//this.track = trkMdl.getTrack(line);
+    	//this.position = new Position(track);
     	this.trnMdl = tm;
     	this.trainActive = true;
     	this.trainID = trainID;
     	// Train Specs
-    	this.trainCars = 2;
+    	this.trainCars = 1;
     	this.trainCapacity = TRAIN_CAPACITY * this.trainCars;
         this.trainHeight = TRAIN_HEIGHT;
         this.trainWeight = TRAIN_WEIGHT * this.trainCars;
@@ -122,14 +141,14 @@ public class Train {
         // Station Control
         //private Station nextStation;
         this.timeOfArrival = 0;
-        this.arrivalStatus = false;
+        this.arrivalStatus = EN_ROUTE;
         this.numPassengers = 0;
+        this.atStation = false;
         
         // Speed/Authority
         this.currentSpeed = 0;
-        this.CTCSpeed = 0;
+        this.CTCSpeed = 45;
         this.CTCAuthority = 100; // 100 miles
-        this.powerOut = 0.0;
         this.powerIn = 0.0;
         
         // Train Operations
@@ -153,79 +172,100 @@ public class Train {
     	this.trainModelGUI = null;
     }
     
+    /**
+     * Method that creates a new GUI for a train model
+     * @return
+     */
     public TrainModelGUI CreateNewGUI() {
         //Create a GUI object
     	trainModelGUI = new TrainModelGUI(this);
-    	setValuesForDisplay(trainModelGUI);
+    	setValuesForDisplay();
     	return trainModelGUI;
     }
     
+    /**
+     * Returns a train's GUI
+     * @return
+     */
+    public TrainModelGUI getTrainGUI() {
+    	return this.trainModelGUI;
+    }
+    
+    /**
+     * Displays a trains GUI
+     */
     public void showTrainGUI() {
-        //Make sure to set it visible//Initialize a JFrame to hold the GUI in (Since it is only a JPanel)
-        this.trainModelGUI.setTitle(this.trainID);
-        //trainModelFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        //trainModelFrame.getContentPane().add(this.trainModelGUI);
-        //this.trainModelGUI.pack();
-        this.trainModelGUI.setVisible(true);     //Make sure to set it visible
+        //Make sure to set it visible
+        this.getTrainGUI().setTitle(this.getTrainID());
+        this.getTrainGUI().setVisible(true);
     }
 
-    
-    public void setValuesForDisplay(TrainModelGUI tmGUI) {
-    	tmGUI.tempLabel.setText(Integer.toString(this.temperature)+"°F");
+    /**
+     * Check all values for updates and reflect these updates on the GUI per clock tick
+     */
+    public void setValuesForDisplay() {
+    	this.trainModelGUI.tempLabel.setText(Integer.toString(this.temperature) + DEGREE + "F");
          
-        this.powerIn = tmGUI.returnPowerInput();
-         
-        if(tmGUI.serviceBrakeStatus()) {	// if the brakes were applied (button pressed)
+        if(this.trainModelGUI.serviceBrakeStatus()) {	// if the brakes were applied (button pressed)
         	this.serviceBrake = true;
         } else {
         	this.serviceBrake = false;
         }
-        if(tmGUI.emerBrakeStatus()) {	// if the e brake was pushed (button pressed)
+        if(this.trainModelGUI.emerBrakeStatus()) {	// if the e brake was pushed (button pressed)
         	this.emerBrake = true;
         } else {
         	this.emerBrake = false;
         }
 
-        tmGUI.numCarsSpinner.setText(Integer.toString(this.trainCars));
-        tmGUI.heightVal.setText(Double.toString(truncateTo(this.trainHeight, 2)));
-        tmGUI.widthVal.setText(Double.toString(truncateTo(this.trainWidth, 2)));
-        tmGUI.lengthVal.setText(Double.toString(truncateTo(this.trainLength, 2)));
-        tmGUI.weightVal.setText(Double.toString(truncateTo(this.trainWeight, 2)));
-        tmGUI.capacityVal.setText(Integer.toString(this.trainCapacity));
-        tmGUI.powerVal.setText(Double.toString(this.powerIn));
+        this.trainModelGUI.numCarsSpinner.setText(Integer.toString(this.trainCars));
+        this.trainModelGUI.heightVal.setText(Double.toString(truncateTo(this.trainHeight, 2)));
+        this.trainModelGUI.widthVal.setText(Double.toString(truncateTo(this.trainWidth, 2)));
+        this.trainModelGUI.lengthVal.setText(Double.toString(truncateTo(this.trainLength, 2)));
+        this.trainModelGUI.weightVal.setText(Double.toString(truncateTo(this.trainWeight, 2)));
+        this.trainModelGUI.capacityVal.setText(Integer.toString(this.trainCapacity));
+        this.trainModelGUI.powerVal.setText(Double.toString(this.powerIn));
         
-        tmGUI.gpsAntennaStatusLabel.setText("ON");
-     	tmGUI.mboAntennaStatusLabel.setText("ON");
-     	tmGUI.stationVal.setText("Pioneer");
-     	tmGUI.rightDoorStatusLabel.setText("CLOSED");
-     	tmGUI.timeVal.setText(trnMdl.currentTime.toString());
-        //tmGUI.lblAm.setText("AM");
-     	tmGUI.leftDoorStatusLabel.setText("OPEN");
-     	tmGUI.lightStatusLabel.setText("OFF");
-     	tmGUI.numPassengers.setText("20");
-     	tmGUI.authorityVal.setText("100");
-     	tmGUI.serviceLabel.setText("OFF");
-     	tmGUI.emergencyLabel.setText("OFF");
-
-     	tmGUI.arrivalStatusLabel.setText("ARRIVING");
-     	tmGUI.currentSpeedLabel.setText(Double.toString(truncateTo((this.currentSpeed*SECONDS_PER_HOUR/METERS_PER_MILE), 2)));
+        this.trainModelGUI.gpsAntennaStatusLabel.setText("ON");
+     	this.trainModelGUI.mboAntennaStatusLabel.setText("ON");
+     	this.trainModelGUI.stationVal.setText("Pioneer");
+     	this.trainModelGUI.rightDoorStatusLabel.setText("CLOSED");
+     	this.trainModelGUI.timeVal.setText(trnMdl.currentTime.toString());
+        //this.trainModelGUI.lblAm.setText("AM");
+     	this.trainModelGUI.leftDoorStatusLabel.setText("OPEN");
+     	this.trainModelGUI.lightStatusLabel.setText("OFF");
+     	this.trainModelGUI.numPassengers.setText("20");
+     	this.trainModelGUI.authorityVal.setText("100");
+     	this.trainModelGUI.serviceLabel.setText("OFF");
+     	this.trainModelGUI.emergencyLabel.setText("OFF");
+     	
+     	if(this.arrivalStatus == ARRIVING) {
+     		this.trainModelGUI.arrivalStatusLabel.setText("ARRIVING");
+     	} else if (this.arrivalStatus == EN_ROUTE) {
+     		this.trainModelGUI.arrivalStatusLabel.setText("EN ROUTE");
+     	} else {
+     		this.trainModelGUI.arrivalStatusLabel.setText("DEPARTING");
+     	}
+     	this.trainModelGUI.currentSpeedLabel.setText(Double.toString(truncateTo((this.currentSpeed*SECONDS_PER_HOUR/METERS_PER_MILE), 2)));
          
      	if (this.lineColor.equals("GREEN")) {
-     		tmGUI.lblLine.setText(lineColor);
-     		tmGUI.lblLine.setForeground(Color.GREEN);
+     		this.trainModelGUI.lblLine.setText(lineColor);
+     		this.trainModelGUI.lblLine.setForeground(Color.GREEN);
      	} else {
-     		tmGUI.lblLine.setText("RED");
-     		tmGUI.lblLine.setForeground(Color.RED);
+     		this.trainModelGUI.lblLine.setText("RED");
+     		this.trainModelGUI.lblLine.setForeground(Color.RED);
         }
     }
     
+    /**
+     * Same concecpt behind this method as the setValuesForDisplay() method, except this method is purely calculations
+     * surrounding the train's velocity, which is it's core functionality
+     */
     public void updateVelocity() {
-    	// So far the values of the train are all hard coded EXCEPT the velocity and power
-    	// Need to add functionality to output a velocity from a power input
     	// Step 1: input power and convert the power to a force based on the starting velocity
     	//powerIn = 180;
     	double trainMass = trainWeight*KG_PER_POUND;
     	
+    	// this is ensuring that we never get a negative speed
     	if (this.currentSpeed == 0) {
     		this.force = (this.powerIn * 1000)/1;
     	} else {
@@ -236,16 +276,18 @@ public class Train {
     	this.slope = Math.atan2(this.grade,100);
     	double angle = Math.toDegrees(this.slope);
     	
-    	// Step 3: Calculate the forces acting on the train using the coefficient of friction (TODO: FIND OUT WHAT THAT IS)
-    	// and the train's weight in lbs converted to kg divided over the wheels times gravity (G)
+    	// Step 3: Calculate the forces acting on the train using the coefficient of friction
+    	// and the train's weight in lbs converted to kg divided over the wheels (where the force is technically
+    	// being applied times gravity (G)
     	this.normalForce = (trainMass/12) * G * Math.sin(angle);	// divide by 12 for the number of wheels
     	this.downwardForce = (trainMass/12) * G * Math.cos(angle);	// divide by 12 for the number of wheels
-    	
-    	// TODO FIGURE OUT WHY THE CURRENT FRICTION COEFFICIENT RETURNS 0 AND 0.01 RETURNS A VALUE
+
+    	// compute friction force
     	this.friction = (FRICTION_COEFFICIENT * this.downwardForce) + this.normalForce;
     	
+    	// sum of the forces
     	this.totalForce = this.force - this.friction;
-    	
+    	    	
     	this.force = this.totalForce;
     	
     	// Step 4: Calculate acceleration using the F = ma equation, where m = the mass of the body moving
@@ -257,9 +299,12 @@ public class Train {
     		this.trainAcceleration = TRAIN_MAX_ACCELERATION * 1;	// time elapsed (one second)
     	}
     	
+    	// decelerates the train based on the values given in the spec sheet for the emergency brake
     	if (emerBrake) {
     		this.trainAcceleration = (TRAIN_MAX_ACCELERATION_E_BRAKE*1);
     	}
+    	
+    	// decelerates the train based onthe values given in the spec sheet for the service brake
     	if(serviceBrake) {
     		this.trainAcceleration = (TRAIN_MAX_ACCELERATION_SERVICE_BRAKE*1);
     	}
@@ -267,6 +312,7 @@ public class Train {
     	// Step 5: Calculate the final speed by adding the old speed with the acceleration x the time elapsed (one second)
     	this.finalSpeed = this.currentSpeed + (this.trainAcceleration * 1);
     	
+    	// NO NEGATIVE SPEEDS YINZ
     	if(this.finalSpeed < 0) {
             this.finalSpeed = 0;
         }
@@ -275,68 +321,189 @@ public class Train {
     	this.currentSpeed =  this.finalSpeed;
     	//System.out.println(finalSpeed);
     	
-    	
+    	// TODO: add pos.moveTrain(double []pos) method call to tell the position class how far to move the train
     }
     
-    static double truncateTo( double unroundedNumber, int decimalPlaces ){
+    /**
+     * This method truncates any floating point numbers passed to it to the number of decimal points specified
+     * by passing in an integer. I found this to be the most intuitive solution for trimming numbers for me personally
+     * @param unroundedNumber
+     * @param decimalPlaces
+     * @return
+     */
+    static double truncateTo(double unroundedNumber, int decimalPlaces){
         int truncatedNumberInt = (int)( unroundedNumber * Math.pow( 10, decimalPlaces ) );
         double truncatedNumber = (double)( truncatedNumberInt / Math.pow( 10, decimalPlaces ) );
         return truncatedNumber;
     }
     
-    public void activateFailureModeTest() {
-    	
+    /**
+     * Returns the train ID of the current train object
+     * @return
+     */
+    public String getTrainID() {
+    	return this.trainID;
+    }
+    
+    public void activateEngineFailure() {
+    	// TODO
+    }
+    
+    public void activateSignalFailure() {
+    	// TODO
+    }
+    
+    public void activateBrakeFailure() {
+    	// TODO
     }
     
     public void endFailureMode() {
-    	
+    	// TODO
     }
     
     public void updateArrivalStatus() {
-    	
+    	// TODO
     }
     
+    /**
+     * Set the current x and y positions of the current train
+     * @param pos
+     */
     public void setPosition(double[] pos) {
+    	this.currentX = pos[0];
+    	this.currentY = pos[1];
+    }
+    
+    /**
+     * Returns the current x and y coordinates of this train
+     */
+    public double[] getPosition() {
+    	double []position = new double[2];
+    	position [0] = this.currentX;
+    	position[1] = this.currentY;
+    	return position;
+    }
+    
+    /**
+     * Returns the train's current block
+     * @return
+     */
+    public Block getBlock() {
+    	return currentBlock;
+    }
+    
+    public void setBlock() {
     	
     }
     
-    public void getPosition() {
+    public void getMetersIntoBlock() {
     	
     }
     
-    public void getGrade() {
+    public void setMetersIntoBlock() {
     	
     }
     
-    public void getSetpoint() {
-    	
+    /**
+     * Sets the grade of the current block/position of the train
+     * @param g
+     */
+    public void setGrade(double g) {
+    	this.grade = g;
     }
     
+    /**
+     * gets the grade information from the track model
+     * TODO do I need this?
+     * @return
+     */
+    public double getGrade() {
+    	return this.grade;
+    }
+    
+    /**
+     * Returns the set point speed for this specific train object
+     * @return
+     */
+    public double getSetpoint() {
+    	return this.CTCSpeed;
+    }
+    
+    /**
+     * Sets the setpoint speed of a specific train when this method is called in the train model after
+     * the parent method is called by the track model
+     */
     public void setSetpoint(double setpoint) {
-    	
+    	this.CTCSpeed = setpoint;
     }
     
-    public void getAuthority() {
-    	
+    /**
+     * Called by the train model class when it's parent method is called by the train controller to set a 
+     * power input command based on the setpoint speed
+     */
+    public void setPower(double pow) {
+    	this.powerIn = pow;
+    }
+    
+    /**
+     * Returns the train's current velocity
+     * @return
+     */
+    public double getVelocity() {
+    	return this.currentSpeed;
+    }
+    
+    
+    public double getAuthority() {
+    	return this.CTCAuthority;
     }
     
     public void setAuthority(double authority) {
-    	
+    	this.CTCAuthority = authority;
     }
     
     public void setLightStatus(boolean lights) {
-    	
+    	this.lightsAreOn = lights;
     }
     
     public void setLeftDoorStatus(boolean leftDoor) {
-    	
+    	this.leftDoorIsOpen = leftDoor;
     }
     
     public void setRightDoorStatus(boolean rightDoor) {
-    	
+    	this.rightDoorIsOpen = rightDoor;
     }
     
     public void setTemperature(int temp) {
+    	this.temperature = temp;
+    }
+    
+    public void setAtStation(boolean atStation) {
     	
+    }
+    
+    public void setEBrake(boolean ebrake) {
+    	this.emerBrake = ebrake;
+    }
+    
+    public boolean getDriverEBrake() {
+    	return this.driverEmerBrake;
+    }
+    
+    /**
+     * Sets the number of passengers exiting the train using a random number generator
+     * This method should only ever be called when train is STOPPED at a station
+     * @param numPassengers
+     * @return
+     */
+    public int setNumDeparting() {
+    	Random rand = new Random();
+
+    	int  n = rand.nextInt(this.numPassengers);
+    	if (this.numPassengers - n >= 0) {
+    		this.numPassengers = this.numPassengers - n;
+    		return this.numPassengers;
+    	}
+    	return 0;
     }
 }
