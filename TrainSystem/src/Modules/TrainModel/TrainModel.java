@@ -114,7 +114,7 @@ public class TrainModel implements Module{
 		return start-end; // TODO: Ask Kevin how we would be doing this
 	}*/
 	
-	public Train getTrainAtBlock(Block block) {
+	public Train getTrainAtBlock(int block) {
 		// TODO: Should I iterate through every single entry in the hashmap to find the
 		// train at the specified block?
 		for(Train t : trainList.values()) {
@@ -146,19 +146,9 @@ public class TrainModel implements Module{
 	 * @param eBrake
 	 */
 	public void setDriverEmergencyBrake(String trainID, boolean eBrake) {
-		
+		this.getTrain(trainID).setEBrake(eBrake);
 	}
 	
-	/**
-	 * Set the Emergency Brake status based on the passengers. In this case, the driver
-	 * will be allowed to override a request for the emergency brake, but only once the 
-	 * train has come to a complete stop can he deactivate the e brake
-	 * @param trainID
-	 * @param eBrake
-	 */
-	public void setPassengerEmergencyBrake(String trainID, boolean eBrake) {
-		
-	}
 	
 	/**
 	 * Set by the driver only
@@ -167,37 +157,45 @@ public class TrainModel implements Module{
 	 * @param sBrake
 	 */
 	public void setServiceBrake(String trainID, boolean sBrake) {
-		
+		this.getTrain(trainID).setServiceBrake(sBrake);
 	}
 	
-	/*public String[] getPosition(String trainID) {
-		return ;
-	}*/
+	public Position getPosition(String trainID) {
+		return this.getTrain(trainID).getPosition();
+	}
 	
-	public void setPosition(String trainID, double[] coordinates) {
-		
+	public void setPosition(String trainID, Position position) {
+		this.getTrain(trainID).setPosition(position);
 	}
 	
 	public void setPower(String trainID, double powerCommand) {
 		this.getTrain(trainID).setPower(powerCommand);
 	}
 	
-	public void setDoors(String trainID, boolean left, boolean right) {
-		
+	public void setRightDoor(String trainID, boolean right) {
+		this.getTrain(trainID).setRightDoors(right);
+	}
+	
+	public void setLeftDoor(String trainID, boolean left) {
+		this.getTrain(trainID).setLeftDoors(left);
 	}
 	
 	public void setLights(String trainID, boolean lights) {
-		
+		this.getTrain(trainID).setLights(lights);
 	}
 	
 	public void setTemp(String trainID, int temp) {
-		
+		this.getTrain(trainID).setTemp(temp);
+	}
+	
+	public void setArrivalStatus(String trainID, int status) {
+		this.getTrain(trainID).setArrivalStatus(status);
 	}
 	
 	// TODO: I don't think I need this??
-	public void setActualTrainSpeed(String trainID, double actualSpeed) {
+	/*public void setActualTrainSpeed(String trainID, double actualSpeed) {
 		
-	}
+	}*/
 	
 	
 }

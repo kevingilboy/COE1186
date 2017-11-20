@@ -62,8 +62,9 @@ public class Train {
     private int trainCapacity;
     
     // Track Information
-    private Block currentBlock;
-    private Block nextBlock;
+    private int prevBlock;
+    private int currentBlock;
+    private int nextBlock;
     private double currentX;
     private double currentY;
     private String lineColor;
@@ -111,6 +112,7 @@ public class Train {
     private double finalSpeed;
     private double trainAcceleration;
     private double distTravelled;
+    private double metersIn;
     
     public Train(String line, String trainID, TrainModel tm, TrackModel tkmdl) {
     	this.trkMdl = tkmdl;
@@ -129,8 +131,9 @@ public class Train {
         this.trainWidth = TRAIN_WIDTH;
         
         // Track Information
-        this.currentBlock = new Block();
-        this.nextBlock = new Block();
+        this.prevBlock = 0;
+        this.currentBlock = 0;
+        this.nextBlock = 0;
         this.grade = 0;
         this.currentSpeedLimit = 0;
         this.GPSAntenna = false;
@@ -171,6 +174,7 @@ public class Train {
         this.slope = 0;
         this.finalSpeed = 0;
         this.trainAcceleration = 0;
+        this.metersIn = 0.0;
     	
     	this.trainModelGUI = null;
     }
@@ -325,7 +329,13 @@ public class Train {
     	this.distTravelled = this.currentSpeed * 1; // speed times the time between clock ticks = distance travelled
     	//System.out.println(finalSpeed);
     	
+    	if(!(currentBlock == this.position.getCurrentBlock())) {
+    		metersIn = 0;
+    	} else {
+    		metersIn += this.distTravelled;
+    	}
     	this.position.moveTrain(this.distTravelled); // method call to tell the position class how far to move the train
+    	
     }
     
     /**
@@ -365,8 +375,35 @@ public class Train {
     	// TODO
     }
     
-    public void updateArrivalStatus() {
-    	// TODO
+    public void setArrivalStatus(int status) {
+    	this.arrivalStatus = status;
+    }
+    
+    /**
+     * Returns the current x and y coordinates of this train in a double array
+     */
+    /*public double[] getCoordinates() {
+    	double []coords = new double[2];
+    	coords[0] = this.currentX;
+    	coords[1] = this.currentY;
+    	return coords;
+    }*/
+    
+    public Position getPosition(){
+        return this.position;
+    }
+    
+    public void setPosition(Position pos) {
+    	this.position = pos;
+    }
+    
+ // Called by the Train Controller
+    public int getBlock(){
+        return this.position.getCurrentBlock();
+    }
+    // Called by the MBO
+    public double[] getCoordinates(){
+        return this.position.getCoordinates();
     }
     
     /**
@@ -379,59 +416,12 @@ public class Train {
     }
     
     /**
-     * Returns the current x and y coordinates of this train in a double array
-     */
-    public double[] getCoordinates() {
-    	double []position = new double[2];
-    	position [0] = this.currentX;
-    	position[1] = this.currentY;
-    	return position;
-    }
-    
-    public Position getPosition(){
-        return this.position;
-    }
-    
-    public void setPosition(Position pos) {
-    	this.position = pos;
-    }
-    
-    /**
-     * Returns the train's current block
-     * @return
-     */
-    public Block getBlock() {
-    	return currentBlock;
-    }
-    
-    public void setBlock() {
-    	
-    }
-    
-    public void getMetersIntoBlock() {
-    	
-    }
-    
-    public void setMetersIntoBlock() {
-    	
-    }
-    
-    /**
      * Sets the grade of the current block/position of the train
      * @param g
-     */
-    public void setGrade(double g) {
-    	this.grade = g;
-    }
-    
-    /**
-     * gets the grade information from the track model
-     * TODO do I need this?
-     * @return
-     */
-    public double getGrade() {
-    	return this.grade;
-    }
+     
+    public void setGrade() {
+    	this.grade = this.currentBlock.getGrade();
+    }*/
     
     /**
      * Returns the set point speed for this specific train object
@@ -498,8 +488,28 @@ public class Train {
     	this.emerBrake = ebrake;
     }
     
+    public void setServiceBrake(boolean sBrake) {
+    	this.serviceBrake = sBrake;
+    }
+    
     public boolean getDriverEBrake() {
     	return this.driverEmerBrake;
+    }
+    
+    public void setRightDoors(boolean right) {
+    	this.rightDoorIsOpen = right;
+    }
+    
+    public void setLeftDoors(boolean left) {
+    	this.leftDoorIsOpen = left;
+    }
+    
+    public void setLights(boolean lights) {
+    	this.lightsAreOn = lights;
+    }
+    
+    public void setTemp(int temp) {
+    	this.temperature = temp;
     }
     
     /**
