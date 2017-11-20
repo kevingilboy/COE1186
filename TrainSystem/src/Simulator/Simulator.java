@@ -67,9 +67,9 @@ public class Simulator {
 		temperature = 69;
 		weather = "Sunny";
 		
-		//Update all modules
+		//Notify each module that communication routes have been made
 		for(Module module : modules) {
-			//Wait for module to finish updating before proceeding
+			//Wait for module to finish before proceeding
 			while(!module.communicationEstablished()) {};
 		}
 		
