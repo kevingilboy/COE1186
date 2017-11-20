@@ -30,17 +30,17 @@ public class EngineerGUI {
 	
 	private String trainID;
 	
-	//private PIController pi;
+	private PIController pi;
 	
 	/*public static void main(String[] args) {
 		new EngineerGUI("Train 1");
 	}*/
 	
-	public EngineerGUI(/*PIController p, */String s) {
-		//pi = p;
+	public EngineerGUI(PIController p, String s) {
+		pi = p;
 		trainID = s;
-		P = 0;//P = pi.getP();
-		I = 0;//I = pi.getI();
+		P = pi.getP();
+		I = pi.getI();
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.setBounds(100, 100, 400, 250);

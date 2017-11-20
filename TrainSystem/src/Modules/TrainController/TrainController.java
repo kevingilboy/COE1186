@@ -6,9 +6,10 @@ import Shared.Module;
 import Shared.SimTime;
 
 import Modules.TrackModel.TrackModel;
-import Modules.TrainModel.TrainModel;
 import Modules.TrackModel.Block;
 import Modules.TrackModel.Station;
+import Modules.TrainModel.TrainModel;
+import Modules.TrainModel.Train;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,10 +28,10 @@ public class TrainController implements Module {
 	
 	public void dispatchTrain(String trainID, String line) {
 		if (line.equals("RED")) {
-			controlList.put(trainID.hashCode(), new TrnController(trainID, line, this, redInfo);
+			controlList.put(trainID.hashCode(), new TrnController(trainID, line, this, redInfo));
 		}
 		else {
-			controlList.put(trainID.hashCode(), new TrnController(trainID, line, this, greenInfo);
+			controlList.put(trainID.hashCode(), new TrnController(trainID, line, this, greenInfo));
 		}
 	}
 	
@@ -44,7 +45,7 @@ public class TrainController implements Module {
 		C.setSafeBrakingDistance(dist);
 	}
 	
-	public void setBeacon(String trainID, double value) {
+	public void setBeacon(String trainID, int value) {
 		TrnController C = controlList.get(trainID.hashCode());
 		C.setBeacon(value);
 	}
@@ -81,7 +82,7 @@ public class TrainController implements Module {
 		//trainModel.setAnnouncement(trainID, announcement);
 	}
 	
-	public double receiveTrainActualSpeed(String trainID) {
+	/*public double receiveTrainActualSpeed(String trainID) {
 		//return trainModel.getActualSpeed(trainID);
 	}
 	
@@ -99,7 +100,7 @@ public class TrainController implements Module {
 	
 	public int receiveTrainPosition(String trainID) {
 		//return trainModel.getPosition(trainID).getCurrentBlock();
-	}
+	}*/
 	
 	public void receiveMap() {
 		ArrayList<Block> redBlocks = trackModel.getTrack("red");
@@ -119,7 +120,7 @@ public class TrainController implements Module {
 
 	@Override
 	public boolean updateTime(SimTime time) {
-		for (TrnController T : controlList) {
+		for (TrnController T : controlList.values()) {
 			T.updateTime();
 		}
 		return true;

@@ -61,17 +61,17 @@ public class TrnControllerGUI {
 	private boolean emergency;
 	private boolean lights;
 	
-	//private TrnController controller;
+	private TrnController controller;
 	
-	//private EngineerGUI eGUI;
+	private EngineerGUI eGUI;
 	
-	//private PIController pi;
+	private PIController pi;
 	
 	/*public static void main(String[] args) {
 		new TrnControllerGUI("Train 1");
 	}*/
 	
-	public TrnControllerGUI(/*PIController p, TrnController c, */String s) {
+	public TrnControllerGUI(PIController p, TrnController c, String s) {
 		trainID = s;
 		driveMode = 0;
 		speed = 0;
@@ -84,11 +84,9 @@ public class TrnControllerGUI {
 		service = false;
 		emergency = false;
 		lights = false;
-		//pi = p;
-		//controller = c;
-		//eGUI = new EngineerGUI(pi, trainID);
-		//setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		//setBounds(100, 100, 500, 380);
+		pi = p;
+		controller = c;
+		eGUI = new EngineerGUI(pi, trainID);
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.setBounds(100, 100, 500, 380);
