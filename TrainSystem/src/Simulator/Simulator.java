@@ -67,6 +67,12 @@ public class Simulator {
 		temperature = 69;
 		weather = "Sunny";
 		
+		//Update all modules
+		for(Module module : modules) {
+			//Wait for module to finish updating before proceeding
+			while(!module.communicationEstablished()) {};
+		}
+		
 		//Start timer
 		play();
 	}
@@ -109,7 +115,6 @@ public class Simulator {
 			timerTaskRunning = true;
 			
 			//Update all modules
-
 			for(Module module : modules) {
 				//Wait for module to finish updating before proceeding
 				while(!module.updateTime(currentTime)) {};
