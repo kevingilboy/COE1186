@@ -1,5 +1,7 @@
 package Modules.TrackModel;
 
+import Modules.TrainModel.Position;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -22,7 +24,7 @@ import java.util.*;
 public class DynamicDisplay{
 
 	// Dimensions of the track layout view
-	public int VERTICAL_FRAME_PADDING = 10;
+	public int VERTICAL_FRAME_PADDING = 0;
 	public int TRACK_LAYOUT_WIDTH = 334;
 	public int TRACK_LAYOUT_HEIGHT = 448;
 
@@ -34,7 +36,7 @@ public class DynamicDisplay{
 
 	// Initialize GUI window and components
 	private JFrame f;
-	private JPanel dynamicTrackView;
+	public TrackRenderWindow dynamicTrackView;
 
 	private static ArrayList<Block> blocks;
 
@@ -63,18 +65,23 @@ public class DynamicDisplay{
 
 		// Make the frame draggable
 		FrameDragListener frameDragListener = new FrameDragListener(f);
-		f.addMouseListener(frameDragListener);
-		f.addMouseMotionListener(frameDragListener);
+		dynamicTrackView.addMouseListener(frameDragListener);
+		dynamicTrackView.addMouseMotionListener(frameDragListener);
 
 		// Add the dynamic track view panel
 		f.add(dynamicTrackView);
+	}
+
+	// Add trains
+	public void dispatchTrain(String trainID, Position pos){
+		dynamicTrackView.dispatchTrain(trainID, pos);
 	}
 
 	// FrameDragListener class to enable enable draggable
 	// frame, used for dynamic track rendering since the
 	// window will not have a border or minimize / maximize / close
 	// buttons
-	public static class FrameDragListener extends MouseAdapter {
+	public class FrameDragListener extends MouseAdapter {
         private final JFrame frame;
         private Point mouseDownCompCoords = null;
 
@@ -83,14 +90,12 @@ public class DynamicDisplay{
         }
 
         public void mouseReleased(MouseEvent e) {
-        	// Toggle all switches on mouse release
-        	
-        	for (int i = 0; i < blocks.size(); i++){
-        		if (blocks.get(i).getSwitch() != null){
-        			boolean currState = blocks.get(i).getSwitch().getState();
-        			blocks.get(i).getSwitch().setState(!currState);
-        		}
-        	}
+
+        	// TESTING ONLY:
+        	// Dispatch a train on by clicking on
+        	// the track window
+        	Position pos = new Position(blocks);
+        	dispatchTrain("train 1", pos);
         	 
             mouseDownCompCoords = null;
         }

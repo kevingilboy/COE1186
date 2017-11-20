@@ -1,15 +1,14 @@
 package Modules.Ctc;
 
+import Modules.TrackModel.Block;
 import Shared.SimTime;
 
 public class Stop {
-	public String block;
-	public SimTime arrivalTime;
-	public SimTime departureTime;
+	public Block block;
+	public SimTime timeToDwell;
 	
-	public Stop(String blk,String arrival,String departure) {
-		block = blk;
-		arrivalTime = new SimTime(arrival);
-		departureTime = new SimTime(departure);
+	public Stop(Block block) {
+		this.block = block;
+		this.timeToDwell = null;
 	}
 }

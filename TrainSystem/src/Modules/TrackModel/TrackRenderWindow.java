@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,27 +27,30 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
 
     // Timer used to update the dynamic track view
     Timer timer;
-    
+
     // Track data structure whose information will be
     // used for the dynamic rendering
     ArrayList<Block> blocks;
     Color lineColor;
-    Position pos;
 
-    int blockPos = 0;
-    int meterPos = 0;
+    // Information for rendering each active train on the track
+    int pingCounter = 0;
+    int activeTrains = 0;
+    ArrayList<String> trainIDs = new ArrayList<String>();
+    ArrayList<Position> positions = new ArrayList<Position>();
+    ArrayList<Double[]> xy_coords = new ArrayList<Double[]>();
+    ArrayList<Double[]> previous_xy_coords = new ArrayList<Double[]>();
 
     public TrackRenderWindow(int width, int height, ArrayList<Block> blocks){
         initializeWindow(width, height);
         initializeTimer();
         initializeTrack(blocks);
-        pos = new Position(blocks);
     }
 
     // Initialize the window in the context 
     // of the DynamicDisplay GUI window
     public void initializeWindow(int width, int height){
-        int windowPadding = 5;
+        int windowPadding = 0;
         setBounds(windowPadding, windowPadding, width, height);
         setLayout(null);
         setBackground(Color.BLACK);
@@ -75,16 +79,51 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         this.blocks = blocks;
     }
 
+    // Dispatch a train to the track
+    public void dispatchTrain(String trainID, Position pos){
+        Double[] xy_coord = {(double)0.0, (double)0.0};
+        Double[] previous_xy_coord = {(double)0.0, (double)0.0};
+
+        xy_coords.add(xy_coord);
+        previous_xy_coords.add(previous_xy_coord);
+
+        trainIDs.add(trainID);
+        positions.add(new Position(blocks));
+        activeTrains++;
+    }
+
+    // TODO: Remove a train from the track
+    public void removeTrain(){
+        activeTrains--;
+        trainIDs.remove(activeTrains);
+        positions.remove(activeTrains);
+        xy_coords.remove(activeTrains);
+        previous_xy_coords.remove(activeTrains);
+    }
+
+    // Calls paintComponent(Graphics g) every time
+    // the timer goes off
+    public void actionPerformed(ActionEvent e){
+        repaint();
+    }
+
     // Draw the screen (gets refreshed every time the timer is
     // called, trigger the actionPerformed() listener to call 
     // repaint()
-    public void paintComponent (Graphics g)     
-    {
+    public void paintComponent(Graphics g){
+        
         super.paintComponent(g);
         Graphics2D g2d  = (Graphics2D) g;
 
-        // Draw black track shadow
+        drawTrack(g2d);
+        drawSwitches(g2d);
+        drawTrains(g2d);
+    }
+
+    // Render the track
+    public void drawTrack(Graphics2D g2d){
         
+        // Draw black track shadow
         g2d.setColor(new Color(25, 25, 25));
         for (int i = 0; i < blocks.size(); i++){
             double[] x_coords = blocks.get(i).getXCoordinates();
@@ -127,11 +166,6 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         // real track rails colored as the line color
         g2d.setColor(Color.black);
         for (int i = 0; i < blocks.size(); i++){
-            if (i == blockPos){
-                g2d.setColor(lineColor);
-            } else {
-                g2d.setColor(Color.black);
-            }
 
             double[] x_coords = blocks.get(i).getXCoordinates();
             double[] y_coords = blocks.get(i).getYCoordinates();
@@ -141,8 +175,10 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                             2, 2);
             }
         }
+    }
 
-        // Draw the switches in their current state
+    // Render the switches
+    public void drawSwitches(Graphics2D g2d){
         for (int i = 0; i < blocks.size(); i++){
             if (blocks.get(i).getSwitch() != null){
 
@@ -178,73 +214,61 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                     double[] y_coords = blocks.get(i).getYCoordinates();
 
                     g2d.setColor(lineColor);
+                    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                        RenderingHints.VALUE_ANTIALIAS_ON);
                     for (int j = 0; j < x_coords.length-2; j++){
                         g2d.drawRect((int)x_coords[j]-1, (int)y_coords[j]-1, 4, 4);
                     }
-
-                    g2d.setColor(Color.black);
-                    for (int j = 0; j < x_coords.length-2; j++){
-                        g2d.drawRect((int)x_coords[j], (int)y_coords[j], 2, 2);
-                    }
                 }
             }
-        }
+        }  
+    }
 
-        // Draw the train (currently just iterates through each
-        // position along the track, will later just appear at
-        // the current block position occupied in the simulation)
-        g2d.setColor(Color.white);
-        double[] xy_coords = pos.getCoordinates();
-        double x_coord = xy_coords[0];
-        double y_coord = xy_coords[1];
-        g2d.fillRect((int)x_coord-1, (int)y_coord-1, 5, 5);
+    // Render each active train
+    public void drawTrains(Graphics2D g2d){
+        for (int i = 0; i < activeTrains; i++){
+                
+            int scaledMetersToMove = (int)(blocks.get(positions.get(i).getCurrentBlock()).getLength()) / 10;
+            int direction = positions.get(i).moveTrain( scaledMetersToMove );
 
-        pos.moveTrain(10);
+            if (direction == 1){
+                (xy_coords.get(i))[0] = (positions.get(i).getCoordinates())[0];
+                (xy_coords.get(i))[1] = (positions.get(i).getCoordinates())[1];
+                (previous_xy_coords.get(i))[0] = (xy_coords.get(i))[0];
+                (previous_xy_coords.get(i))[1] = (xy_coords.get(i))[1];
+            } else if (direction == -1){
+                (xy_coords.get(i))[0] = (positions.get(i).getInverseCoordinates())[0];
+                (xy_coords.get(i))[1] = (positions.get(i).getInverseCoordinates())[1];
+                (previous_xy_coords.get(i))[0] = (xy_coords.get(i))[0];
+                (previous_xy_coords.get(i))[1] = (xy_coords.get(i))[1];
+            } else {
+                (xy_coords.get(i))[0] = (previous_xy_coords.get(i))[0];
+                (xy_coords.get(i))[1] = (previous_xy_coords.get(i))[1];
+            }
+            
+            g2d.setColor(Color.white);
+            g2d.fillRect(((xy_coords.get(i))[0]).intValue() - 1, ((xy_coords.get(i))[1]).intValue() - 1, 5, 5);
 
+            g2d.drawString("(" + 
+                String.format("%.2f", (xy_coords.get(i))[0]) + ", " + 
+                String.format("%.2f", (xy_coords.get(i))[1]) + ")", 
+                ((xy_coords.get(i))[0]).intValue() - 50, ((xy_coords.get(i))[1]).intValue() - 15);
 
-        /*
-        double[] xy_coords = blocks.get(blockPos).getCoordinatesAtMeter(meterPos);
-        double x_coord = xy_coords[0];
-        double y_coord = xy_coords[1];
-        g2d.fillRect((int)x_coord-1, (int)y_coord-1, 5, 5);
+            g2d.drawString(blocks.get(positions.get(i).getCurrentBlock()).toString(), 
+                ((xy_coords.get(i))[0]).intValue() - 30, ((xy_coords.get(i))[1]).intValue() - 30);
+     
+            g2d.setColor(lineColor);
+            pingCounter++;
+            int radius = (pingCounter % 14);
+            Shape circle = new Ellipse2D.Double(((xy_coords.get(i))[0]).intValue() - radius, 
+                            ((xy_coords.get(i))[1]).intValue() - radius,
+                            2.0*radius, 2.0*radius );
+            g2d.draw(circle);
 
-        // Draw vertical and horizontal lines tracking the train
-        g2d.setColor(Color.DARK_GRAY);
-        g2d.drawLine(0, (int)y_coord, 334, (int)y_coord);
-        g2d.drawLine((int)x_coord, 0, (int)x_coord, 448);
-
-        // Draw the coordinates of the train's current location 
-        // on top of the train
-        g2d.setColor(Color.white);
-        g2d.drawString("(" + String.format("%.2f", x_coord) + ", " + String.format("%.2f", y_coord) + ")", (int)x_coord - 50, (int)y_coord - 15);
-
-        // Draw the currently occupied block position
-        // on top of the train
-        g2d.setColor(lineColor);
-        g2d.setFont(new Font("default", Font.BOLD, 12));
-        g2d.drawString(blocks.get(blockPos).getSection() + Integer.toString(blocks.get(blockPos).getId() + 1) + ", " + Integer.toString(meterPos),
-                        (int)x_coord - 30, 
-                        (int)y_coord - 5);
-        g2d.setFont(new Font("default", Font.PLAIN, 12));
-
-        // Increment the train's block position.
-        // If the incremented number of meters overflows to the
-        // next block, move to overflow amount of meters along
-        // the next block.
-        meterPos += (int)(blocks.get(blockPos).getLength() / 10);
-        if (meterPos >= blocks.get(blockPos).getLength()){
-            meterPos = meterPos - (int)blocks.get(blockPos).getLength();
-            blockPos++;
-            if (blockPos >= blocks.size()){
-                blockPos = 0;
+            if (direction == -2){
+                removeTrain();
             }
         }
-        */
     }
+}
 
-    // Calls paintComponent(Graphics g) every time
-    // the timer goes off
-    public void actionPerformed(ActionEvent e) {
-        repaint();
-    }
-} 

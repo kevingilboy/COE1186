@@ -14,10 +14,10 @@ public class Position{
 	
 	private int previousBlockID;
 	private int currentBlockID;
-	private int direction; 
+	private int nextBlockID;
 	private double blockMeterPosition;
 	private double[] coordinates; // (double x_coords, double y_coords)
-	// private int nextBlockID;
+	private double[] inverseCoordinates; // Used for moving in negative direction along a block
 
 	public Position(ArrayList<Block> track){
 		this.track = track;
@@ -29,66 +29,85 @@ public class Position{
 		// given by trackModel.getTrack();
 		
 		currentBlockID = track.get(track.size() - 1).getId();
-		previousBlockID = -1;
-		direction = 1;
+		previousBlockID = -1; // No previous block upon dispatch, indicated by (-1) for previous
+		nextBlockID = 0; // default, not used
 		blockMeterPosition = 0.0;
 		coordinates = track.get(currentBlockID).getCoordinatesAtMeter((int)blockMeterPosition);
+		inverseCoordinates = track.get(currentBlockID).getCoordinatesAtMeter((int)((this.track).get(currentBlockID).getLength()) - 1);
 	} 
 
 
 	// Moves the train to a new position given a distance from 
 	// the previous position
-	public void moveTrain(double distance){
+	public int moveTrain(double distance){
 
-		if (direction == 1){
-			blockMeterPosition += distance;
+		blockMeterPosition += distance;
+		nextBlockID = nextBlock(currentBlockID, previousBlockID);
 
-			if ((int)blockMeterPosition >= track.get(currentBlockID).getLength()){
-				System.out.println("\n~~~~SECTION UPDATE (+1)~~~~");
-				int nextBlockID = nextBlock(currentBlockID, previousBlockID);
-				previousBlockID = currentBlockID;
-				currentBlockID = nextBlockID;
+		if ((int)blockMeterPosition >= track.get(currentBlockID).getLength()){
 
-				System.out.print("block: "); System.out.print(track.get(currentBlockID).getSection());
-				System.out.print(track.get(currentBlockID).getId());
+			previousBlockID = currentBlockID;
+			currentBlockID = nextBlockID;
 
-				System.out.print(", (before)blockMeterPosition: "); System.out.print(blockMeterPosition);
-				blockMeterPosition -= track.get(previousBlockID).getLength();
-				
-				System.out.print(", (edge)block length(): "); System.out.print(track.get(currentBlockID).getLength());
-				System.out.print(", blockMeterPosition: "); System.out.println(blockMeterPosition);
-			}
-				
-			System.out.print("block: "); System.out.print(track.get(currentBlockID).getSection());
-			System.out.print(track.get(currentBlockID).getId());
-			System.out.print(", block length(): "); System.out.print(track.get(currentBlockID).getLength());
-			System.out.print(", blockMeterPosition: "); System.out.println(blockMeterPosition);
-
-		} else if (direction == -1){
-			blockMeterPosition -= distance;
-
-			if ((int)blockMeterPosition < 0){
-				System.out.println("~~~~SECTION UPDATE (-1)~~~~");
-				int nextBlockID = nextBlock(currentBlockID, previousBlockID);
-				previousBlockID = currentBlockID;
-				currentBlockID = nextBlockID;
-				blockMeterPosition += track.get(previousBlockID).getLength();
-				System.out.print("(edge)block length(): "); System.out.print(track.get(currentBlockID).getLength());
-				System.out.print(", blockMeterPosition: "); System.out.println(blockMeterPosition);
-
-			}
-
-			System.out.print("block length(): "); System.out.print(track.get(currentBlockID).getLength());
-			System.out.print(", blockMeterPosition: "); System.out.println(blockMeterPosition);
-		
+			blockMeterPosition -= track.get(previousBlockID).getLength();
 		}
 
 		coordinates = track.get(currentBlockID).getCoordinatesAtMeter((int)blockMeterPosition);
+		inverseCoordinates = track.get(currentBlockID).getCoordinatesAtMeter(   
+							(int)(track.get(currentBlockID).getLength()) - (int)blockMeterPosition - 1);
+
+		// TODO:
+		// 
+		// return "direction" from nextBlock() method calculated in TrackIterator's nextBlock, 
+		// adding in the logic below as additional state machine logic. The return value of 
+		// nextBlock() should be an int array: [nextBlockID, direction]
+		
+		int direction = 0;
+		if (currentBlockID != track.get(track.size() - 1).getId()){
+			if (nextBlockID > currentBlockID){
+				direction = 1;
+			} else if(nextBlockID < currentBlockID){
+				direction = -1;
+			}
+
+			if (track.get(currentBlockID).getSwitch() != null){
+				if ( (track.get(currentBlockID).getSwitch().getEdge() == Switch.EDGE_TYPE_HEAD) && 
+					(previousBlockID > currentBlockID) && 
+					(previousBlockID != track.get(track.size()-1).getId()) ){
+					direction = -1;
+				}
+
+				if ( (track.get(currentBlockID).getSwitch().getEdge() == Switch.EDGE_TYPE_TAIL) &&
+					(previousBlockID < currentBlockID) &&
+					(track.get(previousBlockID).getSwitch() == null) &&
+					(previousBlockID != track.get(track.size()-1).getId()) ){
+
+					direction = 1;
+				}
+			}
+		} else {
+			direction = 1;
+		}
+
+		return direction;
 	}
 
 	// Returns the current coordinates of the train
 	public double[] getCoordinates(){
 		return coordinates;
+	}
+
+	// Returns the current coordinates of the train 
+	// moving in the negative direction along a block
+	// (higher meter value to lower meter value).
+	// This method is only used by the TrackRenderWindow.
+	public double[] getInverseCoordinates(){
+		return inverseCoordinates;
+	}
+
+	// Returns the current block occupied by the train
+	public int getCurrentBlock(){
+		return currentBlockID;
 	}
 
 	// Returns the next block ID given the current and previous block ID's
