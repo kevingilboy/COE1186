@@ -5,6 +5,8 @@ package Modules.TrainController;
 import Shared.Module;
 import Shared.SimTime;
 
+import java.util.ArrayList;
+
 public class TrnController {
 	private String trainID;
 	private String line;
@@ -44,7 +46,7 @@ public class TrnController {
 		//currentStation = null;
 		currentBlock = 0;	//yard
 		controller = C;
-		pi = new PIController(//p and i values HERE);
+		pi = new PIController(5, 5;
 		controlGUI = new TrnControllerGUI(pi, this, trainID);
 		driveMode = 0;
 		blockMode = 0;
@@ -68,7 +70,7 @@ public class TrnController {
 		trainDirection = 0;
 	}
 	
-	public boolean timeUpdate() {
+	public boolean updateTime() {
 		actualSpeed = controller.receiveTrainActualSpeed(trainID);
 		ctcAuth = controller.receiveCtcAuthority(trainID);
 		passEBrakes = controller.receivePassengerEmergency(trainID);
@@ -214,7 +216,7 @@ public class TrnController {
 	}
 	
 	public void setEmergencyBrake(boolean status) {
-		ebrakes = status;
+		eBrakes = status;
 		//controlGUI.setEmergency(status);
 	}
 	
@@ -268,11 +270,11 @@ public class TrnController {
 	
 	private void stationCheck() {
 		if (actualSpeed == 0) {
-			if (currentBlockInfo.getStationName != "") {
+			if (currentBlockInfo.getStationName() != "") {
 				inStation = true;
-				announceArrived(currentBlockInfo.getStationName);
+				announceArrived(currentBlockInfo.getStationName());
 				//get train direction somehow
-				if (currentBlockInfo.getDirection == 1 || currentBlockInfo.getDirection == -1) {
+				if (currentBlockInfo.getDirection() == 1 || currentBlockInfo.getDirection() == -1) {
 					if (currentBlockInfo.getPositive()) {
 						openRight();
 					}
