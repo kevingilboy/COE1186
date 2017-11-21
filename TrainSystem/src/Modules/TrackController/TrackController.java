@@ -13,7 +13,7 @@ public class TrackController implements Module{
 	//Subclass variables
 	private TrackControllerGUI tcgui;
 	private PLC tcplc;
-	private String initialPLCPath = "plc.txt";
+	private String initialPLCPath = null;
 	//Set internally
 	private String line;
 	private String section;
@@ -160,5 +160,11 @@ public class TrackController implements Module{
 	private void transmitCrossingState(String line, int blockId, boolean state){
 		//logic before transmitting
 		trackModel.getBlock(line, blockId).getCrossing().setState(state);
+	}
+
+	@Override
+	public boolean communicationEstablished() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 }

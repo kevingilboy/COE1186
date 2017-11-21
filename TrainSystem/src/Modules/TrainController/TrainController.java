@@ -131,4 +131,10 @@ public class TrainController implements Module {
 		}
 		return true;
 	}
+
+	@Override
+	public boolean communicationEstablished() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }

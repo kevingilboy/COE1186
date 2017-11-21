@@ -42,7 +42,7 @@ public class Simulator {
 		trainModel = new TrainModel();
 		mbo = new Mbo();
 		
-		modules = new Module[]{ctc,trackController,trackModel,trainController,trainModel,mbo};
+		modules = new Module[]{ctc,trackController,trackModel,trainModel, trainController, mbo};
 		
 		//Pass cross references
 		ctc.simulator = this;
@@ -65,7 +65,13 @@ public class Simulator {
 		mbo.trainModel = trainModel;
 		
 		temperature = 69;
-		weather = "Sunny";
+		weather = "SUNNY";
+		
+		//Tell each module that communication has been established
+		for(Module module : modules) {
+			//Wait for module to finish before proceeding
+			while(!module.communicationEstablished()) {};
+		}
 		
 		//Start timer
 		play();
@@ -109,7 +115,6 @@ public class Simulator {
 			timerTaskRunning = true;
 			
 			//Update all modules
-
 			for(Module module : modules) {
 				//Wait for module to finish updating before proceeding
 				while(!module.updateTime(currentTime)) {};

@@ -1,6 +1,6 @@
 package Modules.TrackController;
 
-import org.apache.commons.jexl3.*;
+import org.apache.commons.jexl2.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -20,8 +20,8 @@ public class PLC {
 	public PLC(TrackController tc, String plcPath){
 		this.tc = tc;
 		this.line = tc.associatedLine;
-		parsePLC(plcPath);
-		jexl = new JexlBuilder().create();
+		//parsePLC(plcPath);
+		jexl = new JexlEngine();
 	}
 	
 	public boolean parsePLC(String plcPath){
