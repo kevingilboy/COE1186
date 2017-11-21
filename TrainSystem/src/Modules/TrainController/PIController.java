@@ -266,20 +266,12 @@ public class PIController {
 				P *= -1;
 			if (I > 0)
 				I *= -1;
-			if (D > 0)
-				D *= -1;
-			if (F > 0)
-				F *= -1;
 		}
 		else {	//all values should be above zero
 			if(P < 0)
 				P *= -1;
 			if(I < 0)
 				I *= -1;
-			if(D < 0)
-				D *= -1;
-			if(F < 0)
-				F *= -1;
 		}
 	}
 }
