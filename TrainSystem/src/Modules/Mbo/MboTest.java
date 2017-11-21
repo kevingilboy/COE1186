@@ -16,7 +16,7 @@ public class MboTest {
 	@Test 
 	public void testTrainDataNotNull() {
 		Object[][] trainData = mbo.getTrainData("");
-		assertThat(trainData,not(null));
+		assertThat(trainData,not(new String()));
 	}
 
 	@Test 
