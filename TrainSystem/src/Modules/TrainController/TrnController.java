@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class TrnController {
 	private String trainID;
 	private String line;
-	//private String currentStation;
+	private String currentStation;
 	private PIController pi;
 	private TrnControllerGUI controlGUI;
 	private TrainController controller;
@@ -39,6 +39,11 @@ public class TrnController {
 	private boolean inStation;
 	private ArrayList<BlockInfo> mapInfo;
 	private BlockInfo currentBlockInfo;
+	
+	public final int APPROACHING = 0;
+	public final int ARRIVED = 1;
+	public final int DEPARTING = 2;
+	public final int ENROUTE = 3;
 	
 	public TrnController(String id, String ln, TrainController C, ArrayList<BlockInfo> map) {
 		trainID = id;
@@ -124,7 +129,16 @@ public class TrnController {
 	}
 	
 	public void updateGUI() {
-		//
+		controlGUI.setLeft(leftDoor);
+		controlGUI.setRight(rightDoor);
+		controlGUI.setLights(lightState);
+		controlGUI.setService(sBrakes);
+		controlGUI.setEmergency(eBrakes);
+		controlGUI.setPower(power);
+		controlGUI.setSpeed(actualSpeed);
+		controlGUI.setSetpoint(setpointSpeed);
+		controlGUI.setAuth(overallAuth);
+		controlGUI.guiUpdate(false);
 	}
 	
 	public void openLeft() {
@@ -154,7 +168,7 @@ public class TrnController {
 	public void lightsOn() {
 		lightState = true;
 		controller.transmitLights(trainID, lightState);
-		controlGUI.setRight(true);
+		controlGUI.setLights(true);
 	}
 	
 	public void lightsOff() {
@@ -309,18 +323,31 @@ public class TrnController {
 		String stationName = "";
 		if (beacon != 0)
 		{
-			//get station name from beacon
-			announceApproach(stationName);
+			if (currentStation == null) {
+				//get station name from beacon
+				currentStation = stationName;
+				announceApproach(stationName);
+			}
+			else { //currentStation == beaconStation
+				currentStation = null;
+				announceEnRoute();
+			}
 		}
 	}
 	
 	private void announceApproach(String stationName) {
-		String announcement = "Now approaching station: " + stationName + "";
-		controller.transmitAnnouncement(trainID, announcement);
+		controller.transmitAnnouncement(trainID, APPROACHING, stationName);
 	}
 	
 	private void announceArrived(String stationName) {
-		String announcement = "Arrived at station: " + stationName + "";
-		controller.transmitAnnouncement(trainID, announcement);
+		controller.transmitAnnouncement(trainID, ARRIVED, stationName);
+	}
+	
+	private void announceDeparting(String stationName) {
+		controller.transmitAnnouncement(trainID, DEPARTING, stationName);
+	}
+	
+	private void announceEnRoute() {
+		controller.transmitAnnouncement(trainID, ENROUTE, "");
 	}
 }

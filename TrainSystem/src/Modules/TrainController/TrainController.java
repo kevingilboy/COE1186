@@ -21,6 +21,11 @@ public class TrainController implements Module {
 	private ArrayList<BlockInfo> redInfo;
 	private ArrayList<BlockInfo> greenInfo;
 	private SimTime time;
+	
+	public final int APPROACHING = 0;
+	public final int ARRIVED = 1;
+	public final int DEPARTING = 2;
+	public final int ENROUTE = 3;
 
 	public TrainController() {
 		controlList = new HashMap<Integer, TrnController>();
@@ -55,11 +60,11 @@ public class TrainController implements Module {
 	}
 	
 	public void transmitLeft(String trainID, boolean status) {
-		//trainModel.setLeft(trainID, status);
+		//trainModel.setLeftDoor(trainID, status);
 	}
 	
 	public void transmitRight(String trainID, boolean status) {
-		//trainModel.setRight(trainID, status);
+		//trainModel.setRightDoor(trainID, status);
 	}
 	
 	public void transmitService(String trainID, boolean status) {
@@ -78,8 +83,9 @@ public class TrainController implements Module {
 		trainModel.setTemp(trainID, temperature);
 	}
 	
-	public void transmitAnnouncement(String trainID, String announcement) {
-		//trainModel.setAnnouncement(trainID, announcement);
+	public void transmitAnnouncement(String trainID, int status, String stationName) {
+		//trainModel.setArrivalStatus(trainID, status, stationName);
+		
 	}
 	
 	/*public double receiveTrainActualSpeed(String trainID) {
@@ -103,8 +109,8 @@ public class TrainController implements Module {
 	}*/
 	
 	public void receiveMap() {
-		ArrayList<Block> redBlocks = trackModel.getTrack("red");
-		ArrayList<Block> greenBlocks = trackModel.getTrack("green");
+		ArrayList<Block> redBlocks = trackModel.getTrack("RED");
+		ArrayList<Block> greenBlocks = trackModel.getTrack("GREEN");
 		redInfo = new ArrayList<BlockInfo>(77);
 		greenInfo = new ArrayList<BlockInfo>(152);
 		Station S;
