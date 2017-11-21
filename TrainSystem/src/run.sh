@@ -3,6 +3,13 @@ echo '|                 |'
 echo '|    Compiling    |'
 echo '|                 |'
 echo '-------------------'
+
+javac Modules/Ctc/Ctc.java
+javac Modules/TrackController/TrackController.java
+javac Modules/TrackModel/TrackModel.java
+javac Modules/TrainModel/TrainModel.java
+javac Modules/TrainController/TrainController.java
+javac Modules/Mbo/Mbo.java
 javac Simulator/Simulator.java
 
 echo '> Done'
