@@ -53,4 +53,11 @@ public class CtcStandalone extends CtcCore{
 			play();
 		}
 	}
+
+
+	@Override
+	public boolean communicationEstablished() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }

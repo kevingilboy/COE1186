@@ -223,4 +223,10 @@ public class TrainModel implements Module{
 		this.getTrain(trainID).setMBOAntenna(status);
 	}
 
+	@Override
+	public boolean communicationEstablished() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }

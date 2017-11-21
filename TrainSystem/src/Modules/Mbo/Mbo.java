@@ -41,10 +41,6 @@ public class Mbo implements Module {
 		return output;
 	}
 
-	public Object[][] getTrainData(String regex) {
-		return null;
-	}
-
 	@Override
 	public boolean updateTime(SimTime time) {
 		this.time = time;
@@ -74,5 +70,11 @@ public class Mbo implements Module {
 
 	private double calculateSafeBrakingDistance(String trainID) {
 		return 0;	
+	}
+
+	@Override
+	public boolean communicationEstablished() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 }

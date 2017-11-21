@@ -113,4 +113,10 @@ public class TrackModel implements Module{
 	public void transmitSuggestedTrainSetpointSpeed(String trainName, int speed){
 		// ...
 	}
+
+	@Override
+	public boolean communicationEstablished() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }

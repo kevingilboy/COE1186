@@ -152,7 +152,7 @@ public class TrackControllerGUI extends JFrame{
 		
 		comboBlock.setBounds(384, 19, 104, 27);
 		trackSelectorPanel.add(comboBlock);
-		comboBlock.setModel(new DefaultComboBoxModel(blocks));
+		//comboBlock.setModel(new DefaultComboBoxModel(blocks));
 		//comboBlock.addActionListener(new BlockChange());
 		
 		JComboBox comboSection = new JComboBox();
