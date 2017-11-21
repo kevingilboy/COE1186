@@ -23,6 +23,7 @@ public class TrainModel implements Module{
 	double powSum = 0.0;
 	private String line = "GREEN";
 	private int i = 0;
+	private boolean shown = false;
 	//Instantiate a GUI for this train
 
 	/**
@@ -44,14 +45,17 @@ public class TrainModel implements Module{
 		currentTime = time;
 		i++;
 		// this is just for test
-		if(i == 1) {
-			dispatchTrain("Train 1", line);
+		if(!shown) {
+			//dispatchTrain("Train 1", line);
 			// instantiateGUI(train);
-	        this.getTrain("Train 1").showTrainGUI();
-	        dispatchTrain("Train 2", line);
-	        dispatchTrain("Train 3", line);
-	        dispatchTrain("Train 4", line);
-	        dispatchTrain("Train 5", line);
+			int ID = trainList.keySet().iterator().next();
+	        Train first = trainList.get(ID);
+	        first.showTrainGUI();
+	        shown = true;
+	        //dispatchTrain("Train 2", line);
+	        //dispatchTrain("Train 3", line);
+	        //dispatchTrain("Train 4", line);
+	        //dispatchTrain("Train 5", line);
 		}
 		//setPower("Train 1", pow+10);
 		powSum += 10;
@@ -167,6 +171,23 @@ public class TrainModel implements Module{
 	
 	public void setPosition(String trainID, Position position) {
 		this.getTrain(trainID).setPosition(position);
+	}
+	
+	/**
+	 * I call on the MBO to set the MBO signal
+	 * @param trainID
+	 */
+	public void setCoordinates(String trainID) {
+		double coord[] = this.getTrain(trainID).getCoordinates();
+	}
+	
+	/**
+	 * Train Controller calls this on a specific train to get the current block ID
+	 * @param trainID
+	 * @return
+	 */
+	public int getBlock(String trainID) {
+		return this.getTrain(trainID).getBlock();
 	}
 	
 	public void setPower(String trainID, double powerCommand) {

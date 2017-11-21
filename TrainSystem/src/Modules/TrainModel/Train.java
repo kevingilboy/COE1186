@@ -38,9 +38,10 @@ public class Train {
     public final double KG_PER_POUND = 0.454; 
     public final String DEGREE = "\u00b0";
     
-    public final int DEPARTING = 0;
+    public final int APPROACHING = 0;
     public final int ARRIVING = 1;
-    public final int EN_ROUTE = 2;
+    public final int DEPARTING = 2;
+    public final int EN_ROUTE = 3;
     
     // Declaring a variables for the GUI
     public TrainModelGUI trainModelGUI;
