@@ -19,6 +19,13 @@ public class MboTest {
 		assertThat(trainData,not(new String()));
 	}
 
+	@Test
+	public void testGetTrainDataByName() {
+		Object[][] trainData = mbo.getTrainData("RED 2");
+		String red2Str = new String("RED 2");
+		assertEquals(trainData[0][0], red2Str);
+	}
+
 	@Test 
 	public void testAlwaysPasses() {
 		assertEquals(1,1);
