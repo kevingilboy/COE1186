@@ -67,7 +67,6 @@ public abstract class CtcCore implements Module,TimeControl {
 		}
 		currentTime = new SimTime(time);
 		
-		//DO STUFF HERE
 		calculateThroughput();
 		//TODO update trains
 		
@@ -77,36 +76,35 @@ public abstract class CtcCore implements Module,TimeControl {
 	}
 	
 	/*
-	 * FUNCTIONALITY
-	 */	
-	protected void calculateThroughput() {
-		double timeElapsed = SimTime.hoursBetween(startTime, currentTime);
-		throughput = runningTicketSales/timeElapsed;
-	}
-
-	/*
-	 * GETTERS
+	 * SCHEDULES
 	 */
 	public Schedule getScheduleByName(String name){
 		Schedule schedule = schedules.get(name);
 		return schedule;
 	}
 	
+	public void addSchedule(String name, Schedule schedule) {
+		schedules.put(name, schedule);
+	}
+	
+	public Schedule removeScheduleByName(String name) {
+		Schedule removedSchedule = schedules.remove(name);
+		return removedSchedule;
+	}
+	
+	/*
+	 * TRAINS
+	 */	
 	public Train getTrainByName(String name){
 		Train train = trains.get(name);
 		return train;
 	}
 	
-	/*
-	 * SETTERS
-	 */
-
-	/*
-	 * TICKETS
-	 */
-	public void addTicketSales(int tickets) {
-		runningTicketSales+=tickets;
-		calculateThroughput();
+	public void dispatchTrain(String name) {
+		Schedule schedule = removeScheduleByName(name);
+		
+		Train train = new Train(schedule);
+		trains.put(name, train);
 	}
 	
 	public void addPassengers(String trainName, int number) {
@@ -120,26 +118,26 @@ public abstract class CtcCore implements Module,TimeControl {
 	}
 	
 	/*
-	 * ADDERS
-	 */	
-	public void dispatchTrain(String name) {
-		Schedule schedule = removeScheduleByName(name);
-		
-		Train train = new Train(schedule);
-		trains.put(name, train);
-		
-		
+	 * TICKETS
+	 */
+	public void addTicketSales(int tickets) {
+		runningTicketSales+=tickets;
+		calculateThroughput();
 	}
-	
-	public void addSchedule(String name, Schedule schedule) {
-		schedules.put(name, schedule);
+	protected void calculateThroughput() {
+		double timeElapsed = SimTime.hoursBetween(startTime, currentTime);
+		throughput = runningTicketSales/timeElapsed;
 	}
 	
 	/*
-	 * REMOVERS
+	 * TRANSMITTERS
 	 */
-	public Schedule removeScheduleByName(String name) {
-		Schedule removedSchedule = schedules.remove(name);
-		return removedSchedule;
+	public void transmitSuggestedSpeed(String name, int speed) {
+		//UNCOMMENT once Nick adds this
+		//trackController.transmitSuggestedSpeed(name,speed);
+	}
+	public void transmitCtcAuthority(String name, int auth) {
+		//UNCOMMENT once Nick adds this
+		//trackController.transmitAuthority(name,auth);
 	}
 }
