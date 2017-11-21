@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Line2D;
@@ -386,26 +387,26 @@ public class TrainModelGUI extends JFrame {
 		contentPane.add(lblBrakeFailure);
 		
 		engineFailPanel.setBounds(660, 100, 34, 31);
-		ImageIcon ledImage = new ImageIcon("greyStatusIcon.png");
-		JLabel ledImageLabel = new JLabel("", ledImage, JLabel.CENTER);
+		Image ledImage = new ImageIcon(this.getClass().getResource("greyStatusIcon.png")).getImage();
+		JLabel ledImageLabel = new JLabel();
 		ledImageLabel.setBounds(660, 105, 34, 31);
-		ledImageLabel.setIcon(ledImage);
+		ledImageLabel.setIcon(new ImageIcon(ledImage));
 		contentPane.add(ledImageLabel);
 		contentPane.add(engineFailPanel);
 		
 		signalFailPanel.setBounds(660, 153, 34, 31);
-		ImageIcon ledImage2 = new ImageIcon("greyStatusIcon.png");
-		JLabel ledImageLabel2 = new JLabel("", ledImage2, JLabel.CENTER);
+		Image ledImage2 = new ImageIcon(this.getClass().getResource("greyStatusIcon.png")).getImage();
+		JLabel ledImageLabel2 = new JLabel();
 		ledImageLabel2.setBounds(660, 155, 34, 31);
-		ledImageLabel2.setIcon(ledImage2);
+		ledImageLabel2.setIcon(new ImageIcon(ledImage2));
 		contentPane.add(ledImageLabel2);
 		contentPane.add(signalFailPanel);
 		
 		brakeFailPanel.setBounds(660, 203, 34, 31);
-		ImageIcon ledImageNew = new ImageIcon("greyStatusIcon.png");
-		JLabel ledImageLabel3 = new JLabel("", ledImageNew, JLabel.CENTER);
+		Image ledImageNew = new ImageIcon(this.getClass().getResource("greyStatusIcon.png")).getImage();
+		JLabel ledImageLabel3 = new JLabel();
 		ledImageLabel3.setBounds(660, 205, 34, 31);
-		ledImageLabel3.setIcon(ledImageNew);
+		ledImageLabel3.setIcon(new ImageIcon(ledImageNew));
 		contentPane.add(ledImageLabel3);
 		contentPane.add(brakeFailPanel);
 		
