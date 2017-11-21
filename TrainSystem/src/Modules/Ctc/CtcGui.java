@@ -48,7 +48,7 @@ public class CtcGui {
 	
 	private JLabel lblThroughputAmt;
 	
-	/**
+	/*
 	 * Dispatched train tables
 	 */
 	private Object[] dispatchedTrainsColumnNames = {"Train","Location","Speed","Authority","Passengers"};
@@ -57,7 +57,7 @@ public class CtcGui {
 	private ScheduleJTable dispatchSelectedTable;
 	private JButton btnSuggestSpeed;
 		
-	/**
+	/*
 	 * Creator tables
 	 */
 	private JButton addToDispatchToQueue;
@@ -66,7 +66,7 @@ public class CtcGui {
 	private JComboBox<Line> trainCreationLine;
 	private JTextField trainCreationName;
 	
-	/**
+	/*
 	 * Queue tables
 	 */
 	private Object[] queueTrainColumnNames = {"Train","Departure"};
@@ -77,7 +77,7 @@ public class CtcGui {
 	private JTextField queueDepartTime;
 	private JButton btnDispatchQueueSchedule;
 	
-	/**
+	/*
 	 * Block select variables
 	 */
 	private JSpinner blockNumberSpinner;
@@ -96,13 +96,13 @@ public class CtcGui {
 	private JButton btnDecSpeed;
 	private JButton btnIncSpeed;
 	
-	/**
+	/*
 	 * Constants
 	 */
 	private final int GUI_WINDOW_HEIGHT = 800;
 	private final int GUI_WINDOW_WIDTH = 1400;
 
-	/**
+	/*
 	 * Real Time
 	 */
 	private JLabel clockLabel = new JLabel("00:00:00");
@@ -551,7 +551,10 @@ public class CtcGui {
 		btnSuggestSpeed.setEnabled(false);
 		btnSuggestSpeed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO send suggested speed
+				String speed = suggestedSpeed.getText();
+				if(speed.contains("[0-9]+")) {
+					ctc.transmitSuggestedSpeed(dispatchSelectedTable.schedule.name, Integer.parseInt(speed));
+				}
 			}
 		});
 		btnSuggestSpeed.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -864,6 +867,6 @@ public class CtcGui {
 		checkQueueForDisaptches();
 		
 		//Update the locations of trains
-		//updateDispatchedTable();
+		updateDispatchedTable();
 	}
 }
