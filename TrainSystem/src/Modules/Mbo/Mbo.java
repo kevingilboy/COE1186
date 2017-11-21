@@ -41,6 +41,10 @@ public class Mbo implements Module {
 		return output;
 	}
 
+	public Object[][] getTrainData(String regex) {
+		return null;
+	}
+
 	@Override
 	public boolean updateTime(SimTime time) {
 		this.time = time;
