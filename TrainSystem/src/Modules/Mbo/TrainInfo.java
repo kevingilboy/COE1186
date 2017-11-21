@@ -1,19 +1,21 @@
 package Modules.Mbo;
 
+import java.time.LocalDateTime;
+
 public class TrainInfo {
 	
 	private String name;
-	private double[2] position;
+	private double[] position;
 	private LocalDateTime timeSignalReceived;
-	private double[2] previousPosition;
+	private double[] previousPosition;
 	private LocalDateTime timePreviousSignalReceived;
-	private double[2] velocity;
+	private double[] velocity;
 	private double speed;
 	private double authority;
 	private LocalDateTime timeSignalTransmitted;
 
-	public TrainInfo() {
-
+	public TrainInfo(String name) {
+		this.name = name;
 	}
 
 	private void calculateVelocity() {
