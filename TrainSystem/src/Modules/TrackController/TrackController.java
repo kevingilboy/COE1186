@@ -64,7 +64,7 @@ public class TrackController implements Module{
 	}
 	
 	private void updateStates(){
-		for(int i=0; i < associatedBlocks.length; i++){
+		for(int i=0; i<associatedBlocks.length; i++){
 			receiveBlockInfo(line, Integer.parseInt(associatedBlocks[i]));
 			runPLC();
 			if(Integer.parseInt(associatedBlocks[i]) == tcgui.getSelectedBlockId()){
@@ -74,11 +74,16 @@ public class TrackController implements Module{
 	}
 	
 	private void runPLC(){
-		boolean holdLightState;
-		boolean holdSwitchState;
-		boolean holdCrossingState;
+		boolean holdLightState, holdSwitchState, holdCrossingState;
 		if(hasLight){
 			if(/*tcplc.getLightLogic()*/true){
+				if(tcplc.getLightLogic(0) == 1){
+					
+				}else if(tcplc.getLightLogic(0) == -1){
+					
+				}else{
+					
+				}
 				holdLightState = true;
 			} else {
 				holdLightState = false;
