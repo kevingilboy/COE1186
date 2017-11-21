@@ -18,6 +18,12 @@ public class TrainInfo {
 		this.name = name;
 	}
 
+	public Object[] toDataArray() {
+		Object[] output = new Object[1];
+		output[0] = name;
+		return output;
+	}
+
 	private void calculateVelocity() {
 
 	}
