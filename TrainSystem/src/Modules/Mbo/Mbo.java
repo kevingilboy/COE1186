@@ -25,13 +25,15 @@ public class Mbo implements Module {
 		trains.put("RED 1", new TrainInfo("RED 1"));
 		trains.put("RED 2", new TrainInfo("RED 2"));
 		trains.put("RED 3", new TrainInfo("RED 3"));
+		trains.put("GREEN 1", new TrainInfo("GREEN 1"));
+		trains.put("GREEN 2", new TrainInfo("GREEN 2"));
 	}
 
 	public Object[][] getTrainData(String regex) {
-		Object output[][] = new Object[3][1];
+		Object output[][] = new Object[5][1];
 		for (String trainName : trains.keySet()) {
 			int index = 0;
-			if (trainName.equals(regex)) {
+			if (!regex.equals("") && trainName.equals(regex)) {
 				output[index] = trains.get(regex).toDataArray();
 				index++;	
 			}
