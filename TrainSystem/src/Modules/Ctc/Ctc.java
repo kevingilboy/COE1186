@@ -1,3 +1,5 @@
+//Kevin Gilboy
+
 package Modules.Ctc;
 
 import Simulator.Simulator;
@@ -26,6 +28,7 @@ public class Ctc extends CtcCore{
 		return;
 	}
 	
+	@Override
 	public void dispatchTrain(String name) {
 		Schedule schedule = removeScheduleByName(name);
 		
@@ -33,8 +36,7 @@ public class Ctc extends CtcCore{
 		trains.put(name, train);
 		
 		trainModel.dispatchTrain(name, train.line.toString().toUpperCase());
-		//UNCOMMENT ONCE MIKE ADDS
-		//trainController.dispatchTrain(name, train.line.toString().toUpperCase()); 
+		trainController.dispatchTrain(name, train.line.toString().toUpperCase()); 
 	}
 	
 	@Override
