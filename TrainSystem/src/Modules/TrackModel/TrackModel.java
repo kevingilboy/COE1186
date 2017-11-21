@@ -10,6 +10,7 @@ import Shared.SimTime;
 
 import Simulator.Simulator;
 import Modules.TrainModel.TrainModel;
+import Modules.TrainModel.Position;
 import Modules.Ctc.Ctc;
 
 import java.util.*;
@@ -29,6 +30,16 @@ public class TrackModel implements Module{
 	String redLineFile = "Modules/TrackModel/Track Layout/RedLineFinal.csv";
 	String greenLineFile = "Modules/TrackModel/Track Layout/GreenLineFinal.csv";
 
+	DynamicDisplay greenLineDisplay;
+	DynamicDisplay redLineDisplay;
+
+	private ArrayList<String> redTrainIDs = new ArrayList<String>();
+	private ArrayList<Position> redPositions = new ArrayList<Position>();
+
+	
+	private ArrayList<String> greenTrainIDs = new ArrayList<String>();
+	private ArrayList<Position> greenPositions = new ArrayList<Position>();
+
 	public TrackModel(){	
 
 		// Parse CSV files and store in block collection structure
@@ -36,8 +47,8 @@ public class TrackModel implements Module{
 		greenLineBlocks = (new TrackCsvParser()).parse(greenLineFile);
 
 		// Instantiate dyPamic displays for each track
-		new DynamicDisplay(redLineBlocks);
-		new DynamicDisplay(greenLineBlocks);
+		greenLineDisplay = new DynamicDisplay(redLineBlocks);
+		redLineDisplay = new DynamicDisplay(greenLineBlocks);
 	}
 
 	// Access a specific block on track specified by line and block ID
@@ -78,5 +89,28 @@ public class TrackModel implements Module{
 	// Main method for standalone operation of the Track Model
 	public static void main(String[] args){
 		new TrackModel();
+	}
+
+
+	// INTER-MODULE COMMUNICATION CLASSES
+	public void dispatchTrain(String line, String trainID, Position pos){
+		
+		if (line.toLowerCase() == "red"){
+			redTrainIDs.add(trainID);
+			redPositions.add(pos);
+			redLineDisplay.dispatchTrain(trainID, pos);
+		} else if (line.toLowerCase() == "green"){
+			greenTrainIDs.add(trainID);
+			greenPositions.add(pos);
+			greenLineDisplay.dispatchTrain(trainID, pos);
+		}
+	}
+
+	public void transmitCtcAuthority(String trainName, int authority){
+		// ...
+	}
+
+	public void transmitSuggestedTrainSetpointSpeed(String trainName, int speed){
+		// ...
 	}
 }

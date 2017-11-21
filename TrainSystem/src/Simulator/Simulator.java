@@ -32,7 +32,6 @@ public class Simulator {
 	private TrainModel trainModel;
 	private TrainController trainController;
 	private Mbo mbo;
-
 	
 	public Simulator() throws InterruptedException {		
 		//Initialize all modules
