@@ -374,6 +374,7 @@ public class TrnControllerGUI {
 					lightOn.setSelected(false);
 					lightOff.setSelected(true);
 					lights = false;
+					
 				}
 			}
 		});
@@ -415,7 +416,7 @@ public class TrnControllerGUI {
 		eGUIButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//eGUI.setVisible(true);
+				eGUI.setVisible(true);
 			}
 		});
 		eGUIButton.setBounds(162, 21, 117, 29);
