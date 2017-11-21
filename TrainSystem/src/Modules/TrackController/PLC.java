@@ -68,36 +68,31 @@ public class PLC {
 		return true;
 	}
 	
-	public boolean canProceed(int pb, int nb, int nnb){
-		return vitalCheckProceed(pb, nb, nnb);
+	public boolean canProceed(int pb, int cb, int nb, int nnb){
+		return vitalCheckProceed(pb, cb, nb, nnb);
 	}
 	
-	public boolean canLight(int pb, int nb, int nnb){
-		return vitalCheckLight(pb, nb, nnb);
-		//return vitalCheck(pb,nb,nnb);
+	public boolean canLight(int pb, int cb, int nb, int nnb){
+		return vitalCheck(lightLogic, pb, cb, nb, nnb);
 	}
 	
-	public boolean canSwitch(int pb, int nb, int nnb){
-		return vitalCheckSwitch(pb, nb, nnb);
+	public boolean canSwitch(int pb, int cb, int nb, int nnb){
+		return vitalCheck(switchLogic, pb, cb, nb, nnb);
 	}
 	
-	public boolean canCrossing(int pb, int nb, int nnb){
-		return vitalCheckCrossing(pb, nb, nnb);
+	public boolean canCrossing(int pb, int cb, int nb, int nnb){
+		return vitalCheck(crossingLogic, pb, cb, nb, nnb);
 	}
-	//-------------------------------------------------------
-	//-------------------------------------------------------
-	//-------------------------------------------------------
-	//TODO ensure trackModel displays all track errors with Occupied signal
-	//-------------------------------------------------------
-	//-------------------------------------------------------
-	//-------------------------------------------------------
-	private boolean vitalCheckProceed(int pb, int nb, int nnb){
+	
+	//TODO: Do I need a separate proceed check?
+	private boolean vitalCheckProceed(int pb, int cb, int nb, int nnb){
 		boolean result = true;
 		Expression e = jexl.createExpression(proceedLogic);
 		JexlContext context = new MapContext();
 		//Compute evaluation 3 times in order to assure vitality of signal
 		for(int iii = 0; iii < 3; iii++){ 
 			context.set("pb_occupied", tc.trackModel.getBlock(line, pb).getOccupied());
+			context.set("cb_occupied", tc.trackModel.getBlock(line, cb).getOccupied());
 			context.set("nb_occupied", tc.trackModel.getBlock(line, nb).getOccupied());
 			context.set("nnb_occupied", tc.trackModel.getBlock(line, nnb).getOccupied());
 			//Compound evaluation expression
@@ -106,58 +101,14 @@ public class PLC {
 		return result;
 	}
 	
-	private boolean vitalCheck(int pb, int nb, int nnb){
+	private boolean vitalCheck(String logic, int pb, int cb, int nb, int nnb){
 		boolean result = true;
-		Expression e = jexl.createExpression(proceedLogic);
+		Expression e = jexl.createExpression(logic);
 		JexlContext context = new MapContext();
 		//Compute evaluation 3 times in order to assure vitality of signal
 		for(int iii = 0; iii < 3; iii++){ 
 			context.set("pb_occupied", tc.trackModel.getBlock(line, pb).getOccupied());
-			context.set("nb_occupied", tc.trackModel.getBlock(line, nb).getOccupied());
-			context.set("nnb_occupied", tc.trackModel.getBlock(line, nnb).getOccupied());
-			//Compound evaluation expression
-			result &= (boolean) e.evaluate(context); 
-		}
-		return result;
-	}
-	
-	private boolean vitalCheckLight(int pb, int nb, int nnb){
-		boolean result = true;
-		Expression e = jexl.createExpression(proceedLogic);
-		JexlContext context = new MapContext();
-		//Compute evaluation 3 times in order to assure vitality of signal
-		for(int iii = 0; iii < 3; iii++){ 
-			context.set("pb_occupied", tc.trackModel.getBlock(line, pb).getOccupied());
-			context.set("nb_occupied", tc.trackModel.getBlock(line, nb).getOccupied());
-			context.set("nnb_occupied", tc.trackModel.getBlock(line, nnb).getOccupied());
-			//Compound evaluation expression
-			result &= (boolean) e.evaluate(context); 
-		}
-		return result;
-	}
-	
-	private boolean vitalCheckSwitch(int pb, int nb, int nnb){
-		boolean result = true;
-		Expression e = jexl.createExpression(proceedLogic);
-		JexlContext context = new MapContext();
-		//Compute evaluation 3 times in order to assure vitality of signal
-		for(int iii = 0; iii < 3; iii++){ 
-			context.set("pb_occupied", tc.trackModel.getBlock(line, pb).getOccupied());
-			context.set("nb_occupied", tc.trackModel.getBlock(line, nb).getOccupied());
-			context.set("nnb_occupied", tc.trackModel.getBlock(line, nnb).getOccupied());
-			//Compound evaluation expression
-			result &= (boolean) e.evaluate(context); 
-		}
-		return result;
-	}
-	
-	private boolean vitalCheckCrossing(int pb, int nb, int nnb){
-		boolean result = true;
-		Expression e = jexl.createExpression(proceedLogic);
-		JexlContext context = new MapContext();
-		//Compute evaluation 3 times in order to assure vitality of signal
-		for(int iii = 0; iii < 3; iii++){ 
-			context.set("pb_occupied", tc.trackModel.getBlock(line, pb).getOccupied());
+			context.set("cb_occupied", tc.trackModel.getBlock(line, cb).getOccupied());
 			context.set("nb_occupied", tc.trackModel.getBlock(line, nb).getOccupied());
 			context.set("nnb_occupied", tc.trackModel.getBlock(line, nnb).getOccupied());
 			//Compound evaluation expression
