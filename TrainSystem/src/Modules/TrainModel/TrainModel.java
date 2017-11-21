@@ -125,6 +125,7 @@ public class TrainModel implements Module{
 		return null;
 	}
 	
+	// TODO: Is this necessary?
 	public void setBeacon(String trainID, int beaconVal) {
 		
 	}
@@ -188,14 +189,17 @@ public class TrainModel implements Module{
 		this.getTrain(trainID).setTemp(temp);
 	}
 	
-	public void setArrivalStatus(String trainID, int status) {
+	public void setArrivalStatus(String trainID, int status, String station) {
 		this.getTrain(trainID).setArrivalStatus(status);
+		this.getTrain(trainID).setStation(station);
 	}
 	
-	// TODO: I don't think I need this??
-	/*public void setActualTrainSpeed(String trainID, double actualSpeed) {
-		
-	}*/
+	public void setGPSAntenna(String trainID, boolean status) {
+		this.getTrain(trainID).setGPSAntenna(status);
+	}
 	
-	
+	public void setMBOAntenna(String trainID, boolean status) {
+		this.getTrain(trainID).setMBOAntenna(status);
+	}
+
 }

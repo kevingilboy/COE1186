@@ -84,7 +84,7 @@ public class Train {
     //private Station nextStation;
     private int arrivalStatus;
     private int numPassengers;
-    private boolean atStation;
+    private String station;
     
     // Speed/Authority
     private double currentSpeed;
@@ -136,7 +136,7 @@ public class Train {
         this.nextBlock = 0;
         this.grade = 0;
         this.currentSpeedLimit = 0;
-        this.GPSAntenna = false;
+        this.GPSAntenna = true;
         this.MBOAntenna = false;
         
         // Failure Modes Activation
@@ -149,7 +149,7 @@ public class Train {
         this.timeOfArrival = 0;
         this.arrivalStatus = EN_ROUTE;
         this.numPassengers = 0;
-        this.atStation = false;
+        //this.station = null;
         
         // Speed/Authority
         this.currentSpeed = 0;
@@ -232,18 +232,50 @@ public class Train {
         this.trainModelGUI.capacityVal.setText(Integer.toString(this.trainCapacity));
         this.trainModelGUI.powerVal.setText(Double.toString(this.powerIn));
         
-        this.trainModelGUI.gpsAntennaStatusLabel.setText("ON");
-     	this.trainModelGUI.mboAntennaStatusLabel.setText("ON");
-     	this.trainModelGUI.stationVal.setText("Pioneer");
-     	this.trainModelGUI.rightDoorStatusLabel.setText("CLOSED");
+        if(GPSAntenna == true) {
+        	this.trainModelGUI.gpsAntennaStatusLabel.setText("ON");
+        } else {
+        	this.trainModelGUI.gpsAntennaStatusLabel.setText("OFF");
+        }
+        if(MBOAntenna == true) {
+        	this.trainModelGUI.mboAntennaStatusLabel.setText("ON");
+        } else {
+        	this.trainModelGUI.mboAntennaStatusLabel.setText("OFF");
+        }
+     	
      	this.trainModelGUI.timeVal.setText(trnMdl.currentTime.toString());
-        //this.trainModelGUI.lblAm.setText("AM");
-     	this.trainModelGUI.leftDoorStatusLabel.setText("OPEN");
-     	this.trainModelGUI.lightStatusLabel.setText("OFF");
-     	this.trainModelGUI.numPassengers.setText("20");
-     	this.trainModelGUI.authorityVal.setText("100");
-     	this.trainModelGUI.serviceLabel.setText("OFF");
-     	this.trainModelGUI.emergencyLabel.setText("OFF");
+     	this.trainModelGUI.stationVal.setText("Pioneer");
+     	
+     	if(rightDoorIsOpen == true) {
+        	this.trainModelGUI.rightDoorStatusLabel.setText("OPEN");
+        } else {
+        	this.trainModelGUI.rightDoorStatusLabel.setText("CLOSED");
+        }
+     	if(leftDoorIsOpen == true) {
+        	this.trainModelGUI.leftDoorStatusLabel.setText("OPEN");
+        } else {
+        	this.trainModelGUI.leftDoorStatusLabel.setText("CLOSED");
+        }
+
+     	if(lightsAreOn == true) {
+     		this.trainModelGUI.lightStatusLabel.setText("ON");
+        } else {
+        	this.trainModelGUI.lightStatusLabel.setText("OFF");
+        }
+     	
+     	this.trainModelGUI.numPassengers.setText(Integer.toString(this.numPassengers));
+     	this.trainModelGUI.authorityVal.setText(Double.toString(this.CTCAuthority));
+     	
+     	if(serviceBrake == true) {
+     		this.trainModelGUI.serviceLabel.setText("ON");
+        } else {
+        	this.trainModelGUI.serviceLabel.setText("OFF");
+        }
+     	if(emerBrake == true) {
+     		this.trainModelGUI.emergencyLabel.setText("ON");
+        } else {
+        	this.trainModelGUI.emergencyLabel.setText("OFF");
+        }
      	
      	if(this.arrivalStatus == ARRIVING) {
      		this.trainModelGUI.arrivalStatusLabel.setText("ARRIVING");
@@ -261,6 +293,7 @@ public class Train {
      		this.trainModelGUI.lblLine.setText("RED");
      		this.trainModelGUI.lblLine.setForeground(Color.RED);
         }
+     	
     }
     
     /**
@@ -278,7 +311,7 @@ public class Train {
     	} else {
     		this.force = (this.powerIn * 1000)/this.currentSpeed;
     	}
-    	
+    	setGrade();
     	// Step 2: Calculate the slope of the train's current angle (Degrees = Tan-1 (Slope Percent/100))
     	this.slope = Math.atan2(this.grade,100);
     	double angle = Math.toDegrees(this.slope);
@@ -360,23 +393,32 @@ public class Train {
     }
     
     public void activateEngineFailure() {
-    	// TODO
+    	this.engineFailureActive = true;
     }
     
     public void activateSignalFailure() {
     	// TODO
+    	this.setGPSAntenna(false);
+    	this.setMBOAntenna(false);
+    	this.signalFailureActive = true;
     }
     
     public void activateBrakeFailure() {
-    	// TODO
+    	this.brakeFailureActive = true;
     }
     
     public void endFailureMode() {
-    	// TODO
+    	this.engineFailureActive = false;
+    	this.signalFailureActive = false;
+    	this.brakeFailureActive = false;
     }
     
     public void setArrivalStatus(int status) {
     	this.arrivalStatus = status;
+    }
+    
+    public void setStation(String station) {
+    	this.station = station;
     }
     
     /**
@@ -395,12 +437,14 @@ public class Train {
     
     public void setPosition(Position pos) {
     	this.position = pos;
+    	//setGrade();
     }
     
  // Called by the Train Controller
     public int getBlock(){
         return this.position.getCurrentBlock();
     }
+    
     // Called by the MBO
     public double[] getCoordinates(){
         return this.position.getCoordinates();
@@ -418,10 +462,13 @@ public class Train {
     /**
      * Sets the grade of the current block/position of the train
      * @param g
-     
+     */
     public void setGrade() {
-    	this.grade = this.currentBlock.getGrade();
-    }*/
+    	this.grade = trkMdl.getBlock(this.lineColor,this.currentBlock).getGrade();
+    	//int currentBlockID = position.getCurrentBlock();
+    	//Block current = trackModel.getBlock(curentBlockID);
+    	//grade = currentBlock.getGrade();
+    }
     
     /**
      * Returns the set point speed for this specific train object
@@ -462,26 +509,6 @@ public class Train {
     
     public void setAuthority(double authority) {
     	this.CTCAuthority = authority;
-    }
-    
-    public void setLightStatus(boolean lights) {
-    	this.lightsAreOn = lights;
-    }
-    
-    public void setLeftDoorStatus(boolean leftDoor) {
-    	this.leftDoorIsOpen = leftDoor;
-    }
-    
-    public void setRightDoorStatus(boolean rightDoor) {
-    	this.rightDoorIsOpen = rightDoor;
-    }
-    
-    public void setTemperature(int temp) {
-    	this.temperature = temp;
-    }
-    
-    public void setAtStation(boolean atStation) {
-    	
     }
     
     public void setEBrake(boolean ebrake) {
@@ -527,5 +554,13 @@ public class Train {
     		return this.numPassengers;
     	}
     	return 0;
+    }
+    
+    public void setMBOAntenna(boolean status) {
+    	this.MBOAntenna = status;
+    }
+    
+    public void setGPSAntenna(boolean status) {
+    	this.GPSAntenna = status;
     }
 }
