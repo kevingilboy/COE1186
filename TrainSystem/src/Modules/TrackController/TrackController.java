@@ -13,6 +13,7 @@ public class TrackController implements Module{
 	//Subclass variables
 	private TrackControllerGUI tcgui;
 	private PLC tcplc;
+	private String initialPLCPath = "plc.txt";
 	//Set internally
 	private String line;
 	private String section;
@@ -29,15 +30,16 @@ public class TrackController implements Module{
 	//Constructor
 	public TrackController(String associatedLine, String[] associatedBlocks){
 		this.tcgui = new TrackControllerGUI(this);
-		this.tcplc = new PLC();
+		this.tcplc = new PLC(this, initialPLCPath);
 		this.associatedLine = associatedLine;
 		this.associatedBlocks = associatedBlocks;
-		
 	}
 	
 	public TrackController(){
 		//initialize first track controller -- Maybe remove the initialization 
 		//from the simulator so that CTC initializes all of them?
+		this.tcgui = new TrackControllerGUI(this);
+		this.tcplc = new PLC(this, initialPLCPath);
 	}
 
 	@Override
@@ -77,13 +79,6 @@ public class TrackController implements Module{
 		boolean holdLightState, holdSwitchState, holdCrossingState;
 		if(hasLight){
 			if(/*tcplc.getLightLogic()*/true){
-				if(tcplc.getLightLogic(0) == 1){
-					
-				}else if(tcplc.getLightLogic(0) == -1){
-					
-				}else{
-					
-				}
 				holdLightState = true;
 			} else {
 				holdLightState = false;
@@ -129,13 +124,20 @@ public class TrackController implements Module{
 	
 	//CTC Functions
 	public void transmitSuggestedTrainSetpointSpeed(String trainName, int speed){
-		//trackModel.transmitSuggestedTrainSetpointSpeed(trainName, speed);
+		trackModel.transmitSuggestedTrainSetpointSpeed(trainName, speed);
 	}
 	
 	public void transmitCtcAuthority(String trainName, int authority){
-		//trackModel.transmitCtcAuthority(trainName, authority);
+		trackModel.transmitCtcAuthority(trainName, authority);
 	}
 	
+	//-------------------------------------------------------
+	//-------------------------------------------------------
+	//-------------------------------------------------------
+	//TODO figure out why this doesn't like passing a block??
+	//-------------------------------------------------------
+	//-------------------------------------------------------
+	//-------------------------------------------------------
 	/*public Block receiveBlockInfoForCtc(String line, int blockId){
 		return trackModel.getBlock(line, blockId);
 	}*/

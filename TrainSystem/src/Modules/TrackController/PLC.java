@@ -1,6 +1,6 @@
 package Modules.TrackController;
 
-import libs.org.apache.commons.jexl3.*;
+import org.apache.commons.jexl3.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -21,7 +21,7 @@ public class PLC {
 		this.tc = tc;
 		this.line = tc.associatedLine;
 		parsePLC(plcPath);
-		jexl = new JexlEngine();
+		jexl = new JexlBuilder().create();
 	}
 	
 	public boolean parsePLC(String plcPath){
@@ -39,17 +39,17 @@ public class PLC {
 					logic[i] = logic[i].replaceAll("\\s+","");
 				}
 				//Save expressions
-				if(parts[0].equals("proceed")) {
-					canProceedExpr = parts[1];
+				if(logic[0].equals("proceed")) {
+					proceedLogic = logic[1];
 				}
-				else if(parts[0].equals("light")) {
-					canDoCrossingExpr = parts[1];
+				else if(logic[0].equals("light")) {
+					lightLogic = logic[1];
 				}
-				else if(parts[0].equals("switch")) {
-					canSwitchExpr = parts[1];
+				else if(logic[0].equals("switch")) {
+					switchLogic = logic[1];
 				}
-				else if(parts[0].equals("crossing")) {
-					canMaintExpr = parts[1];
+				else if(logic[0].equals("crossing")) {
+					crossingLogic = logic[1];
 				}
 			}			
         } catch (FileNotFoundException e) {
@@ -97,9 +97,9 @@ public class PLC {
 		JexlContext context = new MapContext();
 		//Compute evaluation 3 times in order to assure vitality of signal
 		for(int iii = 0; iii < 3; iii++){ 
-			context.set("pb_occupied", tc.trackModel.getBlock(line, pb).getOccupied();
-			context.set("nb_occupied", tc.trackModel.getBlock(line, nb).getOccupied();
-			context.set("nnb_occupied", tc.trackModel.getBlock(line, nnb).getOccupied();
+			context.set("pb_occupied", tc.trackModel.getBlock(line, pb).getOccupied());
+			context.set("nb_occupied", tc.trackModel.getBlock(line, nb).getOccupied());
+			context.set("nnb_occupied", tc.trackModel.getBlock(line, nnb).getOccupied());
 			//Compound evaluation expression
 			result &= (boolean) e.evaluate(context); 
 		}
@@ -112,9 +112,9 @@ public class PLC {
 		JexlContext context = new MapContext();
 		//Compute evaluation 3 times in order to assure vitality of signal
 		for(int iii = 0; iii < 3; iii++){ 
-			context.set("pb_occupied", tc.trackModel.getBlock(line, pb).getOccupied();
-			context.set("nb_occupied", tc.trackModel.getBlock(line, nb).getOccupied();
-			context.set("nnb_occupied", tc.trackModel.getBlock(line, nnb).getOccupied();
+			context.set("pb_occupied", tc.trackModel.getBlock(line, pb).getOccupied());
+			context.set("nb_occupied", tc.trackModel.getBlock(line, nb).getOccupied());
+			context.set("nnb_occupied", tc.trackModel.getBlock(line, nnb).getOccupied());
 			//Compound evaluation expression
 			result &= (boolean) e.evaluate(context); 
 		}
@@ -127,9 +127,9 @@ public class PLC {
 		JexlContext context = new MapContext();
 		//Compute evaluation 3 times in order to assure vitality of signal
 		for(int iii = 0; iii < 3; iii++){ 
-			context.set("pb_occupied", tc.trackModel.getBlock(line, pb).getOccupied();
-			context.set("nb_occupied", tc.trackModel.getBlock(line, nb).getOccupied();
-			context.set("nnb_occupied", tc.trackModel.getBlock(line, nnb).getOccupied();
+			context.set("pb_occupied", tc.trackModel.getBlock(line, pb).getOccupied());
+			context.set("nb_occupied", tc.trackModel.getBlock(line, nb).getOccupied());
+			context.set("nnb_occupied", tc.trackModel.getBlock(line, nnb).getOccupied());
 			//Compound evaluation expression
 			result &= (boolean) e.evaluate(context); 
 		}
@@ -142,9 +142,9 @@ public class PLC {
 		JexlContext context = new MapContext();
 		//Compute evaluation 3 times in order to assure vitality of signal
 		for(int iii = 0; iii < 3; iii++){ 
-			context.set("pb_occupied", tc.trackModel.getBlock(line, pb).getOccupied();
-			context.set("nb_occupied", tc.trackModel.getBlock(line, nb).getOccupied();
-			context.set("nnb_occupied", tc.trackModel.getBlock(line, nnb).getOccupied();
+			context.set("pb_occupied", tc.trackModel.getBlock(line, pb).getOccupied());
+			context.set("nb_occupied", tc.trackModel.getBlock(line, nb).getOccupied());
+			context.set("nnb_occupied", tc.trackModel.getBlock(line, nnb).getOccupied());
 			//Compound evaluation expression
 			result &= (boolean) e.evaluate(context); 
 		}
@@ -157,9 +157,9 @@ public class PLC {
 		JexlContext context = new MapContext();
 		//Compute evaluation 3 times in order to assure vitality of signal
 		for(int iii = 0; iii < 3; iii++){ 
-			context.set("pb_occupied", tc.trackModel.getBlock(line, pb).getOccupied();
-			context.set("nb_occupied", tc.trackModel.getBlock(line, nb).getOccupied();
-			context.set("nnb_occupied", tc.trackModel.getBlock(line, nnb).getOccupied();
+			context.set("pb_occupied", tc.trackModel.getBlock(line, pb).getOccupied());
+			context.set("nb_occupied", tc.trackModel.getBlock(line, nb).getOccupied());
+			context.set("nnb_occupied", tc.trackModel.getBlock(line, nnb).getOccupied());
 			//Compound evaluation expression
 			result &= (boolean) e.evaluate(context); 
 		}
