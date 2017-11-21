@@ -29,10 +29,13 @@ public class Mbo implements Module {
 
 	public Object[][] getTrainData(String regex) {
 		Object output[][] = new Object[3][1];
-		output[0][0] = trains.get("RED 1");
-		output[1][0] = trains.get("RED 2");
-		output[2][0] = trains.get("RED 3");
-		System.out.println(output);
+		for (String trainName : trains.keySet()) {
+			int index = 0;
+			if (trainName.equals(regex)) {
+				output[index] = trains.get(regex).toDataArray();
+				index++;	
+			}
+		}
 		return output;
 	}
 
