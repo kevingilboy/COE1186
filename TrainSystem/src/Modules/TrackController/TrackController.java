@@ -4,6 +4,7 @@ import Shared.Module;
 import Shared.SimTime;
 
 import Modules.TrackModel.TrackModel;
+import Modules.TrackModel.Block;
 
 public class TrackController implements Module{
 	//Set by other modules
@@ -13,7 +14,7 @@ public class TrackController implements Module{
 	//Subclass variables
 	private TrackControllerGUI tcgui;
 	private PLC tcplc;
-	private String initialPLCPath = "plc.txt";
+	private String initialPLCPath = "Modules/TrackController/plc.txt";
 	//Set internally
 	private String line;
 	private String section;
@@ -131,16 +132,9 @@ public class TrackController implements Module{
 		trackModel.transmitCtcAuthority(trainName, authority);
 	}
 	
-	//-------------------------------------------------------
-	//-------------------------------------------------------
-	//-------------------------------------------------------
-	//TODO figure out why this doesn't like passing a block??
-	//-------------------------------------------------------
-	//-------------------------------------------------------
-	//-------------------------------------------------------
-	/*public Block receiveBlockInfoForCtc(String line, int blockId){
+	public Block receiveBlockInfoForCtc(String line, int blockId){
 		return trackModel.getBlock(line, blockId);
-	}*/
+	}
 	
 	public void transmitBlockMaintenance(String line, int blockId, boolean maintenance){
 		trackModel.getBlock(line, blockId).setMaintenance(maintenance);
