@@ -4,5 +4,4 @@
 .classpath
 .DS_Store
 /bin/
-*.class
 TrainSystem/src/run.bat
