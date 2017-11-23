@@ -38,7 +38,7 @@ public class DynamicDisplay{
 	private JFrame f;
 	public TrackRenderWindow dynamicTrackView;
 
-	private ArrayList<Block> blocks;
+	private static ArrayList<Block> blocks;
 
 	// Instantiate dynamic display when Track Model blocks have
 	// been generated from parsed layout file
@@ -61,6 +61,7 @@ public class DynamicDisplay{
 		f.setLocationRelativeTo(null);
 		f.setResizable(false);
 		f.add(new JLabel("test label"));
+		f.setVisible(true);
 
 		// Make the frame draggable
 		FrameDragListener frameDragListener = new FrameDragListener(f);

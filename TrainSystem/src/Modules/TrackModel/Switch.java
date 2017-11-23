@@ -45,7 +45,6 @@ public class Switch{
 	}
 
 	public void setState(boolean newState){
-		// NEED TO MODIFY STATE UPDATE TO UPDATE "SWITCH" AT ALL THREE PORTS
 		state = newState;
 	}
 
