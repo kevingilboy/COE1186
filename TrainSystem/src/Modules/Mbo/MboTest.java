@@ -27,6 +27,16 @@ public class MboTest {
 	}
 
 	@Test 
+	public void testGetTrainsByRegex() {
+		Object[][] trainData = mbo.getTrainData("GREEN");
+		String[] greenTrains = {"GREEN 1", "GREEN 2"};
+		String[] received = new String[2];
+		received[0] = trainData[0][0].toString();
+		received[1] = trainData[1][0].toString();
+		assertEquals(greenTrains, received);
+	}
+
+	@Test 
 	public void testAlwaysPasses() {
 		assertEquals(1,1);
 	}
