@@ -143,14 +143,17 @@ public class Block{
 
 	public void setRailStatus(boolean status){
 		railStatus = status;
+		setOccupancy(!status);
 	}
 
 	public void setPowerStatus(boolean status){
 		powerStatus = status;
+		setOccupancy(!status);
 	}
 
 	public void setTrackCircuitStatus(boolean status){
 		trackCircuitStatus = status;
+		setOccupancy(!status);
 	}
 
 	public double[] getXCoordinates(){
@@ -173,10 +176,12 @@ public class Block{
 			railStatus = STATUS_MAINTENANCE;
 			powerStatus = STATUS_MAINTENANCE;
 			trackCircuitStatus = STATUS_MAINTENANCE;
+			setOccupancy(true);
 		} else {
 			railStatus = STATUS_REPAIRED;
 			powerStatus = STATUS_REPAIRED;
 			trackCircuitStatus = STATUS_REPAIRED;
+			setOccupancy(false);
 		}
 	}
 
