@@ -26,29 +26,20 @@ public class TrackModel implements Module{
 	private ArrayList<Block> redLineBlocks = new ArrayList<Block>();
 	private ArrayList<Block> greenLineBlocks = new ArrayList<Block>();
 
-	// Red and Green line CSV filenames to parse into ArrayList<Block> data
-	String redLineFile = "Modules/TrackModel/Track Layout/RedLineFinal.csv";
-	String greenLineFile = "Modules/TrackModel/Track Layout/GreenLineFinal.csv";
-
-	DynamicDisplay greenLineDisplay;
-	DynamicDisplay redLineDisplay;
-
+	// Data structures for tracking active train information
 	private ArrayList<String> redTrainIDs = new ArrayList<String>();
-	private ArrayList<Position> redPositions = new ArrayList<Position>();
-
-	
 	private ArrayList<String> greenTrainIDs = new ArrayList<String>();
+	private ArrayList<Position> redPositions = new ArrayList<Position>();
 	private ArrayList<Position> greenPositions = new ArrayList<Position>();
+	
+	// GUI references
+	private TrackModelGUI trackModelGUI;
 
+	// Constructor
 	public TrackModel(){	
 
-		// Parse CSV files and store in block collection structure
-		redLineBlocks = (new TrackCsvParser()).parse(redLineFile);
-		greenLineBlocks = (new TrackCsvParser()).parse(greenLineFile);
-
-		// Instantiate dyPamic displays for each track
-		greenLineDisplay = new DynamicDisplay(redLineBlocks);
-		redLineDisplay = new DynamicDisplay(greenLineBlocks);
+		// Instantiate Track Model GUI
+		trackModelGUI = new TrackModelGUI(this);
 	}
 
 	// Access a specific block on track specified by line and block ID
@@ -78,12 +69,14 @@ public class TrackModel implements Module{
 
 		return track;
 	}
-
-	// Respond to the Simulator's regularly call to this modules's updateTime()
-	@Override
-	public boolean updateTime(SimTime time){
-		// ...
-		return true;
+ 
+ 	// Set the track for a particular line
+	public void setTrack(String line, ArrayList<Block> track){
+		if (line.toLowerCase() == "green"){
+			greenLineBlocks = track;
+		} else if (line.toLowerCase() == "red"){
+			redLineBlocks = track;
+		}
 	}
 
 	// Main method for standalone operation of the Track Model
@@ -91,18 +84,17 @@ public class TrackModel implements Module{
 		new TrackModel();
 	}
 
-
 	// INTER-MODULE COMMUNICATION CLASSES
 	public void dispatchTrain(String line, String trainID, Position pos){
 		
 		if (line.toLowerCase() == "red"){
 			redTrainIDs.add(trainID);
 			redPositions.add(pos);
-			redLineDisplay.dispatchTrain(trainID, pos);
+			trackModelGUI.redLineDisplay.dispatchTrain(trainID, pos);
 		} else if (line.toLowerCase() == "green"){
 			greenTrainIDs.add(trainID);
 			greenPositions.add(pos);
-			greenLineDisplay.dispatchTrain(trainID, pos);
+			trackModelGUI.greenLineDisplay.dispatchTrain(trainID, pos);
 		}
 	}
 
@@ -114,9 +106,16 @@ public class TrackModel implements Module{
 		// ...
 	}
 
+	// Respond to the Simulator's regularly call to this modules's updateTime()
 	@Override
-	public boolean communicationEstablished() {
-		// TODO Auto-generated method stub
+	public boolean updateTime(SimTime time){
+		// ...
+		return true;
+	}
+
+	@Override
+	public boolean communicationEstablished(){
+		// ... 
 		return true;
 	}
 }

@@ -2,17 +2,16 @@ package Modules.TrackModel;
 
 public class Block{
 
-	public boolean STATUS_WORKING = true;
-	public boolean STATUS_NOT_WORKING = false;
-	public boolean STATUS_MAINTENANCE = STATUS_NOT_WORKING;
-	public boolean STATUS_REPAIRED = STATUS_WORKING;
+	public static boolean STATUS_WORKING = true;
+	public static boolean STATUS_NOT_WORKING = false;
+	public static boolean STATUS_MAINTENANCE = STATUS_NOT_WORKING;
+	public static boolean STATUS_REPAIRED = STATUS_WORKING;
 	public static int DIRECTION_INCREASING_ID = 1;
 	public static int DIRECTION_DECREASING_ID = -1;
 
 	private boolean railStatus = STATUS_WORKING;
 	private boolean powerStatus = STATUS_WORKING;
 	private boolean trackCircuitStatus = STATUS_WORKING;
-
 
 	private boolean occupied;
 	
@@ -142,6 +141,21 @@ public class Block{
 		return occupied;
 	}
 
+	public void setRailStatus(boolean status){
+		railStatus = status;
+		setOccupancy(!status);
+	}
+
+	public void setPowerStatus(boolean status){
+		powerStatus = status;
+		setOccupancy(!status);
+	}
+
+	public void setTrackCircuitStatus(boolean status){
+		trackCircuitStatus = status;
+		setOccupancy(!status);
+	}
+
 	public double[] getXCoordinates(){
 		return x_coordinates;
 	}
@@ -162,15 +176,29 @@ public class Block{
 			railStatus = STATUS_MAINTENANCE;
 			powerStatus = STATUS_MAINTENANCE;
 			trackCircuitStatus = STATUS_MAINTENANCE;
+			setOccupancy(true);
 		} else {
 			railStatus = STATUS_REPAIRED;
 			powerStatus = STATUS_REPAIRED;
 			trackCircuitStatus = STATUS_REPAIRED;
+			setOccupancy(false);
 		}
 	}
 
+	public boolean getRailStatus(){
+		return railStatus;
+	}
+
+	public boolean getPowerStatus(){
+		return powerStatus;
+	}
+
+	public boolean getTrackCircuitStatus(){
+		return trackCircuitStatus;
+	}
+
 	public boolean getStatus(){
-		return (railStatus || powerStatus || trackCircuitStatus);
+		return (railStatus && powerStatus && trackCircuitStatus);
 	}
 
 	public void setOccupancy(boolean occupancy){

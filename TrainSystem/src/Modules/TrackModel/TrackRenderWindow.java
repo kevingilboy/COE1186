@@ -25,6 +25,9 @@ import java.lang.Thread;
 
 public class TrackRenderWindow extends JPanel implements ActionListener{  
 
+    // Reference to the main GUI's selected block
+    Block blockSelected;
+
     // Timer used to update the dynamic track view
     Timer timer;
 
@@ -53,7 +56,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         int windowPadding = 0;
         setBounds(windowPadding, windowPadding, width, height);
         setLayout(null);
-        setBackground(Color.BLACK);
+        setBackground(new Color(40, 40, 40));
         setVisible(true);
     }
 
@@ -76,6 +79,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
             System.out.println("No track line color found!");
         }
 
+        this.blockSelected = blocks.get(0);
         this.blocks = blocks;
     }
 
@@ -111,7 +115,6 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
     // called, trigger the actionPerformed() listener to call 
     // repaint()
     public void paintComponent(Graphics g){
-        
         super.paintComponent(g);
         Graphics2D g2d  = (Graphics2D) g;
 
@@ -164,9 +167,8 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
 
         // Draw the inner black track to make it look like
         // real track rails colored as the line color
-        g2d.setColor(Color.black);
+        g2d.setColor(Color.BLACK);
         for (int i = 0; i < blocks.size(); i++){
-
             double[] x_coords = blocks.get(i).getXCoordinates();
             double[] y_coords = blocks.get(i).getYCoordinates();
 
@@ -174,6 +176,76 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                 g2d.drawRect((int)x_coords[j], (int)y_coords[j], 
                             2, 2);
             }
+        }
+
+        // Highlight entire failed section with failed block
+        g2d.setColor(new Color(100, 0, 0));
+        for (int i = 0; i < blocks.size(); i++){
+
+            if (blocks.get(i).getStatus() == Block.STATUS_NOT_WORKING){
+                double[] x_coords = blocks.get(i).getXCoordinates();
+                double[] y_coords = blocks.get(i).getYCoordinates();
+
+                // Highlight entire section of track until nearest switch 
+                // when a block fails to indicate that a train cannot
+                // move on that section
+                
+                boolean exit = false;
+                int j = i;
+                do {
+                    x_coords = blocks.get(j).getXCoordinates();
+                    y_coords = blocks.get(j).getYCoordinates();
+
+                    for (int k = 0; k < x_coords.length-2; k++){
+                        g2d.drawRect((int)x_coords[k], (int)y_coords[k],
+                                    2, 2);
+                    }
+                    if (j < blocks.size() - 1){
+                        j++;
+                    } else {
+                        exit = true;
+                    }
+                } while ((blocks.get(j).getSwitch() == null) && (!exit));
+
+                j = i;
+                do {
+                    x_coords = blocks.get(j).getXCoordinates();
+                    y_coords = blocks.get(j).getYCoordinates();
+
+                    for (int k = 0; k < x_coords.length-2; k++){
+                        g2d.drawRect((int)x_coords[k], (int)y_coords[k],
+                                    2, 2);
+                    }
+                    if (j > 0){
+                        j--;
+                    } else {
+                        exit = true;
+                    }
+                } while ((blocks.get(j).getSwitch() == null) && (!exit));
+            }
+        }
+
+        // Highlight failed blocks
+        g2d.setColor(new Color(170, 0, 0));
+        for (int i = 0; i < blocks.size(); i++){
+            if (blocks.get(i).getStatus() == Block.STATUS_NOT_WORKING){
+                double[] x_coords = blocks.get(i).getXCoordinates();
+                double[] y_coords = blocks.get(i).getYCoordinates();
+
+                for (int j = 0; j < x_coords.length-2; j++){
+                    g2d.drawRect((int)x_coords[j], (int)y_coords[j], 
+                                2, 2);
+                }
+            }
+        }
+
+        // Highlight the current block selected in the main GUI
+        g2d.setColor(Color.YELLOW);
+        double[] x_coords = blocks.get(blockSelected.getId()).getXCoordinates();
+        double[] y_coords = blocks.get(blockSelected.getId()).getYCoordinates();
+        for (int i = 0; i < x_coords.length-2; i++){
+            g2d.drawRect((int)x_coords[i], (int)y_coords[i],
+                        2, 2);
         }
     }
 
