@@ -3,6 +3,7 @@ package Modules.Mbo;
 import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+import java.util.Arrays;
 
 public class MboTest {
 
@@ -55,9 +56,15 @@ public class MboTest {
 	public void testUpdateSignal() {
 		String signal = "RED 3;1;2:" + Integer.toUnsignedString(0x7C5F6962);
 		mbo.receiveTrainPosition(signal);
-		Object[][] trainData = mbo.getTrainData("RED 3");
-		Object[] knownData = {"RED 3", 1.0, 2.0};
-		assertEquals(trainData[0], knownData);
+		//Object[][] trainData = mbo.getTrainData("RED 3");
+		double[] pos = {1.0, 2.0};
+		assertEquals(Arrays.toString(mbo.getTrainPosition("RED 3")), 
+			         Arrays.toString(pos));
+		//double[] gotten = trainData[0][2];
+		//System.out.println("Name " + trainData[0][0]);
+		//System.out.printf("Coord: %f, %f\n", coord[0], coord[1]);
+		//boolean result = (trainData[0][0] == "RED 3" && trainData[0][2] == coord);
+		//assertTrue(result);
 	}
 
 	@Test

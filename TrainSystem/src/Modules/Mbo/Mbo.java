@@ -29,7 +29,7 @@ public class Mbo implements Module {
 //		build_initTrains();
 	}
 
-	private void build_initTrains() {
+	public void testInitTrains() {
 		trains.put("RED 1", new TrainInfo("RED 1"));
 		trains.put("RED 2", new TrainInfo("RED 2"));
 		trains.put("GREEN 1", new TrainInfo("GREEN 1"));
@@ -38,6 +38,10 @@ public class Mbo implements Module {
 
 	public Object[][] getTrainData() {
 		return getTrainData("");
+	}
+
+	public double[] getTrainPosition(String regex) {
+		return trains.get(regex).getPosition();
 	}
 
 	public Object[][] getTrainData(String regex) {
