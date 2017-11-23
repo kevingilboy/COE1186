@@ -2,6 +2,9 @@ package Modules.Mbo;
 
 import java.util.HashMap;
 import java.time.LocalDateTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.ArrayList;
 
 import Shared.Module;
 import Shared.SimTime;
@@ -30,13 +33,18 @@ public class Mbo implements Module {
 	}
 
 	public Object[][] getTrainData(String regex) {
-		Object output[][] = new Object[5][1];
+		Pattern pattern = Pattern.compile(".*" + regex + ".*");
+		ArrayList<Object[]> trainObjs = new ArrayList<Object[]>();
 		for (String trainName : trains.keySet()) {
-			int index = 0;
-			if (!regex.equals("") && trainName.equals(regex)) {
-				output[index] = trains.get(regex).toDataArray();
-				index++;	
+			if (!regex.equals("") && pattern.matcher(trainName).matches()) {
+				trainObjs.add(trains.get(trainName).toDataArray());
 			}
+		}
+		Object[][] output = new Object[trainObjs.size()][1];
+		int index = 0;
+		for (Object[] train : trainObjs) {
+			output[index] = train;
+			index++;
 		}
 		return output;
 	}

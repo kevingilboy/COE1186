@@ -21,9 +21,8 @@ public class MboTest {
 
 	@Test
 	public void testGetTrainDataByName() {
-		Object[][] trainData = mbo.getTrainData("RED 2");
-		String red2Str = new String("RED 2");
-		assertEquals(trainData[0][0], red2Str);
+		Object[][] trainData = mbo.getTrainData("RED 3");
+		assertEquals(trainData[0][0], "RED 3");
 	}
 
 	@Test 
