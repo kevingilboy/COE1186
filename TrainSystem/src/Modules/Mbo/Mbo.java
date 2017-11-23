@@ -33,6 +33,10 @@ public class Mbo implements Module {
 		trains.put("GREEN 2", new TrainInfo("GREEN 2"));
 	}
 
+	public Object[][] getTrainData() {
+		return getTrainData("");
+	}
+
 	public Object[][] getTrainData(String regex) {
 		Pattern pattern = Pattern.compile(".*" + regex + ".*");
 		ArrayList<Object[]> trainObjs = new ArrayList<Object[]>();
