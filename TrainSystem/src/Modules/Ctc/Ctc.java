@@ -51,4 +51,10 @@ public class Ctc extends CtcCore{
 	public void setSpeedup(int newSpeed) {
 	    simulator.setSpeedup(newSpeed);
 	}
+
+	@Override
+	public boolean communicationEstablished() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }

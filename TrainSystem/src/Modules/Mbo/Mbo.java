@@ -71,4 +71,10 @@ public class Mbo implements Module {
 	private double calculateSafeBrakingDistance(String trainID) {
 		return 0;	
 	}
+
+	@Override
+	public boolean communicationEstablished() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }
