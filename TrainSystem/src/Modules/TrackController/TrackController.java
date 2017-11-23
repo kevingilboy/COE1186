@@ -13,7 +13,7 @@ public class TrackController implements Module{
 	//Subclass variables
 	private TrackControllerGUI tcgui;
 	private PLC tcplc;
-	private String initialPLCPath = null;
+	private String initialPLCPath = "plc.txt";
 	//Set internally
 	private String line;
 	private String section;

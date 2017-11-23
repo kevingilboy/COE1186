@@ -20,7 +20,7 @@ public class PLC {
 	public PLC(TrackController tc, String plcPath){
 		this.tc = tc;
 		this.line = tc.associatedLine;
-		//parsePLC(plcPath);
+		parsePLC(plcPath);
 		jexl = new JexlEngine();
 	}
 	
