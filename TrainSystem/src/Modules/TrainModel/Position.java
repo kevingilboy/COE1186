@@ -43,11 +43,17 @@ public class Position{
 		blockMeterPosition += distance;
 		nextBlockID = nextBlock(currentBlockID, previousBlockID);
 
+		track.get(currentBlockID).setOccupancy(true);
+
 		if ((int)blockMeterPosition >= track.get(currentBlockID).getLength()){
+
+			track.get(currentBlockID).setOccupancy(false);
 
 			previousBlockID = currentBlockID;
 			currentBlockID = nextBlockID;
 
+			track.get(currentBlockID).setOccupancy(true);
+			
 			blockMeterPosition -= track.get(previousBlockID).getLength();
 		}
 
