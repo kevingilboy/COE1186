@@ -802,7 +802,7 @@ public class CtcGui {
 	private void updateSelectedBlock() {
 		Block block = getSelectedBlock();
 		
-		if(block.getStatus() == Block.STATUS_WORKING) {
+		if(block.STATUS_WORKING==true) {
 			//Track is open, check if switch
 			if(block.getSwitch() != null) {
 				selectedBlockToggle.setEnabled(true);
