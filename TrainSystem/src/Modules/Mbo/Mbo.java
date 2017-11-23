@@ -1,10 +1,11 @@
 package Modules.Mbo;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import Shared.Module;
 import Shared.SimTime;
@@ -17,10 +18,10 @@ public class Mbo implements Module {
 	public TrainController trainController;
 	public TrainModel trainModel;
 	private SimTime time;
-	private HashMap<String, TrainInfo> trains;
+	private TreeMap<String, TrainInfo> trains;
 
 	public Mbo(){
-		this.trains = new HashMap<String,TrainInfo>();
+		this.trains = new TreeMap<String,TrainInfo>();
 		build_initTrains();
 	}
 
@@ -36,7 +37,7 @@ public class Mbo implements Module {
 		Pattern pattern = Pattern.compile(".*" + regex + ".*");
 		ArrayList<Object[]> trainObjs = new ArrayList<Object[]>();
 		for (String trainName : trains.keySet()) {
-			if (!regex.equals("") && pattern.matcher(trainName).matches()) {
+			if (pattern.matcher(trainName).matches()) {
 				trainObjs.add(trains.get(trainName).toDataArray());
 			}
 		}

@@ -35,6 +35,20 @@ public class MboTest {
 		assertEquals(greenTrains, received);
 	}
 
+	@Test
+	public void testGetAllTrainData() {
+		Object[][] trainData = mbo.getTrainData("");
+		String[] allTrains = {"GREEN 1", "GREEN 2",  
+		                      "RED 1", "RED 2", "RED 3"};
+		String[] received = new String[5];
+		received[0] = trainData[0][0].toString();
+		received[1] = trainData[1][0].toString();
+		received[2] = trainData[2][0].toString();
+		received[3] = trainData[3][0].toString();
+		received[4] = trainData[4][0].toString();
+		assertEquals(allTrains, received);
+	}
+
 	@Test 
 	public void testAlwaysPasses() {
 		assertEquals(1,1);
