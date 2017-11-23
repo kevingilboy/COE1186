@@ -6,6 +6,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.math.BigInteger;
+import java.util.zip.CRC32;
 
 import Shared.Module;
 import Shared.SimTime;
@@ -19,16 +21,17 @@ public class Mbo implements Module {
 	public TrainModel trainModel;
 	private SimTime time;
 	private TreeMap<String, TrainInfo> trains;
+	private CRC32 crc;
 
 	public Mbo(){
 		this.trains = new TreeMap<String,TrainInfo>();
-		build_initTrains();
+		this.crc = new CRC32();
+//		build_initTrains();
 	}
 
 	private void build_initTrains() {
 		trains.put("RED 1", new TrainInfo("RED 1"));
 		trains.put("RED 2", new TrainInfo("RED 2"));
-		trains.put("RED 3", new TrainInfo("RED 3"));
 		trains.put("GREEN 1", new TrainInfo("GREEN 1"));
 		trains.put("GREEN 2", new TrainInfo("GREEN 2"));
 	}
@@ -45,7 +48,7 @@ public class Mbo implements Module {
 				trainObjs.add(trains.get(trainName).toDataArray());
 			}
 		}
-		Object[][] output = new Object[trainObjs.size()][1];
+		Object[][] output = new Object[trainObjs.size()][3];
 		int index = 0;
 		for (Object[] train : trainObjs) {
 			output[index] = train;
@@ -61,8 +64,29 @@ public class Mbo implements Module {
 		return true;
 	}
 
+	// returns true if checksum is valid, otherwise false
 	public boolean receiveTrainPosition(String signal) {
-		return false;
+
+		// check that checksum is valid
+		crc.reset();
+		String[] segments = signal.split(":");
+		long checksum = Long.parseLong(segments[1]);
+		crc.update(segments[0].getBytes());
+		if (checksum != crc.getValue()) return false;
+
+		// add train if necessary
+		String[] vals = segments[0].split(";");
+		String train = vals[0];
+		if (trains.get(train) == null) {
+			trains.put(train, new TrainInfo(train));
+		}
+
+		// update train's position
+		double x = Double.parseDouble(vals[1]);
+		double y = Double.parseDouble(vals[2]);
+		trains.get(train).updatePosition(x,y);
+
+		return true;
 	}
 
 	private void transmitSafeBrakingDistance(String trainID, double distance) {
