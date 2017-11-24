@@ -43,32 +43,32 @@ public class TrainModel implements Module{
 	@Override
 	public boolean updateTime(SimTime time) {
 		currentTime = time;
-		i++;
-		// this is just for test
-		if(!shown) {
-			//dispatchTrain("Train 1", line);
-			// instantiateGUI(train);
-			int ID = trainList.keySet().iterator().next();
-	        Train first = trainList.get(ID);
-	        first.showTrainGUI();
-	        shown = true;
-	        //dispatchTrain("Train 2", line);
-	        //dispatchTrain("Train 3", line);
-	        //dispatchTrain("Train 4", line);
-	        //dispatchTrain("Train 5", line);
+		if(!trainList.isEmpty()) {
+			if(!shown) {
+				//dispatchTrain("Train 1", line);
+				// instantiateGUI(train);
+				int ID = trainList.keySet().iterator().next();
+		        Train first = trainList.get(ID);
+		        first.showTrainGUI();
+		        shown = true;
+		        //dispatchTrain("Train 2", line);
+		        //dispatchTrain("Train 3", line);
+		        //dispatchTrain("Train 4", line);
+		        //dispatchTrain("Train 5", line);
+			}
+			//setPower("Train 1", pow+10);
+			//powSum += 10;
+			//setPower("Train 1", powSum);
+			//setPower("Train 2", powSum-20);
+			//setPower("Train 3", powSum*2);
+			//setPower("Train 4", powSum+20);
+			//setPower("Train 5", powSum+50);
+			for(Train t : trainList.values()) {
+				t.updateVelocity();
+		        t.setValuesForDisplay();
+			}
+	        
 		}
-		//setPower("Train 1", pow+10);
-		powSum += 10;
-		setPower("Train 1", powSum);
-		setPower("Train 2", powSum-20);
-		setPower("Train 3", powSum*2);
-		setPower("Train 4", powSum+20);
-		setPower("Train 5", powSum+50);
-		for(Train t : trainList.values()) {
-			t.updateVelocity();
-	        t.setValuesForDisplay();
-		}
-        
 		return true;
 	}
 	
