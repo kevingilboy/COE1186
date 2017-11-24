@@ -389,15 +389,15 @@ public class TrainModelGUI extends JFrame {
 		engineFailPanel.setBounds(660, 100, 34, 31);
 		Image ledImage = new ImageIcon(this.getClass().getResource("greyStatusIcon.png")).getImage();
 		JLabel ledImageLabel = new JLabel();
-		ledImageLabel.setBounds(660, 105, 34, 31);
+		ledImageLabel.setBounds(670, 100, 34, 31);
 		ledImageLabel.setIcon(new ImageIcon(ledImage));
 		contentPane.add(ledImageLabel);
 		contentPane.add(engineFailPanel);
 		
-		signalFailPanel.setBounds(660, 153, 34, 31);
+		signalFailPanel.setBounds(670, 150, 34, 31);
 		Image ledImage2 = new ImageIcon(this.getClass().getResource("greyStatusIcon.png")).getImage();
 		JLabel ledImageLabel2 = new JLabel();
-		ledImageLabel2.setBounds(660, 155, 34, 31);
+		ledImageLabel2.setBounds(670, 155, 34, 31);
 		ledImageLabel2.setIcon(new ImageIcon(ledImage2));
 		contentPane.add(ledImageLabel2);
 		contentPane.add(signalFailPanel);
