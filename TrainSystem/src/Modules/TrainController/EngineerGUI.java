@@ -114,8 +114,8 @@ public class EngineerGUI {
 					iValue.setText(I + "");
 					newIField.setText("");
 				}
-				//pi.setP(P);
-				//pi.setI(I);
+				pi.setP(P);
+				pi.setI(I);
 			}
 		});
 		confirmButton.setBounds(130, 173, 117, 29);

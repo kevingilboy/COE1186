@@ -49,12 +49,12 @@ public class TrnControllerGUI {
 	
 	private int mode;	
 	private String trainID;
-	private double speed;
-	private double setpoint;
-	private double authority;
-	private double power;
-	private int temperature;
-	private int driveMode;	//0 is auto, 1 is manual
+	private double speed;		//miles per hour
+	private double setpoint;	//miles per hour
+	private double authority;	//miles
+	private double power;		//watts
+	private int temperature;	//F
+	private int driveMode;		//0 is auto, 1 is manual
 	private boolean left;
 	private boolean right;
 	private boolean service;
@@ -66,6 +66,9 @@ public class TrnControllerGUI {
 	private EngineerGUI eGUI;
 	
 	private PIController pi;
+	
+	public final double SPEEDCONVERSION = 2.23694;			//1 m/s = 2.23694 mph
+	public final double DISTANCECONVERSION = 0.000621371;	//1 m = 0.000621371 miles
 	
 	/*public static void main(String[] args) {
 		new TrnControllerGUI("Train 1");
@@ -133,6 +136,7 @@ public class TrnControllerGUI {
 						setpointValue.setText(newSpeedField.getText() + " mi/hr");
 						newSpeedField.setText("");
 						setpoint = d;
+						controller.setSetpointSpeed(setpoint / SPEEDCONVERSION);
 					} 
 					catch (NumberFormatException E) {
 						newSpeedField.setText("");
@@ -156,7 +160,7 @@ public class TrnControllerGUI {
 		powerLabel.setBounds(20, 211, 99, 16);
 		contentPane.add(powerLabel);
 		
-		powerValue = new JLabel(power + " kW");
+		powerValue = new JLabel(power + " W");
 		powerValue.setBounds(146, 211, 139, 16);
 		contentPane.add(powerValue);
 		
@@ -200,12 +204,13 @@ public class TrnControllerGUI {
 			public void mouseClicked(MouseEvent e) {
 				if (driveMode == 1) {
 					try {
-						Integer.parseInt(tempField.getText());
+						int t = Integer.parseInt(tempField.getText());
+						temperature = t;
+						controller.setTemperature(temperature);
 					} 
 					catch (NumberFormatException E) {
 						tempField.setText(temperature + "");
 					}
-					temperature = Integer.parseInt(tempField.getText());
 					tempSet.setEnabled(false);
 				}
 			}
@@ -223,6 +228,7 @@ public class TrnControllerGUI {
 					sBrakesOn.setSelected(true);
 					sBrakesOff.setSelected(false);
 					service = true;
+					controller.sBrakesOn();
 				}
 			}
 		});
@@ -238,6 +244,7 @@ public class TrnControllerGUI {
 					sBrakesOn.setSelected(false);
 					sBrakesOff.setSelected(true);
 					service = false;
+					controller.sBrakesOff();
 				}
 			}
 		});
@@ -257,6 +264,7 @@ public class TrnControllerGUI {
 					eBrakesOn.setSelected(true);
 					eBrakesOff.setSelected(false);
 					emergency = true;
+					controller.eBrakesOn();
 				}
 			}
 		});
@@ -272,6 +280,7 @@ public class TrnControllerGUI {
 					eBrakesOn.setSelected(false);
 					eBrakesOff.setSelected(true);
 					emergency = false;
+					controller.eBrakesOff();
 				}
 			}
 		});
@@ -291,6 +300,7 @@ public class TrnControllerGUI {
 					rightOpen.setSelected(true);
 					rightClose.setSelected(false);
 					right = true;
+					controller.openRight();
 				}
 			}
 		});
@@ -306,6 +316,7 @@ public class TrnControllerGUI {
 					rightOpen.setSelected(false);
 					rightClose.setSelected(true);
 					right = false;
+					controller.closeRight();
 				}
 			}
 		});
@@ -325,6 +336,7 @@ public class TrnControllerGUI {
 					leftOpen.setSelected(true);
 					leftClose.setSelected(false);
 					left = true;
+					controller.openLeft();
 				}
 			}
 		});
@@ -340,6 +352,7 @@ public class TrnControllerGUI {
 					leftOpen.setSelected(false);
 					leftClose.setSelected(true);
 					left = false;
+					controller.closeLeft();
 				}
 			}
 		});
@@ -359,6 +372,7 @@ public class TrnControllerGUI {
 					lightOn.setSelected(true);
 					lightOff.setSelected(false);
 					lights = true;
+					controller.lightsOn();
 				}
 			}
 		});
@@ -374,7 +388,7 @@ public class TrnControllerGUI {
 					lightOn.setSelected(false);
 					lightOff.setSelected(true);
 					lights = false;
-					
+					controller.lightsOff();
 				}
 			}
 		});
@@ -393,6 +407,7 @@ public class TrnControllerGUI {
 				modeAuto.setSelected(true);
 				modeManual.setSelected(false);
 				driveMode = 0;
+				controller.setDriveMode(driveMode);
 			}
 		});
 		modeAuto.setBounds(324, 40, 65, 23);
@@ -406,6 +421,7 @@ public class TrnControllerGUI {
 				modeAuto.setSelected(false);
 				modeManual.setSelected(true);
 				driveMode = 1;
+				controller.setDriveMode(driveMode);
 			}
 		});
 		modeManual.setBounds(404, 40, 77, 23);
@@ -440,11 +456,11 @@ public class TrnControllerGUI {
 		frame.setVisible(true);
 	}
 	
-	public void guiUpdate(boolean status) {		//send true if in yard, false otherwise
+	public boolean guiUpdate(boolean status) {		//send true if in yard, false otherwise
 		speedValue.setText(speed + " mi/hr");
 		setpointValue.setText(setpoint + " mi/hr");
 		authorityValue.setText(authority + " mi");
-		powerValue.setText(power + " kW");
+		powerValue.setText(power + " W");
 		if (left) {
 			leftOpen.setSelected(true);
 			leftClose.setSelected(false);
@@ -523,18 +539,20 @@ public class TrnControllerGUI {
 			tempField.setEnabled(false);
 			newSpeedField.setEnabled(false);
 		}
+		frame.repaint();
+		return true;
 	}
 	
 	public void setSpeed(double s) {
-		speed = s;
+		speed = (s * SPEEDCONVERSION);
 	}
 	
 	public void setSetpoint(double s) {
-		setpoint = s;
+		setpoint = (s * SPEEDCONVERSION);
 	}
 	
 	public void setAuth(double a) {
-		authority = a;
+		authority = (a * DISTANCECONVERSION);
 	}
 	
 	public void setPower(double p) {
@@ -567,5 +585,9 @@ public class TrnControllerGUI {
 	
 	public void setVisible(boolean b) {
 		frame.setVisible(b);
+	}
+	
+	public String getId() {
+		return trainID;
 	}
 }

@@ -15,12 +15,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TrainController implements Module {
-	private HashMap<Integer, TrnController> controlList;
+	private HashMap<String, TrnController> controlList;
+	private TrainControllerGUI mainGUI;
 	public TrackModel trackModel;
 	public TrainModel trainModel;
 	private ArrayList<BlockInfo> redInfo;
 	private ArrayList<BlockInfo> greenInfo;
 	private SimTime time;
+	private String[] stationList;
 	
 	public final int APPROACHING = 0;
 	public final int ARRIVED = 1;
@@ -28,31 +30,38 @@ public class TrainController implements Module {
 	public final int ENROUTE = 3;
 
 	public TrainController() {
-		controlList = new HashMap<Integer, TrnController>();
+		controlList = new HashMap<String, TrnController>();
+		mainGUI = new TrainControllerGUI();
+		stationList = new String[]{"Pioneer", "Edgebrook", "Station", "Whited", "South Bank", "Central", "Inglewood", "Overbrook", "Glenbury", "Dormont", "Mt. Lebanon", "Poplar", "Castle Shannon", "Glenbury", "Overbrook", "Inglewood", "Central", "Shadyside", "Herron Avenue", "Swissville", "Penn Station", "Steel Plaza", "First Avenue", "Station Square", "South Hills Junction"};
 	}
 	
 	public void dispatchTrain(String trainID, String line) {
 		if (line.equals("RED")) {
-			controlList.put(trainID.hashCode(), new TrnController(trainID, line, this, redInfo));
+			controlList.put(trainID, new TrnController(trainID, line, this, redInfo, mainGUI, stationList));
 		}
 		else {
-			controlList.put(trainID.hashCode(), new TrnController(trainID, line, this, greenInfo));
+			controlList.put(trainID, new TrnController(trainID, line, this, greenInfo, mainGUI, stationList));
 		}
 	}
 	
 	public void setMboAuthority(String trainID, double auth) {
-		TrnController C = controlList.get(trainID.hashCode());
+		TrnController C = controlList.get(trainID);
 		C.setMboAuthority(auth);
 	}
 	
 	public void setSafeBrakingDistance(String trainID, double dist) {
-		TrnController C = controlList.get(trainID.hashCode());
+		TrnController C = controlList.get(trainID);
 		C.setSafeBrakingDistance(dist);
 	}
 	
 	public void setBeacon(String trainID, int value) {
-		TrnController C = controlList.get(trainID.hashCode());
+		TrnController C = controlList.get(trainID);
 		C.setBeacon(value);
+	}
+	
+	public void setPassengerEmergencyBrake(String trainID, boolean status) {
+		TrnController C = controlList.get(trainID);
+		C.setPassengerEmergencyBrake(status);
 	}
 	
 	public void transmitPower(String trainID, double power) {
@@ -60,11 +69,11 @@ public class TrainController implements Module {
 	}
 	
 	public void transmitLeft(String trainID, boolean status) {
-		//trainModel.setLeftDoor(trainID, status);
+		trainModel.setLeftDoor(trainID, status);
 	}
 	
 	public void transmitRight(String trainID, boolean status) {
-		//trainModel.setRightDoor(trainID, status);
+		trainModel.setRightDoor(trainID, status);
 	}
 	
 	public void transmitService(String trainID, boolean status) {
@@ -84,29 +93,24 @@ public class TrainController implements Module {
 	}
 	
 	public void transmitAnnouncement(String trainID, int status, String stationName) {
-		//trainModel.setArrivalStatus(trainID, status, stationName);
-		
+		trainModel.setArrivalStatus(trainID, status, stationName);
 	}
 	
-	/*public double receiveTrainActualSpeed(String trainID) {
-		//return trainModel.getActualSpeed(trainID);
+	public double receiveTrainActualSpeed(String trainID) {
+		return trainModel.getTrain(trainID).getVelocity();
 	}
 	
 	public double receiveSetpointSpeed(String trainID) {
-		//return trainModel.getSetpointSpeed(trainID);
+		return trainModel.getTrain(trainID).getSetpoint();
 	}
 	
 	public double receiveCtcAuthority(String trainID) {
-		//return trainModel.getCtcAuthority(trainID);
-	}
-	
-	public boolean receivePassengerEmergency(String trainID) {
-		//return trainModel.getEmergencyBrake(trainID);
+		return trainModel.getTrain(trainID).getAuthority();
 	}
 	
 	public int receiveTrainPosition(String trainID) {
-		//return trainModel.getPosition(trainID).getCurrentBlock();
-	}*/
+		return trainModel.getTrain(trainID).getBlock();
+	}
 	
 	public void receiveMap() {
 		ArrayList<Block> redBlocks = trackModel.getTrack("RED");
