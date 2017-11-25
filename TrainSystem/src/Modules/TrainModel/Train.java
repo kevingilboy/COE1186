@@ -114,6 +114,7 @@ public class Train {
     private double trainAcceleration;
     private double distTravelled;
     private double metersIn;
+    private boolean setExit;
     
     public Train(String line, String trainID, TrainModel tm, TrackModel tkmdl) {
     	this.trkMdl = tkmdl;
@@ -176,7 +177,7 @@ public class Train {
         this.finalSpeed = 0;
         this.trainAcceleration = 0;
         this.metersIn = 0.0;
-    	
+    	this.setExit = false;
     	this.trainModelGUI = null;
     }
     
@@ -563,5 +564,10 @@ public class Train {
     
     public void setGPSAntenna(boolean status) {
     	this.GPSAntenna = status;
+    }
+    
+    public void setExitAllGuis(boolean yes) {
+    	if(yes)
+    		trnMdl.exitAll();
     }
 }
