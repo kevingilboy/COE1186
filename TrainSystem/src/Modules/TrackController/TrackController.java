@@ -49,31 +49,40 @@ public class TrackController implements Module{
 		return true;
 	}
 	//Internal Functions
-	public void receiveBlockInfo(String line, int blockId){
-		if (trackModel.getBlock(line, blockId).getLight() != null){
-			hasLight = true;
-			lightState = trackModel.getBlock(line, blockId).getLight().getState();
-		}
-		if (trackModel.getBlock(line, blockId).getSwitch() != null){
-			hasSwitch = true;
-			switchState = trackModel.getBlock(line, blockId).getSwitch().getState();
-		}
-		if (trackModel.getBlock(line, blockId).getCrossing() != null){
-			hasCrossing = true;
-			crossingState = trackModel.getBlock(line, blockId).getCrossing().getState();
-		}
-		status = trackModel.getBlock(line, blockId).getStatus();
-		occupancy = trackModel.getBlock(line, blockId).getOccupied();
-	}
-	
 	private void updateStates(){
 		for(int i=0; i<associatedBlocks.length; i++){
-			receiveBlockInfo(line, Integer.parseInt(associatedBlocks[i]));
+			receiveBlockInfo(associatedLine, Integer.parseInt(associatedBlocks[i]));
 			runPLC();
 			if(Integer.parseInt(associatedBlocks[i]) == tcgui.getSelectedBlockId()){
 				tcgui.displayInfo();
 			}
 		}
+	}
+	
+	public void receiveBlockInfo(String line, int blockId){
+		if (trackModel.getBlock(line, blockId).getLight() != null){
+			hasLight = true;
+			lightState = trackModel.getBlock(line, blockId).getLight().getState();
+		} else {
+			hasLight = false;
+			lightState = false;
+		}
+		if (trackModel.getBlock(line, blockId).getSwitch() != null){
+			hasSwitch = true;
+			switchState = trackModel.getBlock(line, blockId).getSwitch().getState();
+		} else {
+			hasSwitch = false;
+			switchState = false;
+		}
+		if (trackModel.getBlock(line, blockId).getCrossing() != null){
+			hasCrossing = true;
+			crossingState = trackModel.getBlock(line, blockId).getCrossing().getState();
+		} else {
+			hasCrossing = false;
+			crossingState = false;
+		}
+		status = trackModel.getBlock(line, blockId).getStatus();
+		occupancy = trackModel.getBlock(line, blockId).getOccupied();
 	}
 	
 	private void runPLC(){
