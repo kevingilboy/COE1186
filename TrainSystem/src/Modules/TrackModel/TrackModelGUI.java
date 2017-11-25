@@ -639,7 +639,7 @@ public class TrackModelGUI implements ActionListener{
 
 		if (block.getStation() != null){
 			icon_station.setIcon(new ImageIcon("Modules\\TrackModel\\images\\statusIcon_green.png"));
-			label_stationName.setText((block.getStation().getId() + 1).toUpperCase());
+			label_stationName.setText((block.getStation().getId()).toUpperCase());
 		} else {
 			icon_station.setIcon(new ImageIcon("Modules\\TrackModel\\images\\statusIcon_grey.png"));
 			label_stationName.setText("   ");
