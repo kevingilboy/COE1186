@@ -3,20 +3,12 @@ package Modules.Ctc;
 import Shared.Module;
 import Shared.SimTime;
 
-//Temporary import while TM is under development
-//Once project is complete, I will need the Block, Switch, Station, and Beacon classes kept locally
 import Modules.TrackModel.TrackCsvParser;
 import Modules.TrackModel.Block;
-import Modules.TrackModel.Light;
-import Modules.TrackModel.Crossing;
-import Modules.TrackModel.Station;
-import Modules.TrackModel.Switch;
-import Modules.TrackModel.Beacon;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public abstract class CtcCore implements Module,TimeControl {
@@ -55,7 +47,7 @@ public abstract class CtcCore implements Module,TimeControl {
 	
 	public void initializeBlocks() {
 		for(Line line : Line.values()) {
-			ArrayList<Block> blocks = trackParser.parse("Modules/Ctc/"+line.toString()+"LineFinal.csv");
+			ArrayList<Block> blocks = new TrackCsvParser().parse("Modules/Ctc/"+line.toString()+"LineFinal.csv");
 			line.blocksAL = blocks;
 			line.blocks = blocks.toArray(new Block[blocks.size()]);
 		}
@@ -78,7 +70,15 @@ public abstract class CtcCore implements Module,TimeControl {
 				gui.autoDispatchFromQueue(name);
 			}
 		}
-		//TODO update trains
+		
+		//Calculate authority
+		for(Train train : trains.values()) {
+			ArrayList<Integer> authority = train.calculateAuthority();
+			System.out.println(authority.toString());
+			
+			//TODO uncomment when Nick adds this function
+			//trackController.transmitCtcAuthority(train.name, authority);
+		}
 		
 		gui.repaint();
 		
