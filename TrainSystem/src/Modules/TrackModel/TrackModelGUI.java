@@ -559,9 +559,16 @@ public class TrackModelGUI implements ActionListener{
 	}
 
 	public void showBlockInfo(Block block){
+		/**
+		 * NOTE: Calls to block.getId() in this method are added to 1 (+1) 
+		 * for displaying the block ID correctly. This is because all block ID's
+		 * are initialized to start from index 0 when read in from the CSV file
+		 * that starts at block A1 for each line. When displaying the ID back to 
+		 * the user in a GUI, (+1) will revert to the ID specified in the CSV.
+		 */
 		DecimalFormat df = new DecimalFormat("#.##");
 
-		label_blockID.setText((block.getSection()).toUpperCase() + Integer.toString(block.getId()));
+		label_blockID.setText((block.getSection()).toUpperCase() + Integer.toString(block.getId() + 1));
 		label_lengthVal.setText(df.format(block.getLength() * METERS_TO_YARDS_FACTOR) + " yd");
 		label_gradeVal.setText(df.format(block.getGrade()) + " %");
 		label_elevationVal.setText(df.format(block.getElevation() * METERS_TO_YARDS_FACTOR) + " yd");
@@ -598,7 +605,7 @@ public class TrackModelGUI implements ActionListener{
 			int a = s.getPortAlternate();
 			
 			if (s.getEdge() == Switch.EDGE_TYPE_HEAD){
-				label_switchHead.setText((block.getSection()).toUpperCase() + Integer.toString(block.getId()));
+				label_switchHead.setText((block.getSection()).toUpperCase() + Integer.toString(block.getId() + 1));
 				label_switchPortNormal.setText((trackSelected.get(n).getSection()).toUpperCase() + Integer.toString(n));
 				label_switchPortAlternate.setText((trackSelected.get(a).getSection()).toUpperCase() + Integer.toString(a));
 			} else if (s.getEdge() == Switch.EDGE_TYPE_TAIL){
@@ -607,11 +614,11 @@ public class TrackModelGUI implements ActionListener{
 				// Check if this tail block is the normal or the alternate
 				// by referencing the head block at the normal port of the tail block
 				if (trackSelected.get(n).getSwitch().getPortNormal() == block.getId()){
-					label_switchPortNormal.setText((block.getSection()).toUpperCase() + Integer.toString(block.getId()));
+					label_switchPortNormal.setText((block.getSection()).toUpperCase() + Integer.toString(block.getId() + 1));
 					label_switchPortAlternate.setText((trackSelected.get(a).getSection()).toUpperCase() + Integer.toString(a)); 
 				} else {
 					label_switchPortNormal.setText((trackSelected.get(a).getSection()).toUpperCase() + Integer.toString(a)); 
-					label_switchPortAlternate.setText((block.getSection()).toUpperCase() + Integer.toString(block.getId()));
+					label_switchPortAlternate.setText((block.getSection()).toUpperCase() + Integer.toString(block.getId() + 1));
 				}
 			}
 
@@ -632,7 +639,7 @@ public class TrackModelGUI implements ActionListener{
 
 		if (block.getStation() != null){
 			icon_station.setIcon(new ImageIcon("Modules\\TrackModel\\images\\statusIcon_green.png"));
-			label_stationName.setText((block.getStation().getId()).toUpperCase());
+			label_stationName.setText((block.getStation().getId() + 1).toUpperCase());
 		} else {
 			icon_station.setIcon(new ImageIcon("Modules\\TrackModel\\images\\statusIcon_grey.png"));
 			label_stationName.setText("   ");
