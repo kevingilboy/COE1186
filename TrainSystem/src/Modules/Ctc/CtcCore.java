@@ -67,7 +67,17 @@ public abstract class CtcCore implements Module,TimeControl {
 		}
 		currentTime = new SimTime(time);
 		
+		//Throughput
 		calculateThroughput();
+		
+		//Auto-dispatch from queue
+		for(Schedule schedule : ctc.schedules.values()) {
+			if(schedule.departureTime.equals(ctc.currentTime)) {
+				String name = schedule.name;
+				ctc.dispatchTrain(name);
+				gui.autoDispatchFromQueue(name);
+			}
+		}
 		//TODO update trains
 		
 		gui.repaint();

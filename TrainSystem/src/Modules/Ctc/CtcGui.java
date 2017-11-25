@@ -698,7 +698,7 @@ public class CtcGui {
 	
 	/*
 	 * QUEUE TABLE
-	 */
+	 */	
 	private void updateQueueTable(){
 		//Clear the red and green tables
 		for(Line line : Line.values()) {
@@ -720,7 +720,7 @@ public class CtcGui {
 		
 		//If a schedule was selected, restore the selection in the table
 		if(queueSelectedTable.schedule!=null) {
-			for(int i=0;i<queueSelectedTable.schedule.line.queueData.getColumnCount();i++) {
+			for(int i=0;i<queueSelectedTable.schedule.line.queueData.getRowCount();i++) {
 				if(queueSelectedTable.schedule.line.queueData.getValueAt(i, 0).equals(queueSelectedTable.schedule.name)) {
 					queueSelectedTable.schedule.line.queueTable.setRowSelectionInterval(i, i);
 					break;
@@ -729,21 +729,20 @@ public class CtcGui {
 		}
 	}
 	
-	private void checkQueueForDisaptches() {
-		for(Schedule schedule : ctc.schedules.values()) {
-			if(schedule.departureTime.equals(ctc.currentTime)) {
-				ctc.dispatchTrain(schedule.name);
-				updateQueueTable();
-				updateDispatchedTable();
-				if(queueSelectedTable.schedule!=null && queueSelectedTable.schedule.name==schedule.name) {
-					queueSelectedTable.clear();	
-					queueDepartTime.setText("");
-					btnDispatchQueueSchedule.setEnabled(false);
-					queueDepartTime.setEnabled(false);
-					btnDeleteQueueSchedule.setEnabled(false);
-				}				
-			}	
+	protected void autoDispatchFromQueue(String name) {
+		//If the dispatched train was the one selected, clear the selected 
+		//table and disable appropriate buttons
+		if(queueSelectedTable.schedule!=null && queueSelectedTable.schedule.name==name) {
+			queueSelectedTable.clear();	
+			queueDepartTime.setText("");
+			btnDispatchQueueSchedule.setEnabled(false);
+			queueDepartTime.setEnabled(false);
+			btnDeleteQueueSchedule.setEnabled(false);
 		}
+		
+		//Update the queue and dispatch tables to reflect changes
+		updateQueueTable();
+		updateDispatchedTable();
 	}
 	
 	/*
@@ -862,9 +861,6 @@ public class CtcGui {
 		
 		//Update the info of the selected block
 		updateSelectedBlock();
-		
-		//Dispatch trains who are scheduled to be dispatched
-		checkQueueForDisaptches();
 		
 		//Update the locations of trains
 		updateDispatchedTable();
