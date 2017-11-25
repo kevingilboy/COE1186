@@ -2,6 +2,11 @@ package Modules.TrackController;
 
 import java.util.*;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 import java.awt.event.*;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -32,6 +37,7 @@ public class TrackControllerGUI extends JFrame{
 	//GUI Variables
 	private JPanel contentPane;
 	private JTextField textStatus;
+	private JTextField textLine;
 	private JTextField textOccupancy;
 	JComboBox comboBlock = new JComboBox();
 	JRadioButton switchButtonTop = new JRadioButton();
@@ -135,7 +141,7 @@ public class TrackControllerGUI extends JFrame{
 		labelTrackImg.setBackground(Color.WHITE);
 		labelTrackImg.setBounds(0, 0, 334, 448);
 		panel.add(labelTrackImg);
-		labelTrackImg.setIcon(new ImageIcon("imgs/track.png"));
+		labelTrackImg.setIcon(new ImageIcon("Modules/TrackController/imgs/track.png"));
 		
 		//Block Selectors
 		JLabel labelBlock = new JLabel("Block");
@@ -152,7 +158,7 @@ public class TrackControllerGUI extends JFrame{
 		
 		comboBlock.setBounds(384, 19, 104, 27);
 		trackSelectorPanel.add(comboBlock);
-		//comboBlock.setModel(new DefaultComboBoxModel(blocks));
+		comboBlock.setModel(new DefaultComboBoxModel(blocks));
 		//comboBlock.addActionListener(new BlockChange());
 		
 		JComboBox comboSection = new JComboBox();
@@ -160,10 +166,13 @@ public class TrackControllerGUI extends JFrame{
 		trackSelectorPanel.add(comboSection);
 		comboSection.setModel(new DefaultComboBoxModel(new String[] {"-", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "ZZ", "YY"}));
 		
-		JComboBox comboLine = new JComboBox();
-		comboLine.setBounds(48, 19, 104, 27);
-		trackSelectorPanel.add(comboLine);
-		comboLine.setModel(new DefaultComboBoxModel(new String[] {"-", "Green"}));
+		textLine = new JTextField();
+		textLine.setBounds(48, 19, 104, 27);
+		trackSelectorPanel.add(textLine);
+		textLine.setHorizontalAlignment(SwingConstants.CENTER);
+		textLine.setText(line);
+		textLine.setEditable(false);
+		textLine.setColumns(10);
 		
 		//Controller Specifier
 		JLabel labelController = new JLabel("<html><b>Controller - G1</b><html>");
@@ -202,7 +211,7 @@ public class TrackControllerGUI extends JFrame{
 		labelSwitchState.setHorizontalAlignment(SwingConstants.TRAILING);
 		
 		JLabel labelSwitchGraphic = new JLabel();
-		labelSwitchGraphic.setIcon(new ImageIcon("imgs/switch.png"));
+		labelSwitchGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/switch.png"));
 		labelSwitchGraphic.setBounds(100, 17, 55, 33);
 		switchPanel.add(labelSwitchGraphic);
 		
@@ -222,7 +231,7 @@ public class TrackControllerGUI extends JFrame{
 		
 		labelLightGraphic.setBounds(149, 0, 39, 57);
 		lightsPanel.add(labelLightGraphic);
-		labelLightGraphic.setIcon(new ImageIcon("imgs/lightsOff.png"));
+		labelLightGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/lightsOff.png"));
 		
 		//Block Crossing
 		JLabel labelCrossing = new JLabel("Crossing");
@@ -230,7 +239,7 @@ public class TrackControllerGUI extends JFrame{
 		labelCrossing.setBounds(0, 60, 88, 57);
 		lightsPanel.add(labelCrossing);
 		
-		labelCrossingGraphic.setIcon(new ImageIcon("imgs/crossingOff.png"));
+		labelCrossingGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/crossingOff.png"));
 		labelCrossingGraphic.setForeground(Color.LIGHT_GRAY);
 		labelCrossingGraphic.setFont(new Font("Helvetica", Font.BOLD, 40));
 		labelCrossingGraphic.setHorizontalAlignment(SwingConstants.CENTER);
@@ -250,7 +259,7 @@ public class TrackControllerGUI extends JFrame{
 		
 		//Pineapple logo
 		JLabel labelPineapple = new JLabel("");
-		labelPineapple.setIcon(new ImageIcon("imgs/pineapple_icon.png"));
+		labelPineapple.setIcon(new ImageIcon("Modules/TrackController/imgs/pineapple_icon.png"));
 		labelPineapple.setBounds(364, 253, 138, 76);
 		trackInfoPanel.add(labelPineapple);
 	}
@@ -262,7 +271,7 @@ public class TrackControllerGUI extends JFrame{
 	}
 
 	class uploadPLC implements ActionListener {
-	    public void actionPerformed(ActionEvent e) {
+	    public void actionPerformed(ActionEvent e){
 			JFileChooser c = new JFileChooser();
 			String plcPath = c.getCurrentDirectory().toString() + "/" + c.getSelectedFile().getName();
 			System.out.println("path = " + plcPath);

@@ -228,5 +228,14 @@ public class TrainModel implements Module{
 		// TODO Auto-generated method stub
 		return true;
 	}
+	
+	public void exitAll() {
+		if(!trainList.isEmpty()) {
+			for(Train t : trainList.values()) {
+				// set the System.exit(DISPOSE);
+				t.getTrainGUI().dispose();
+			}
+		}
+	}
 
 }
