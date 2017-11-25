@@ -1,0 +1,4 @@
+proceed: ((!nb_occupied) && (!nnb_occupied))
+lights: ((pb_occupied) && (!nb_occupied) && (!nnb_occupied))
+crossing: ((pb_occupied) || (nb_occupied) || (cb_occupied))
+switch: ((!nb_occupied) && (!nnb_occupied))

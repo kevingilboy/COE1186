@@ -20,7 +20,7 @@ public class PLC {
 	public PLC(TrackController tc, String plcPath){
 		this.tc = tc;
 		this.line = tc.associatedLine;
-		//parsePLC(plcPath);
+		parsePLC(plcPath);
 		jexl = new JexlEngine();
 	}
 	
@@ -68,49 +68,32 @@ public class PLC {
 		return true;
 	}
 	
-	public boolean canProceed(int pb, int cb, int nb, int nnb){
-		return vitalCheckProceed(pb, cb, nb, nnb);
+	public boolean canProceed(int cb){
+		return vitalCheck(proceedLogic, cb);
 	}
 	
-	public boolean canLight(int pb, int cb, int nb, int nnb){
-		return vitalCheck(lightLogic, pb, cb, nb, nnb);
+	public boolean canLight(int cb){
+		return vitalCheck(lightLogic, cb);
 	}
 	
-	public boolean canSwitch(int pb, int cb, int nb, int nnb){
-		return vitalCheck(switchLogic, pb, cb, nb, nnb);
+	public boolean canSwitch(int cb){
+		return vitalCheck(switchLogic, cb);
 	}
 	
-	public boolean canCrossing(int pb, int cb, int nb, int nnb){
-		return vitalCheck(crossingLogic, pb, cb, nb, nnb);
+	public boolean canCrossing(int cb){
+		return vitalCheck(crossingLogic, cb);
 	}
 	
-	//TODO: Do I need a separate proceed check?
-	private boolean vitalCheckProceed(int pb, int cb, int nb, int nnb){
-		boolean result = true;
-		Expression e = jexl.createExpression(proceedLogic);
-		JexlContext context = new MapContext();
-		//Compute evaluation 3 times in order to assure vitality of signal
-		for(int iii = 0; iii < 3; iii++){ 
-			context.set("pb_occupied", tc.trackModel.getBlock(line, pb).getOccupied());
-			context.set("cb_occupied", tc.trackModel.getBlock(line, cb).getOccupied());
-			context.set("nb_occupied", tc.trackModel.getBlock(line, nb).getOccupied());
-			context.set("nnb_occupied", tc.trackModel.getBlock(line, nnb).getOccupied());
-			//Compound evaluation expression
-			result &= (boolean) e.evaluate(context); 
-		}
-		return result;
-	}
-	
-	private boolean vitalCheck(String logic, int pb, int cb, int nb, int nnb){
+	private boolean vitalCheck(String logic, int cb){
 		boolean result = true;
 		Expression e = jexl.createExpression(logic);
 		JexlContext context = new MapContext();
 		//Compute evaluation 3 times in order to assure vitality of signal
 		for(int iii = 0; iii < 3; iii++){ 
-			context.set("pb_occupied", tc.trackModel.getBlock(line, pb).getOccupied());
+			context.set("pb_occupied", tc.trackModel.getBlock(line, (cb-1)).getOccupied());
 			context.set("cb_occupied", tc.trackModel.getBlock(line, cb).getOccupied());
-			context.set("nb_occupied", tc.trackModel.getBlock(line, nb).getOccupied());
-			context.set("nnb_occupied", tc.trackModel.getBlock(line, nnb).getOccupied());
+			context.set("nb_occupied", tc.trackModel.getBlock(line, (cb+1)).getOccupied());
+			context.set("nnb_occupied", tc.trackModel.getBlock(line, (cb+2)).getOccupied());
 			//Compound evaluation expression
 			result &= (boolean) e.evaluate(context); 
 		}
