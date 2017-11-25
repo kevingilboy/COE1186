@@ -6,11 +6,10 @@ import Modules.TrackModel.TrackIterator;
 
 import java.util.ArrayList;
 
-import Modules.TrackModel.Block;
-
 public class Schedule {
 	public Line line;
 	public ArrayList<Stop> stops;
+	public int nextStopIndex;
 	
 	public SimTime departureTime;
 	
@@ -19,18 +18,23 @@ public class Schedule {
 	
 	public Schedule(Line line) {
 		this.line = line;
+		nextStopIndex = 0;
 		stops = new ArrayList<Stop>();
 	}
 	
-	public void addStop(int index, Block block) {
+	public void addStop(int index, int blockId) {
 		//If stop does not exist, then add it. Else replace the current stop
 		if(index>=stops.size()) {
-			stops.add(index,new Stop(block));
+			stops.add(index,new Stop(blockId));
 		}
 		else {
-			stops.set(index,new Stop(block));
+			stops.set(index,new Stop(blockId));
 		}
 		calculateDwellTimes();
+	}
+	
+	public int getNextStop() {
+		return stops.get(nextStopIndex).blockId;
 	}
 	
 	public void removeStop(int index) {
@@ -53,7 +57,7 @@ public class Schedule {
 	 * This function calculates time between stops
 	 */
 	private void calculateDwellTimes() {
-		int currBlockId = line.yardOutNext;
+		int currBlockId = line.yardOut;
 		int prevBlockId = -1;
 		
 		TrackIterator ti;
@@ -64,7 +68,7 @@ public class Schedule {
 			double runningTime = 0;
 			
 			//Loop until the stop is reached by the iterator
-			while(stop.block.getId() != currBlockId) {	
+			while(stop.blockId != currBlockId) {	
 				runningTime += line.blocks[currBlockId].getSpeedLimit()/1000.0 * line.blocks[currBlockId].getLength();
 				
 				ti = new TrackIterator(line.blocksAL, currBlockId, prevBlockId);
@@ -87,7 +91,7 @@ public class Schedule {
 		Object[][] grid = new Object[stops.size()][3];
 		for(int i=0;i<stops.size();i++) {
 			Stop stop = stops.get(i);
-			grid[i][0] = stop.block.getId();
+			grid[i][0] = line.blocks[stop.blockId+1].toString();
 			grid[i][1] = stop.timeToDwell.toString();
 		}
 		return grid;

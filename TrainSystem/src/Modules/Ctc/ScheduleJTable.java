@@ -2,6 +2,8 @@ package Modules.Ctc;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
@@ -74,7 +76,7 @@ public class ScheduleJTable extends JTable{
 		blockCB.addItem("");
 		blockCB.addItem("-REMOVE-");
 		for(Block block : schedule.line.blocks) {
-			blockCB.addItem(Integer.toString(block.getId()));
+			blockCB.addItem(block.toString());
 		}
 		
 		//Add a listener to the ComboBox, add stop when state changes
@@ -84,6 +86,10 @@ public class ScheduleJTable extends JTable{
 				if (e.getStateChange() == ItemEvent.SELECTED) {					
 					int row = table.getSelectedRow();
 					String blockText = (String)blockCB.getSelectedItem();
+					
+					if(row==-1) {
+						return;
+					}
 					
 					if(blockText.equals("-REMOVE-")) {
 						if(row<schedule.stops.size()) {
@@ -95,7 +101,15 @@ public class ScheduleJTable extends JTable{
 						}
 					}
 					else if(!blockText.equals("")){
-						schedule.addStop(row, schedule.line.blocks[Integer.parseInt(blockText)]);
+						System.out.println(blockText);
+						//Match the first number (single or multi-digit)
+						Matcher matcher = Pattern.compile("\\d+").matcher(blockText);
+						matcher.find();
+						int blockNum = Integer.valueOf(matcher.group());
+						
+						if(blockNum!=-1) {
+							schedule.addStop(row, blockNum-1);
+						}
 					}
 					
 					fireScheduleChanged();
