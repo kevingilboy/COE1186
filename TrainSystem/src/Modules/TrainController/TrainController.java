@@ -118,7 +118,7 @@ public class TrainController implements Module {
 	}
 	
 	public boolean receivePassengerEmergencyBrake(String trainID) {
-		return false;	//NEED TO IMPLEMENT
+		return trainModel.getPassengerEmergencyBrake(trainID);
 	}
 	
 	public void receiveMap() {
