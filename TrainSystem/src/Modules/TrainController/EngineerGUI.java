@@ -1,3 +1,5 @@
+//Michael Kotcher
+
 package Modules.TrainController;
 
 import javax.swing.JFrame;

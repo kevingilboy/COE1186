@@ -10,6 +10,7 @@ import Modules.TrackModel.Block;
 import Modules.TrackModel.Station;
 import Modules.TrainModel.TrainModel;
 import Modules.TrainModel.Train;
+import Modules.TrainModel.Position;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,7 +55,7 @@ public class TrainController implements Module {
 		C.setSafeBrakingDistance(dist);
 	}
 	
-	public void setBeacon(String trainID, int value) {
+	public void setBeacon(String trainID, int value) {		//may have to change to a GETTER
 		TrnController C = controlList.get(trainID);
 		C.setBeacon(value);
 	}
@@ -110,6 +111,14 @@ public class TrainController implements Module {
 	
 	public int receiveTrainPosition(String trainID) {
 		return trainModel.getTrain(trainID).getBlock();
+	}
+	
+	public int receiveTrainDirection(String trainID) {
+		return trainModel.getTrain(trainID).getPosition().getCurrentDirection();
+	}
+	
+	public boolean receivePassengerEmergencyBrake(String trainID) {
+		return false;	//NEED TO IMPLEMENT
 	}
 	
 	public void receiveMap() {
