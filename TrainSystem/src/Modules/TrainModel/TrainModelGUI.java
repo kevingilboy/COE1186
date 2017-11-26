@@ -45,7 +45,7 @@ public class TrainModelGUI extends JFrame {
 	private boolean emerBrake = false;
 
 	private JLabel lblSpecifications = new JLabel("Train Specifications");
-	private JLabel lblFailureModeActivation = new JLabel("Failure Mode Activation");
+	private JLabel lblFailureModeActivation = new JLabel("Failure Mode Simulation");
 	private JLabel lblOnboardTemperature = new JLabel("Train Operations");
 	private JLabel lblSpeedauthority = new JLabel("Speed/Authority");
 	private JLabel lblStationControl = new JLabel("Station Control");
@@ -118,6 +118,9 @@ public class TrainModelGUI extends JFrame {
 	public JLabel currentSpeedLabel = new JLabel();
 	
 	public JButton btnEmergencyBrake = new JButton("Emergency Brake");
+	JToggleButton engineToggle = new JToggleButton("Toggle");
+	JToggleButton sigToggle = new JToggleButton("Toggle");
+	JToggleButton brakeToggle = new JToggleButton("Toggle");
 	
 	public JLabel numCarsSpinner = new JLabel();
 	public JLabel tempLabel = new JLabel();
@@ -128,21 +131,15 @@ public class TrainModelGUI extends JFrame {
 	// The instance of the TrainModel class we will use to go between the back end elements
 	// and the GUI elements of the Train Model
 	public static Train train;
-	private final JMenuItem mntmSimulateBrakeFailure = new JMenuItem("Simulate Brake Failure");
-	private final JMenuItem mntmSimulateEngineFailure = new JMenuItem("Simulate Engine Failure");
-	private final JMenuItem mntmSimulateSignalFailure = new JMenuItem("Simulate Signal Failure");
-	private final JMenuItem mntmExit = new JMenuItem("Exit");
+	//private final JMenuItem mntmSimulateBrakeFailure = new JMenuItem("Simulate Brake Failure");
+	//private final JMenuItem mntmSimulateEngineFailure = new JMenuItem("Simulate Engine Failure");
+	//private final JMenuItem mntmSimulateSignalFailure = new JMenuItem("Simulate Signal Failure");
+	private final JMenuItem mntmExit = new JMenuItem("Exit All");
 	private Image ledImage = new ImageIcon(this.getClass().getResource("greyStatusIcon.png")).getImage();
 	private Image ledImageRed = new ImageIcon(this.getClass().getResource("redStatusIcon.png")).getImage();
 	private final JLabel ledImageLabel = new JLabel();
 	private final JLabel ledImageLabel2 = new JLabel();
 	private final JLabel ledImageLabel3 = new JLabel();
-	private final JMenuItem mntmEndFailures = new JMenuItem("End Failure(s)");
-	JButton btnCauseFailure = new JButton("Cause Failure");
-	JCheckBox engineFailCheckBox = new JCheckBox("");
-	JCheckBox signalFailCheckBox = new JCheckBox("");
-	JCheckBox brakeFailCheckBox = new JCheckBox("");
-	private final JButton btnEndFailure = new JButton("End Failure");
 	
 	/*public TrainModelNewGUI() {
 		
@@ -230,112 +227,61 @@ public class TrainModelGUI extends JFrame {
 		contentPane.add(menuBar);
 		
 		menuBar.add(mnFile);
-	
-		/*mnFile.add(mntmSimulateEngineFailure);
-		mntmSimulateEngineFailure.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				setEnabled(true);
-				ledImageLabel.setIcon(new ImageIcon(ledImageRed));
-				ledImageLabel.setBounds(692, 104, 34, 31);
-				repaint();
-			}
-		});
-		
-		mnFile.add(mntmSimulateSignalFailure);
-		mntmSimulateSignalFailure.addActionListener(new ActionListener()
-		{
-		  public void actionPerformed(ActionEvent e)
-		  {
-			  setEnabled(true);
-			  ledImageLabel2.setIcon(new ImageIcon(ledImageRed));
-			  ledImageLabel2.setBounds(692, 153, 34, 31);
-			  repaint();
-		  }
-		});
-		
-		mnFile.add(mntmSimulateBrakeFailure);
-		mntmSimulateBrakeFailure.addActionListener(new ActionListener()
-		{
-		  public void actionPerformed(ActionEvent e)
-		  {
-			  setEnabled(true);
-			  ledImageLabel3.setIcon(new ImageIcon(ledImageRed));
-			  ledImageLabel3.setBounds(692, 203, 34, 31);
-			  repaint();
-		  }
-		});*/
-		
-		mnFile.add(mntmEndFailures);
-		btnEndFailure.addActionListener(new ActionListener()
-		{
-		  public void actionPerformed(ActionEvent e)
-		  {
-			  setEnabled(true);
-			  ledImageLabel.setIcon(new ImageIcon(ledImage));
-			  engineFail = false;
-			  engineFailCheckBox.setSelected(engineFail);
-			  ledImageLabel2.setIcon(new ImageIcon(ledImage));
-			  sigFail = false;
-			  signalFailCheckBox.setSelected(sigFail);
-			  ledImageLabel3.setIcon(new ImageIcon(ledImage));
-			  brakeFail = false;
-			  brakeFailCheckBox.setSelected(brakeFail);
-			  repaint();
-		  }
-		});
-		
-		
-		btnCauseFailure.setBounds(666, 245, 129, 29);
-		contentPane.add(btnCauseFailure);
-		btnCauseFailure.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				setEnabled(true);
-				if(engineFail) { ledImageLabel.setIcon(new ImageIcon(ledImageRed)); }
-				
-				if(sigFail)	{ ledImageLabel2.setIcon(new ImageIcon(ledImageRed)); }
-				
-				if(brakeFail) { ledImageLabel3.setIcon(new ImageIcon(ledImageRed)); }
-				repaint();
-			}
-		});
-		
-		engineFailCheckBox.setBounds(873, 96, 52, 29);
-		contentPane.add(engineFailCheckBox);
-		engineFailCheckBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				engineFail = true;
-			}
-		});
-		
-		signalFailCheckBox.setBounds(873, 146, 52, 29);
-		contentPane.add(signalFailCheckBox);
-		signalFailCheckBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				sigFail = true;
-			}
-		});
-		
-		brakeFailCheckBox.setBounds(873, 196, 52, 29);
-		contentPane.add(brakeFailCheckBox);
-		brakeFailCheckBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				brakeFail = true;
-			}
-		});
 		
 		// Not working currently...not sure what's going on, but will just remove if needed
 		mnFile.add(mntmExit);
 		mntmExit.addActionListener(new ActionListener()
 		{
-		  public void actionPerformed(ActionEvent e)
-		  {
-			  setEnabled(true);
-			  train.setExitAllGuis(true);
-		  }
+			public void actionPerformed(ActionEvent e) {
+				setEnabled(true);
+				train.setExitAllGuis(true);
+			}
 		});
+		
+		engineToggle.setBounds(666, 245, 129, 29);
+		contentPane.add(engineToggle);
+		engineToggle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				//setEnabled(true);
+				engineFail = !engineFail;
+				if(engineFail) { 
+					ledImageLabel.setIcon(new ImageIcon(ledImageRed)); 
+				} else {
+					ledImageLabel.setIcon(new ImageIcon(ledImage));
+				}
+				repaint();
+			}
+		});
+		
+		sigToggle.setBounds(873, 96, 52, 29);
+		contentPane.add(sigToggle);
+		sigToggle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				sigFail = !sigFail;
+				if(sigFail)	{ 
+					ledImageLabel2.setIcon(new ImageIcon(ledImageRed)); 
+				} else {
+					ledImageLabel2.setIcon(new ImageIcon(ledImage));
+				}
+				repaint();
+			}
+		});
+		
+		brakeToggle.setBounds(873, 146, 52, 29);
+		contentPane.add(brakeToggle);
+		brakeToggle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				brakeFail = !brakeFail;
+				if(brakeFail) { 
+					ledImageLabel3.setIcon(new ImageIcon(ledImageRed)); 
+				} else {
+					ledImageLabel3.setIcon(new ImageIcon(ledImage));
+				}
+				repaint();
+			}
+		});
+
 		
 		menuBar.add(mnSelectTrain);
 		
@@ -499,20 +445,20 @@ public class TrainModelGUI extends JFrame {
 		
 		
 		lblEngineFailureMode.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblEngineFailureMode.setBounds(742, 102, 129, 20);
+		lblEngineFailureMode.setBounds(709, 106, 129, 20);
 		contentPane.add(lblEngineFailureMode);
 		
 		lblSignalFailure.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblSignalFailure.setBounds(742, 150, 129, 20);
+		lblSignalFailure.setBounds(709, 154, 129, 20);
 		contentPane.add(lblSignalFailure);
 		
 		lblBrakeFailure.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblBrakeFailure.setBounds(742, 200, 129, 20);
+		lblBrakeFailure.setBounds(709, 204, 129, 20);
 		contentPane.add(lblBrakeFailure);
 
-		ledImageLabel.setBounds(692, 96, 34, 31);
-		ledImageLabel2.setBounds(692, 145, 34, 31);
-		ledImageLabel3.setBounds(692, 195, 34, 31);
+		ledImageLabel.setBounds(682, 100, 34, 31);
+		ledImageLabel2.setBounds(682, 149, 34, 31);
+		ledImageLabel3.setBounds(682, 199, 34, 31);
 		
 		ledImageLabel.setIcon(new ImageIcon(ledImage));
 		contentPane.add(ledImageLabel);
@@ -650,9 +596,15 @@ public class TrainModelGUI extends JFrame {
 		emergencyLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		emergencyLabel.setBounds(516, 225, 69, 20);
 		contentPane.add(emergencyLabel);
-		btnEndFailure.setBounds(806, 245, 115, 29);
 		
-		contentPane.add(btnEndFailure);
+		engineToggle.setBounds(826, 100, 91, 29);
+		contentPane.add(engineToggle);
+		
+		sigToggle.setBounds(826, 150, 91, 29);
+		contentPane.add(sigToggle);
+		
+		brakeToggle.setBounds(826, 200, 91, 29);
+		contentPane.add(brakeToggle);
 	}
 	
 	/**
