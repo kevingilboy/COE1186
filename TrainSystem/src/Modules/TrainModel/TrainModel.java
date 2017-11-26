@@ -1,13 +1,10 @@
 package Modules.TrainModel;
 
 import Shared.Module;
-
 import Shared.SimTime;
-
 import java.util.HashMap;
-
 import Modules.TrackModel.*;
-import Modules.TrainController.TrainController;
+//import Modules.TrainController.TrainController;
 
 /**
  * Class for the overarching class of the TrainModel (which acts as the interface of the train model between other
@@ -19,7 +16,7 @@ import Modules.TrainController.TrainController;
  */
 public class TrainModel implements Module{
 	public TrackModel trackModel;
-	public TrainController trainController;
+	//public TrainController trainController;
 	public static HashMap<Integer, Train> trainList;
 	public SimTime currentTime = new SimTime("00:00:00");
 	double powSum = 0.0;
@@ -155,6 +152,10 @@ public class TrainModel implements Module{
 	public void setPassengerEmergencyBrake(String trainID, boolean eBrake) {
 		this.getTrain(trainID).setEBrake(eBrake);
 		//trainController.setPassengerEmergencyBrake(trainID, eBrake);
+	}
+	
+	public boolean getPassengerEmergencyBrake(String trainID) {
+		return this.getTrain(trainID).getEBrake();
 	}
 	
 	public void setDriverEmergencyBrake(String trainID, boolean eBrake) {

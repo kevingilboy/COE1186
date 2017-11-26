@@ -265,7 +265,7 @@ public class TrainModelGUI extends JFrame {
 			  ledImageLabel3.setBounds(692, 203, 34, 31);
 			  repaint();
 		  }
-		});
+		});*/
 		
 		mnFile.add(mntmEndFailures);
 		btnEndFailure.addActionListener(new ActionListener()
@@ -284,7 +284,7 @@ public class TrainModelGUI extends JFrame {
 			  brakeFailCheckBox.setSelected(brakeFail);
 			  repaint();
 		  }
-		});*/
+		});
 		
 		
 		btnCauseFailure.setBounds(666, 245, 129, 29);

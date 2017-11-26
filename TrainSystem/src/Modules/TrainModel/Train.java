@@ -522,8 +522,8 @@ public class Train {
     	this.serviceBrake = sBrake;
     }
     
-    public boolean getDriverEBrake() {
-    	return this.driverEmerBrake;
+    public boolean getEBrake() {
+    	return this.emerBrake;
     }
     
     public void setRightDoors(boolean right) {
