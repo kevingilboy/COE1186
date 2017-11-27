@@ -15,6 +15,7 @@ public class Position{
 	private int previousBlockID;
 	private int currentBlockID;
 	private int nextBlockID;
+	private int direction;
 	private double blockMeterPosition;
 	private double[] coordinates; // (double x_coords, double y_coords)
 	private double[] inverseCoordinates; // Used for moving in negative direction along a block
@@ -31,6 +32,7 @@ public class Position{
 		previousBlockID = -1; // No previous block upon dispatch, indicated by (-1) for previous
 		nextBlockID = 0; // default, not used
 		blockMeterPosition = 0.0;
+		direction = 0;
 		coordinates = track.get(currentBlockID).getCoordinatesAtMeter((int)blockMeterPosition);
 		inverseCoordinates = track.get(currentBlockID).getCoordinatesAtMeter((int)((this.track).get(currentBlockID).getLength()) - 1);
 	} 
@@ -67,7 +69,6 @@ public class Position{
 		// adding in the logic below as additional state machine logic. The return value of 
 		// nextBlock() should be an int array: [nextBlockID, direction]
 		
-		int direction = 0;
 		if (currentBlockID != track.get(track.size() - 1).getId()){
 			if (nextBlockID > currentBlockID){
 				direction = 1;
@@ -113,6 +114,14 @@ public class Position{
 	// Returns the current block occupied by the train
 	public int getCurrentBlock(){
 		return currentBlockID;
+	}
+
+	// Returns the direction the train is moving on the
+	// current block as an integer (+/- 1):
+	// +1 : Train is moving in increasing block ID direction
+	// -1 : Train is moving in decreasing block ID direction
+	public int getCurrentDirection(){
+		return direction;
 	}
 
 	// Returns the next block ID given the current and previous block ID's
