@@ -154,6 +154,13 @@ public class TrainModel implements Module{
 		//trainController.setPassengerEmergencyBrake(trainID, eBrake);
 	}
 	
+	/**
+	 * This is a getter method of the status of the emergency brake set by the passenger
+	 * JButton at a specific train's GUI. The train controller will call this method every clock
+	 * tick to see the status of the ebrake
+	 * @param trainID
+	 * @return eBrake
+	 */
 	public boolean getPassengerEmergencyBrake(String trainID) {
 		return this.getTrain(trainID).getEBrake();
 	}
@@ -173,10 +180,20 @@ public class TrainModel implements Module{
 		this.getTrain(trainID).setServiceBrake(sBrake);
 	}
 	
+	/**
+	 * Returns the current position of the train to the caller of this method
+	 * @param trainID
+	 * @return
+	 */
 	public Position getPosition(String trainID) {
 		return this.getTrain(trainID).getPosition();
 	}
 	
+	/**
+	 * Sets the position of train
+	 * @param trainID
+	 * @param position
+	 */
 	public void setPosition(String trainID, Position position) {
 		this.getTrain(trainID).setPosition(position);
 	}
