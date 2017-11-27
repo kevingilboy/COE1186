@@ -87,25 +87,28 @@ public class ScheduleJTable extends JTable{
 					int row = table.getSelectedRow();
 					String blockText = (String)blockCB.getSelectedItem();
 					
+					//Sometimes this is accidentally triggered so check the row
 					if(row==-1) {
 						return;
 					}
 					
+					// CASE : -REMOVE-, remove the row
 					if(blockText.equals("-REMOVE-")) {
+						//Make sure the last row is not being removed
 						if(row<schedule.stops.size()) {
 							schedule.removeStop(row);
 						}
 						
+						//If no rows exist, add one for future stop additions
 						if(schedule.stops.size()==0) {
 							addBlankRow();
 						}
 					}
 					else if(!blockText.equals("")){
-						System.out.println(blockText);
 						//Match the first number (single or multi-digit)
-						Matcher matcher = Pattern.compile("\\d+").matcher(blockText);
-						matcher.find();
-						int blockNum = Integer.valueOf(matcher.group());
+						Matcher m = Pattern.compile("\\d+").matcher(blockText);
+						m.find();
+						int blockNum = Integer.valueOf(m.group());
 						
 						if(blockNum!=-1) {
 							schedule.addStop(row, blockNum-1);
