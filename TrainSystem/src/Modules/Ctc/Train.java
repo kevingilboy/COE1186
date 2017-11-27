@@ -1,8 +1,13 @@
 package Modules.Ctc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+
 import Modules.TrackModel.Switch;
 import Modules.TrackModel.TrackIterator;
+import Shared.SimTime;
 
 public class Train {
 	public String name;
@@ -25,14 +30,110 @@ public class Train {
 		prevLocation = -1;
 		currLocation = line.yardOut;
 	}
-
+	
 	public ArrayList<Integer> calculateAuthority() {
+		Queue<ArrayList<Integer>> q = new LinkedList<ArrayList<Integer>>();
+		ArrayList<Integer> path = new ArrayList<Integer>();
+		int currBlockId = currLocation;
+		int prevBlockId = prevLocation;
+		int stopBlockId = schedule.getNextStop();
+		
+		q.add(new ArrayList<Integer>(Arrays.asList(prevBlockId,currBlockId)));
+		
+		while(!q.isEmpty()) {
+			//-------------------
+			// Pop next path from queue
+			//-------------------
+			path = q.remove();
+			currBlockId = path.get(path.size()-1);
+			prevBlockId = path.get(path.size()-2);
+			
+			//-------------------
+			// If approaching the yard, ditch the path
+			//-------------------
+			if(prevBlockId==line.yardIn && currBlockId==-1) {
+				continue;
+			}
+			
+			//-------------------
+			// If block is on bidirectional track which is occupied, ditch the path
+			//-------------------
+			if(line.blocks[currBlockId].getDirection()==0) {
+				if(bidirectionalStretchOccupied(line,currBlockId,prevBlockId)) {
+					continue;
+				}
+			}
+			
+			//-------------------
+			// If block is occupied, ditch the path
+			//-------------------
+			if(line.blocks[currBlockId].getOccupied()) {
+				continue;
+			}
+			
+			//-------------------
+			// If at the stop, path is the optimal route so exit the while
+			//-------------------
+			if(currBlockId == stopBlockId) {
+				break;
+			}
+			
+			//-------------------
+			// Otherwise add adj blocks to the queue
+			//-------------------
+			Switch swCurr= line.blocks[currBlockId].getSwitch();
+			Switch swPrev;
+			if(prevBlockId==-1) {
+				swPrev = null;
+			}
+			else{
+				swPrev = line.blocks[prevBlockId].getSwitch();
+			}
+			//Entering a switch
+			if(swCurr!=null && swPrev==null){
+				// CASE: Entering a head from a non-switch, pursue both ports
+				if(swCurr.getEdge()==Switch.EDGE_TYPE_HEAD && swPrev==null) {
+					int normId = swCurr.getPortNormal();
+					int altId = swCurr.getPortAlternate();
+					
+					//Follow both paths if valid
+					if(line.blocks[normId].getDirection()>=line.blocks[currBlockId].getDirection()) {
+						ArrayList<Integer> newPath = cloneAndAppendAL(path,normId);
+						q.add(newPath);
+					}
+					if(line.blocks[altId].getDirection()>=line.blocks[currBlockId].getDirection()) {
+						ArrayList<Integer> newPath = cloneAndAppendAL(path,altId);
+						q.add(newPath);
+					}
+				}
+				// CASE: Entering a tail from a non-switch, pursue the normal port 
+				else if(swCurr.getEdge()==Switch.EDGE_TYPE_TAIL && swPrev==null) {
+					int nextBlockId = swCurr.getPortNormal();
+					ArrayList<Integer> newPath = cloneAndAppendAL(path,nextBlockId);
+					q.add(newPath);
+				}
+			}
+			// CASE : Not a switch or about to leave a switch so just use a vanilla TrackIterator to pursue the next block
+			else {
+				int nextBlockId = (new TrackIterator(line.blocksAL, currBlockId, prevBlockId)).nextBlock();
+				ArrayList<Integer> newPath = cloneAndAppendAL(path,nextBlockId);
+				q.add(newPath);
+			}
+		} //while q not empty
+		
+		//-------------------
+		// Return the found path as the authority
+		//-------------------
+		return path;
+	}
+
+	public ArrayList<Integer> calculateDFSAuthority() {
 		int nextLocation = (new TrackIterator(line.blocksAL, currLocation, prevLocation)).nextBlock();
-		ArrayList<Integer> authority = BFS(line,nextLocation,currLocation,schedule.getNextStop(),new ArrayList<Integer>());
+		ArrayList<Integer> authority = DFS(line,nextLocation,currLocation,schedule.getNextStop(),new ArrayList<Integer>());
 		return authority;
 	}
 	
-	private static ArrayList<Integer> BFS(Line line, int currBlockId,int prevBlockId, int destBlockId, ArrayList<Integer> path) {
+	private ArrayList<Integer> DFS(Line line, int currBlockId,int prevBlockId, int destBlockId, ArrayList<Integer> path) {
 		//-------------------
 		// Base Cases
 		//-------------------
@@ -135,5 +236,14 @@ public class Train {
 		
 		//The bidirectional stretch must not be occupied
 		return false;
+	}
+	
+	public <T> ArrayList<T> cloneAndAppendAL(ArrayList<T> oldAl, T newEl) {
+		ArrayList<T> newAl = new ArrayList<T>();
+		for(T oldEl : oldAl) {
+			newAl.add(oldEl);
+		}
+		newAl.add(newEl);
+		return newAl;
 	}
 }
