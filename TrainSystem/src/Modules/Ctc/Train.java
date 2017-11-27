@@ -181,10 +181,10 @@ public class Train {
 				
 				//Follow both paths
 				if(line.blocks[norm].getDirection()>=line.blocks[currBlockId].getDirection()) {
-					pathNorm = BFS(line,norm,currBlockId,destBlockId,path);
+					pathNorm = DFS(line,norm,currBlockId,destBlockId,path);
 				}
 				if(line.blocks[alt].getDirection()>=line.blocks[currBlockId].getDirection()) {
-					pathAlt = BFS(line,alt,currBlockId,destBlockId,path);
+					pathAlt = DFS(line,alt,currBlockId,destBlockId,path);
 				}
 				
 				//Need to determine and return the best path, which has priority:
@@ -208,13 +208,13 @@ public class Train {
 			}
 			// CASE: Entering a tail from a non-switch, pursue the normal port 
 			else if(swCurr.getEdge()==Switch.EDGE_TYPE_TAIL && swPrev==null) {
-				return BFS(line,swCurr.getPortNormal(),currBlockId,destBlockId,path);
+				return DFS(line,swCurr.getPortNormal(),currBlockId,destBlockId,path);
 			}
 		}
 		// CASE : Not a switch or about to leave a switch so just use a vanilla TrackIterator to pursue the next block
 		else {
 			int nextBlockId = (new TrackIterator(line.blocksAL, currBlockId, prevBlockId)).nextBlock();
-			return BFS(line,nextBlockId,currBlockId,destBlockId,path);
+			return DFS(line,nextBlockId,currBlockId,destBlockId,path);
 		}
 		
 		return path;
