@@ -77,7 +77,7 @@ public abstract class CtcCore implements Module,TimeControl {
 			//System.out.println(authority.toString());
 			
 			//TODO uncomment when Nick adds this function
-			//trackController.transmitCtcAuthority(train.name, authority);
+			//transmitCtcAuthority(train.name, authority);
 		}
 		
 		gui.repaint();
@@ -88,16 +88,16 @@ public abstract class CtcCore implements Module,TimeControl {
 	/*
 	 * SCHEDULES
 	 */
-	public Schedule getScheduleByName(String name){
+	protected Schedule getScheduleByName(String name){
 		Schedule schedule = schedules.get(name);
 		return schedule;
 	}
 	
-	public void addSchedule(String name, Schedule schedule) {
+	protected void addSchedule(String name, Schedule schedule) {
 		schedules.put(name, schedule);
 	}
 	
-	public Schedule removeScheduleByName(String name) {
+	protected Schedule removeScheduleByName(String name) {
 		Schedule removedSchedule = schedules.remove(name);
 		return removedSchedule;
 	}
@@ -105,23 +105,25 @@ public abstract class CtcCore implements Module,TimeControl {
 	/*
 	 * TRAINS
 	 */	
-	public Train getTrainByName(String name){
+	protected Train getTrainByName(String name){
 		Train train = trains.get(name);
 		return train;
 	}
 	
-	public void dispatchTrain(String name) {
+	protected void dispatchTrain(String name) {
 		Schedule schedule = removeScheduleByName(name);
 		
 		Train train = new Train(schedule);
 		trains.put(name, train);
 	}
 	
+	//TrainModel uses this method to add passengers to the train
 	public void addPassengers(String trainName, int number) {
 		Train train = getTrainByName(trainName);
 		train.passengers += number;
 	}
 	
+	//TrainModel uses this method to remove passengers from a train
 	public void removePassengers(String trainName, int number) {
 		Train train = getTrainByName(trainName);
 		train.passengers -= number;
@@ -130,10 +132,11 @@ public abstract class CtcCore implements Module,TimeControl {
 	/*
 	 * TICKETS
 	 */
+	//TrackModel uses this method to add ticket sales for throughput
 	public void addTicketSales(int tickets) {
 		runningTicketSales+=tickets;
-		calculateThroughput();
 	}
+	
 	protected void calculateThroughput() {
 		double timeElapsed = SimTime.hoursBetween(startTime, currentTime);
 		throughput = runningTicketSales/timeElapsed;
@@ -142,11 +145,11 @@ public abstract class CtcCore implements Module,TimeControl {
 	/*
 	 * TRANSMITTERS
 	 */
-	public void transmitSuggestedSpeed(String name, int speed) {
+	protected void transmitSuggestedSpeed(String name, int speed) {
 		//UNCOMMENT once Nick adds this
 		//trackController.transmitSuggestedSpeed(name,speed);
 	}
-	public void transmitCtcAuthority(String name, int auth) {
+	protected void transmitCtcAuthority(String name, int auth) {
 		//UNCOMMENT once Nick adds this
 		//trackController.transmitAuthority(name,auth);
 	}

@@ -7,11 +7,12 @@ import Modules.TrackModel.TrackIterator;
 public class Train {
 	public String name;
 	public Line line;
+	public Schedule schedule;
+	
 	public int currLocation;
 	public int prevLocation;
 	public int speed;
 	public int authority;
-	public Schedule schedule;
 	public int passengers;
 	
 	public Train(Schedule schedule) {
