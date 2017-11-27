@@ -2,13 +2,13 @@
 //This is a Java translation of the MiniPID open source controller
 //https://github.com/tekdemo/MiniPID
 
+//I BELIEVE that the output is in Watts
+
 package Modules.TrainController;
 
 public class PIController {
 	private double P;
-	private double I;
-	//private double D;					//set D and F to zero to do nothing
-	//private double F;			
+	private double I;	
 
 	private double maxIOutput;			//set to zero to do nothing
 	private double maxError;
@@ -31,38 +31,21 @@ public class PIController {
 
 	private double setpointRange;		//set to zero to do nothing
 	
+	/*public static void main(String[] args) {
+		new PIController(200, 300);
+	}*/
+	
 	public PIController(double p, double i) {
-		init();
 		P = p;
 		I = i;
-	}
-	
-	/*public PIController(double p, double i, double d) {
 		init();
-		P = p;
-		I = i;
-		D = d;
 	}
-	
-	public PIController(double p, double i, double d, double f) {
-		init();
-		P = p;
-		I = i;
-		D = d;
-		F = f;
-	}
-	Shouldn't be used because this is just going to be a PI controller*/
 	
 	private void init() {
-		P = 0;
-		I = 0;
-		//D = 0;
-		//F = 0;
-
 		maxIOutput = 0;
 		maxError = 0;
 		errorSum = 0;
-		maxOutput = 0; 
+		maxOutput = 820000; 	//820 kW - may be for just one car in the train, LOOK INTO THIS MORE
 		minOutput = 0;
 		setpoint = 0;
 		lastActual = 0;
@@ -72,6 +55,7 @@ public class PIController {
 		lastOutput = 0;
 		outputFilter = 0.1;
 		setpointRange = 0;
+		//System.out.println(getOutput(0, 45));
 	}
 	
 	public void setP(double p) {
@@ -122,10 +106,6 @@ public class PIController {
 		}
 	}
 	
-	/*public void setDirection(bool reversed) {		//Not used
-		this.reversed = reversed;
-	}*/
-	
 	public void setSetpoint(double setpoint) {
 		this.setpoint = setpoint;
 	}
@@ -134,8 +114,6 @@ public class PIController {
 		double output;
 		double Poutput;
 		double Ioutput;
-		//double Doutput;
-		//double Foutput;
 
 		this.setpoint = setpoint;
 
@@ -146,9 +124,6 @@ public class PIController {
 
 		//Do the simple parts of the calculations
 		double error = setpoint - actual;
-
-		//Calculate F output. Notice, this->depends only on the setpoint, and not the error. 
-		//Foutput = F * setpoint;
 
 		//Calculate P term
 		Poutput = P * error;	 
@@ -234,13 +209,13 @@ public class PIController {
 	
 	/*public void setOutputRampRate(double rate) {		//Not used
 		outputRampRate = rate;
-	}*/
+	}
 	
 	public void setSetpointRange(double range) {		//Not used, unless I can get have speed limit
 		setpointRange = range;
 	}
 	
-	/*public void setOutputFilter(double strength) {		//Not used
+	public void setOutputFilter(double strength) {		//Not used
 		if (strength == 0 || bounded(strength, 0, 1)) {
 			outputFilter = strength;
 		}
