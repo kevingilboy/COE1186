@@ -105,8 +105,12 @@ public class Mbo implements Module {
 
 	}
 
-	private double[] calculateAuthority(String trainID) {
-		return null;
+	private double calculateAuthority(String trainID) {
+		return 0;
+	}
+
+	public double debug_getAuthority(String trainID) {
+		return trains.get(trainID).getAuthority();
 	}
 
 	private double calculateSafeBrakingDistance(String trainID) {

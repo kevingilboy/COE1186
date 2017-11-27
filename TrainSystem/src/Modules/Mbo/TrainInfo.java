@@ -42,6 +42,10 @@ public class TrainInfo {
 		return position;
 	}
 
+	public double getAuthority() {
+		return authority;
+	}
+
 	private void calculateVelocity() {
 
 	}

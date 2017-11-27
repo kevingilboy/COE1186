@@ -93,6 +93,14 @@ public class MboTest {
 		assertFalse(mbo.receiveTrainPosition(signal));
 	}
 
+	@Test
+	public void testCalculateAuthority() {
+		String signal = "RED 3;3;4" + ":" + Integer.toUnsignedString(0x96B81839);
+		mbo.receiveTrainPosition(signal);
+		double receivedAuthority = mbo.debug_getAuthority("RED 3");
+		assertEquals(5.0, receivedAuthority, 0.001);
+	}
+
 	@Test 
 	public void testAlwaysPasses() {
 		assertEquals(1,1);
