@@ -150,9 +150,13 @@ public class Train {
         this.trainWidth = TRAIN_WIDTH;
         
         // Track Information
-        this.prevBlock = 0;
-        this.currentBlock = 0;
-        this.nextBlock = 0;
+        this.currentBlock = this.trkMdl.getTrack(line).size()-1;
+        this.nextBlock = position.getCurrentBlock();
+        
+        //this.currentBlock = 0;
+        //this.nextBlock = 0;
+        //this.prevBlock = 0;
+        
         this.grade = 0;
         this.currentSpeedLimit = 0;
         this.GPSAntenna = true;

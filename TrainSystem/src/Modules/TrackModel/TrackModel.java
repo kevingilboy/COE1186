@@ -46,11 +46,11 @@ public class TrackModel implements Module{
 	public Block getBlock(String line, int id){
 		Block block = new Block();
 
-		// get block at index (id - 1)
-		if (line.toLowerCase() == "red"){
-			block = redLineBlocks.get(id - 1);
-		} else if (line.toLowerCase() == "green"){
-			block = greenLineBlocks.get(id - 1);
+		// get block at index (id)
+		if ((line.toLowerCase()).equals("red")){
+			block = redLineBlocks.get(id);
+		} else if ((line.toLowerCase()).equals("green")){
+			block = greenLineBlocks.get(id);
 		}
 
 		return block;
@@ -61,9 +61,9 @@ public class TrackModel implements Module{
 	public ArrayList<Block> getTrack(String line){
 		ArrayList<Block> track = null;
 
-		if (line.toLowerCase() == "green"){
+		if ((line.toLowerCase()).equals("green")){
 			track = greenLineBlocks;
-		} else if (line.toLowerCase() == "red"){
+		} else if ((line.toLowerCase()).equals("red")){
 			track = redLineBlocks;
 		}
 
@@ -72,9 +72,9 @@ public class TrackModel implements Module{
  
  	// Set the track for a particular line
 	public void setTrack(String line, ArrayList<Block> track){
-		if (line.toLowerCase() == "green"){
+		if ((line.toLowerCase()).equals("green")){
 			greenLineBlocks = track;
-		} else if (line.toLowerCase() == "red"){
+		} else if ((line.toLowerCase()).equals("red")){
 			redLineBlocks = track;
 		}
 	}
@@ -87,11 +87,11 @@ public class TrackModel implements Module{
 	// INTER-MODULE COMMUNICATION CLASSES
 	public void dispatchTrain(String line, String trainID, Position pos){
 		
-		if (line.toLowerCase() == "red"){
+		if ((line.toLowerCase()).equals("red")){
 			redTrainIDs.add(trainID);
 			redPositions.add(pos);
 			trackModelGUI.redLineDisplay.dispatchTrain(trainID, pos);
-		} else if (line.toLowerCase() == "green"){
+		} else if ((line.toLowerCase()).equals("green")){
 			greenTrainIDs.add(trainID);
 			greenPositions.add(pos);
 			trackModelGUI.greenLineDisplay.dispatchTrain(trainID, pos);
