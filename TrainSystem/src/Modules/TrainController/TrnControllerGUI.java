@@ -29,7 +29,7 @@ public class TrnControllerGUI {
 	
 	private JButton speedSet;
 	private JButton tempSet;
-	private JButton eGUIButton;
+	//private JButton eGUIButton;
 	
 	private JLabel speedValue;
 	private JLabel setpointValue;
@@ -48,14 +48,7 @@ public class TrnControllerGUI {
 	private JRadioButton leftClose;
 	private JRadioButton lightOn;
 	private JRadioButton lightOff;
-	
-	/*private Image ledImage = new ImageIcon(this.getClass().getResource("greyStatusIcon.png")).getImage();
-	private Image ledImageGreen = new ImageIcon(this.getClass().getResource("greenStatusIcon.png")).getImage();
-	
-	private JLabel ledLabelRight;
-	private JLabel ledLabelLeft;
-	private JLabel ledLabelStation;*/
-	
+		
 	private int mode;	
 	private String trainID;
 	private double speed;		//miles per hour
@@ -69,13 +62,10 @@ public class TrnControllerGUI {
 	private boolean service;
 	private boolean emergency;
 	private boolean lights;
-	private boolean inStation;
-	private boolean suggestRight;
-	private boolean suggestLeft;
 	
 	private TrnController controller;
 	
-	private EngineerGUI eGUI;
+	//private EngineerGUI eGUI;
 	
 	private PIController pi;
 	
@@ -101,10 +91,11 @@ public class TrnControllerGUI {
 		lights = false;
 		pi = p;
 		controller = c;
-		eGUI = new EngineerGUI(pi, trainID);
+		//eGUI = new EngineerGUI(pi, trainID);
+		new EngineerGUI(pi, trainID, controller);
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		frame.setBounds(100, 100, 500, 380);
+		frame.setBounds(600, 100, 500, 380);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frame.setContentPane(contentPane);
@@ -440,7 +431,7 @@ public class TrnControllerGUI {
 		modeManual.setSelected(false);
 		contentPane.add(modeManual);
 		
-		eGUIButton = new JButton("Engineer Mode");
+		/*eGUIButton = new JButton("Engineer Mode");
 		eGUIButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -448,25 +439,7 @@ public class TrnControllerGUI {
 			}
 		});
 		eGUIButton.setBounds(168, 323, 117, 29);
-		contentPane.add(eGUIButton);
-		
-		/*ledLabelRight = new JLabel();
-		ledLabelRight.setBounds(414, 179, 34, 31);
-		ledLabelRight.setIcon(new ImageIcon(ledImage));
-		contentPane.add(ledLabelRight);
-		
-		ledLabelLeft = new JLabel();
-		ledLabelLeft.setBounds(414, 231, 34, 31);
-		ledLabelLeft.setIcon(new ImageIcon(ledImage));
-		contentPane.add(ledLabelLeft);
-		
-		ledLabelStation = new JLabel();
-		ledLabelStation.setBounds(157, 22, 34, 31);
-		ledLabelStation.setIcon(new ImageIcon(ledImage));
-		contentPane.add(ledLabelStation);
-		
-		JLabel stationLabel = new JLabel("In Station");
-		stationLabel.setBounds(192, 22, 100, 20);*/
+		contentPane.add(eGUIButton);*/
 		
 		speedSet.setEnabled(false);
 		tempSet.setEnabled(false);
@@ -483,10 +456,10 @@ public class TrnControllerGUI {
 		tempField.setEnabled(false);
 		newSpeedField.setEnabled(false);
 		
-		frame.setVisible(true);
+		frame.setVisible(false);
 	}
 	
-	public boolean guiUpdate(boolean status) {		//send true if in yard, false otherwise
+	public boolean guiUpdate() {
 		speedValue.setText(speed + " mi/hr");
 		setpointValue.setText(setpoint + " mi/hr");
 		authorityValue.setText(authority + " mi");
@@ -530,12 +503,6 @@ public class TrnControllerGUI {
 		else {
 			lightOn.setSelected(false);
 			lightOff.setSelected(true);
-		}
-		if (status) {
-			eGUIButton.setEnabled(true);
-		}
-		else {
-			eGUIButton.setEnabled(false);
 		}
 		if (driveMode == 1) {
 			speedSet.setEnabled(true);
@@ -616,23 +583,6 @@ public class TrnControllerGUI {
 	public void setVisible(boolean b) {
 		frame.setVisible(b);
 	}
-	
-	/*public void setInStation(boolean b) {
-		if (b) {
-			ledLabelStation.setIcon(new ImageIcon(ledImageGreen));
-		}
-		else {
-			ledLabelStation.setIcon(new ImageIcon(ledImage));
-		}
-	}
-	
-	public void setRightSuggestion(boolean b) {
-		
-	}
-	
-	public void setLeftSuggestion(boolean b) {
-		
-	}*/
 	
 	public String getId() {
 		return trainID;

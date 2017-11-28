@@ -34,6 +34,8 @@ public class EngineerGUI {
 	
 	private PIController pi;
 	
+	private TrnController controller;
+	
 	/*public static void main(String[] args) {
 		new EngineerGUI("Train 1");
 	}*/
@@ -44,7 +46,7 @@ public class EngineerGUI {
 		P = pi.getP();
 		I = pi.getI();
 		frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setBounds(100, 100, 400, 250);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -118,6 +120,8 @@ public class EngineerGUI {
 				}
 				pi.setP(P);
 				pi.setI(I);
+				controller.signalReady();
+				System.exit(0);
 			}
 		});
 		confirmButton.setBounds(130, 173, 117, 29);
@@ -126,7 +130,7 @@ public class EngineerGUI {
 		frame.setVisible(true);
 	}
 	
-	public void setVisible(boolean b) {
+	/*public void setVisible(boolean b) {
 		frame.setVisible(b);
-	}
+	}*/
 }
