@@ -31,6 +31,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
+@SuppressWarnings("unchecked")
 public class TrackControllerGUI extends JFrame{
 	//Parent Class
 	private TrackController tc;
@@ -148,10 +149,10 @@ public class TrackControllerGUI extends JFrame{
 		labelBlock.setBounds(338, 23, 34, 16);
 		trackSelectorPanel.add(labelBlock);
 		
-		JLabel labelSection = new JLabel("Section");
+		/*JLabel labelSection = new JLabel("Section");
 		labelSection.setBounds(164, 23, 46, 16);
 		trackSelectorPanel.add(labelSection);
-		
+		*/
 		JLabel labelLine = new JLabel("Line");
 		labelLine.setBounds(10, 23, 26, 16);
 		trackSelectorPanel.add(labelLine);
@@ -159,13 +160,13 @@ public class TrackControllerGUI extends JFrame{
 		comboBlock.setBounds(384, 19, 104, 27);
 		trackSelectorPanel.add(comboBlock);
 		comboBlock.setModel(new DefaultComboBoxModel(blocks));
-		//comboBlock.addActionListener(new BlockChange());
+		comboBlock.addActionListener(new UpdateInfo());
 		
-		JComboBox comboSection = new JComboBox();
+		/*JComboBox comboSection = new JComboBox();
 		comboSection.setBounds(222, 19, 104, 27);
 		trackSelectorPanel.add(comboSection);
 		comboSection.setModel(new DefaultComboBoxModel(new String[] {"-", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "ZZ", "YY"}));
-		
+		*/
 		textLine = new JTextField();
 		textLine.setBounds(48, 19, 104, 27);
 		trackSelectorPanel.add(textLine);
@@ -181,7 +182,7 @@ public class TrackControllerGUI extends JFrame{
 		labelController.setHorizontalAlignment(SwingConstants.CENTER);
 	
 		//Block Status
-		JLabel labelStatus = new JLabel("Status");
+		/*JLabel labelStatus = new JLabel("Status");
 		labelStatus.setBounds(136, 0, 73, 28);
 		updatePanel.add(labelStatus);
 		labelStatus.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -193,16 +194,20 @@ public class TrackControllerGUI extends JFrame{
 		textStatus.setText("-");
 		textStatus.setEditable(false);
 		textStatus.setColumns(10);
-		
+		*/
 		//Block Occupancy
 		JLabel labelOccupancy = new JLabel("Occupancy");
 		labelOccupancy.setBounds(135, 29, 73, 28);
 		updatePanel.add(labelOccupancy);
 		labelOccupancy.setHorizontalAlignment(SwingConstants.TRAILING);
 		
-		comboOccupancy.setBounds(220, 29, 134, 28);
-		updatePanel.add(comboOccupancy);
-		comboOccupancy.setModel(new DefaultComboBoxModel(new String[] {"False", "True"}));
+		textOccupancy = new JTextField();
+		textOccupancy.setBounds(220, 29, 134, 28);
+		updatePanel.add(textOccupancy);
+		textOccupancy.setHorizontalAlignment(SwingConstants.CENTER);
+		textOccupancy.setText("-");
+		textOccupancy.setEditable(false);
+		textOccupancy.setColumns(10);
 		
 		//Block Switch
 		JLabel labelSwitchState = new JLabel("Switch State");
@@ -247,14 +252,14 @@ public class TrackControllerGUI extends JFrame{
 		lightsPanel.add(labelCrossingGraphic);
 		
 		//Buttons
-		JButton buttonUpdate = new JButton("Update");
+		/*JButton buttonUpdate = new JButton("Update");
 		buttonUpdate.setBounds(260, 294, 96, 29);
 		buttonUpdate.addActionListener(new updateInfo());
 		trackInfoPanel.add(buttonUpdate);
-		
+		*/
 		JButton buttonImportPlc = new JButton("Import PLC");
 		buttonImportPlc.setBounds(141, 294, 117, 29);
-		buttonImportPlc.addActionListener(new uploadPLC());
+		buttonImportPlc.addActionListener(new UploadPLC());
 		trackInfoPanel.add(buttonImportPlc);
 		
 		//Pineapple logo
@@ -264,13 +269,13 @@ public class TrackControllerGUI extends JFrame{
 		trackInfoPanel.add(labelPineapple);
 	}
 	
-	class updateInfo implements ActionListener {
+	class UpdateInfo implements ActionListener {
 	    public void actionPerformed(ActionEvent e) {
 			displayInfo();
 	    }
 	}
 
-	class uploadPLC implements ActionListener {
+	class UploadPLC implements ActionListener {
 	    public void actionPerformed(ActionEvent e){
 			JFileChooser c = new JFileChooser();
 			String plcPath = c.getCurrentDirectory().toString() + "/" + c.getSelectedFile().getName();
@@ -280,7 +285,46 @@ public class TrackControllerGUI extends JFrame{
 	}
 	
 	public void displayInfo(){
-		tc.receiveBlockInfo(line, Integer.parseInt((String)comboBlock.getSelectedItem()));
+		int blockId = Integer.parseInt((String)comboBlock.getSelectedItem());
+		String line = textLine.getText();
+		System.out.println(line);
+		System.out.println(blockId);
+		//update gui
+		/*if(tc.trackModel.getBlock(line, blockId).getStatus() == ){
+			textStatus.setText();
+		}*/
+		if(tc.trackModel.getBlock(line, blockId).getOccupied() == true){
+			textOccupancy.setText("True");
+		} else {
+			textOccupancy.setText("False");
+		}
+		if (tc.trackModel.getBlock(line, blockId).getLight() != null){
+			if(tc.trackModel.getBlock(line, blockId).getLight().getState() == true){
+				labelLightGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/greenLight.png"));
+			} else {
+				labelLightGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/redLight.png"));
+			}
+		}
+		if (tc.trackModel.getBlock(line, blockId).getSwitch() != null){
+			if(tc.trackModel.getBlock(line, blockId).getSwitch().getState() == true){
+				switchButtonTop.setSelected(true);
+				switchButtonTop.setText("Alt");
+				switchButtonBottom.setSelected(false);
+				switchButtonBottom.setText("Norm");
+			} else {
+				switchButtonTop.setSelected(false);
+				switchButtonTop.setText("Alt");
+				switchButtonBottom.setSelected(true);
+				switchButtonBottom.setText("Norm");
+			}
+		}
+		if (tc.trackModel.getBlock(line, blockId).getCrossing() != null){
+			if(tc.trackModel.getBlock(line, blockId).getCrossing().getState() == true){
+				labelCrossingGraphic.setIcon(new ImageIcon("imgs/crossingOn.gif"));
+			} else {
+				labelCrossingGraphic.setIcon(new ImageIcon("imgs/crossingOff.png"));
+			}
+		}
 	}
 	
 	public int getSelectedBlockId(){
