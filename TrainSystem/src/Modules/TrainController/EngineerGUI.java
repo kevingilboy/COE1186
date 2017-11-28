@@ -34,6 +34,8 @@ public class EngineerGUI {
 	
 	private PIController pi;
 	
+	private TrnController controller;
+	
 	/*public static void main(String[] args) {
 		new EngineerGUI("Train 1");
 	}*/
@@ -118,6 +120,8 @@ public class EngineerGUI {
 				}
 				pi.setP(P);
 				pi.setI(I);
+				controller.signalReady();
+				System.exit(0);
 			}
 		});
 		confirmButton.setBounds(130, 173, 117, 29);
