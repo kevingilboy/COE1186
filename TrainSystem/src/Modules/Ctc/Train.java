@@ -78,6 +78,9 @@ public class Train {
 				break;
 			}
 			
+			//TODO below is a temporary fix for the switch issue
+			if(currBlockId>line.yardOut ||currBlockId<0) continue;
+			
 			//-------------------
 			// Otherwise add adj blocks to the queue
 			//-------------------
@@ -121,9 +124,16 @@ public class Train {
 			}
 		} //while q not empty
 		
+		path.remove(0);
+		/*
+		for(int j=1; j<path.size(); j++) {
+			int i = path.get(j);
+			System.out.print(line.blocks[i].getSection()+Integer.toString(i+1)+", ");
+		}
+		System.out.println("");
+		*/
 		double dist = 0;
-		for(int i=1;i<path.size();i++) {
-			int blockId = path.get(i);
+		for(int blockId : path) {
 			dist += line.blocks[blockId].getLength();
 		}
 		this.authority = dist;

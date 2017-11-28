@@ -90,6 +90,9 @@ public class Schedule {
 					break;
 				}
 				
+				//TODO below is a temporary fix for the switch issue
+				if(currBlockId>line.yardOut ||currBlockId<0) continue;
+				
 				//-------------------
 				// Otherwise add adj blocks to the queue
 				//-------------------
@@ -131,19 +134,22 @@ public class Schedule {
 					ArrayList<Integer> newPath = cloneAndAppendAL(path,nextBlockId);
 					q.add(newPath);
 				}
+				/*
 				for(int j=1; j<path.size(); j++) {
 					int i = path.get(j);
 					System.out.print(line.blocks[i].getSection()+Integer.toString(i+1)+", ");
 				}
 				System.out.println("");
+				*/
 			} //while q not empty
+			
+			path.remove(0);
 			
 			//-------------------
 			// Calculate and set the dwell time
 			//-------------------
 			double runningTime = 0;
-			for(int i=1;i<path.size();i++) {
-				int blockId = path.get(i);
+			for(int blockId : path) {
 				runningTime += line.blocks[blockId].getSpeedLimit()/1000.0 * line.blocks[blockId].getLength();
 			}
 			int hr = (int)runningTime/3600;

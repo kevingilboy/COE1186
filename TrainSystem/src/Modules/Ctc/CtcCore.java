@@ -73,11 +73,15 @@ public abstract class CtcCore implements Module,TimeControl {
 		
 		//Calculate authority
 		for(Train train : trains.values()) {
-			ArrayList<Integer> authority = train.calculateAuthorityPath();
-			//System.out.println(authority.toString());
+			ArrayList<Integer> authorityAl = train.calculateAuthorityPath();
+			
+			int[] authority = new int[authorityAl.size()];
+			for(int i=0; i<authorityAl.size(); i++) {
+				authority[i] = authorityAl.get(i);
+			}
 			
 			//TODO uncomment when Nick adds this function
-			//transmitCtcAuthority(train.name, authority);
+			transmitCtcAuthority(train.name, authority);
 		}
 		
 		gui.repaint();
@@ -146,11 +150,9 @@ public abstract class CtcCore implements Module,TimeControl {
 	 * TRANSMITTERS
 	 */
 	protected void transmitSuggestedSpeed(String name, int speed) {
-		//UNCOMMENT once Nick adds this
-		//trackController.transmitSuggestedSpeed(name,speed);
+		ctc.trackController.transmitSuggestedTrainSetpointSpeed(name,speed);
 	}
-	protected void transmitCtcAuthority(String name, int auth) {
-		//UNCOMMENT once Nick adds this
-		//trackController.transmitAuthority(name,auth);
+	protected void transmitCtcAuthority(String name, int[] auth) {
+		ctc.trackController.transmitCtcAuthority(name,auth);
 	}
 }
