@@ -78,7 +78,7 @@ public class TrainModel implements Module{
 	public void dispatchTrain(String trainID, String line) {
 		Train newTrain = new Train(line, trainID, this, this.trackModel);
 		trainList.put(trainID.hashCode(), newTrain);
-		//trackModel.dispatchTrain(trainID, line, );
+		trackModel.dispatchTrain(line, trainID, this.getTrain(trainID).getPosition());
 		instantiateGUI(newTrain);
 	}
 	
@@ -129,24 +129,54 @@ public class TrainModel implements Module{
 	
 	// TODO: Is this necessary?
 	public void setBeacon(String trainID, int beaconVal) {
-		
+		this.getTrain(trainID).setBeacon(beaconVal);
 	}
 	
-	public void setBeaconBlockOcuupancy(int id, int beaconInfo){
+	public int getBeacon(String trainID) {
+		return this.getTrain(trainID).getBeacon();
+	}
+	
+	/**
+	 * Track model calls this method to inform me that a train is on a beacon block, and I have
+	 * to determine which train that is. I then set the beacon for that train so the train controller
+	 * can get it from me
+	 * @param line
+	 * @param blockId
+	 * @param beaconInfo
+	 */
+	public void setBeaconBlockOcuupancy(String line, int blockId, int beaconInfo){
 	    // Figure out which train is occupying the block at 'id'
 	    // set that train's beacon information to 'beaconInfo'
-		Train beaconTrain = getTrainAtBlock(id);
+		Train beaconTrain = getTrainAtBlock(blockId);
 		// something like
-		// beaconTrain.setBeacon(beaconTrain.getTrainID(), trackModel.getBeaconSignal(id));
+		setBeacon(beaconTrain.getTrainID(), beaconInfo);
 		
 	}
 	
 	public double transmitCtcAuthority(String trainID, double authority) {
+		this.getTrain(trainID).setAuthority(authority);
 		return authority;
 	}
 	
 	public double suggestSetpointSpeed(String trainID, double setpoint) {
+		this.getTrain(trainID).setSetpoint(setpoint);
 		return setpoint;
+	}
+	
+	public double getVelocity(String trainID) {
+		return this.getTrain(trainID).getVelocity();
+	}
+	
+	public double getSetpointSpeed(String trainID) {
+		return this.getTrain(trainID).getSetpoint();
+	}
+	
+	public double getAuthority(String trainID) {
+		return this.getTrain(trainID).getAuthority();
+	}
+	
+	public int getBlockID(String trainID) {
+		return this.getTrain(trainID).getBlock();
 	}
 	
 	/**
