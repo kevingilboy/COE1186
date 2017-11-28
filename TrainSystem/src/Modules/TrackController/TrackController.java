@@ -7,7 +7,7 @@ import Modules.TrackModel.TrackModel;
 import Modules.TrackModel.Block;
 
 public class TrackController implements Module{
-	//Set by other modules
+	//Set externally
 	public TrackModel trackModel;
 	public String associatedLine = "Green";
 	public String[] associatedBlocks = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150","151","152"};
@@ -15,9 +15,9 @@ public class TrackController implements Module{
 	private TrackControllerGUI tcgui;
 	private PLC tcplc;
 	private String initialPLCPath = "Modules/TrackController/plc.txt";
-	//Set internally
+	//Set internally per block
 	private String line;
-	private String section;
+	private String section; //might not need this
 	private int blockId;
 	private boolean hasLight;
 	private boolean lightState;
@@ -25,7 +25,7 @@ public class TrackController implements Module{
 	private boolean switchState;
 	private boolean hasCrossing;
 	private boolean crossingState;
-	private boolean status;
+	private boolean status; //might not need this
 	private boolean occupancy;
 
 	//Constructor
@@ -48,18 +48,23 @@ public class TrackController implements Module{
 		updateStates();
 		return true;
 	}
+	
 	//Internal Functions
 	private void updateStates(){
 		for(int i=0; i<associatedBlocks.length; i++){
 			receiveBlockInfo(associatedLine, Integer.parseInt(associatedBlocks[i]));
-			runPLC();
+			lightsAndCrossings(Integer.parseInt(associatedBlocks[i]));
 			if(Integer.parseInt(associatedBlocks[i]) == tcgui.getSelectedBlockId()){
-				tcgui.displayInfo();
+				guiUpdate();
 			}
 		}
 	}
 	
 	public void receiveBlockInfo(String line, int blockId){
+		this.line = line;
+		this.blockId = blockId;
+		status = trackModel.getBlock(line, blockId).getStatus();
+		occupancy = trackModel.getBlock(line, blockId).getOccupied();
 		if (trackModel.getBlock(line, blockId).getLight() != null){
 			hasLight = true;
 			lightState = trackModel.getBlock(line, blockId).getLight().getState();
@@ -81,38 +86,18 @@ public class TrackController implements Module{
 			hasCrossing = false;
 			crossingState = false;
 		}
-		status = trackModel.getBlock(line, blockId).getStatus();
-		occupancy = trackModel.getBlock(line, blockId).getOccupied();
 	}
 	
-	private void runPLC(){
-		boolean holdLightState, holdSwitchState, holdCrossingState;
+	private void lightsAndCrossings(int blockNum){
+		boolean holdLightState, holdCrossingState;
 		if(hasLight){
-			if(/*tcplc.getLightLogic()*/true){
-				holdLightState = true;
-			} else {
-				holdLightState = false;
-			}
+			holdLightState = tcplc.canLightBlock(blockNum);
 			if(holdLightState != lightState){
 				transmitLightState(line, blockId, holdLightState);
 			}
 		}
-		if(hasSwitch){
-			if(/*tcplc.getSwitchLogic()*/true){
-				holdSwitchState = true;
-			} else {
-				holdSwitchState = false;
-			}
-			if(holdSwitchState != switchState){
-				transmitLightState(line, blockId, holdSwitchState);
-			}
-		}
 		if(hasCrossing){
-			if(/*tcplc.getCrossingLogic()*/true){
-				holdCrossingState = true;
-			} else {
-				holdCrossingState = false;
-			}
+			holdCrossingState = tcplc.canCrossingBlock(blockNum);
 			if(holdCrossingState != crossingState){
 				transmitCrossingState(line, blockId, holdCrossingState);
 			}
@@ -136,9 +121,42 @@ public class TrackController implements Module{
 	public void transmitSuggestedTrainSetpointSpeed(String trainName, int speed){
 		trackModel.transmitSuggestedTrainSetpointSpeed(trainName, speed);
 	}
-	
-	public void transmitCtcAuthority(String trainName, int authority){
-		trackModel.transmitCtcAuthority(trainName, authority);
+	// transmit as int[] authority = currentBlock, nextBlocks[]
+	public void transmitCtcAuthority(String trainName, int[] authority){
+		boolean canProceed = tcplc.canProceedPath(authority);
+		int distAuthority = 0;
+		if(canProceed){
+			if(trackModel.getBlock(associatedLine, authority[1]).getSwitch() != null){
+				boolean canSwitch = tcplc.canSwitchPath(authority);
+				if(canSwitch){
+					if(false){//switch state not correct
+						transmitSwitchState(associatedLine, authority[1], !trackModel.getBlock(line, blockId).getSwitch().getState());
+						//TODO distAuthority = calcAuthDist(authority[]);
+						trackModel.transmitCtcAuthority(trainName, distAuthority);
+					} else {
+						transmitSwitchState(associatedLine, authority[1], trackModel.getBlock(line, blockId).getSwitch().getState());
+						//TODO distAuthority = calcAuthDist(authority[]);
+						trackModel.transmitCtcAuthority(trainName, distAuthority);
+					}
+				} else { //has switch but cant switch state (correct or not)
+					if (trackModel.getBlock(associatedLine, authority[1]).getLight() != null){
+						if(trackModel.getBlock(associatedLine, authority[1]).getLight().getState() != false){
+							//TODO distAuthority = calcAuthDist(authority[]);
+							trackModel.transmitCtcAuthority(trainName, distAuthority);
+						} else { //light is red
+							trackModel.transmitCtcAuthority(trainName, distAuthority);
+						}
+					} else {//cant switch switch and has no light
+						trackModel.transmitCtcAuthority(trainName, distAuthority);
+					}
+				}
+			} else { //nb doesnt have switch && can proceed
+				//TODO distAuthority = calcAuthDist(authority[]);
+				trackModel.transmitCtcAuthority(trainName, distAuthority);
+			}
+		} else { //cannot proceed
+			trackModel.transmitCtcAuthority(trainName, distAuthority);
+		}
 	}
 	
 	public Block receiveBlockInfoForCtc(String line, int blockId){
@@ -146,22 +164,30 @@ public class TrackController implements Module{
 	}
 	
 	public void transmitBlockMaintenance(String line, int blockId, boolean maintenance){
+		//check canMaintenance
 		trackModel.getBlock(line, blockId).setMaintenance(maintenance);
 	}
 	
+	public void transmitCtcSwitchState(String line, int blockId, boolean state){
+		boolean canSwitch = tcplc.canSwitchBlock(blockId);
+		if(canSwitch){
+			transmitSwitchState(line, blockId, state);
+		}
+	}
+	
 	//Hardware Control
-	public void transmitSwitchState(String line, int blockId, boolean state){
-		//logic before transmitting
+	private void transmitSwitchState(String line, int blockId, boolean state){
+		//false == norm, true == alt
 		trackModel.getBlock(line, blockId).getSwitch().setState(state);
 	}
 	
 	private void transmitLightState(String line, int blockId, boolean state){
-		//logic before transmitting
+		//false == red, true == green
 		trackModel.getBlock(line, blockId).getLight().setState(state);
 	}
 	
 	private void transmitCrossingState(String line, int blockId, boolean state){
-		//logic before transmitting
+		//false == off, true == on
 		trackModel.getBlock(line, blockId).getCrossing().setState(state);
 	}
 
