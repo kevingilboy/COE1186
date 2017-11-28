@@ -144,7 +144,7 @@ public class TrainModel implements Module{
 	 * @param blockId
 	 * @param beaconInfo
 	 */
-	public void setBeaconBlockOcuupancy(String line, int blockId, int beaconInfo){
+	public void setBeaconBlockOccupancy(String line, int blockId, int beaconInfo){
 	    // Figure out which train is occupying the block at 'id'
 	    // set that train's beacon information to 'beaconInfo'
 		Train beaconTrain = getTrainAtBlock(blockId);
