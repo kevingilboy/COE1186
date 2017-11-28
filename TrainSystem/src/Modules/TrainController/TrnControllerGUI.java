@@ -92,10 +92,10 @@ public class TrnControllerGUI {
 		pi = p;
 		controller = c;
 		//eGUI = new EngineerGUI(pi, trainID);
-		new EngineerGUI(pi, trainID);
+		new EngineerGUI(pi, trainID, controller);
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		frame.setBounds(100, 100, 500, 380);
+		frame.setBounds(600, 100, 500, 380);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frame.setContentPane(contentPane);
@@ -456,7 +456,7 @@ public class TrnControllerGUI {
 		tempField.setEnabled(false);
 		newSpeedField.setEnabled(false);
 		
-		frame.setVisible(true);
+		frame.setVisible(false);
 	}
 	
 	public boolean guiUpdate() {
