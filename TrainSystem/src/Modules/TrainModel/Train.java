@@ -500,6 +500,10 @@ public class Train {
     	this.currentY = pos[1];
     }
     
+    public String getLine() {
+    	return this.lineColor;
+    }
+    
     /**
      * Sets the grade of the current block/position of the train
      * @param g

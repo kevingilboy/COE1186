@@ -116,11 +116,11 @@ public class TrainModel implements Module{
 		return start-end; // TODO: Ask Kevin how we would be doing this
 	}*/
 	
-	public Train getTrainAtBlock(int block) {
+	public Train getTrainAtBlock(int block, String line) {
 		// TODO: Should I iterate through every single entry in the hashmap to find the
 		// train at the specified block?
 		for(Train t : trainList.values()) {
-			if(t.getBlock() == block) {
+			if(t.getBlock() == block && t.getLine().equals(line)) {
 				return t;
 			}
 		}
@@ -147,7 +147,7 @@ public class TrainModel implements Module{
 	public void setBeaconBlockOccupancy(String line, int blockId, int beaconInfo){
 	    // Figure out which train is occupying the block at 'id'
 	    // set that train's beacon information to 'beaconInfo'
-		Train beaconTrain = getTrainAtBlock(blockId);
+		Train beaconTrain = getTrainAtBlock(blockId, line);
 		// something like
 		setBeacon(beaconTrain.getTrainID(), beaconInfo);
 		
