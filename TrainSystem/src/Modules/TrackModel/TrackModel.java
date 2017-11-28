@@ -98,7 +98,7 @@ public class TrackModel implements Module{
 		}
 	}
 
-	public void transmitCtcAuthority(String trainName, int authority){
+	public void transmitCtcAuthority(String trainName, double authority){
 		// ...
 	}
 
@@ -109,8 +109,28 @@ public class TrackModel implements Module{
 	// Respond to the Simulator's regularly call to this modules's updateTime()
 	@Override
 	public boolean updateTime(SimTime time){
-		// ...
+		checkOccupiedBeaconBlocks(redLineBlocks);
+		checkOccupiedBeaconBlocks(greenLineBlocks);
 		return true;
+	}
+
+	// If a beacon block is occupied, send that block ID and its beacon
+	// information to the Train Model. The Train Model determines which
+	// train is at that location and recieves the beacon information 
+	// for that train.
+	public void checkOccupiedBeaconBlocks(ArrayList<Block> track){
+		int blockID = 0;
+		int beaconInfo = 0;
+
+		for (int i = 0; i < track.size(); i++){
+			if (track.get(i).getBeacon() != null){
+				if (track.get(i).getOccupied()){
+					blockID = i;
+					beaconInfo = track.get(i).getBeacon().getInfo();
+					trainModel.setBeaconBlockOccupancy(blockID, beaconInfo);
+				}
+			}
+		}
 	}
 
 	@Override
