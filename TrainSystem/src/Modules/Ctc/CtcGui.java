@@ -181,7 +181,7 @@ public class CtcGui {
 		contentPane.add(lblThroughputAmt);
 		
 		btnPlay = new JButton("<html><center>Play</center></html>");
-		btnPlay.setEnabled(false);
+		btnPlay.setEnabled(true);
 		btnPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnPause.setEnabled(true);
@@ -194,6 +194,7 @@ public class CtcGui {
 		frame.getContentPane().add(btnPlay);
 		
 		btnPause = new JButton("<html><center>Pause</center></html>");
+		btnPause.setEnabled(false);
 		btnPause.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnPause.setEnabled(false);

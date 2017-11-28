@@ -73,8 +73,8 @@ public class Simulator {
 			while(!module.communicationEstablished()) {};
 		}
 		
-		//Start timer
-		play();
+		//Pause timer
+		//pause();
 	}
 	
 	public void pause() {
@@ -117,9 +117,11 @@ public class Simulator {
 			//Update all modules
 			for(Module module : modules) {
 				//Wait for module to finish updating before proceeding
-				while(!module.updateTime(currentTime)) {};
+				while(!module.updateTime(currentTime)) {
+					System.out.println(module.toString());
+				};
 			}
-			
+			System.out.println("--------");
 			//Increment time
 			currentTime.incrementSecond();
 			
