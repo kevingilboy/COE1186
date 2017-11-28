@@ -83,10 +83,14 @@ public class TrnController {
 		trainID = id;
 		line = ln;
 		currentStation = null;
-		currentBlock = 0;	//yard
+		if (line.equals("RED")) {
+			currentBlock = 77;	//yard
+		}
+		else {
+			currentBlock = 152;	//yard_OUT
+		}
 		controller = C;
 		pi = new PIController(200, 300);
-		controlGUI = new TrnControllerGUI(pi, this, trainID);
 		driveMode = 0;
 		blockMode = 0;
 		beacon = 0;
@@ -106,9 +110,11 @@ public class TrnController {
 		passEBrakes = false;
 		temperature = 70;
 		mapInfo = map;
+		stationList = s;
 		trainDirection = 0;
 		mainGUI = g;
-		stationList = s;
+		controlGUI = new TrnControllerGUI(pi, this, trainID);
+		g.add(controlGUI);
 	}
 	
 	public boolean updateTime() {
@@ -190,7 +196,7 @@ public class TrnController {
 		controlGUI.setSpeed(actualSpeed);
 		controlGUI.setSetpoint(setpointSpeed);
 		controlGUI.setAuth(overallAuth);
-		controlGUI.guiUpdate(false);
+		controlGUI.guiUpdate();
 		return true;
 	}
 	
