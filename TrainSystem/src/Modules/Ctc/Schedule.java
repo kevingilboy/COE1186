@@ -109,13 +109,11 @@ public class Schedule {
 						int altId = swCurr.getPortAlternate();
 						
 						//Follow both paths if valid
-						if(line.blocks[normId].getDirection()==line.blocks[currBlockId].getDirection() ||
-								line.blocks[currBlockId].getDirection()==0) {
+						if(line.blocks[normId].getDirection()>=line.blocks[currBlockId].getDirection()) {
 							ArrayList<Integer> newPath = cloneAndAppendAL(path,normId);
 							q.add(newPath);
 						}
-						if(line.blocks[altId].getDirection()==line.blocks[currBlockId].getDirection() ||
-								line.blocks[currBlockId].getDirection()==0) {
+						if(line.blocks[altId].getDirection()>=line.blocks[currBlockId].getDirection()) {
 							ArrayList<Integer> newPath = cloneAndAppendAL(path,altId);
 							q.add(newPath);
 						}
