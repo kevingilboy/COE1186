@@ -38,6 +38,7 @@ public class TrnController {
 	private boolean eBrakes;
 	private boolean passEBrakes;
 	private boolean inStation;
+	private boolean ready;
 	private ArrayList<BlockInfo> mapInfo;
 	private BlockInfo currentBlockInfo;
 	private String[] stationList;
@@ -47,46 +48,19 @@ public class TrnController {
 	public final int DEPARTING = 2;
 	public final int ENROUTE = 3;
 	
-	/*public TrnController() {
-		trainID = "Train 1";
-		line = "RED";
-		currentStation = null;
-		currentBlock = 0;	//yard
-		controller = null;
-		pi = new PIController(1, 0);
-		controlGUI = null;
-		driveMode = 0;
-		blockMode = 0;
-		beacon = 0;
-		ctcAuth = 0;
-		mboAuth = 0;
-		overallAuth = 0;
-		actualSpeed = 0;
-		setpointSpeed = 0;
-		speedLimit = 0;
-		power = 0;
-		safeBrakingDistance = 0;
-		rightDoor = false;
-		leftDoor = false;
-		lightState = false;
-		sBrakes = false;
-		eBrakes = false;
-		passEBrakes = false;
-		temperature = 70;
-		mapInfo = null;
-		trainDirection = 0;
-		mainGUI = null;
-		stationList = null;
-	}*/
-	
 	public TrnController(String id, String ln, TrainController C, ArrayList<BlockInfo> map, TrainControllerGUI g, String[] s) {
 		trainID = id;
 		line = ln;
 		currentStation = null;
-		currentBlock = 0;	//yard
+		ready = false;
+		if (line.equals("RED")) {
+			currentBlock = 77;	//yard
+		}
+		else {
+			currentBlock = 152;	//yard_OUT
+		}
 		controller = C;
 		pi = new PIController(200, 300);
-		controlGUI = new TrnControllerGUI(pi, this, trainID);
 		driveMode = 0;
 		blockMode = 0;
 		beacon = 0;
@@ -106,9 +80,11 @@ public class TrnController {
 		passEBrakes = false;
 		temperature = 70;
 		mapInfo = map;
+		stationList = s;
 		trainDirection = 0;
 		mainGUI = g;
-		stationList = s;
+		controlGUI = new TrnControllerGUI(pi, this, trainID);
+		g.add(controlGUI);
 	}
 	
 	public boolean updateTime() {
@@ -190,7 +166,7 @@ public class TrnController {
 		controlGUI.setSpeed(actualSpeed);
 		controlGUI.setSetpoint(setpointSpeed);
 		controlGUI.setAuth(overallAuth);
-		controlGUI.guiUpdate(false);
+		controlGUI.guiUpdate();
 		return true;
 	}
 	
@@ -299,6 +275,9 @@ public class TrnController {
 		if (sBrakes || eBrakes) {
 			power = 0;
 		}
+		else if (!ready) {
+			power = 0;
+		}
 		else {
 			if (setpointSpeed > speedLimit) {
 				setpointSpeed = speedLimit;
@@ -389,6 +368,10 @@ public class TrnController {
 				announceEnRoute();
 			}
 		}
+	}
+	
+	public void signalReady() {
+		ready = true;
 	}
 	
 	private void announceApproach(String stationName) {

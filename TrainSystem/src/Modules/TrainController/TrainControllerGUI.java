@@ -14,6 +14,8 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class TrainControllerGUI {
 
@@ -76,6 +78,15 @@ public class TrainControllerGUI {
 		guiList.add(g);
 		JButton B = new JButton(g.getId());
 		buttonList.add(B);
+		B.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int i = buttonList.indexOf(B);
+				TrnControllerGUI I = guiList.get(i);
+				I.setVisible(true);
+			}
+		});
+		//buttonList.add(B);
 		B.setBounds(30, yCount, 120, 30);
 		B.setVisible(true);
 		B.setEnabled(true);
