@@ -123,6 +123,7 @@ public class TrackModel implements Module{
 		if (track.size() > 0){
 			String line = track.get(0).getLine();
 			int blockID = 0;
+			int beaconInfo = 0;
 
 			for (int i = 0; i < track.size(); i++){
 				if (track.get(i).getBeacon() != null){
