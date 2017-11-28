@@ -1,3 +1,11 @@
+/**
+ * Author: Jennifer Patterson
+ * Course: CoE 1186 - Software Engineering
+ * Group: HashSlinging Slashers
+ * Date Created: 10/3/17
+ * Date Modified: 11/26/17
+ */
+
 package Modules.TrainModel;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -31,6 +39,14 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.JCheckBox;
 
+/**
+ * Class for the individual GUIs of each existing train model. Every train model will have an existing
+ * GUI upon dispatch, but on simulation start up, the first train in the train list will appear and every
+ * GUI after that will have to be manually selected from the Select Train dropdown menu.
+ * 
+ * @author Jennifer
+ *
+ */
 public class TrainModelGUI extends JFrame {
 
 	private JPanel contentPane;
@@ -197,6 +213,18 @@ public class TrainModelGUI extends JFrame {
 	
 	public boolean emerBrakeStatus() {
 		return emerBrake;
+	}
+	
+	public boolean engineFailStatus() {
+		return engineFail;
+	}
+	
+	public boolean signalFailStatus() {
+		return sigFail;
+	}
+	
+	public boolean brakeFailStatus() {
+		return brakeFail;
 	}
 	
 

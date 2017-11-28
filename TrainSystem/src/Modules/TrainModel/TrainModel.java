@@ -1,8 +1,18 @@
+/**
+ * Author: Jennifer Patterson
+ * Course: CoE 1186 - Software Engineering
+ * Group: HashSlinging Slashers
+ * Date Created: 10/3/17
+ * Date Modified: 11/26/17
+ */
+
 package Modules.TrainModel;
 
 import Shared.Module;
 import Shared.SimTime;
 import java.util.HashMap;
+
+import Modules.Mbo.Mbo;
 import Modules.TrackModel.*;
 //import Modules.TrainController.TrainController;
 
@@ -16,6 +26,7 @@ import Modules.TrackModel.*;
  */
 public class TrainModel implements Module{
 	public TrackModel trackModel;
+	public Mbo mbo;
 	//public TrainController trainController;
 	public static HashMap<Integer, Train> trainList;
 	public SimTime currentTime = new SimTime("00:00:00");
@@ -44,27 +55,15 @@ public class TrainModel implements Module{
 		currentTime = time;
 		if(!trainList.isEmpty()) {
 			if(!shown) {
-				//dispatchTrain("Train 1", line);
-				// instantiateGUI(train);
 				int ID = trainList.keySet().iterator().next();
 		        Train first = trainList.get(ID);
 		        first.showTrainGUI();
 		        shown = true;
-		        //dispatchTrain("Train 2", line);
-		        //dispatchTrain("Train 3", line);
-		        //dispatchTrain("Train 4", line);
-		        //dispatchTrain("Train 5", line);
 			}
-			//setPower("Train 1", pow+10);
-			//powSum += 10;
-			//setPower("Train 1", powSum);
-			//setPower("Train 2", powSum-20);
-			//setPower("Train 3", powSum*2);
-			//setPower("Train 4", powSum+20);
-			//setPower("Train 5", powSum+50);
 			for(Train t : trainList.values()) {
 				t.updateVelocity();
 		        t.setValuesForDisplay();
+		        setMBOSignal(t.getTrainID());
 			}
 	        
 		}
@@ -130,6 +129,15 @@ public class TrainModel implements Module{
 	
 	// TODO: Is this necessary?
 	public void setBeacon(String trainID, int beaconVal) {
+		
+	}
+	
+	public void setBeaconBlockOcuupancy(int id, int beaconInfo){
+	    // Figure out which train is occupying the block at 'id'
+	    // set that train's beacon information to 'beaconInfo'
+		Train beaconTrain = getTrainAtBlock(id);
+		// something like
+		// beaconTrain.setBeacon(beaconTrain.getTrainID(), trackModel.getBeaconSignal(id));
 		
 	}
 	
@@ -202,8 +210,9 @@ public class TrainModel implements Module{
 	 * I call on the MBO to set the MBO signal
 	 * @param trainID
 	 */
-	public void setCoordinates(String trainID) {
+	public double[] getCoordinates(String trainID) {
 		double coord[] = this.getTrain(trainID).getCoordinates();
+		return coord;
 		// this is where we would call setMBOCoordinates or something
 	}
 	
@@ -245,8 +254,9 @@ public class TrainModel implements Module{
 		this.getTrain(trainID).setGPSAntenna(status);
 	}
 	
-	public void setMBOAntenna(String trainID, boolean status) {
-		this.getTrain(trainID).setMBOAntenna(status);
+	public void setMBOSignal(String trainID) {
+		//this.getTrain(trainID).setMBOAntenna(status);
+		// mbo.receiveTrainPosition(trainID, getCoordinates(trainID), this.getTrain(trainID).checkSum());
 		// call method to send the MBO an "incoming signal" status that passes a trainID
 	}
 

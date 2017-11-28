@@ -1,3 +1,11 @@
+/**
+ * Author: Jennifer Patterson
+ * Course: CoE 1186 - Software Engineering
+ * Group: HashSlinging Slashers
+ * Date Created: 10/3/17
+ * Date Modified: 11/26/17
+ */
+
 package Modules.TrainModel;
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -5,6 +13,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.zip.CRC32;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,6 +23,13 @@ import Modules.TrackModel.Block;
 import Modules.TrackModel.Station;
 import Modules.TrackModel.TrackModel;
 
+/**
+ * Class that implements functionality separately for each train that is active on the track
+ * Trains become instantiated through the CTC when they are dispatched from the yard.
+ * 
+ * @author Jennifer
+ *
+ */
 public class Train {
 	public final double TRAIN_WEIGHT = 163600; 	// currently in lbs
 	public final int TRAIN_CAPACITY = 222; 	// per 1 car
@@ -86,6 +102,7 @@ public class Train {
     private int arrivalStatus;
     private int numPassengers;
     private String station;
+    private int beacon;
     
     // Speed/Authority
     private double currentSpeed;
@@ -151,6 +168,7 @@ public class Train {
         this.timeOfArrival = 0;
         this.arrivalStatus = EN_ROUTE;
         this.numPassengers = 0;
+        this.beacon = 0;
         //this.station = null;
         
         // Speed/Authority
@@ -423,15 +441,23 @@ public class Train {
     	this.station = station;
     }
     
+    public void setBeacon(int beaconVal) {
+    	this.beacon = beaconVal;
+    }
+    
+    public int getBeacon() {
+    	return this.beacon;
+    }
+    
     /**
      * Returns the current x and y coordinates of this train in a double array
      */
-    /*public double[] getCoordinates() {
-    	double []coords = new double[2];
+    public double[] getCoordinates() {
+    	double []coords = this.position.getCoordinates();
     	coords[0] = this.currentX;
     	coords[1] = this.currentY;
     	return coords;
-    }*/
+    }
     
     public Position getPosition(){
         return this.position;
@@ -448,8 +474,21 @@ public class Train {
     }
     
     // Called by the MBO
-    public double[] getCoordinates(){
-        return this.position.getCoordinates();
+    /*public double[] getCoordinates(){
+        
+    }*/
+    
+    /**
+     * Startings of a method to compute the checksum of the signal sent to the MBO with the
+     * Train's current position as X and Y coordinates
+     */
+    public long checkSum() {
+    	CRC32 crc = new CRC32();
+    	crc.reset(); // in order to reuse the object for all signals
+    	String signal = this.trainID + ":" + Double.toString(this.currentX) + "," + Double.toString(this.currentY);
+    	crc.update(signal.getBytes()); // signal is a String containing your data
+    	long checksum = crc.getValue();
+    	return checksum;
     }
     
     /**
