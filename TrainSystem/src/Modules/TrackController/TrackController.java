@@ -124,24 +124,24 @@ public class TrackController implements Module{
 	// transmit as int[] authority = currentBlock, nextBlocks[]
 	public void transmitCtcAuthority(String trainName, int[] authority){
 		boolean canProceed = tcplc.canProceedPath(authority);
-		int distAuthority = 0;
+		double distAuthority = 0;
 		if(canProceed){
 			if(trackModel.getBlock(associatedLine, authority[1]).getSwitch() != null){
 				boolean canSwitch = tcplc.canSwitchPath(authority);
 				if(canSwitch){
-					if(false){//switch state not correct
+					if(compareSwitchState(authority[0], authority[1])){//switch state not correct
 						transmitSwitchState(associatedLine, authority[1], !trackModel.getBlock(line, blockId).getSwitch().getState());
-						//TODO distAuthority = calcAuthDist(authority[]);
+						distAuthority = calcAuthDist(authority);
 						trackModel.transmitCtcAuthority(trainName, distAuthority);
 					} else {
 						transmitSwitchState(associatedLine, authority[1], trackModel.getBlock(line, blockId).getSwitch().getState());
-						//TODO distAuthority = calcAuthDist(authority[]);
+						distAuthority = calcAuthDist(authority);
 						trackModel.transmitCtcAuthority(trainName, distAuthority);
 					}
 				} else { //has switch but cant switch state (correct or not)
 					if (trackModel.getBlock(associatedLine, authority[1]).getLight() != null){
 						if(trackModel.getBlock(associatedLine, authority[1]).getLight().getState() != false){
-							//TODO distAuthority = calcAuthDist(authority[]);
+							distAuthority = calcAuthDist(authority);
 							trackModel.transmitCtcAuthority(trainName, distAuthority);
 						} else { //light is red
 							trackModel.transmitCtcAuthority(trainName, distAuthority);
@@ -151,7 +151,7 @@ public class TrackController implements Module{
 					}
 				}
 			} else { //nb doesnt have switch && can proceed
-				//TODO distAuthority = calcAuthDist(authority[]);
+				distAuthority = calcAuthDist(authority);
 				trackModel.transmitCtcAuthority(trainName, distAuthority);
 			}
 		} else { //cannot proceed
@@ -189,6 +189,30 @@ public class TrackController implements Module{
 	private void transmitCrossingState(String line, int blockId, boolean state){
 		//false == off, true == on
 		trackModel.getBlock(line, blockId).getCrossing().setState(state);
+	}
+	
+	private boolean compareSwitchState(int cb, int nb){
+		if(trackModel.getBlock(associatedLine,cb).getSwitch().getState()){
+			if(trackModel.getBlock(associatedLine,cb).getSwitch().getPortAlternate() == nb){
+				return true;
+			} else {
+				return false;
+			}
+		} else { //state = false
+			if(trackModel.getBlock(associatedLine,cb).getSwitch().getPortNormal() == nb){
+				return true;
+			} else {
+				return false;
+			}
+		}
+	} 
+	
+	private double calcAuthDist(int[] authority){
+		double distAuth = 0;
+		for(int i=1; i<authority.length; i++){
+			distAuth += trackModel.getBlock(line, authority[i]).getLength();
+		}
+		return distAuth;
 	}
 
 	@Override
