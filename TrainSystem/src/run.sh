@@ -4,6 +4,8 @@ echo '|    Compiling    |'
 echo '|                 |'
 echo '-------------------'
 
+javac Shared/Module.java
+javac Shared/SimTime.java
 javac Modules/Ctc/Ctc.java
 javac Modules/TrackController/TrackController.java
 javac Modules/TrackModel/TrackModel.java

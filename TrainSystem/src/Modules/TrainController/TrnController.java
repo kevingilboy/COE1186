@@ -12,24 +12,25 @@ public class TrnController {
 	private String line;
 	private String currentStation;
 	private PIController pi;
+	private TrainControllerGUI mainGUI;
 	private TrnControllerGUI controlGUI;
 	private TrainController controller;
-	private int driveMode;		//0 is auto, 1 is manual
-	private int blockMode;		//0 is moving, 1 is fixed
-	private int temperature;
-	private int beacon;
+	private int driveMode;					//0 is auto, 1 is manual
+	private int blockMode;					//0 is moving, 1 is fixed
+	private int temperature;				//F
+	private int beacon;						//32 bit integer
 	private int stationTimeCounter;
 	private int currentBlock;
 	private int trainDirection;
-	private double ctcAuth;
-	private double mboAuth;
-	private double distToStation;
-	private double overallAuth;
-	private double actualSpeed;
-	private double setpointSpeed;
-	private double speedLimit;
-	private double power;
-	private double safeBrakingDistance;
+	private double ctcAuth;					//meters
+	private double mboAuth;					//meters
+	private double distToStation;			//meters
+	private double overallAuth;				//meters
+	private double actualSpeed;				//meters per second
+	private double setpointSpeed;			//meters per second
+	private double speedLimit;				//meters per second
+	private double power;					//watts
+	private double safeBrakingDistance;		//meters
 	private boolean rightDoor;
 	private boolean leftDoor;
 	private boolean lightState;
@@ -39,19 +40,52 @@ public class TrnController {
 	private boolean inStation;
 	private ArrayList<BlockInfo> mapInfo;
 	private BlockInfo currentBlockInfo;
+	private String[] stationList;
 	
 	public final int APPROACHING = 0;
 	public final int ARRIVED = 1;
 	public final int DEPARTING = 2;
 	public final int ENROUTE = 3;
 	
-	public TrnController(String id, String ln, TrainController C, ArrayList<BlockInfo> map) {
+	/*public TrnController() {
+		trainID = "Train 1";
+		line = "RED";
+		currentStation = null;
+		currentBlock = 0;	//yard
+		controller = null;
+		pi = new PIController(1, 0);
+		controlGUI = null;
+		driveMode = 0;
+		blockMode = 0;
+		beacon = 0;
+		ctcAuth = 0;
+		mboAuth = 0;
+		overallAuth = 0;
+		actualSpeed = 0;
+		setpointSpeed = 0;
+		speedLimit = 0;
+		power = 0;
+		safeBrakingDistance = 0;
+		rightDoor = false;
+		leftDoor = false;
+		lightState = false;
+		sBrakes = false;
+		eBrakes = false;
+		passEBrakes = false;
+		temperature = 70;
+		mapInfo = null;
+		trainDirection = 0;
+		mainGUI = null;
+		stationList = null;
+	}*/
+	
+	public TrnController(String id, String ln, TrainController C, ArrayList<BlockInfo> map, TrainControllerGUI g, String[] s) {
 		trainID = id;
 		line = ln;
-		//currentStation = null;
+		currentStation = null;
 		currentBlock = 0;	//yard
 		controller = C;
-		pi = new PIController(5, 5);
+		pi = new PIController(200, 300);
 		controlGUI = new TrnControllerGUI(pi, this, trainID);
 		driveMode = 0;
 		blockMode = 0;
@@ -73,24 +107,28 @@ public class TrnController {
 		temperature = 70;
 		mapInfo = map;
 		trainDirection = 0;
+		mainGUI = g;
+		stationList = s;
 	}
 	
-	public void updateTime() {
-		//actualSpeed = controller.receiveTrainActualSpeed(trainID);
-		//ctcAuth = controller.receiveCtcAuthority(trainID);
-		//passEBrakes = controller.receivePassengerEmergency(trainID);
-		//currentBlock = controller.receiveTrainPosition(trainID);
+	public boolean updateTime() {
+		actualSpeed = controller.receiveTrainActualSpeed(trainID);
+		ctcAuth = controller.receiveCtcAuthority(trainID);
+		passEBrakes = controller.receivePassengerEmergencyBrake(trainID);	//NEED TO IMPLEMENT
+		currentBlock = controller.receiveTrainPosition(trainID);
 		currentBlockInfo = mapInfo.get(currentBlock - 1);
 		speedLimit = currentBlockInfo.getSpeedLimit();
 		if (driveMode == 0) {		//if auto
-			//setpointSpeed = controller.receiveSetpointSpeed(trainID);
+			setpointSpeed = controller.receiveSetpointSpeed(trainID);
 			if (inStation) {
 				stationTimeCounter++;
 				if (stationTimeCounter == 120)
 				{
+					stationTimeCounter = 0;
 					closeLeft();
 					closeRight();
 					inStation = false;
+					announceDeparting(currentStation);
 				}
 			}
 			else if (passEBrakes) {
@@ -115,8 +153,15 @@ public class TrnController {
 				}
 			}
 		}
-		else {		//if manual
-			if (passEBrakes) {
+		else {		//if manual - THIS NEEDS WORK
+			if (inStation) {
+				if (actualSpeed > 0) {
+					stationTimeCounter = 0;
+					inStation = false;
+					announceDeparting(currentStation);
+				}
+			}
+			else if (passEBrakes) {
 				engineOff();
 				eBrakesOn();
 			}
@@ -124,11 +169,18 @@ public class TrnController {
 				engineOff();
 				sBrakesOn();
 			}
+			else {
+				calcAuth();
+				calcPowerOutput();
+				stationCheck();
+			}
 		}
+		decodeBeacon();		//may have to poll the train model for beacon info as well
 		updateGUI();
+		return true;
 	}
 	
-	public void updateGUI() {
+	public boolean updateGUI() {
 		controlGUI.setLeft(leftDoor);
 		controlGUI.setRight(rightDoor);
 		controlGUI.setLights(lightState);
@@ -139,6 +191,7 @@ public class TrnController {
 		controlGUI.setSetpoint(setpointSpeed);
 		controlGUI.setAuth(overallAuth);
 		controlGUI.guiUpdate(false);
+		return true;
 	}
 	
 	public void openLeft() {
@@ -212,6 +265,10 @@ public class TrnController {
 		controller.transmitTemperature(trainID, temperature);
 	}
 	
+	public void setDriveMode(int mode) {
+		driveMode = mode;
+	}
+	
 	public void setCtcAuthority(double auth) {
 		ctcAuth = auth;
 	}
@@ -226,12 +283,11 @@ public class TrnController {
 	
 	public void setSetpointSpeed(double speed) {
 		setpointSpeed = speed;
-		//controlGUI.setSetpoint(speed);
+		controlGUI.setSetpoint(speed);
 	}
 	
-	public void setEmergencyBrake(boolean status) {
-		eBrakes = status;
-		//controlGUI.setEmergency(status);
+	public void setPassengerEmergencyBrake(boolean status) {
+		passEBrakes = status;
 	}
 	
 	public void setBeacon(int value) {
@@ -283,11 +339,11 @@ public class TrnController {
 	}
 	
 	private void stationCheck() {
-		if (actualSpeed == 0) {
-			if (currentBlockInfo.getStationName() != "") {
-				inStation = true;
-				announceArrived(currentBlockInfo.getStationName());
-				//get train direction somehow
+		if (actualSpeed == 0 && currentBlockInfo.getStationName() != "") {
+			inStation = true;
+			announceArrived(currentBlockInfo.getStationName());
+			if (driveMode == 0) {
+				trainDirection = controller.receiveTrainDirection(trainID);
 				if (currentBlockInfo.getDirection() == 1 || currentBlockInfo.getDirection() == -1) {
 					if (currentBlockInfo.getPositive()) {
 						openRight();
@@ -318,13 +374,13 @@ public class TrnController {
 		}
 	}
 	
-	private void decodeBeacon(int beacon)
+	private void decodeBeacon()
 	{
-		String stationName = "";
+		String stationName;
 		if (beacon != 0)
 		{
 			if (currentStation == null) {
-				//get station name from beacon
+				stationName = stationList[beacon];
 				currentStation = stationName;
 				announceApproach(stationName);
 			}
