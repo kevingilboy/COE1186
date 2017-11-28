@@ -31,10 +31,9 @@ public class TrainInfo {
 		return output;
 	}
 
-	public void updatePosition(double x, double y) {
+	public void updatePosition(double[] pos) {
 		timeSignalReceived = LocalDateTime.now();
-		position[0] = x;
-		position[1] = y;
+		position = pos;
 		// todo do more
 	}
 
@@ -44,6 +43,10 @@ public class TrainInfo {
 
 	public double getAuthority() {
 		return authority;
+	}
+
+	public void setAuthority(double auth) {
+		authority = auth;
 	}
 
 	private void calculateVelocity() {

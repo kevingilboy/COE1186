@@ -64,31 +64,32 @@ public class Mbo implements Module {
 	@Override
 	public boolean updateTime(SimTime time) {
 		this.time = time;
-		// TODO do stuff with the new time
+		this.updateTrainInfo();
 		return true;
 	}
 
 	// returns true if checksum is valid, otherwise false
-	public boolean receiveTrainPosition(String signal) {
+	public boolean receiveTrainPosition(String train, double[] pos, long checksum) {
 
 		// check that checksum is valid
 		crc.reset();
-		String[] segments = signal.split(":");
-		long checksum = Long.parseLong(segments[1]);
-		crc.update(segments[0].getBytes());
-		if (checksum != crc.getValue()) return false;
+		//String[] segments = signal.split(":");
+		//long checksum = Long.parseLong(segments[1]);
+		crc.update(String.format("%s;%.0f;%.0f",train,pos[0],pos[1]).getBytes());
+		//System.out.printf("Checksum %s: %x %x\n", train, crc.getValue(), checksum);
+		//if (checksum != crc.getValue()) return false;
 
 		// add train if necessary
-		String[] vals = segments[0].split(";");
-		String train = vals[0];
+		//String[] vals = segments[0].split(";");
+		//String train = vals[0];
 		if (trains.get(train) == null) {
 			trains.put(train, new TrainInfo(train));
 		}
 
 		// update train's position
-		double x = Double.parseDouble(vals[1]);
-		double y = Double.parseDouble(vals[2]);
-		trains.get(train).updatePosition(x,y);
+		//double x = Double.parseDouble(vals[1]);
+		//double y = Double.parseDouble(vals[2]);
+		trains.get(train).updatePosition(pos);
 
 		return true;
 	}
@@ -101,12 +102,25 @@ public class Mbo implements Module {
 
 	}
 
-	private void updateTrainInfo() {
-
+	public void updateTrainInfo() {
+		for (String train : trains.keySet()) {
+			trains.get(train).setAuthority(calculateAuthority(train));
+		//	trainController.setMboAuthority(train, trains.get(train).getAuthority());
+		}
 	}
 
 	private double calculateAuthority(String trainID) {
-		return 0;
+		double minDistance = Double.MAX_VALUE;
+		double[] pos = trains.get(trainID).getPosition();
+		for (String other : trains.keySet()) {
+			if (trainID.equals(other)) continue;
+			double[] otherPos = trains.get(other).getPosition();
+			double dispX = pos[0] - otherPos[0];
+			double dispY = pos[1] - otherPos[1];
+			double newDist = Math.pow((Math.pow(dispX, 2) + Math.pow(dispY, 2)), 0.5);
+			if (newDist < minDistance) minDistance = newDist;
+		}
+		return minDistance;
 	}
 
 	public double debug_getAuthority(String trainID) {
