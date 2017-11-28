@@ -73,6 +73,7 @@ public abstract class CtcCore implements Module,TimeControl {
 		
 		//Calculate authority
 		for(Train train : trains.values()) {
+			/*
 			ArrayList<Integer> authorityAl = train.calculateAuthorityPath();
 			
 			int[] authority = new int[authorityAl.size()];
@@ -80,8 +81,8 @@ public abstract class CtcCore implements Module,TimeControl {
 				authority[i] = authorityAl.get(i);
 			}
 			
-			//TODO uncomment when Nick adds this function
 			transmitCtcAuthority(train.name, authority);
+			*/
 		}
 		
 		gui.repaint();

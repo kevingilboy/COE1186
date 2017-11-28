@@ -77,9 +77,9 @@ public class TrainModel implements Module{
 	 */
 	public void dispatchTrain(String trainID, String line) {
 		Train newTrain = new Train(line, trainID, this, this.trackModel);
+		instantiateGUI(newTrain);
 		trainList.put(trainID.hashCode(), newTrain);
 		trackModel.dispatchTrain(line, trainID, this.getTrain(trainID).getPosition());
-		instantiateGUI(newTrain);
 	}
 	
 	/**
