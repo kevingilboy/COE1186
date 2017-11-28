@@ -207,7 +207,8 @@ public class Block{
 
 	public String toString(){
 		String sectionStr = getSection();
-		String idStr = Integer.toString(getId());
+		String idStr = Integer.toString(getId() + 1); // (+1) for displaying values
+													  // zero-index from parsing
 		String stationStr = "";
 
 		if (getStation() != null){
