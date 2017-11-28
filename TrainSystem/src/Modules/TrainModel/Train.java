@@ -515,14 +515,15 @@ public class Train {
     
     public void setEBrake(boolean ebrake) {
     	this.emerBrake = ebrake;
+    	trnMdl.setPassengerEmergencyBrake(this.trainID, ebrake);
     }
     
     public void setServiceBrake(boolean sBrake) {
     	this.serviceBrake = sBrake;
     }
     
-    public boolean getDriverEBrake() {
-    	return this.driverEmerBrake;
+    public boolean getEBrake() {
+    	return this.emerBrake;
     }
     
     public void setRightDoors(boolean right) {
