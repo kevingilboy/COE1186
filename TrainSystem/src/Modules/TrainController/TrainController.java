@@ -98,19 +98,19 @@ public class TrainController implements Module {
 	}
 	
 	public double receiveTrainActualSpeed(String trainID) {
-		return trainModel.getTrain(trainID).getVelocity();
+		return trainModel.getVelocity(trainID);
 	}
 	
 	public double receiveSetpointSpeed(String trainID) {
-		return trainModel.getTrain(trainID).getSetpoint();
+		return trainModel.getSetpointSpeed(trainID);
 	}
 	
 	public double receiveCtcAuthority(String trainID) {
-		return trainModel.getTrain(trainID).getAuthority();
+		return trainModel.getAuthority(trainID);
 	}
 	
 	public int receiveTrainPosition(String trainID) {
-		return trainModel.getTrain(trainID).getBlock();
+		return trainModel.getBlockID(trainID);
 	}
 	
 	public int receiveTrainDirection(String trainID) {
@@ -119,6 +119,10 @@ public class TrainController implements Module {
 	
 	public boolean receivePassengerEmergencyBrake(String trainID) {
 		return trainModel.getPassengerEmergencyBrake(trainID);
+	}
+	
+	public int receiveBeaconValue(String trainID) {
+		return trainModel.getBeacon(trainID);
 	}
 	
 	public void receiveMap() {
@@ -147,7 +151,7 @@ public class TrainController implements Module {
 
 	@Override
 	public boolean communicationEstablished() {
-		// TODO Auto-generated method stub
+		receiveMap();
 		return true;
 	}
 }

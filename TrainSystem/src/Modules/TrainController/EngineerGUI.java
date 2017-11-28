@@ -44,7 +44,7 @@ public class EngineerGUI {
 		P = pi.getP();
 		I = pi.getI();
 		frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setBounds(100, 100, 400, 250);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -126,7 +126,7 @@ public class EngineerGUI {
 		frame.setVisible(true);
 	}
 	
-	public void setVisible(boolean b) {
+	/*public void setVisible(boolean b) {
 		frame.setVisible(b);
-	}
+	}*/
 }
