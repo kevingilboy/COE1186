@@ -17,7 +17,7 @@ public class Train {
 	public int currLocation;
 	public int prevLocation;
 	public int speed;
-	public int authority;
+	public double authority;
 	public int passengers;
 	
 	public Train(Schedule schedule) {
@@ -31,7 +31,7 @@ public class Train {
 		currLocation = line.yardOut;
 	}
 	
-	public ArrayList<Integer> calculateAuthority() {
+	public ArrayList<Integer> calculateAuthorityPath() {
 		Queue<ArrayList<Integer>> q = new LinkedList<ArrayList<Integer>>();
 		ArrayList<Integer> path = new ArrayList<Integer>();
 		int currBlockId = currLocation;
@@ -120,6 +120,13 @@ public class Train {
 				q.add(newPath);
 			}
 		} //while q not empty
+		
+		double dist = 0;
+		for(int i=1;i<path.size();i++) {
+			int blockId = path.get(i);
+			dist += line.blocks[blockId].getLength();
+		}
+		this.authority = dist;
 		
 		//-------------------
 		// Return the found path as the authority
