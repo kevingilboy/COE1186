@@ -119,7 +119,7 @@ public class TrackModel implements Module{
 	// train is at that location and recieves the beacon information 
 	// for that train.
 	public void checkOccupiedBeaconBlocks(ArrayList<Block> track){
-		String line = track.getLine();
+		String line = track.get(0).getLine();
 		int blockID = 0;
 		int beaconInfo = 0;
 
