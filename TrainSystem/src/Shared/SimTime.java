@@ -4,17 +4,20 @@ public class SimTime {
 	public int hr;
 	public int min;
 	public int sec;
+	public int ms;
 	
 	public SimTime(int hours, int minutes, int seconds) {
 		hr = hours;
 		min = minutes;
 		sec = seconds;
+		ms = 0;
 	}
 	
 	public SimTime(SimTime time) {
 		hr = time.hr;
 		min = time.min;
 		sec = time.sec;
+		ms = 0;
 	}
 	
 	public SimTime(String time) {
@@ -24,6 +27,27 @@ public class SimTime {
 				hr =  Integer.parseInt(parts[0]);
 				min = Integer.parseInt(parts[1]);
 				sec = Integer.parseInt(parts[2]);
+				ms = 0;
+			}
+		}
+	}
+	
+	public void incrementTime(int ticksPerSecond) {
+		int msPerTick = (int)((1.0/ticksPerSecond) * 1000);
+		ms+=msPerTick;
+		if(ms==1000) {
+			ms = 0;
+			sec++;
+			if(sec==60) {
+				sec = 0;
+				min++;
+				if(min==60) {
+					min = 0;
+					hr++;
+					if(hr==24) {
+						hr = 0;
+					}
+				}
 			}
 		}
 	}

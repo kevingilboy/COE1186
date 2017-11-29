@@ -14,6 +14,9 @@ import java.util.TimerTask;
 
 public class Simulator {
 	public int speedup = 1;
+	
+	public int ticksPerSecond = 4;
+	
 	public SimTime startTime = new SimTime("07:00:00");
 	public SimTime currentTime = new SimTime("07:00:00");
 	public SimTime endTime = new SimTime("21:00:00");
@@ -73,8 +76,8 @@ public class Simulator {
 			while(!module.communicationEstablished()) {};
 		}
 		
-		//Start timer
-		play();
+		//Pause timer
+		//pause();
 	}
 	
 	public void pause() {
@@ -88,7 +91,7 @@ public class Simulator {
 		//Create the timer
 	    this.timer = new Timer();
 	    TimerTask runSimulation = new incrementTime();
-	    this.timer.schedule( runSimulation, 0, 1000/speedup );
+	    this.timer.schedule( runSimulation, 0, (1000/speedup)/ticksPerSecond );
 	    
 	    simulationRunning = true;
 	}
@@ -119,9 +122,8 @@ public class Simulator {
 				//Wait for module to finish updating before proceeding
 				while(!module.updateTime(currentTime)) {};
 			}
-			
 			//Increment time
-			currentTime.incrementSecond();
+			currentTime.incrementTime(ticksPerSecond);
 			
 			//Unlock the timer
 			timerTaskRunning = false;

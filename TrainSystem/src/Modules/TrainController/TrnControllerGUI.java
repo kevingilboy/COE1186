@@ -67,7 +67,7 @@ public class TrnControllerGUI {
 	
 	//private EngineerGUI eGUI;
 	
-	private PIController pi;
+	//private PIController pi;
 	
 	public final double SPEEDCONVERSION = 2.23694;			//1 m/s = 2.23694 mph
 	public final double DISTANCECONVERSION = 0.000621371;	//1 m = 0.000621371 miles
@@ -89,10 +89,10 @@ public class TrnControllerGUI {
 		service = false;
 		emergency = false;
 		lights = false;
-		pi = p;
+		//pi = p;
 		controller = c;
 		//eGUI = new EngineerGUI(pi, trainID);
-		new EngineerGUI(pi, trainID, controller);
+		//new EngineerGUI(pi, trainID, controller);
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.setBounds(600, 100, 500, 380);

@@ -1,14 +1,13 @@
 package Modules.Ctc;
 
-import Modules.TrackModel.Block;
 import Shared.SimTime;
 
 public class Stop {
-	public Block block;
+	public int blockId;
 	public SimTime timeToDwell;
 	
-	public Stop(Block block) {
-		this.block = block;
+	public Stop(int blockId) {
+		this.blockId = blockId;
 		this.timeToDwell = null;
 	}
 }

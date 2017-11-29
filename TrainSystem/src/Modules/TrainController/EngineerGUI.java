@@ -40,9 +40,10 @@ public class EngineerGUI {
 		new EngineerGUI("Train 1");
 	}*/
 	
-	public EngineerGUI(PIController p, String s) {
+	public EngineerGUI(PIController p, String s, TrnController c) {
 		pi = p;
 		trainID = s;
+		controller = c;
 		P = pi.getP();
 		I = pi.getI();
 		frame = new JFrame();
