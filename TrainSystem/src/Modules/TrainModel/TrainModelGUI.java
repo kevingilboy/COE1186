@@ -59,6 +59,7 @@ public class TrainModelGUI extends JFrame {
 	//private int setPowerIn;
 	private boolean serviceBrake = false;
 	private boolean emerBrake = false;
+	private int numCars = 1;
 
 	private JLabel lblSpecifications = new JLabel("Train Specifications");
 	private JLabel lblFailureModeActivation = new JLabel("Failure Mode Activation");
@@ -123,6 +124,7 @@ public class TrainModelGUI extends JFrame {
 	public JLabel authorityVal = new JLabel();
 	public JLabel serviceLabel = new JLabel();
 	public JLabel emergencyLabel = new JLabel();
+	JLabel ctcSpeedLabel = new JLabel();
 	
 	public JLabel lblLine = new JLabel();
 	public JLabel heightVal = new JLabel();
@@ -130,12 +132,14 @@ public class TrainModelGUI extends JFrame {
 	public JLabel lengthVal = new JLabel();
 	public JLabel widthVal = new JLabel();
 	public JLabel capacityVal = new JLabel();
+	JSpinner numCarsSpinner = new JSpinner();
+	JButton setCars = new JButton("Set");
+	JLabel lblCrew = new JLabel("Crew:");
+	JLabel crewCountLabel = new JLabel();
 	public JLabel arrivalStatusLabel = new JLabel();
 	public JLabel currentSpeedLabel = new JLabel();
 	
 	public JButton btnEmergencyBrake = new JButton("Emergency Brake");
-	
-	public JLabel numCarsSpinner = new JLabel();
 	public JLabel tempLabel = new JLabel();
 	
 	public JLabel powerVal = new JLabel();
@@ -227,6 +231,10 @@ public class TrainModelGUI extends JFrame {
 		return brakeFail;
 	}
 	
+	public int numCars() {
+		return numCars;
+	}
+	
 
 	/**
 	 * Create the frame.
@@ -246,7 +254,7 @@ public class TrainModelGUI extends JFrame {
 		
 	private void initComponents() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 975, 614);
+		setBounds(100, 100, 975, 630);
 		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -409,15 +417,11 @@ public class TrainModelGUI extends JFrame {
 		contentPane.add(lblWidth);
 		
 		lblOfCars.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblOfCars.setBounds(60, 200, 104, 20);
+		lblOfCars.setBounds(60, 203, 104, 20);
 		contentPane.add(lblOfCars);
 		
-		numCarsSpinner.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		numCarsSpinner.setBounds(153, 200, 69, 20);
-		contentPane.add(numCarsSpinner);
-		
 		lblCapacity.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblCapacity.setBounds(60, 225, 69, 20);
+		lblCapacity.setBounds(60, 236, 69, 20);
 		contentPane.add(lblCapacity);
 		
 		
@@ -554,7 +558,7 @@ public class TrainModelGUI extends JFrame {
 		
 		Image pineapple = new ImageIcon(this.getClass().getResource("pineapple_icon.png")).getImage();
 		JLabel pineappleImageLabel = new JLabel();
-		pineappleImageLabel.setBounds(40, 480, 138, 76);
+		pineappleImageLabel.setBounds(25, 498, 138, 76);
 		pineappleImageLabel.setIcon(new ImageIcon(pineapple));
 		contentPane.add(pineappleImageLabel);
 		
@@ -604,7 +608,7 @@ public class TrainModelGUI extends JFrame {
 		contentPane.add(widthVal);
 		capacityVal.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		capacityVal.setBounds(154, 225, 69, 20);
+		capacityVal.setBounds(154, 236, 69, 20);
 		contentPane.add(capacityVal);
 		
 		gpsAntennaStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -657,11 +661,10 @@ public class TrainModelGUI extends JFrame {
 		ctcSpeedUnitsLabel.setBounds(568, 125, 34, 20);
 		contentPane.add(ctcSpeedUnitsLabel);
 		
-		JLabel label = new JLabel("0");
-		label.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		label.setHorizontalAlignment(SwingConstants.RIGHT);
-		label.setBounds(515, 125, 44, 20);
-		contentPane.add(label);
+		ctcSpeedLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		ctcSpeedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		ctcSpeedLabel.setBounds(515, 125, 44, 20);
+		contentPane.add(ctcSpeedLabel);
 		
 		lblServiceBrake.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblServiceBrake.setBounds(358, 225, 129, 20);
@@ -681,6 +684,28 @@ public class TrainModelGUI extends JFrame {
 		btnEndFailure.setBounds(806, 245, 115, 29);
 		
 		contentPane.add(btnEndFailure);
+		
+		numCarsSpinner.setBounds(143, 204, 59, 20);
+		contentPane.add(numCarsSpinner);
+		
+		setCars.setBounds(204, 204, 69, 20);
+		contentPane.add(setCars);
+		setCars.addActionListener(new ActionListener()
+		{
+		  public void actionPerformed(ActionEvent e)
+		  {
+			  // send the power command through when the button is pressed
+
+			  numCars = Integer.parseInt(numCarsSpinner.getValue().toString());
+		  }
+		});
+		
+		lblCrew.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblCrew.setBounds(60, 261, 69, 20);
+		contentPane.add(lblCrew);
+		
+		crewCountLabel.setBounds(154, 261, 69, 20);
+		contentPane.add(crewCountLabel);
 	}
 	
 	/**

@@ -14,7 +14,6 @@ import java.util.HashMap;
 
 import Modules.Mbo.Mbo;
 import Modules.TrackModel.*;
-//import Modules.TrainController.TrainController;
 
 /**
  * Class for the overarching class of the TrainModel (which acts as the interface of the train model between other
@@ -27,18 +26,15 @@ import Modules.TrackModel.*;
 public class TrainModel implements Module{
 	public TrackModel trackModel;
 	public Mbo mbo;
-	//public TrainController trainController;
 	public static HashMap<Integer, Train> trainList;
 	public SimTime currentTime = new SimTime("00:00:00");
-	double powSum = 0.0;
-	private String line = "GREEN";
-	private int i = 0;
+	// double powSum = 0.0;
+
 	private boolean shown = false;
-	//Instantiate a GUI for this train
 
 	/**
 	 * Constructor of the Train Model class
-	 * This calss is backed by a HashMap that stores trains as objects with keys as the
+	 * This class is backed by a HashMap that stores trains as objects with keys as the
 	 * built in java hash of the Train ID strings
 	 */
 	public TrainModel(){
@@ -53,11 +49,8 @@ public class TrainModel implements Module{
 	@Override
 	public boolean updateTime(SimTime time) {
 		currentTime = time;
-		/*if(!shown) {
-			dispatchTrain("train1","GREEN");
-		}*/
 		if(!trainList.isEmpty()) {
-			if(!shown) {
+			if(!shown) { // if no GUI has yet been shown. This should only ever be true once
 				int ID = trainList.keySet().iterator().next();
 		        Train first = trainList.get(ID);
 		        //instantiateGUI(first);
@@ -75,7 +68,8 @@ public class TrainModel implements Module{
 	}
 	
 	/**
-	 * Dispatch a train to a specific block (will add that functionality later)
+	 * Dispatch a train from the yard/make a train exist
+	 * 
 	 * @param trainID
 	 * @param train
 	 */
@@ -109,9 +103,15 @@ public class TrainModel implements Module{
 			}
 		}
 		//trainModelGUI.addTraintoGUIList(train);
-		//return trainModelGUI;
 	}
 	
+	/**
+	 * When passed an existing train's ID, will return the train object by retrieving the value at the
+	 * ID's hashcode index in the HashMap
+	 * 
+	 * @param ID
+	 * @return
+	 */
 	public Train getTrain(String ID) {
 		return trainList.get(ID.hashCode());
 	}
@@ -120,6 +120,13 @@ public class TrainModel implements Module{
 		return start-end; // TODO: Ask Kevin how we would be doing this
 	}*/
 	
+	/**
+	 * Retrieves a train at a current block. Used to determine when a train is at a beacon block
+	 * 
+	 * @param block
+	 * @param line
+	 * @return
+	 */
 	public Train getTrainAtBlock(int block, String line) {
 		// TODO: Should I iterate through every single entry in the hashmap to find the
 		// train at the specified block?
@@ -131,11 +138,22 @@ public class TrainModel implements Module{
 		return null;
 	}
 	
-	// TODO: Is this necessary?
+	/**
+	 * This sets the specified train's beacon value
+	 * 
+	 * @param trainID
+	 * @param beaconVal
+	 */
 	public void setBeacon(String trainID, int beaconVal) {
 		this.getTrain(trainID).setBeacon(beaconVal);
 	}
 	
+	/**
+	 * Train Controller calls this method on the train model to get the train's beacon info
+	 * 
+	 * @param trainID
+	 * @return
+	 */
 	public int getBeacon(String trainID) {
 		return this.getTrain(trainID).getBeacon();
 	}
@@ -144,6 +162,7 @@ public class TrainModel implements Module{
 	 * Track model calls this method to inform me that a train is on a beacon block, and I have
 	 * to determine which train that is. I then set the beacon for that train so the train controller
 	 * can get it from me
+	 * 
 	 * @param line
 	 * @param blockId
 	 * @param beaconInfo
@@ -157,28 +176,67 @@ public class TrainModel implements Module{
 		
 	}
 	
+	/**
+	 * Trainsmit the authority and receive/set it
+	 * 
+	 * @param trainID
+	 * @param authority
+	 * @return
+	 */
 	public double transmitCtcAuthority(String trainID, double authority) {
 		this.getTrain(trainID).setAuthority(authority);
 		return authority;
 	}
 	
+	/**
+	 * Receive and trainsmit the train's suggested speed
+	 * 
+	 * @param trainID
+	 * @param setpoint
+	 * @return
+	 */
 	public double suggestSetpointSpeed(String trainID, double setpoint) {
 		this.getTrain(trainID).setSetpoint(setpoint);
 		return setpoint;
 	}
 	
+	/**
+	 * For the train Controller to know the train's actual speed
+	 * 
+	 * @param trainID
+	 * @return
+	 */
 	public double getVelocity(String trainID) {
 		return this.getTrain(trainID).getVelocity();
 	}
 	
+	/**
+	 * For the Train Controller to receive the train's setpoint speed
+	 * 
+	 * @param trainID
+	 * @return
+	 */
 	public double getSetpointSpeed(String trainID) {
 		return this.getTrain(trainID).getSetpoint();
 	}
 	
+	/**
+	 * For the train controller to receive the train's authority
+	 * 
+	 * @param trainID
+	 * @return
+	 */
 	public double getAuthority(String trainID) {
 		return this.getTrain(trainID).getAuthority();
 	}
 	
+	/**
+	 * Called by the train controller to retrieve the train's current block as an
+	 * integer ID
+	 * 
+	 * @param trainID
+	 * @return
+	 */
 	public int getBlockID(String trainID) {
 		return this.getTrain(trainID).getBlock();
 	}
@@ -241,7 +299,8 @@ public class TrainModel implements Module{
 	}
 	
 	/**
-	 * I call on the MBO to set the MBO signal
+	 * Returns the coordinates as a double array of the specified train
+	 * 
 	 * @param trainID
 	 */
 	public double[] getCoordinates(String trainID) {
@@ -252,6 +311,7 @@ public class TrainModel implements Module{
 	
 	/**
 	 * Train Controller calls this on a specific train to get the current block ID
+	 * 
 	 * @param trainID
 	 * @return
 	 */
@@ -259,38 +319,81 @@ public class TrainModel implements Module{
 		return this.getTrain(trainID).getBlock();
 	}
 	
+	/**
+	 * Called by the train controller to set a specified train's power command based on the speed
+	 * limit and authority provided to it
+	 * 
+	 * @param trainID
+	 * @param powerCommand
+	 */
 	public void setPower(String trainID, double powerCommand) {
 		this.getTrain(trainID).setPower(powerCommand);
 	}
 	
+	/**
+	 * Called by the train controller to set a specified train's right door as open or closed
+	 * 
+	 * @param trainID
+	 * @param right
+	 */
 	public void setRightDoor(String trainID, boolean right) {
 		this.getTrain(trainID).setRightDoors(right);
 	}
 	
+	/**
+	 * Called by the train controller to set a specified train's left door as open or closed
+	 * 
+	 * @param trainID
+	 * @param left
+	 */
 	public void setLeftDoor(String trainID, boolean left) {
 		this.getTrain(trainID).setLeftDoors(left);
 	}
 	
+	/**
+	 * Called by the train controller to set a specified train's lights as on or off
+	 * 
+	 * @param trainID
+	 * @param lights
+	 */
 	public void setLights(String trainID, boolean lights) {
 		this.getTrain(trainID).setLights(lights);
 	}
 	
+	/**
+	 * Called by the train controller to set the train cabin's temperature
+	 * 
+	 * @param trainID
+	 * @param temp
+	 */
 	public void setTemp(String trainID, int temp) {
 		this.getTrain(trainID).setTemp(temp);
 	}
 	
+	/**
+	 * Called by the train controller to set a train's current arrival status
+	 * 
+	 * @param trainID
+	 * @param status
+	 * @param station
+	 */
 	public void setArrivalStatus(String trainID, int status, String station) {
 		this.getTrain(trainID).setArrivalStatus(status);
 		this.getTrain(trainID).setStation(station);
 	}
 	
+	// TODO: not sure yet if I need this??
 	public void setGPSAntenna(String trainID, boolean status) {
 		this.getTrain(trainID).setGPSAntenna(status);
 	}
 	
+	/**
+	 * Called every clock tick to send the MBO a train ID, it's respective coordinates, and a checksum
+	 * to act as a level of security and ensure that a position value is not corrupt
+	 * @param trainID
+	 */
 	public void setMBOSignal(String trainID) {
-		//this.getTrain(trainID).setMBOAntenna(status);
-		// mbo.receiveTrainPosition(trainID, getCoordinates(trainID), this.getTrain(trainID).checkSum());
+		mbo.receiveTrainPosition(trainID, getCoordinates(trainID), this.getTrain(trainID).checkSum());
 		// call method to send the MBO an "incoming signal" status that passes a trainID
 	}
 
@@ -300,6 +403,10 @@ public class TrainModel implements Module{
 		return true;
 	}
 	
+	/**
+	 * When the exit all field is selected from the File menu in any train's GUI, every single train model GUI
+	 * is closed
+	 */
 	public void exitAll() {
 		if(!trainList.isEmpty()) {
 			for(Train t : trainList.values()) {
