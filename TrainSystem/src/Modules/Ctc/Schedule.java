@@ -217,7 +217,7 @@ public class Schedule {
 		Object[][] grid = new Object[stops.size()][3];
 		for(int i=0;i<stops.size();i++) {
 			Stop stop = stops.get(i);
-			grid[i][0] = line.blocks[stop.blockId+1].toString();
+			grid[i][0] = line.blocks[stop.blockId].toString();
 			grid[i][1] = stop.timeToDwell.toString();
 		}
 		return grid;
