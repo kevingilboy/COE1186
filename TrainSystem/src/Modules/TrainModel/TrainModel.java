@@ -53,10 +53,14 @@ public class TrainModel implements Module{
 	@Override
 	public boolean updateTime(SimTime time) {
 		currentTime = time;
+		/*if(!shown) {
+			dispatchTrain("train1","GREEN");
+		}*/
 		if(!trainList.isEmpty()) {
 			if(!shown) {
 				int ID = trainList.keySet().iterator().next();
 		        Train first = trainList.get(ID);
+		        //instantiateGUI(first);
 		        first.showTrainGUI();
 		        shown = true;
 			}
@@ -77,9 +81,10 @@ public class TrainModel implements Module{
 	 */
 	public void dispatchTrain(String trainID, String line) {
 		Train newTrain = new Train(line, trainID, this, this.trackModel);
+		instantiateGUI(newTrain);
 		trainList.put(trainID.hashCode(), newTrain);
 		trackModel.dispatchTrain(line, trainID, this.getTrain(trainID).getPosition());
-		instantiateGUI(newTrain);
+		
 	}
 	
 	/**
