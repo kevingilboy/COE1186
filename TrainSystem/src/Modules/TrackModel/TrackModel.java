@@ -1,6 +1,6 @@
 /**
  * Train Simulation System
- * Track Model sub-system class developed by Kevin Le
+ * TRACK MODEL sub-system class developed by Kevin Le
  */
 
 package Modules.TrackModel;
