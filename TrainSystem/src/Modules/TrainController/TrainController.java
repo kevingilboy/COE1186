@@ -37,11 +37,18 @@ public class TrainController implements Module {
 	}
 	
 	public void dispatchTrain(String trainID, String line) {
+		double p, i;
+		p = mainGUI.getP();
+		i = mainGUI.getI();
+		while (i == -1 || p == -1) {
+			p = mainGUI.getP();
+			i = mainGUI.getI();
+		}
 		if (line.equals("RED")) {
-			controlList.put(trainID, new TrnController(trainID, line, this, redInfo, mainGUI, stationList));
+			controlList.put(trainID, new TrnController(trainID, line, this, redInfo, mainGUI, stationList, p, i));
 		}
 		else {
-			controlList.put(trainID, new TrnController(trainID, line, this, greenInfo, mainGUI, stationList));
+			controlList.put(trainID, new TrnController(trainID, line, this, greenInfo, mainGUI, stationList, p, i));
 		}
 	}
 	
@@ -53,11 +60,6 @@ public class TrainController implements Module {
 	public void setSafeBrakingDistance(String trainID, double dist) {
 		TrnController C = controlList.get(trainID);
 		C.setSafeBrakingDistance(dist);
-	}
-	
-	public void setBeacon(String trainID, int value) {		//may have to change to a GETTER
-		TrnController C = controlList.get(trainID);
-		C.setBeacon(value);
 	}
 	
 	public void setPassengerEmergencyBrake(String trainID, boolean status) {
