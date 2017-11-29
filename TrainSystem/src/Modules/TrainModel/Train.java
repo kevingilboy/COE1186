@@ -158,7 +158,7 @@ public class Train {
         //this.prevBlock = 0;
         
         this.grade = 0;
-        this.currentSpeedLimit = 0;
+        //this.currentSpeedLimit = 0;
         this.GPSAntenna = true;
         this.MBOAntenna = false;
         
@@ -177,15 +177,15 @@ public class Train {
         
         // Speed/Authority
         this.currentSpeed = 0;
-        this.CTCSpeed = 45;
-        this.CTCAuthority = 100; // 100 miles
+        this.CTCSpeed = 0;
+        this.CTCAuthority = 0;
         this.powerIn = 0.0;
         
         // Train Operations
         this.leftDoorIsOpen = false;
         this.rightDoorIsOpen = false;
         this.lightsAreOn  =false;
-        this.temperature = 70;
+        this.temperature = 0;
         this.serviceBrake = false;
         this.emerBrake = false;
         

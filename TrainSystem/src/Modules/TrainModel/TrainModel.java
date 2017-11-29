@@ -53,10 +53,14 @@ public class TrainModel implements Module{
 	@Override
 	public boolean updateTime(SimTime time) {
 		currentTime = time;
+		/*if(!shown) {
+			dispatchTrain("train1","GREEN");
+		}*/
 		if(!trainList.isEmpty()) {
 			if(!shown) {
 				int ID = trainList.keySet().iterator().next();
 		        Train first = trainList.get(ID);
+		        //instantiateGUI(first);
 		        first.showTrainGUI();
 		        shown = true;
 			}
