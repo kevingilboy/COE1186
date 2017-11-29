@@ -26,6 +26,9 @@ public class TrainControllerGUI {
 	private int height;
 	private int logoHeight;
 	
+	private double p;
+	private double i;
+	
 	private boolean ready;
 	
 	private JFrame frame;
@@ -53,6 +56,8 @@ public class TrainControllerGUI {
 	 * Create the frame.
 	 */
 	public TrainControllerGUI() {
+		p = 200;
+		i = 300;
 		ready = true;
 		guiList = new ArrayList<TrnControllerGUI>();
 		buttonList = new ArrayList<JButton>();
@@ -88,7 +93,7 @@ public class TrainControllerGUI {
 		pField.setBounds(241, 106, 130, 26);
 		contentPane.add(pField);
 		pField.setColumns(10);
-		pField.setText("200");
+		pField.setText(p + "");
 		
 		iField = new JTextField();			//i
 		iField.addKeyListener(new KeyAdapter() {
@@ -101,7 +106,7 @@ public class TrainControllerGUI {
 		iField.setBounds(241, 154, 130, 26);
 		contentPane.add(iField);
 		iField.setColumns(10);
-		iField.setText("300");
+		iField.setText(i + "");
 		
 		JLabel pLabel = new JLabel("P");
 		pLabel.setBounds(229, 111, 16, 16);
@@ -115,6 +120,20 @@ public class TrainControllerGUI {
 		confirmButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				try {
+					p = Double.parseDouble(pField.getText());
+					pField.setText(p + "");
+				}
+				catch (NumberFormatException E) {
+					pField.setText(p + "");
+				}
+				try {
+					i = Double.parseDouble(iField.getText());
+					iField.setText(i + "");
+				}
+				catch (NumberFormatException E) {
+					iField.setText(i + "");
+				}
 				ready = true;
 				confirmButton.setEnabled(false);
 			}
@@ -127,12 +146,6 @@ public class TrainControllerGUI {
 		contentPane.add(logoPineapple);
 		
 		frame.setVisible(true);
-		
-		/*add("train 1");
-		add("train 2");
-		add("train 1");
-		add("train 2");*/
-		
 	}
 	
 	public void add(TrnControllerGUI g) {
@@ -163,24 +176,20 @@ public class TrainControllerGUI {
 	}
 	
 	public double getP() {
-		double p;
 		if (ready) {
-			p = Double.parseDouble(pField.getText());
+			return p;
 		} 
 		else {
-			p = -1;
+			return -1;
 		}
-		return p;
 	}
 	
 	public double getI() {
-		double i;
 		if (ready) {
-			i = Double.parseDouble(pField.getText());
+			return i;
 		} 
 		else {
-			i = -1;
+			return -1;
 		}
-		return i;
 	}
 }
