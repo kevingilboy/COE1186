@@ -16,7 +16,8 @@ public class Train {
 	
 	public int currLocation;
 	public int prevLocation;
-	public int speed;
+	public int suggestedSpeed;
+	public boolean overrideSuggestedSpeed = false;
 	public double authority;
 	public int passengers;
 	
@@ -253,6 +254,12 @@ public class Train {
 		
 		//The bidirectional stretch must not be occupied
 		return false;
+	}
+	
+	public void calculateSuggestedSpeed() {
+		if(!overrideSuggestedSpeed) {
+			this.suggestedSpeed = line.blocks[this.currLocation].getSpeedLimit();
+		}
 	}
 	
 	public <T> ArrayList<T> cloneAndAppendAL(ArrayList<T> oldAl, T newEl) {
