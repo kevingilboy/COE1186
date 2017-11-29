@@ -307,6 +307,22 @@ public class CtcGui {
 		trainCreationLine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				trainCreationTable.setSchedule(new Schedule((Line)trainCreationLine.getSelectedItem()));
+				
+				//Restore name and time
+				String name = trainCreationName.getText();
+				String time = trainCreationDepartTime.getText();
+				
+				Boolean validName = name!=null && !name.equals("");
+				Boolean validTime = SimTime.isValid(time);
+				
+				if(validName) {
+					trainCreationTable.schedule.setName(name);
+				}
+				if(validTime) {
+					trainCreationTable.schedule.setDepartureTime(new SimTime(time));
+					trainCreationTable.fireScheduleChanged();	
+				}
+				
 				enableTrainCreationComponents();
 			}
 		});
@@ -362,6 +378,7 @@ public class CtcGui {
 		contentPane.add(scrollPane_1);
 		
 		trainCreationTable = new ScheduleJTable();
+		trainCreationTable.setEnabled(false);
 		trainCreationTable.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent arg0) {
 				enableTrainCreationComponents();
@@ -688,13 +705,17 @@ public class CtcGui {
 	private void enableTrainCreationComponents() {
 		String name = trainCreationName.getText();
 		String time = trainCreationDepartTime.getText();
-		Boolean validProps = name!=null && !name.equals("") && SimTime.isValid(time);
 		
-		//If valid name and time, allow schedule editing
-		trainCreationTable.setEnabled(validProps);
-
-		//If valid name and time, and schedule has one stop then allow schedule to be dispatched
-		addToDispatchToQueue.setEnabled(validProps && trainCreationTable.schedule.stops.size()>0);
+		Boolean validName = name!=null && !name.equals("");
+		Boolean validTime = SimTime.isValid(time);
+		
+		if(validName && validTime) {
+			//If valid name and time, allow schedule editing
+			trainCreationTable.setEnabled(true);
+	
+			//If valid name and time, and schedule has one stop then allow schedule to be dispatched
+			addToDispatchToQueue.setEnabled(trainCreationTable.schedule.stops.size()>0);
+		}
 	}
 	
 	/*
