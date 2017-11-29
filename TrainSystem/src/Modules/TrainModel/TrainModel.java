@@ -84,7 +84,6 @@ public class TrainModel implements Module{
 		instantiateGUI(newTrain);
 		trainList.put(trainID.hashCode(), newTrain);
 		trackModel.dispatchTrain(line, trainID, this.getTrain(trainID).getPosition());
-		
 	}
 	
 	/**
@@ -125,7 +124,7 @@ public class TrainModel implements Module{
 		// TODO: Should I iterate through every single entry in the hashmap to find the
 		// train at the specified block?
 		for(Train t : trainList.values()) {
-			if(t.getBlock() == block && t.getLine().equals(line)) {
+			if((t.getBlock() == block) && (t.getLine().equals(line))) {
 				return t;
 			}
 		}

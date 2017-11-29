@@ -128,16 +128,26 @@ public class TrainController implements Module {
 	public void receiveMap() {
 		ArrayList<Block> redBlocks = trackModel.getTrack("RED");
 		ArrayList<Block> greenBlocks = trackModel.getTrack("GREEN");
-		redInfo = new ArrayList<BlockInfo>(77);
-		greenInfo = new ArrayList<BlockInfo>(152);
+		redInfo = new ArrayList<BlockInfo>();
+		greenInfo = new ArrayList<BlockInfo>();
 		Station S;
 		for (Block B : redBlocks) {
 			S = B.getStation();
-			redInfo.set(B.getId() - 1, new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), S.getId(), S.getDoorSideDirectionPositive(), S.getDoorSideDirectionNegative(), B.getDirection()));
+			if(S==null) {
+				redInfo.add(new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), null, false, false, B.getDirection()));
+			}
+			else {
+				redInfo.add(new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), S.getId(), S.getDoorSideDirectionPositive(), S.getDoorSideDirectionNegative(), B.getDirection()));
+			}
 		}
 		for (Block B : greenBlocks) {
 			S = B.getStation();
-			greenInfo.set(B.getId() - 1, new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), S.getId(), S.getDoorSideDirectionPositive(), S.getDoorSideDirectionNegative(), B.getDirection()));
+			if(S==null) {
+				greenInfo.add(new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), null, false, false, B.getDirection()));			
+			}
+			else {
+				greenInfo.add(new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), S.getId(), S.getDoorSideDirectionPositive(), S.getDoorSideDirectionNegative(), B.getDirection()));			
+			}
 		}
 	}
 

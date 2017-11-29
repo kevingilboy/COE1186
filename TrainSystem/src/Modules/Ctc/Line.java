@@ -21,9 +21,8 @@ public enum Line {
 	
 	public int yardIn;
 	public int yardOut;
-	public int yardOutNext;
 	
-	private Line(String s, int out, int in) {
+	private Line(String s, int in, int out) {
 		text = s;
 		yardIn = in;
 		yardOut = out;

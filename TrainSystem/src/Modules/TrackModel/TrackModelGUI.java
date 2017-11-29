@@ -92,6 +92,7 @@ public class TrackModelGUI implements ActionListener{
 		initialize();
 		frame_tmGUI.setVisible(true);
 		frame_tmGUI.setResizable(false);
+		initTracksOnStartup();
 	}
 
 	/**
@@ -710,6 +711,28 @@ public class TrackModelGUI implements ActionListener{
 				startTimer();
 			}
 	    }
+	}
+	
+	public void initTracksOnStartup() {
+		trackModel.setTrack("green", (new TrackCsvParser()).parse("Modules/TrackModel/Track Layout/GreenLineFinal.csv"));
+		trackSelected = trackModel.getTrack("green");
+		blockSelected = trackSelected.get(0);
+
+		greenLineDisplay = new DynamicDisplay(trackModel.getTrack("green"));
+		currentDisplay = greenLineDisplay;
+
+		comboBox_selectTrack.addItem("GREEN LINE");
+		comboBox_selectTrack.setSelectedItem("GREEN LINE");
+		
+		trackModel.setTrack("red", (new TrackCsvParser()).parse("Modules/TrackModel/Track Layout/RedLineFinal.csv"));
+		trackSelected = trackModel.getTrack("red");
+		blockSelected = trackSelected.get(0);
+
+		redLineDisplay = new DynamicDisplay(trackModel.getTrack("red"));
+		currentDisplay = redLineDisplay;
+
+		comboBox_selectTrack.addItem("RED LINE");
+		comboBox_selectTrack.setSelectedItem("RED LINE");
 	}
 
 	public void startTimer(){

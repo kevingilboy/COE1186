@@ -52,8 +52,8 @@ public class TrackController implements Module{
 	//Internal Functions
 	private void updateStates(){
 		for(int i=0; i<associatedBlocks.length; i++){
-			receiveBlockInfo(associatedLine, Integer.parseInt(associatedBlocks[i]));
-			lightsAndCrossings(Integer.parseInt(associatedBlocks[i]));
+			receiveBlockInfo(associatedLine, Integer.parseInt(associatedBlocks[i])-1);
+			lightsAndCrossings(Integer.parseInt(associatedBlocks[i])-1);
 			if(Integer.parseInt(associatedBlocks[i]) == tcgui.getSelectedBlockId()){
 				guiUpdate();
 			}

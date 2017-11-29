@@ -3,20 +3,12 @@ package Modules.Ctc;
 import Shared.Module;
 import Shared.SimTime;
 
-//Temporary import while TM is under development
-//Once project is complete, I will need the Block, Switch, Station, and Beacon classes kept locally
 import Modules.TrackModel.TrackCsvParser;
 import Modules.TrackModel.Block;
-import Modules.TrackModel.Light;
-import Modules.TrackModel.Crossing;
-import Modules.TrackModel.Station;
-import Modules.TrackModel.Switch;
-import Modules.TrackModel.Beacon;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public abstract class CtcCore implements Module,TimeControl {
@@ -55,7 +47,7 @@ public abstract class CtcCore implements Module,TimeControl {
 	
 	public void initializeBlocks() {
 		for(Line line : Line.values()) {
-			ArrayList<Block> blocks = trackParser.parse("Modules/Ctc/"+line.toString()+"LineFinal.csv");
+			ArrayList<Block> blocks = new TrackCsvParser().parse("Modules/Ctc/"+line.toString()+"LineFinal.csv");
 			line.blocksAL = blocks;
 			line.blocks = blocks.toArray(new Block[blocks.size()]);
 		}
@@ -67,8 +59,31 @@ public abstract class CtcCore implements Module,TimeControl {
 		}
 		currentTime = new SimTime(time);
 		
+		//Throughput
 		calculateThroughput();
-		//TODO update trains
+		
+		//Auto-dispatch from queue
+		for(Schedule schedule : ctc.schedules.values()) {
+			if(schedule.departureTime.equals(ctc.currentTime)) {
+				String name = schedule.name;
+				ctc.dispatchTrain(name);
+				gui.autoDispatchFromQueue(name);
+			}
+		}
+		
+		//Calculate authority
+		for(Train train : trains.values()) {
+			/*
+			ArrayList<Integer> authorityAl = train.calculateAuthorityPath();
+			
+			int[] authority = new int[authorityAl.size()];
+			for(int i=0; i<authorityAl.size(); i++) {
+				authority[i] = authorityAl.get(i);
+			}
+			
+			transmitCtcAuthority(train.name, authority);
+			*/
+		}
 		
 		gui.repaint();
 		
@@ -78,16 +93,16 @@ public abstract class CtcCore implements Module,TimeControl {
 	/*
 	 * SCHEDULES
 	 */
-	public Schedule getScheduleByName(String name){
+	protected Schedule getScheduleByName(String name){
 		Schedule schedule = schedules.get(name);
 		return schedule;
 	}
 	
-	public void addSchedule(String name, Schedule schedule) {
+	protected void addSchedule(String name, Schedule schedule) {
 		schedules.put(name, schedule);
 	}
 	
-	public Schedule removeScheduleByName(String name) {
+	protected Schedule removeScheduleByName(String name) {
 		Schedule removedSchedule = schedules.remove(name);
 		return removedSchedule;
 	}
@@ -95,23 +110,25 @@ public abstract class CtcCore implements Module,TimeControl {
 	/*
 	 * TRAINS
 	 */	
-	public Train getTrainByName(String name){
+	protected Train getTrainByName(String name){
 		Train train = trains.get(name);
 		return train;
 	}
 	
-	public void dispatchTrain(String name) {
+	protected void dispatchTrain(String name) {
 		Schedule schedule = removeScheduleByName(name);
 		
 		Train train = new Train(schedule);
 		trains.put(name, train);
 	}
 	
+	//TrainModel uses this method to add passengers to the train
 	public void addPassengers(String trainName, int number) {
 		Train train = getTrainByName(trainName);
 		train.passengers += number;
 	}
 	
+	//TrainModel uses this method to remove passengers from a train
 	public void removePassengers(String trainName, int number) {
 		Train train = getTrainByName(trainName);
 		train.passengers -= number;
@@ -120,10 +137,11 @@ public abstract class CtcCore implements Module,TimeControl {
 	/*
 	 * TICKETS
 	 */
+	//TrackModel uses this method to add ticket sales for throughput
 	public void addTicketSales(int tickets) {
 		runningTicketSales+=tickets;
-		calculateThroughput();
 	}
+	
 	protected void calculateThroughput() {
 		double timeElapsed = SimTime.hoursBetween(startTime, currentTime);
 		throughput = runningTicketSales/timeElapsed;
@@ -132,12 +150,10 @@ public abstract class CtcCore implements Module,TimeControl {
 	/*
 	 * TRANSMITTERS
 	 */
-	public void transmitSuggestedSpeed(String name, int speed) {
-		//UNCOMMENT once Nick adds this
-		//trackController.transmitSuggestedSpeed(name,speed);
+	protected void transmitSuggestedSpeed(String name, int speed) {
+		ctc.trackController.transmitSuggestedTrainSetpointSpeed(name,speed);
 	}
-	public void transmitCtcAuthority(String name, int auth) {
-		//UNCOMMENT once Nick adds this
-		//trackController.transmitAuthority(name,auth);
+	protected void transmitCtcAuthority(String name, int[] auth) {
+		ctc.trackController.transmitCtcAuthority(name,auth);
 	}
 }
