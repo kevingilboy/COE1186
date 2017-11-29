@@ -15,7 +15,7 @@ public class TrackController implements Module{
 	private TrackController tc;
 	private TrackControllerGUI tcgui;
 	private PLC tcplc;
-	private String initialPLCPath = "Modules/TrackController/plc.txt";
+	private String initialPLCPath = "Modules/TrackController/init.plc";
 	//Set internally per block
 	private String line;
 	private String section; //might not need this
