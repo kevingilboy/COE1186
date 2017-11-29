@@ -48,7 +48,7 @@ public class TrnController {
 	public final int DEPARTING = 2;
 	public final int ENROUTE = 3;
 	
-	public TrnController(String id, String ln, TrainController C, ArrayList<BlockInfo> map, TrainControllerGUI g, String[] s) {
+	public TrnController(String id, String ln, TrainController C, ArrayList<BlockInfo> map, TrainControllerGUI g, String[] s, double p, double i) {
 		trainID = id;
 		line = ln;
 		currentStation = null;
@@ -60,7 +60,7 @@ public class TrnController {
 			currentBlock = 152;	//yard_OUT
 		}
 		controller = C;
-		pi = new PIController(200, 300);
+		pi = new PIController(p, i);
 		driveMode = 0;
 		blockMode = 0;
 		beacon = 0;
