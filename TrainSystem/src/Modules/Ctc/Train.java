@@ -47,6 +47,9 @@ public class Train {
 			path = q.remove();
 			currBlockId = path.get(path.size()-1);
 			prevBlockId = path.get(path.size()-2);
+				
+			//TODO below is a temporary fix for the switch issue
+			if(currBlockId>line.yardOut ||currBlockId<0) continue;
 			
 			//-------------------
 			// If approaching the yard, ditch the path
@@ -77,9 +80,6 @@ public class Train {
 			if(currBlockId == stopBlockId) {
 				break;
 			}
-			
-			//TODO below is a temporary fix for the switch issue
-			if(currBlockId>line.yardOut ||currBlockId<0) continue;
 			
 			//-------------------
 			// Otherwise add adj blocks to the queue
