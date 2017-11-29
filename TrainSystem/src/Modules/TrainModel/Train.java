@@ -293,6 +293,7 @@ public class Train {
      	this.trainModelGUI.numPassengers.setText(Integer.toString(this.numPassengers));
      	this.trainModelGUI.authorityVal.setText(Double.toString(this.CTCAuthority));
      	this.trainModelGUI.ctcSpeedLabel.setText(Double.toString(this.CTCSpeed));
+     	
      	if(serviceBrake == true) {
      		this.trainModelGUI.serviceLabel.setText("ON");
         } else {
@@ -422,31 +423,30 @@ public class Train {
     
     // TODO: NOT SURE IF NECESSARY? Are failures only GUI features? Or do I actually have to tell other modules
     // that I am failing in some way?
-    public void activateEngineFailure() {
-    	this.engineFailureActive = true;
+    public void engineFailureStatus() {
+    	this.engineFailureActive = trainModelGUI.engineFailStatus();
     }
     
     // TODO: NOT SURE IF NECESSARY? Are failures only GUI features? Or do I actually have to tell other modules
     // that I am failing in some way?
-    public void activateSignalFailure() {
+    public void signalFailureStatus() {
     	// TODO
-    	this.setGPSAntenna(false);
-    	this.setMBOAntenna(false);
-    	this.signalFailureActive = true;
+    	this.signalFailureActive = trainModelGUI.signalFailStatus();
+    	if(this.signalFailureActive) {
+        	this.setGPSAntenna(false);
+        	this.setMBOAntenna(false);
+    	} else {
+    		this.setGPSAntenna(true);
+        	this.setMBOAntenna(true);
+    	}
+
+    	
     }
     
     // TODO: NOT SURE IF NECESSARY? Are failures only GUI features? Or do I actually have to tell other modules
     // that I am failing in some way?
-    public void activateBrakeFailure() {
-    	this.brakeFailureActive = true;
-    }
-    
-    // TODO: NOT SURE IF NECESSARY? Are failures only GUI features? Or do I actually have to tell other modules
-    // that I am failing in some way?
-    public void endFailureMode() {
-    	this.engineFailureActive = false;
-    	this.signalFailureActive = false;
-    	this.brakeFailureActive = false;
+    public void brakeFailureStatus() {
+    	this.brakeFailureActive = trainModelGUI.brakeFailStatus();
     }
     
     /**

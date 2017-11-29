@@ -124,7 +124,7 @@ public class TrainModelGUI extends JFrame {
 	public JLabel authorityVal = new JLabel();
 	public JLabel serviceLabel = new JLabel();
 	public JLabel emergencyLabel = new JLabel();
-	JLabel ctcSpeedLabel = new JLabel();
+	public JLabel ctcSpeedLabel = new JLabel();
 	
 	public JLabel lblLine = new JLabel();
 	public JLabel heightVal = new JLabel();
@@ -132,9 +132,9 @@ public class TrainModelGUI extends JFrame {
 	public JLabel lengthVal = new JLabel();
 	public JLabel widthVal = new JLabel();
 	public JLabel capacityVal = new JLabel();
-	JSpinner numCarsSpinner = new JSpinner();
-	JButton setCars = new JButton("Set");
-	JLabel lblCrew = new JLabel("Crew:");
+	private JSpinner numCarsSpinner = new JSpinner();
+	private JButton setCars = new JButton("Set");
+	private JLabel lblCrew = new JLabel("Crew:");
 	JLabel crewCountLabel = new JLabel();
 	public JLabel arrivalStatusLabel = new JLabel();
 	public JLabel currentSpeedLabel = new JLabel();
@@ -311,12 +311,15 @@ public class TrainModelGUI extends JFrame {
 			  setEnabled(true);
 			  ledImageLabel.setIcon(new ImageIcon(ledImage));
 			  engineFail = false;
+			  train.engineFailureStatus();
 			  engineFailCheckBox.setSelected(engineFail);
 			  ledImageLabel2.setIcon(new ImageIcon(ledImage));
 			  sigFail = false;
+			  train.signalFailureStatus();
 			  signalFailCheckBox.setSelected(sigFail);
 			  ledImageLabel3.setIcon(new ImageIcon(ledImage));
 			  brakeFail = false;
+			  train.brakeFailureStatus();
 			  brakeFailCheckBox.setSelected(brakeFail);
 			  repaint();
 		  }
@@ -329,11 +332,20 @@ public class TrainModelGUI extends JFrame {
 			public void actionPerformed(ActionEvent e)
 			{
 				setEnabled(true);
-				if(engineFail) { ledImageLabel.setIcon(new ImageIcon(ledImageRed)); }
+				if(engineFail) { 
+					train.engineFailureStatus();
+					ledImageLabel.setIcon(new ImageIcon(ledImageRed)); 
+				}
 				
-				if(sigFail)	{ ledImageLabel2.setIcon(new ImageIcon(ledImageRed)); }
+				if(sigFail)	{ 
+					train.signalFailureStatus();
+					ledImageLabel2.setIcon(new ImageIcon(ledImageRed)); 
+				}
 				
-				if(brakeFail) { ledImageLabel3.setIcon(new ImageIcon(ledImageRed)); }
+				if(brakeFail) { 
+					train.brakeFailureStatus();
+					ledImageLabel3.setIcon(new ImageIcon(ledImageRed)); 
+				}
 				repaint();
 			}
 		});
