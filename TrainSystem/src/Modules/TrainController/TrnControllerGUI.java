@@ -531,7 +531,7 @@ public class TrnControllerGUI {
 		speed = (s * SPEEDCONVERSION);
 	}
 	
-	public void setSpeedLimit(double d) {	//input is in m/s
+	public void setSpeedLimit(double s) {	//input is in m/s
 		speedLimit = (s * SPEEDCONVERSION);
 	}
 	
