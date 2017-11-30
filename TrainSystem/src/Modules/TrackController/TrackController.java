@@ -133,33 +133,46 @@ public class TrackController implements Module{
 		boolean canProceed = tcplc.canProceedPath(authority);
 		double distAuthority = 0;
 		if(canProceed && authority.length > 1){
+			//can proceed and authority >1
 			boolean canSwitch = tcplc.canSwitchPath(authority);
-			if(trackModel.getBlock(associatedLine, authority[0).getSwitch() != null){
-				if(canSwitch && authority.length > 2){
-					if(!(compareSwitchState(authority[0], authority[1]))){//switch state not correct
-						transmitSwitchState(associatedLine, authority[0], !trackModel.getBlock(line, blockId).getSwitch().getState());
-						distAuthority = calcAuthDist(authority);
-						trackModel.transmitCtcAuthority(trainName, distAuthority);
-					} else { //switch is in the right state
-						//transmitSwitchState(associatedLine, authority[1], trackModel.getBlock(line, blockId).getSwitch().getState());
-						distAuthority = calcAuthDist(authority);
+			//System.out.println(trackModel.getBlock(associatedLine, authority[0]).getSection().substring(0,4));
+			if(trackModel.getBlock(associatedLine, authority[0]).getSection().length() > 1){
+				if(trackModel.getBlock(associatedLine, authority[0]).getSection().substring(0,4).equals("YARD")){	
+					//if coming from the yard
+					if(canSwitch && authority.length > 2){
+						if(!(compareSwitchState(authority[0], authority[1]))){
+							//switch state not correct
+							transmitSwitchState(associatedLine, authority[0], !trackModel.getBlock(line, blockId).getSwitch().getState());
+							distAuthority = calcAuthDist(authority);
+							trackModel.transmitCtcAuthority(trainName, distAuthority);
+						} else { 
+							//switch is in the right state
+							//transmitSwitchState(associatedLine, authority[1], trackModel.getBlock(line, blockId).getSwitch().getState());
+							distAuthority = calcAuthDist(authority);
+							trackModel.transmitCtcAuthority(trainName, distAuthority);
+						}
+					} else { 
+						//has switch but cant switch state (correct or not)
 						trackModel.transmitCtcAuthority(trainName, distAuthority);
 					}
-				} else { //has switch but cant switch state (correct or not)
-					trackModel.transmitCtcAuthority(trainName, distAuthority);
 				}
-			} else if (trackModel.getBlock(associatedLine, authority[1]).getSwitch() != null){
+			} else if(trackModel.getBlock(associatedLine, authority[1]).getSwitch() != null){
+				//not yard and has switch
 				if(canSwitch && authority.length > 2){
-					if(!(compareSwitchState(authority[1], authority[2]))){//switch state not correct
+					//can switch and has >2 authority
+					if(!(compareSwitchState(authority[1], authority[2]))){
+						//switch state not correct
 						transmitSwitchState(associatedLine, authority[1], !trackModel.getBlock(line, blockId).getSwitch().getState());
 						distAuthority = calcAuthDist(authority);
 						trackModel.transmitCtcAuthority(trainName, distAuthority);
-					} else { //switch is in the right state
+					} else { 
+						//switch is in the right state
 						//transmitSwitchState(associatedLine, authority[1], trackModel.getBlock(line, blockId).getSwitch().getState());
 						distAuthority = calcAuthDist(authority);
 						trackModel.transmitCtcAuthority(trainName, distAuthority);
 					}
-				} else { //has switch but cant switch state (correct or not)
+				} else { 
+					//has switch but cant switch state (correct or not)
 					trackModel.transmitCtcAuthority(trainName, distAuthority);
 					/*if (trackModel.getBlock(associatedLine, authority[1]).getLight() != null){
 						if(trackModel.getBlock(associatedLine, authority[1]).getLight().getState() != false){
@@ -172,11 +185,13 @@ public class TrackController implements Module{
 						trackModel.transmitCtcAuthority(trainName, distAuthority);
 					}*/
 				}
-			} else { //nb doesnt have switch && can proceed
+			} else { 
+				//nb doesnt have switch && not coming from yard && can proceed
 				distAuthority = calcAuthDist(authority);
 				trackModel.transmitCtcAuthority(trainName, distAuthority);
 			}
-		} else { //cannot proceed or authority is only current block
+		} else { 
+			//cannot proceed or authority is only current block
 			trackModel.transmitCtcAuthority(trainName, distAuthority);
 		}
 	}
@@ -186,8 +201,10 @@ public class TrackController implements Module{
 	}
 	
 	public void transmitBlockMaintenance(String line, int blockId, boolean maintenance){
-		//check canMaintenance
-		trackModel.getBlock(line, blockId).setMaintenance(maintenance);
+		boolean canMaintenance = tcplc.canMaintenanceBlock(blockId);
+		if(canMaintenance){
+			trackModel.getBlock(line, blockId).setMaintenance(maintenance);
+		}
 	}
 	
 	public void transmitCtcSwitchState(String line, int blockId, boolean state){
@@ -216,12 +233,14 @@ public class TrackController implements Module{
 	//Helper Functions
 	private boolean compareSwitchState(int nb, int nnb){
 		if(trackModel.getBlock(associatedLine,nb).getSwitch().getState()){
+			//state = true
 			if(trackModel.getBlock(associatedLine,nb).getSwitch().getPortNormal() == nnb){
 				return true;
 			} else {
 				return false;
 			}
-		} else { //state = false
+		} else { 
+			//state = false
 			if(trackModel.getBlock(associatedLine,nb).getSwitch().getPortAlternate() == nnb){
 				return true;
 			} else {
