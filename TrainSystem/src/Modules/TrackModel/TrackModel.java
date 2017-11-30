@@ -1,6 +1,6 @@
 /**
  * Train Simulation System
- * Track Model sub-system class developed by Kevin Le
+ * TRACK MODEL sub-system class developed by Kevin Le
  */
 
 package Modules.TrackModel;
@@ -86,7 +86,6 @@ public class TrackModel implements Module{
 
 	// INTER-MODULE COMMUNICATION CLASSES
 	public void dispatchTrain(String line, String trainID, Position pos){
-		
 		if ((line.toLowerCase()).equals("red")){
 			redTrainIDs.add(trainID);
 			redPositions.add(pos);
@@ -99,11 +98,12 @@ public class TrackModel implements Module{
 	}
 
 	public void transmitCtcAuthority(String trainName, double authority){
-		// ...
+		trainModel.transmitCtcAuthority(trainName, authority);
 	}
 
 	public void transmitSuggestedTrainSetpointSpeed(String trainName, int speed){
-		// ...
+		//TODO filter speed to speed limit (I recommend questionmark colon)
+		trainModel.transmitSuggestSetpointSpeed(trainName, speed);
 	}
 
 	// Respond to the Simulator's regularly call to this modules's updateTime()
