@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.math.BigInteger;
 import java.util.zip.CRC32;
+import java.awt.EventQueue;
+import java.lang.reflect.InvocationTargetException;
 
 import Shared.Module;
 import Shared.SimTime;
@@ -19,14 +21,44 @@ public class Mbo implements Module {
 
 	public TrainController trainController;
 	public TrainModel trainModel;
+	private Mbo thisMbo;
+	private MboGui gui;
 	private SimTime time;
 	private TreeMap<String, TrainInfo> trains;
 	private CRC32 crc;
 
 	public Mbo(){
+		thisMbo = this;
 		this.trains = new TreeMap<String,TrainInfo>();
 		this.crc = new CRC32();
+		startGui();
+		while (true) {
+			try {
+				Thread.sleep(2000);
+			} catch (Exception e) {
+
+			}
+			this.updateTrainInfo();
+			gui.update();
+		}
 //		build_initTrains();
+	}
+
+	private void startGui() {
+		try {
+			EventQueue.invokeAndWait(new Runnable() {
+				public void run() {
+					try {
+						gui = new MboGui(thisMbo);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+		}
+		gui.setVisible(true);
 	}
 
 	public void testInitTrains() {
@@ -135,5 +167,9 @@ public class Mbo implements Module {
 	public boolean communicationEstablished() {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	public static void main(String[] args) {
+		new Mbo();
 	}
 }
