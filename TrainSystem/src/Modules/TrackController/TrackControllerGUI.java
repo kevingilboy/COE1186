@@ -34,7 +34,7 @@ import javax.swing.border.LineBorder;
 @SuppressWarnings("unchecked")
 public class TrackControllerGUI extends JFrame{
 	//Parent Class
-	private TrackController tc;
+	public TrackController tc;
 	//GUI Variables
 	private JPanel contentPane;
 	private JTextField textStatus;
@@ -56,10 +56,13 @@ public class TrackControllerGUI extends JFrame{
 		this.tc = tc;
 		this.line = tc.associatedLine;
 		this.blocks = tc.associatedBlocks;
+		for(int i=0; i<blocks.length; i++){
+			blocks[i] = Integer.toString((Integer.parseInt(blocks[i])+1));//offset for displaying
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TrackControllerGUI frame = new TrackControllerGUI(line, blocks);
+					TrackControllerGUI frame = new TrackControllerGUI(tc, line, blocks);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -71,7 +74,7 @@ public class TrackControllerGUI extends JFrame{
 	/**
 	 * Create the frame.
 	 */
-	public TrackControllerGUI(String line, String[] blocks) {
+	public TrackControllerGUI(TrackController tc, String line, String[] blocks) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Track Controller");
 		setBounds(100, 100, 870, 490);
@@ -160,7 +163,7 @@ public class TrackControllerGUI extends JFrame{
 		comboBlock.setBounds(384, 19, 104, 27);
 		trackSelectorPanel.add(comboBlock);
 		comboBlock.setModel(new DefaultComboBoxModel(blocks));
-		comboBlock.addActionListener(new UpdateInfo());
+		comboBlock.addActionListener(new UpdateInfo(tc));
 		
 		/*JComboBox comboSection = new JComboBox();
 		comboSection.setBounds(222, 19, 104, 27);
@@ -270,8 +273,12 @@ public class TrackControllerGUI extends JFrame{
 	}
 	
 	class UpdateInfo implements ActionListener {
+		private TrackController tc;
+		public UpdateInfo(TrackController tc){
+			this.tc = tc;
+		}
 	    public void actionPerformed(ActionEvent e) {
-			displayInfo();
+			displayInfo(tc);
 	    }
 	}
 
@@ -284,8 +291,8 @@ public class TrackControllerGUI extends JFrame{
 	    }
 	}
 	
-	public void displayInfo(){
-		int blockId = Integer.parseInt((String)comboBlock.getSelectedItem());
+	public void displayInfo(TrackController tc){
+		int blockId = Integer.parseInt((String)comboBlock.getSelectedItem())-1;//-1 offset from display
 		String line = textLine.getText();
 		System.out.println(line);
 		System.out.println(blockId);
@@ -317,6 +324,11 @@ public class TrackControllerGUI extends JFrame{
 				switchButtonBottom.setSelected(true);
 				switchButtonBottom.setText("Norm");
 			}
+		} else {
+			switchButtonTop.setSelected(false);
+			switchButtonTop.setText("-");
+			switchButtonBottom.setSelected(false);
+			switchButtonBottom.setText("-");
 		}
 		if (tc.trackModel.getBlock(line, blockId).getCrossing() != null){
 			if(tc.trackModel.getBlock(line, blockId).getCrossing().getState() == true){
