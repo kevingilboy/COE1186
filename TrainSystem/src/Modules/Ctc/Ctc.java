@@ -319,11 +319,11 @@ public class Ctc implements Module,TimeControl {
 		//-------------------
 		// Return the found path as the authority
 		//-------------------
-		for(int j=1; j<path.size(); j++) {
+		/*for(int j=1; j<path.size(); j++) {
 			int i = path.get(j);
 			System.out.print(train.line.blocks[i].getSection()+Integer.toString(i+1)+", ");
 		}
-		System.out.println("");
+		System.out.println("");*/
 		return path;
 	}
 	
@@ -444,6 +444,35 @@ public class Ctc implements Module,TimeControl {
 				//Remove stop if we reach it
 				if(train.currLocation == train.schedule.getNextStop()) {
 					train.schedule.removeStop(0);
+				}
+			}
+			else {
+				Switch currSwitch = train.line.blocks[currentLocation].getSwitch();
+				if(currSwitch!=null && currSwitch.getEdge()==Switch.EDGE_TYPE_HEAD) {
+					int norm = currSwitch.getPortNormal();
+					int alt = currSwitch.getPortAlternate();
+					Boolean normOccupied = getTrackCircuit(train.line,norm);
+					Boolean altOccupied = getTrackCircuit(train.line,alt);
+					if(!currOccupied && normOccupied) {
+						//Train has moved on
+						train.prevLocation = currentLocation;
+						train.currLocation = norm;
+						
+						//Remove stop if we reach it
+						if(train.currLocation == train.schedule.getNextStop()) {
+							train.schedule.removeStop(0);
+						}
+					}
+					else if(!currOccupied && altOccupied) {
+						//Train has moved on
+						train.prevLocation = currentLocation;
+						train.currLocation = alt;
+						
+						//Remove stop if we reach it
+						if(train.currLocation == train.schedule.getNextStop()) {
+							train.schedule.removeStop(0);
+						}
+					}
 				}
 			}
 			
