@@ -15,6 +15,7 @@ public class TrainInfo {
 	private double[] velocity;
 	private double speed;
 	private double authority;
+	private double safeBrakingDistance;
 	private LocalDateTime timeSignalTransmitted;
 
 	public TrainInfo(String name) {
@@ -61,6 +62,14 @@ public class TrainInfo {
 	public void setAuthority(double auth) {
 		authority = auth;
 		System.out.printf("Authority for %s is %f\n", name, authority);
+	}
+
+	public double getSafeBrakingDistance() {
+		return safeBrakingDistance;
+	}
+
+	public void setSafeBrakingDistance(double dist) {
+		safeBrakingDistance = dist;
 	}
 
 	private void calculateVelocity() {
