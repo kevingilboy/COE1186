@@ -527,6 +527,7 @@ public class TrainModelGUI extends JFrame {
 		  public void actionPerformed(ActionEvent e)
 		  {
 			  emerBrake = true;
+			  train.setEBrake(true);
 		  }
 		});
 		

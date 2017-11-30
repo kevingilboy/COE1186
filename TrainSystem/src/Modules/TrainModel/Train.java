@@ -242,15 +242,16 @@ public class Train {
     public void setValuesForDisplay() {
     	this.trainModelGUI.tempLabel.setText(Integer.toString(this.temperature) + DEGREE + "F");
          
-        if(this.trainModelGUI.serviceBrakeStatus()) {	// if the brakes were applied (button pressed)
-        	this.serviceBrake = true;
+        if(serviceBrake) {	// if the brakes were applied (button pressed)
+        	this.trainModelGUI.serviceLabel.setText("ON");
         } else {
-        	this.serviceBrake = false;
+        	this.trainModelGUI.serviceLabel.setText("OFF");
         }
-        if(this.trainModelGUI.emerBrakeStatus()) {	// if the e brake was pushed (button pressed)
-        	this.emerBrake = true;
+        
+        if(emerBrake) {	// if the e brake was pushed (button pressed)
+        	this.trainModelGUI.emergencyLabel.setText("ON");
         } else {
-        	this.emerBrake = false;
+        	this.trainModelGUI.emergencyLabel.setText("OFF");
         }
 
         this.trainCars = this.trainModelGUI.numCars();
