@@ -646,9 +646,7 @@ public class CtcGui {
 		btnCloseTrack = new JButton("Close for Maintenance");
 		btnCloseTrack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Block block = getSelectedBlock();
-				block.setMaintenance(true);
-				updateSelectedBlock();
+				//TODO close the block
 			}
 		});
 		btnCloseTrack.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -658,9 +656,7 @@ public class CtcGui {
 		btnRepairBlock = new JButton("Repair Block");
 		btnRepairBlock.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Block block = getSelectedBlock();
-				block.setMaintenance(false);
-				updateSelectedBlock();
+				//TODO fix the block
 			}
 		});
 		btnRepairBlock.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -717,8 +713,6 @@ public class CtcGui {
 		});
 		blockNumberSpinner.setBounds(631, 686, 70, 28);
 		frame.getContentPane().add(blockNumberSpinner);
-		
-		updateSelectedBlock();
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(SystemColor.inactiveCaption);
@@ -853,43 +847,48 @@ public class CtcGui {
 		Line line = (Line)blockLineComboBox.getSelectedItem();
 		int blockNumber = (int) blockNumberSpinner.getValue();
 		
-		Block block = line.blocks[blockNumber];
+		Block block = line.blocks[blockNumber + 1];
 
 		return block;
 	}
 	
-	private void updateSelectedBlock() {
+	void updateSelectedBlock() {
 		Block block = getSelectedBlock();
+		Line line = (Line)blockLineComboBox.getSelectedItem();
 		
-		if(block.STATUS_WORKING==true) {
-			//Track is open, check if switch
-			if(block.getSwitch() != null) {
-				selectedBlockToggle.setEnabled(true);
-				selectedBlockToggle.setSelected(block.getSwitch().getState());
+		Boolean trackModelOccupied = ctc.getTrackCircuit(line, block.getId());
+		Boolean broken = false;
+		if(trackModelOccupied) {
+			broken = true;
+			for(Train train : ctc.trains.values()) {
+				//If it is a train on the block, it is occupied and not broken
+				if(train.line == line && train.currLocation == block.getId()) {
+					broken = false;
+				}
+			}
+			
+			if(broken) {
+				setIndicator(selectedBlockStatusIndicator,"red");
+				setIndicator(selectedBlockOccupiedIndicator,"red");
 			}
 			else {
-				selectedBlockToggle.setEnabled(false);
+				setIndicator(selectedBlockStatusIndicator,"green");
+				setIndicator(selectedBlockOccupiedIndicator,"green");
 			}
 			
-			btnRepairBlock.setEnabled(false);
-			btnCloseTrack.setEnabled(true);
-			setIndicator(selectedBlockStatusIndicator,"green");
 		}
 		else {
-			//Track is closed, disable switch toggle regardless
-			selectedBlockToggle.setEnabled(false);
-			
-			btnRepairBlock.setEnabled(true);
-			btnCloseTrack.setEnabled(false);
-			setIndicator(selectedBlockStatusIndicator,"red");
-		}
-		
-		if(block.getOccupied() == true) {
-			setIndicator(selectedBlockOccupiedIndicator,"green");
-		}
-		else {
+			setIndicator(selectedBlockStatusIndicator,"grey");
 			setIndicator(selectedBlockOccupiedIndicator,"grey");
 		}
+		
+		if(block.getSwitch() != null) {
+			selectedBlockToggle.setEnabled(true);
+			selectedBlockToggle.setSelected(block.getSwitch().getState());
+		}
+		else {
+			selectedBlockToggle.setEnabled(false);
+		}		
 	}
 
 	private void setIndicator(JLabel label, String color) {
