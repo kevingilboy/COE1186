@@ -126,7 +126,6 @@ public class TrnController {
 				//Do nuthin'
 			}
 			else {
-				//calcAuth();
 				calcPowerOutput();
 				stationCheck();
 				if (lightCheck()) {
@@ -161,7 +160,6 @@ public class TrnController {
 				//Do nuthin'
 			}
 			else {
-				//calcAuth();
 				calcPowerOutput();
 				stationCheck();
 			}
