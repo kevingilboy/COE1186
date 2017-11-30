@@ -275,7 +275,7 @@ public class Train {
         }
      	
      	this.trainModelGUI.timeVal.setText(trnMdl.currentTime.toString());
-     	this.trainModelGUI.stationVal.setText("Pioneer");
+     	this.trainModelGUI.stationVal.setText(this.station);
      	
      	if(rightDoorIsOpen == true) {
         	this.trainModelGUI.rightDoorStatusLabel.setText("OPEN");
