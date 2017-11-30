@@ -141,27 +141,11 @@ public class TrackController implements Module{
 					//if coming from the yard
 					if(canSwitch && authority.length > 2){
 						//can switch and has >2 authority
-						if(trackModel.getBlock(line, authority[0]).getSwitch().getEdge()){
-							//HEAD -- should not end up here
-							/*
-							if(!(compareSwitchState(authority[0], authority[1]))){
-								//switch state not correct
-								transmitSwitchState(associatedLine, authority[0], !trackModel.getBlock(line, blockId).getSwitch().getState());
-								distAuthority = calcAuthDist(authority);
-								trackModel.transmitCtcAuthority(trainName, distAuthority);
-							} else { 
-								//switch is in the right state
-								//transmitSwitchState(associatedLine, authority[1], trackModel.getBlock(line, blockId).getSwitch().getState());
-								distAuthority = calcAuthDist(authority);
-								trackModel.transmitCtcAuthority(trainName, distAuthority);
-							}*/
-						} else {
-							//TAIL
-							//set state to normal
-							transmitSwitchState(associatedLine, authority[0], true);
-							distAuthority = calcAuthDist(authority);
-							trackModel.transmitCtcAuthority(trainName, distAuthority);
-						}					
+						//TAIL
+						//set state to normal
+						transmitSwitchState(associatedLine, authority[0], true);
+						distAuthority = calcAuthDist(authority);
+						trackModel.transmitCtcAuthority(trainName, distAuthority);				
 					} else { 
 						//has switch but cant switch state (correct or not)
 						trackModel.transmitCtcAuthority(trainName, distAuthority);
