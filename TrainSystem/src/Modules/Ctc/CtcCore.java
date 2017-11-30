@@ -80,7 +80,7 @@ public abstract class CtcCore implements Module,TimeControl {
 			
 		for(Train train : trains.values()) {
 			//Calculate authority
-			/*
+			
 			ArrayList<Integer> authorityAl = train.calculateAuthorityPath();
 			
 			TrackController wayside = ctc.getWaysideOfBlock(train.line,train.currLocation);
@@ -89,13 +89,13 @@ public abstract class CtcCore implements Module,TimeControl {
 			for(int i=0; i<authorityAl.size(); i++) {
 				authority[i] = authorityAl.get(i);
 			}
-			*/
 			
-			//transmitCtcAuthority(train.name, wayside, authority);
+			
+			transmitCtcAuthority(train.name, wayside, authority);
 			
 			//Calculate speed
 			train.calculateSuggestedSpeed();
-			//transmitSuggestedSpeed(train.name, wayside, train.suggestedSpeed);
+			transmitSuggestedSpeed(train.name, wayside, train.suggestedSpeed);
 		}
 		
 		gui.repaint();
