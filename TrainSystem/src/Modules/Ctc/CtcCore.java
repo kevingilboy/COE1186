@@ -305,7 +305,7 @@ public abstract class CtcCore implements Module,TimeControl {
 		visited[prevBlockId] = true;
 		
 		do {
-			System.out.println(currBlockId);
+			//System.out.println(currBlockId);
 			if(visited[currBlockId] == true) break;
 			//If block is occupied, treat the bidirectional stretch as occupied
 			Boolean currOccupied = ctc.getWaysideOfBlock(line, currBlockId).receiveBlockInfoForCtc(line.toString(), currBlockId).getOccupied();
