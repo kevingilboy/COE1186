@@ -294,8 +294,8 @@ public class Train {
         }
      	
      	this.trainModelGUI.numPassengers.setText(Integer.toString(this.numPassengers));
-     	this.trainModelGUI.authorityVal.setText(Double.toString(this.CTCAuthority));
-     	this.trainModelGUI.ctcSpeedLabel.setText(Double.toString(this.CTCSpeed));
+     	this.trainModelGUI.authorityVal.setText(Double.toString(truncateTo(this.CTCAuthority,2)));
+     	this.trainModelGUI.ctcSpeedLabel.setText(Double.toString(truncateTo(this.CTCSpeed*2.23694,2)));
      	
      	if(serviceBrake == true) {
      		this.trainModelGUI.serviceLabel.setText("ON");
