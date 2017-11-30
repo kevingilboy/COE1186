@@ -41,7 +41,7 @@ public class Train {
 	public final double TRAIN_MAX_ACCELERATION_E_BRAKE = -2.73; 	// m/s^2
 	public final double TRAIN_MAX_SPEED = 70; 	// km/h currently
 	public final double TRAIN_MAX_GRADE = 60;	// percent
-	public final int TRAIN_NUM_WHEELS = 8;
+	public final int TRAIN_NUM_WHEELS = 6;
 	public final double G = 9.8; 	// m/s^2
 	public final double FRICTION_COEFFICIENT = 0.16;
 	public final double AVE_PASSENGER_WEIGHT = 142.97; //in lbs
@@ -77,6 +77,7 @@ public class Train {
     private double trainWidth;
     private int trainCars;
     private int trainCapacity;
+    private int trainWheels;
     
     // Track Information
     private int prevBlock;
@@ -150,6 +151,7 @@ public class Train {
         this.trainLength = TRAIN_LENGTH * this.trainCars;
         this.trainWidth = TRAIN_WIDTH;
         this.crew = 1; // crew will always be one driver
+        this.trainWheels = this.trainCars * TRAIN_NUM_WHEELS;
         
         // Track Information
         this.currentBlock = this.trkMdl.getTrack(line).size()-1;
@@ -251,13 +253,14 @@ public class Train {
         }
 
         this.trainCars = this.trainModelGUI.numCars();
+        this.trainWheels = this.trainCars * TRAIN_NUM_WHEELS;
         this.trainModelGUI.crewCountLabel.setText(Integer.toString(crew));
         this.trainModelGUI.heightVal.setText(Double.toString(truncateTo(this.trainHeight, 2)));
         this.trainModelGUI.widthVal.setText(Double.toString(truncateTo(this.trainWidth, 2)));
         this.trainModelGUI.lengthVal.setText(Double.toString(truncateTo(this.trainLength, 2)));
         this.trainModelGUI.weightVal.setText(Double.toString(truncateTo(this.trainWeight, 2)));
         this.trainModelGUI.capacityVal.setText(Integer.toString(this.trainCapacity));
-        this.trainModelGUI.powerVal.setText(Double.toString(this.powerIn));
+        this.trainModelGUI.powerVal.setText(Double.toString(this.powerIn/1000));
         
         if(GPSAntenna == true) {
         	this.trainModelGUI.gpsAntennaStatusLabel.setText("ON");
@@ -336,9 +339,9 @@ public class Train {
     	
     	// this is ensuring that we never get a negative speed
     	if (this.currentSpeed == 0) {
-    		this.force = (this.powerIn * 1000)/1;
+    		this.force = (this.powerIn)/1;
     	} else {
-    		this.force = (this.powerIn * 1000)/this.currentSpeed;
+    		this.force = (this.powerIn)/this.currentSpeed;
     	}
     	setGrade();
     	// Step 2: Calculate the slope of the train's current angle (Degrees = Tan-1 (Slope Percent/100))
@@ -348,8 +351,8 @@ public class Train {
     	// Step 3: Calculate the forces acting on the train using the coefficient of friction
     	// and the train's weight in lbs converted to kg divided over the wheels (where the force is technically
     	// being applied times gravity (G)
-    	this.normalForce = (trainMass/12) * G * Math.sin(angle);	// divide by 12 for the number of wheels
-    	this.downwardForce = (trainMass/12) * G * Math.cos(angle);	// divide by 12 for the number of wheels
+    	this.normalForce = (trainMass/this.trainWheels) * G * Math.sin(angle);	// divide by 12 for the number of wheels
+    	this.downwardForce = (trainMass/this.trainWheels) * G * Math.cos(angle);	// divide by 12 for the number of wheels
 
     	// compute friction force
     	this.friction = (FRICTION_COEFFICIENT * this.downwardForce) + this.normalForce;
