@@ -60,7 +60,7 @@ public class TrackControllerGUI extends JFrame{
 		}
 
 		drawTrackControllerGui(tc, line, blocks);
-		// this.setVisible(true); UNCOMMENT BEFORE PUSHING THIS BRANCH
+		this.setVisible(true);
 	}
 	
 	/**
@@ -285,7 +285,7 @@ public class TrackControllerGUI extends JFrame{
 	}
 	
 	public void displayInfo(TrackController tc){
-		int blockId = getSelectedBlockId();//-1 offset from display
+		int blockId = getSelectedBlockId();
 		String line = textLine.getText();
 		
 		//update gui
