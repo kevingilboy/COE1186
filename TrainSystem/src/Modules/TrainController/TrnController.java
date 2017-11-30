@@ -96,6 +96,7 @@ public class TrnController {
 		speedLimit = currentBlockInfo.getSpeedLimit();
 		beacon = controller.receiveBeaconValue(trainID);
 		calcAuth();
+		
 		if (driveMode == 0) {		//if auto
 			setpointSpeed = controller.receiveSetpointSpeed(trainID);
 			if (inStation) {
