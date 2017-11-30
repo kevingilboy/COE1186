@@ -15,6 +15,8 @@ public class TrainInfo {
 	private SimTime timeSignalReceived;
 	private double[] previousPosition;
 	private SimTime timePreviousSignalReceived;
+	private int lastSignalSec;
+	private int signalSec;
 	private double[] velocity;
 	private double speed;
 	private double authority;
@@ -28,6 +30,8 @@ public class TrainInfo {
 		this.position[1] = 0.0;
 		this.velocity = new double[]{0,0};
 		timeSignalReceived = time;
+		timePreviousSignalReceived = time;
+		this.previousPosition = position;
 	}
 
 	public Object[] toDataArray() {
@@ -45,8 +49,20 @@ public class TrainInfo {
 	}
 
 	public void updatePosition(double[] pos, SimTime time) {
-		timeSignalReceived = time;
+		timePreviousSignalReceived.ms = timeSignalReceived.ms;
+		timePreviousSignalReceived.sec = timeSignalReceived.sec;
+		timePreviousSignalReceived.min = timeSignalReceived.min;
+		timePreviousSignalReceived.hr = timePreviousSignalReceived.hr;
+		lastSignalSec = signalSec;
+		signalSec = time.sec;
+		timeSignalReceived = time;/*
+		timeSignalReceived.ms = time.ms;
+		timeSignalReceived.sec = time.ms;
+		timeSignalReceived.min = time.ms;
+		timeSignalReceived.ms = time.ms;*/
 		position = pos;
+
+		calculateVelocity();
 		//System.out.printf("%s at %f:%f\n", name, pos[0], pos[1]);
 	}
 
@@ -90,13 +106,17 @@ public class TrainInfo {
 	}
 
 	private void calculateVelocity() {
-		//double elapsedHours = timePreviousSignalReceived.until(timeSignalReceived, ChronoUnit.MILLIS);
-		double elapsedHours = timeSignalReceived.hr - timePreviousSignalReceived.hr;
-		velocity[0] = (position[0] - previousPosition[0]) / elapsedHours;
-		velocity[1] = (position[1] - previousPosition[1]) / elapsedHours;
-		speed = Math.pow(Math.pow(velocity[0], 2) + Math.pow(velocity[1], 2), 0.5) * 100;
-
-
+		//double elapsedSec = timePreviousSignalReceived.until(timeSignalReceived, ChronoUnit.MILLIS);
+		int elapsedSec = signalSec - lastSignalSec;
+		// System.out.printf("time %d %d\n", signalSec, lastSignalSec);
+		if (elapsedSec == 0) {
+			velocity[0] = 0;
+			velocity[1] = 0;
+		} else {
+			velocity[0] = (position[0] - previousPosition[0]) / (double)elapsedSec;
+			velocity[1] = (position[1] - previousPosition[1]) / (double)elapsedSec;
+		}
+		speed = Math.pow(Math.pow(velocity[0], 2) + Math.pow(velocity[1], 2), 0.5);
 	}
 
 	private void updateLatestSignal() {
