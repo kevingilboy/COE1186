@@ -185,16 +185,29 @@ public class TrainModelGUI extends JFrame {
 	        g2.draw(verticalLine3);
 	        g2.draw(verticalLine4);
 	}
+	
+	/**
+	 * Initialize the look and feel
+	 */
+	public void setLookAndFeel(){
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		/**try {
+			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+			
 		}
 		catch (Throwable e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -240,6 +253,7 @@ public class TrainModelGUI extends JFrame {
 	 * Create the frame.
 	 */
 	public TrainModelGUI() {
+		setLookAndFeel();
 		initComponents();
 	}
 	
@@ -247,6 +261,7 @@ public class TrainModelGUI extends JFrame {
 	 * Create the frame using a train model object.
 	 */
 	public TrainModelGUI(Train newTrain) {
+		setLookAndFeel();
 		initComponents();
 		this.train = newTrain;
 		
@@ -257,6 +272,7 @@ public class TrainModelGUI extends JFrame {
 		setBounds(150, 150, 1050, 655);
 		setResizable(false);
 		contentPane = new JPanel();
+		contentPane.setBackground(Color.LIGHT_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -266,6 +282,8 @@ public class TrainModelGUI extends JFrame {
 		contentPane.add(menuBar);
 		
 		menuBar.add(mnFile);
+		btnEndFailure.setBackground(Color.WHITE);
+		btnEndFailure.setForeground(Color.BLACK);
 		
 		btnEndFailure.setFont(new Font("Dialog", Font.PLAIN, 18));
 		
@@ -290,6 +308,8 @@ public class TrainModelGUI extends JFrame {
 			  repaint();
 		  }
 		});
+		btnCauseFailure.setBackground(Color.WHITE);
+		btnCauseFailure.setForeground(Color.BLACK);
 		
 		btnCauseFailure.setFont(new Font("Dialog", Font.PLAIN, 18));
 		btnCauseFailure.setBounds(723, 268, 94, 29);
@@ -315,6 +335,7 @@ public class TrainModelGUI extends JFrame {
 				repaint();
 			}
 		});
+		engineFailCheckBox.setBackground(Color.LIGHT_GRAY);
 		
 		engineFailCheckBox.setBounds(910, 99, 52, 29);
 		contentPane.add(engineFailCheckBox);
@@ -323,6 +344,7 @@ public class TrainModelGUI extends JFrame {
 				engineFail = true;
 			}
 		});
+		signalFailCheckBox.setBackground(Color.LIGHT_GRAY);
 		
 		signalFailCheckBox.setBounds(910, 155, 52, 29);
 		contentPane.add(signalFailCheckBox);
@@ -331,6 +353,7 @@ public class TrainModelGUI extends JFrame {
 				sigFail = true;
 			}
 		});
+		brakeFailCheckBox.setBackground(Color.LIGHT_GRAY);
 		
 		brakeFailCheckBox.setBounds(910, 214, 52, 29);
 		contentPane.add(brakeFailCheckBox);
@@ -493,9 +516,9 @@ public class TrainModelGUI extends JFrame {
 		//tempLabel.setValue(70);
 		contentPane.add(tempLabel);
 		
-		btnEmergencyBrake.setBackground(Color.BLACK);
 		btnEmergencyBrake.setFont(new Font("Dialog", Font.PLAIN, 18));
-		btnEmergencyBrake.setForeground(Color.RED);
+		btnEmergencyBrake.setBackground(Color.WHITE);
+		btnEmergencyBrake.setForeground(Color.BLACK);
 		btnEmergencyBrake.setBounds(745, 371, 220, 100);
 		//stylizeButton(btnEmergencyBrake);
 		contentPane.add(btnEmergencyBrake);
@@ -665,6 +688,8 @@ public class TrainModelGUI extends JFrame {
 		
 		numCarsSpinner.setBounds(164, 213, 59, 20);
 		contentPane.add(numCarsSpinner);
+		setCars.setForeground(Color.BLACK);
+		setCars.setBackground(Color.WHITE);
 		setCars.setFont(new Font("Dialog", Font.PLAIN, 18));
 		
 		setCars.setBounds(234, 213, 69, 20);
