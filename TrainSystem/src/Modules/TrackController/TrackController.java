@@ -132,10 +132,10 @@ public class TrackController implements Module{
 	public void transmitCtcAuthority(String trainName, int[] authority){
 		boolean canProceed = tcplc.canProceedPath(authority);
 		double distAuthority = 0;
-		if(canProceed){
+		if(canProceed && authority.length > 1){
 			if(trackModel.getBlock(associatedLine, authority[1]).getSwitch() != null){
 				boolean canSwitch = tcplc.canSwitchPath(authority);
-				if(canSwitch){
+				if(canSwitch && authority.length > 2){
 					//if(trackModel.getBlock(associatedLine, authority[1]).getSwitch().getEdge()){ //switch head
 						if(!(compareSwitchState(authority[1], authority[2]))){//switch state not correct
 							transmitSwitchState(associatedLine, authority[1], !trackModel.getBlock(line, blockId).getSwitch().getState());
@@ -163,7 +163,7 @@ public class TrackController implements Module{
 				distAuthority = calcAuthDist(authority);
 				trackModel.transmitCtcAuthority(trainName, distAuthority);
 			}
-		} else { //cannot proceed
+		} else { //cannot proceed or authority is only current block
 			trackModel.transmitCtcAuthority(trainName, distAuthority);
 		}
 	}
