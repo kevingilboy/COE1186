@@ -182,7 +182,7 @@ public class TrackModelGUI implements ActionListener{
 		
 		// SELECTED BLOCK ID
 		label_blockID = new JLabel("   ");
-		label_blockID.setForeground(new Color(255, 255, 255));
+		label_blockID.setForeground(new Color(255, 255, 0));
 		label_blockID.setFont(new Font("Tw Cen MT", Font.BOLD, 33));
 		label_blockID.setHorizontalAlignment(SwingConstants.CENTER);
 		label_blockID.setBounds(462, 59, 97, 52);
