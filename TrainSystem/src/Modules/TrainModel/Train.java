@@ -260,7 +260,7 @@ public class Train {
         this.trainModelGUI.lengthVal.setText(Double.toString(truncateTo(this.trainLength, 2)));
         this.trainModelGUI.weightVal.setText(Double.toString(truncateTo(this.trainWeight, 2)));
         this.trainModelGUI.capacityVal.setText(Integer.toString(this.trainCapacity));
-        this.trainModelGUI.powerVal.setText(Double.toString(this.powerIn));
+        this.trainModelGUI.powerVal.setText(Double.toString(this.powerIn/1000));
         
         if(GPSAntenna == true) {
         	this.trainModelGUI.gpsAntennaStatusLabel.setText("ON");
@@ -339,9 +339,9 @@ public class Train {
     	
     	// this is ensuring that we never get a negative speed
     	if (this.currentSpeed == 0) {
-    		this.force = (this.powerIn * 1000)/1;
+    		this.force = (this.powerIn)/1;
     	} else {
-    		this.force = (this.powerIn * 1000)/this.currentSpeed;
+    		this.force = (this.powerIn)/this.currentSpeed;
     	}
     	setGrade();
     	// Step 2: Calculate the slope of the train's current angle (Degrees = Tan-1 (Slope Percent/100))
