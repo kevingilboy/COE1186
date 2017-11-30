@@ -146,10 +146,10 @@ public class TrainController implements Module {
 		for (Block B : greenBlocks) {
 			S = B.getStation();
 			if(S==null) {
-				greenInfo.add(new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), "", false, false, B.getDirection()));			
+				greenInfo.add(new BlockInfo((double)B.getSpeedLimit(), B.getUndergroundStatus(), "", false, false, B.getDirection()));			
 			}
 			else {
-				greenInfo.add(new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), S.getId(), S.getDoorSideDirectionPositive(), S.getDoorSideDirectionNegative(), B.getDirection()));			
+				greenInfo.add(new BlockInfo((double)B.getSpeedLimit(), B.getUndergroundStatus(), S.getId(), S.getDoorSideDirectionPositive(), S.getDoorSideDirectionNegative(), B.getDirection()));			
 			}
 		}
 	}
