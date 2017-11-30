@@ -40,7 +40,7 @@ public class TrackControllerGUI extends JFrame{
 	private JTextField textStatus;
 	private JTextField textLine;
 	private JTextField textOccupancy;
-	JComboBox comboBlock = new JComboBox();
+	JComboBox<String> comboBlock = new JComboBox<String>();
 	JRadioButton switchButtonTop = new JRadioButton();
 	JRadioButton switchButtonBottom = new JRadioButton();
 	JLabel labelCrossingGraphic = new JLabel();
@@ -50,12 +50,11 @@ public class TrackControllerGUI extends JFrame{
 	private String line;
 	private String section;
 	private String[] blocks;
-	private int selectedBlockId;
 	
 	public TrackControllerGUI(TrackController tc){
 		this.tc = tc;
 		this.line = tc.associatedLine;
-		this.blocks = tc.associatedBlocks;
+		this.blocks = Arrays.copyOf(tc.associatedBlocks, tc.associatedBlocks.length);
 		for(int i=0; i<blocks.length; i++){
 			blocks[i] = Integer.toString((Integer.parseInt(blocks[i])+1));//offset for displaying
 		}
@@ -161,9 +160,10 @@ public class TrackControllerGUI extends JFrame{
 		trackSelectorPanel.add(labelLine);
 		
 		comboBlock.setBounds(384, 19, 104, 27);
-		trackSelectorPanel.add(comboBlock);
-		comboBlock.setModel(new DefaultComboBoxModel(blocks));
+		comboBlock.setModel(new DefaultComboBoxModel<String>(blocks));
+		comboBlock.setSelectedIndex(0);
 		comboBlock.addActionListener(new UpdateInfo(tc));
+		trackSelectorPanel.add(comboBlock);
 		
 		/*JComboBox comboSection = new JComboBox();
 		comboSection.setBounds(222, 19, 104, 27);
@@ -270,6 +270,12 @@ public class TrackControllerGUI extends JFrame{
 		labelPineapple.setIcon(new ImageIcon("Modules/TrackController/imgs/pineapple_icon.png"));
 		labelPineapple.setBounds(364, 253, 138, 76);
 		trackInfoPanel.add(labelPineapple);
+	}	
+	
+	public String getTextLine() {
+		String line = textLine.getText();
+		System.out.println(line);
+		return line;
 	}
 	
 	class UpdateInfo implements ActionListener {
@@ -292,8 +298,8 @@ public class TrackControllerGUI extends JFrame{
 	}
 	
 	public void displayInfo(TrackController tc){
-		int blockId = Integer.parseInt((String)comboBlock.getSelectedItem())-1;//-1 offset from display
-		String line = textLine.getText();
+		int blockId = getSelectedBlockId();//-1 offset from display
+		String line = getTextLine();
 		System.out.println(line);
 		System.out.println(blockId);
 		//update gui
@@ -340,7 +346,9 @@ public class TrackControllerGUI extends JFrame{
 	}
 	
 	public int getSelectedBlockId(){
-		return selectedBlockId;
+		//int selectedBlockId = Integer.parseInt((String)comboBlock.getSelectedItem())-1;
+		//return selectedBlockId;
+		return 0;
 	}
 	
 }
