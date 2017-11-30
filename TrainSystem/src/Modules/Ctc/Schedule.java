@@ -76,6 +76,9 @@ public class Schedule {
 				currBlockId = path.get(path.size()-1);
 				prevBlockId = path.get(path.size()-2);
 				
+				//TODO below is a temporary fix for the switch issue
+				if(currBlockId>line.yardOut ||currBlockId<0) continue;
+				
 				//-------------------
 				// If approaching the yard, ditch the path
 				//-------------------
@@ -89,9 +92,6 @@ public class Schedule {
 				if(currBlockId == stop.blockId) {
 					break;
 				}
-				
-				//TODO below is a temporary fix for the switch issue
-				if(currBlockId>line.yardOut ||currBlockId<0) continue;
 				
 				//-------------------
 				// Otherwise add adj blocks to the queue
@@ -217,7 +217,7 @@ public class Schedule {
 		Object[][] grid = new Object[stops.size()][3];
 		for(int i=0;i<stops.size();i++) {
 			Stop stop = stops.get(i);
-			grid[i][0] = line.blocks[stop.blockId+1].toString();
+			grid[i][0] = line.blocks[stop.blockId].toString();
 			grid[i][1] = stop.timeToDwell.toString();
 		}
 		return grid;

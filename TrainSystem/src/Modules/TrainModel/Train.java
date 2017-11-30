@@ -160,7 +160,7 @@ public class Train {
         //this.prevBlock = 0;
         
         this.grade = 0;
-        this.currentSpeedLimit = 0;
+        //this.currentSpeedLimit = 0;
         this.GPSAntenna = true;
         this.MBOAntenna = false;
         
