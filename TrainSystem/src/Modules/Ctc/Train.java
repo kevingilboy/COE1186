@@ -126,18 +126,12 @@ public class Train {
 		} //while q not empty
 		
 		path.remove(0);
-		/*
-		for(int j=1; j<path.size(); j++) {
-			int i = path.get(j);
-			System.out.print(line.blocks[i].getSection()+Integer.toString(i+1)+", ");
-		}
-		System.out.println("");
-		*/
+
 		double dist = 0;
 		for(int blockId : path) {
 			dist += line.blocks[blockId].getLength();
 		}
-		this.authority = dist;
+		this.authority = dist * 0.000621371192237; //convert distance to miles for display
 		
 		//-------------------
 		// Return the found path as the authority

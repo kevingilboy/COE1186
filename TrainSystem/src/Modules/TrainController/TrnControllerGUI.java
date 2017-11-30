@@ -29,7 +29,6 @@ public class TrnControllerGUI {
 	
 	private JButton speedSet;
 	private JButton tempSet;
-	//private JButton eGUIButton;
 	
 	private JLabel speedValue;
 	private JLabel setpointValue;
@@ -62,12 +61,9 @@ public class TrnControllerGUI {
 	private boolean service;
 	private boolean emergency;
 	private boolean lights;
+	private int suggestedDoor;	//1 for right, -1 for left, 0 for neither
 	
 	private TrnController controller;
-	
-	//private EngineerGUI eGUI;
-	
-	//private PIController pi;
 	
 	public final double SPEEDCONVERSION = 2.23694;			//1 m/s = 2.23694 mph
 	public final double DISTANCECONVERSION = 0.000621371;	//1 m = 0.000621371 miles
@@ -76,7 +72,7 @@ public class TrnControllerGUI {
 		new TrnControllerGUI(new PIController(1,0), new TrnController(), "Train 1");
 	}*/
 	
-	public TrnControllerGUI(PIController p, TrnController c, String s) {
+	public TrnControllerGUI(TrnController c, String s) {
 		trainID = s;
 		driveMode = 0;
 		speed = 0;
@@ -89,10 +85,7 @@ public class TrnControllerGUI {
 		service = false;
 		emergency = false;
 		lights = false;
-		//pi = p;
 		controller = c;
-		//eGUI = new EngineerGUI(pi, trainID);
-		//new EngineerGUI(pi, trainID, controller);
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.setBounds(600, 100, 500, 380);
@@ -299,7 +292,7 @@ public class TrnControllerGUI {
 		rightOpen.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (driveMode == 1) {
+				if (driveMode == 1 && suggestedDoor == 1) {
 					rightOpen.setSelected(true);
 					rightClose.setSelected(false);
 					right = true;
@@ -335,7 +328,7 @@ public class TrnControllerGUI {
 		leftOpen.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (driveMode == 1) {
+				if (driveMode == 1 && suggestedDoor == -1) {
 					leftOpen.setSelected(true);
 					leftClose.setSelected(false);
 					left = true;
@@ -430,16 +423,6 @@ public class TrnControllerGUI {
 		modeManual.setBounds(404, 40, 77, 23);
 		modeManual.setSelected(false);
 		contentPane.add(modeManual);
-		
-		/*eGUIButton = new JButton("Engineer Mode");
-		eGUIButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				eGUI.setVisible(true);
-			}
-		});
-		eGUIButton.setBounds(168, 323, 117, 29);
-		contentPane.add(eGUIButton);*/
 		
 		speedSet.setEnabled(false);
 		tempSet.setEnabled(false);
@@ -578,6 +561,10 @@ public class TrnControllerGUI {
 	
 	public void setLights(boolean b) {
 		lights = b;
+	}
+	
+	public void setSuggestedDoor(int d) {
+		suggestedDoor = d;
 	}
 	
 	public void setVisible(boolean b) {

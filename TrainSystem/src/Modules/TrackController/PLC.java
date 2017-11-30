@@ -97,6 +97,7 @@ public class PLC {
 			context.set("ppb_occupied", tc.trackModel.getBlock(line, path[0]-2).getOccupied());
 			context.set("pb_occupied", tc.trackModel.getBlock(line, path[0]-1).getOccupied());
 			context.set("cb_occupied", tc.trackModel.getBlock(line, path[0]).getOccupied());
+			//TODO FROM KG - check if PATH[1] and [2] EXIST
 			context.set("nb_occupied", tc.trackModel.getBlock(line, path[1]).getOccupied());
 			context.set("nnb_occupied", tc.trackModel.getBlock(line, path[2]).getOccupied());
 			//Compound evaluation expression
