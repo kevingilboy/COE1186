@@ -82,8 +82,9 @@ public class MboGui extends JFrame implements ActionListener {
 						    "<html><center>Coordinates<br>Received<br>(mi, mi)</center></html>",
 							"<html><center>Calculated<br>Location</center></html>",
 							"<html><center>Calculated<br>Velocity<br>(mi/s)</center></html>",
-							"<html><center>Transmitted<br>Authority<br>(mi)</center></html>"};
-		System.out.println("About to try with " + mbo);
+							"<html><center>Transmitted<br>Authority<br>(mi)</center></html>",
+							"<html><center>Transmitted Safe Braking Distance<br>(mi)</center></html>"};
+		//System.out.println("About to try with " + mbo);
 		this.trainData = mbo.getTrainData();
 		trainInfoTableModel = new DefaultTableModel(trainData, trainInfoColumns) {
     		public boolean isCellEditable(int row, int column) {
@@ -295,7 +296,6 @@ public class MboGui extends JFrame implements ActionListener {
 	}
 
 	public void update() {
-		mbo.testInitTrains();
 		this.timeBox.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
 		this.trainData = mbo.getTrainData();
 		this.trainInfoTableModel.setDataVector(this.trainData, this.trainInfoColumns);
