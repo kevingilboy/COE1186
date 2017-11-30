@@ -204,8 +204,14 @@ public class Ctc implements Module,TimeControl {
 		Queue<ArrayList<Integer>> q = new LinkedList<ArrayList<Integer>>();
 		ArrayList<Integer> path = new ArrayList<Integer>();
 		int currBlockId = train.currLocation;
+		int selfLocation = currBlockId;
 		int prevBlockId = train.prevLocation;
 		int stopBlockId = train.schedule.getNextStop();
+		
+		//If no stops, send blank authority
+		if(stopBlockId == -1) {
+			return path;
+		}
 		
 		q.add(new ArrayList<Integer>(Arrays.asList(prevBlockId,currBlockId)));
 		
@@ -247,7 +253,7 @@ public class Ctc implements Module,TimeControl {
 			//-------------------
 			int nbId = getNextBlockId(train.line, currBlockId, prevBlockId);
 			if((nbId<=train.line.yardIn && nbId>=0) && train.line.blocks[nbId].getDirection()==0) {
-				if(bidirectionalStretchOccupied(train.line,nbId,currBlockId)) {
+				if(bidirectionalStretchOccupied(train.line,nbId,currBlockId,selfLocation)) {
 					continue;
 				}
 			}
@@ -271,13 +277,20 @@ public class Ctc implements Module,TimeControl {
 					int altId = swCurr.getPortAlternate();
 					
 					//Follow both paths if valid
-					if(train.line.blocks[normId].getDirection()>=train.line.blocks[currBlockId].getDirection()) {
-						ArrayList<Integer> newPath = cloneAndAppendAL(path,normId);
+					if(train.line.blocks[normId].getDirection() == train.line.blocks[altId].getDirection()) {
+						int indexToFollow = (currBlockId+1==normId) ? normId : altId;
+						ArrayList<Integer> newPath = cloneAndAppendAL(path,indexToFollow);
 						q.add(newPath);
 					}
-					if(train.line.blocks[altId].getDirection()>=train.line.blocks[currBlockId].getDirection()) {
-						ArrayList<Integer> newPath = cloneAndAppendAL(path,altId);
-						q.add(newPath);
+					else {
+						if(train.line.blocks[normId].getDirection()>=train.line.blocks[currBlockId].getDirection()) {
+							ArrayList<Integer> newPath = cloneAndAppendAL(path,normId);
+							q.add(newPath);
+						}
+						if(train.line.blocks[altId].getDirection()>=train.line.blocks[currBlockId].getDirection()) {
+							ArrayList<Integer> newPath = cloneAndAppendAL(path,altId);
+							q.add(newPath);
+						}
 					}
 				}
 				// CASE: Entering a tail from a non-switch, pursue the normal port 
@@ -306,6 +319,11 @@ public class Ctc implements Module,TimeControl {
 		//-------------------
 		// Return the found path as the authority
 		//-------------------
+		for(int j=1; j<path.size(); j++) {
+			int i = path.get(j);
+			System.out.print(train.line.blocks[i].getSection()+Integer.toString(i+1)+", ");
+		}
+		System.out.println("");
 		return path;
 	}
 	
@@ -313,7 +331,7 @@ public class Ctc implements Module,TimeControl {
 		train.suggestedSpeed = train.line.blocks[train.currLocation].getSpeedLimit();
 	}
 	
-	private boolean bidirectionalStretchOccupied(Line line, int currBlockId, int prevBlockId) {
+	private boolean bidirectionalStretchOccupied(Line line, int currBlockId, int prevBlockId, int selfLocation) {
 		//TODO test this method
 		Boolean[] visited = new Boolean[line.blocks.length];
 		for(int i=0; i<visited.length; i++) {
@@ -323,12 +341,10 @@ public class Ctc implements Module,TimeControl {
 		
 		do {
 
-			//System.out.println(currBlockId);
-
 			if(visited[currBlockId] == true) break;
 			//If block is occupied, treat the bidirectional stretch as occupied
 			Boolean currOccupied = getTrackCircuit(line, currBlockId);
-			if(currOccupied) {
+			if(currOccupied && currBlockId != selfLocation) {
 				return true;
 			}
 			
@@ -424,6 +440,11 @@ public class Ctc implements Module,TimeControl {
 				//Train has moved on
 				train.prevLocation = currentLocation;
 				train.currLocation = nextLocation;
+				
+				//Remove stop if we reach it
+				if(train.currLocation == train.schedule.getNextStop()) {
+					train.schedule.removeStop(0);
+				}
 			}
 			
 			//Get Wayside of current location
