@@ -125,7 +125,7 @@ public class TrackController implements Module{
 	}
 	
 	//CTC Functions
-	public void transmitSuggestedTrainSetpointSpeed(String trainName, int speed){
+	public void transmitSuggestedTrainSetpointSpeed(String trainName, double speed){
 		trackModel.transmitSuggestedTrainSetpointSpeed(trainName, speed);
 	}
 	// transmit as int[] authority = currentBlock, nextBlocks[]
@@ -136,7 +136,7 @@ public class TrackController implements Module{
 			if(trackModel.getBlock(associatedLine, authority[1]).getSwitch() != null){
 				boolean canSwitch = tcplc.canSwitchPath(authority);
 				if(canSwitch){
-					if(compareSwitchState(authority[0], authority[1])){//switch state not correct
+					if(compareSwitchState(authority[1], authority[2])){//switch state not correct
 						transmitSwitchState(associatedLine, authority[1], !trackModel.getBlock(line, blockId).getSwitch().getState());
 						distAuthority = calcAuthDist(authority);
 						trackModel.transmitCtcAuthority(trainName, distAuthority);
@@ -199,15 +199,16 @@ public class TrackController implements Module{
 	}
 	
 	//Helper Functions
-	private boolean compareSwitchState(int cb, int nb){
-		if(trackModel.getBlock(associatedLine,cb).getSwitch().getState()){
-			if(trackModel.getBlock(associatedLine,cb).getSwitch().getPortNormal() == nb){
+	private boolean compareSwitchState(int nb, int nnb){
+		Boolean state = trackModel.getBlock(associatedLine,nb).getSwitch().getState();
+		if(trackModel.getBlock(associatedLine,nb).getSwitch().getState()){
+			if(trackModel.getBlock(associatedLine,nb).getSwitch().getPortNormal() == nnb){
 				return true;
 			} else {
 				return false;
 			}
 		} else { //state = false
-			if(trackModel.getBlock(associatedLine,cb).getSwitch().getPortAlternate() == nb){
+			if(trackModel.getBlock(associatedLine,nb).getSwitch().getPortAlternate() == nnb){
 				return true;
 			} else {
 				return false;

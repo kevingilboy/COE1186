@@ -4,6 +4,7 @@ import Shared.Module;
 import Shared.SimTime;
 
 import Modules.TrackModel.TrackCsvParser;
+import Modules.TrackModel.TrackIterator;
 import Modules.TrackController.TrackController;
 import Modules.TrackModel.Block;
 
@@ -79,8 +80,17 @@ public abstract class CtcCore implements Module,TimeControl {
 		}
 			
 		for(Train train : trains.values()) {
-			//Calculate authority
+			int currentLocation = train.currLocation;
+			int nextLocation = (new TrackIterator(train.line.blocksAL, train.currLocation, train.prevLocation)).nextBlock();
+			Boolean currOccupied = ctc.getWaysideOfBlock(train.line, currentLocation).receiveBlockInfoForCtc(train.line.toString(), currentLocation).getOccupied();
+			Boolean nextOccupied = ctc.getWaysideOfBlock(train.line, nextLocation).receiveBlockInfoForCtc(train.line.toString(), nextLocation).getOccupied();
+			if(!currOccupied && nextOccupied) {
+				//Train has moved on
+				train.prevLocation = currentLocation;
+				train.currLocation = nextLocation;
+			}
 			
+			//Calculate authority
 			ArrayList<Integer> authorityAl = train.calculateAuthorityPath();
 			
 			TrackController wayside = ctc.getWaysideOfBlock(train.line,train.currLocation);
@@ -95,7 +105,8 @@ public abstract class CtcCore implements Module,TimeControl {
 			
 			//Calculate speed
 			train.calculateSuggestedSpeed();
-			transmitSuggestedSpeed(train.name, wayside, train.suggestedSpeed);
+			double suggestedSpeedInMps = train.suggestedSpeed / 2.23694;
+			transmitSuggestedSpeed(train.name, wayside, suggestedSpeedInMps);
 		}
 		
 		gui.repaint();
@@ -163,7 +174,7 @@ public abstract class CtcCore implements Module,TimeControl {
 	/*
 	 * TRANSMITTERS
 	 */
-	protected void transmitSuggestedSpeed(String name, TrackController wayside, int speed) {
+	protected void transmitSuggestedSpeed(String name, TrackController wayside, double speed) {
 		wayside.transmitSuggestedTrainSetpointSpeed(name,speed);
 	}
 	protected void transmitCtcAuthority(String name, TrackController wayside, int[] auth) {

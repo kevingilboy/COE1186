@@ -52,7 +52,7 @@ public class TrnController {
 		trainID = id;
 		line = ln;
 		currentStation = null;
-		ready = false;
+		ready = true;
 		if (line.equals("RED")) {
 			currentBlock = 76;	//yard
 		}
@@ -62,7 +62,7 @@ public class TrnController {
 		controller = C;
 		pi = new PIController(p, i);
 		driveMode = 0;
-		blockMode = 0;
+		blockMode = 1;
 		beacon = 0;
 		ctcAuth = 0;
 		mboAuth = 0;
@@ -96,6 +96,7 @@ public class TrnController {
 		speedLimit = currentBlockInfo.getSpeedLimit();
 		beacon = controller.receiveBeaconValue(trainID);
 		calcAuth();
+		
 		if (driveMode == 0) {		//if auto
 			setpointSpeed = controller.receiveSetpointSpeed(trainID);
 			if (inStation) {
@@ -290,11 +291,11 @@ public class TrnController {
 	}
 	
 	private void calcAuth() {
+		distToStation = ctcAuth;
 		if (blockMode == 1) {
 			overallAuth = ctcAuth;
 		}
 		else {
-			distToStation = ctcAuth;
 			overallAuth = Math.min(ctcAuth, mboAuth);
 		}
 	}
