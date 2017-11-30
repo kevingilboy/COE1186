@@ -30,7 +30,6 @@ public class MboGui extends JFrame implements ActionListener {
 	public MboGui(Mbo mbo) {
 		this.mbo = mbo;
         init();
-		MboGui.setVisible(true);
 	}
 
 	private void init() {

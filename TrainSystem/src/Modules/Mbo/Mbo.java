@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.math.BigInteger;
 import java.util.zip.CRC32;
 import java.awt.EventQueue;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.InvocationTargetException; 
 
 import Shared.Module;
 import Shared.SimTime;
@@ -35,7 +35,8 @@ public class Mbo implements Module {
 		this.crc = new CRC32();
 		initTrack();
 		startGui();
-		testInitTrains();
+		gui.setVisible(true);
+		/*testInitTrains();
 		while (true) {
 			try {
 				Thread.sleep(2000);
@@ -50,7 +51,7 @@ public class Mbo implements Module {
 			// red A3
 			trains.get("RED 2").updatePosition(red2, getBlockFromCoordinates(red2).getID());
 			gui.update();
-		}
+		}*/
 	}
 
 	private void initTrack() {
