@@ -58,22 +58,15 @@ public class TrackControllerGUI extends JFrame{
 		for(int i=0; i<blocks.length; i++){
 			blocks[i] = Integer.toString((Integer.parseInt(blocks[i])+1));//offset for displaying
 		}
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TrackControllerGUI frame = new TrackControllerGUI(tc, line, blocks);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+
+		drawTrackControllerGui(tc, line, blocks);
+		this.setVisible(true);
 	}
 	
 	/**
 	 * Create the frame.
 	 */
-	public TrackControllerGUI(TrackController tc, String line, String[] blocks) {
+	public void drawTrackControllerGui(TrackController tc, String line, String[] blocks) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Track Controller");
 		setBounds(100, 100, 870, 490);
@@ -272,12 +265,6 @@ public class TrackControllerGUI extends JFrame{
 		trackInfoPanel.add(labelPineapple);
 	}	
 	
-	public String getTextLine() {
-		String line = textLine.getText();
-		System.out.println(line);
-		return line;
-	}
-	
 	class UpdateInfo implements ActionListener {
 		private TrackController tc;
 		public UpdateInfo(TrackController tc){
@@ -299,9 +286,8 @@ public class TrackControllerGUI extends JFrame{
 	
 	public void displayInfo(TrackController tc){
 		int blockId = getSelectedBlockId();//-1 offset from display
-		String line = getTextLine();
-		System.out.println(line);
-		System.out.println(blockId);
+		String line = textLine.getText();
+		
 		//update gui
 		/*if(tc.trackModel.getBlock(line, blockId).getStatus() == ){
 			textStatus.setText();
@@ -346,9 +332,8 @@ public class TrackControllerGUI extends JFrame{
 	}
 	
 	public int getSelectedBlockId(){
-		//int selectedBlockId = Integer.parseInt((String)comboBlock.getSelectedItem())-1;
-		//return selectedBlockId;
-		return 0;
+		int selectedBlockId = Integer.parseInt((String)comboBlock.getSelectedItem())-1;
+		return selectedBlockId;
 	}
 	
 }
