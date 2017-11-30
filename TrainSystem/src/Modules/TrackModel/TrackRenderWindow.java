@@ -37,7 +37,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
     Color lineColor;
 
     // Information for rendering each active train on the track
-    int pingCounter = 0;
+    int[] pingCounters = new int[100];
     int activeTrains = 0;
     ArrayList<String> trainIDs = new ArrayList<String>();
     ArrayList<Position> positions = new ArrayList<Position>();
@@ -138,8 +138,8 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
             }
         }
 
-        // Draw yellow station outlines
-        g2d.setColor(Color.gray);
+        // Draw gray station outlines
+        g2d.setColor(Color.GRAY);
         for (int i = 0; i < blocks.size(); i++){
             if ((blocks.get(i).getStation()) != null){
                 double[] x_coords = blocks.get(i).getXCoordinates();
@@ -269,7 +269,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                         double[] x_coords = blocks.get(i).getXCoordinates();
                          double[] y_coords = blocks.get(i).getYCoordinates();
 
-                        g2d.setColor(lineColor);
+                        g2d.setColor(new Color(150, 0, 255));
                         for (int j = 0; j < x_coords.length-2; j++){
                             g2d.drawRect((int)x_coords[j]-1, (int)y_coords[j]-1, 4, 4);
                         }
@@ -285,7 +285,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                     double[] x_coords = blocks.get(i).getXCoordinates();
                     double[] y_coords = blocks.get(i).getYCoordinates();
 
-                    g2d.setColor(lineColor);
+                    g2d.setColor(new Color(150, 0, 255));
                     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                                         RenderingHints.VALUE_ANTIALIAS_ON);
                     for (int j = 0; j < x_coords.length-2; j++){
@@ -334,8 +334,8 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                 ((xy_coords.get(i))[0]).intValue() - 30, ((xy_coords.get(i))[1]).intValue() - 30);
      
             g2d.setColor(lineColor);
-            pingCounter++;
-            int radius = (pingCounter % 14);
+            (pingCounters[i])++;
+            int radius = (pingCounters[i] % 14);
             Shape circle = new Ellipse2D.Double(((xy_coords.get(i))[0]).intValue() - radius, 
                             ((xy_coords.get(i))[1]).intValue() - radius,
                             2.0*radius, 2.0*radius );

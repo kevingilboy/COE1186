@@ -94,12 +94,18 @@ public class PLC {
 		JexlContext context = new MapContext();
 		//Compute evaluation 3 times in order to assure vitality of signal
 		for(int iii = 0; iii < 3; iii++){ 
-			context.set("ppb_occupied", tc.trackModel.getBlock(line, path[0]-2).getOccupied());
-			context.set("pb_occupied", tc.trackModel.getBlock(line, path[0]-1).getOccupied());
-			context.set("cb_occupied", tc.trackModel.getBlock(line, path[0]).getOccupied());
-			//TODO FROM KG - check if PATH[1] and [2] EXIST
-			context.set("nb_occupied", tc.trackModel.getBlock(line, path[1]).getOccupied());
-			context.set("nnb_occupied", tc.trackModel.getBlock(line, path[2]).getOccupied());
+			//Don't need these for things using authority
+			//context.set("ppb_occupied", tc.trackModel.getBlock(line, path[0]-2).getOccupied());
+			//context.set("pb_occupied", tc.trackModel.getBlock(line, path[0]-1).getOccupied());
+			if(path.length>=1) {
+				context.set("cb_occupied", tc.trackModel.getBlock(line, path[0]).getOccupied());
+				if(path.length>=2) {
+					context.set("nb_occupied", tc.trackModel.getBlock(line, path[1]).getOccupied());
+					if(path.length>=3) {
+						context.set("nnb_occupied", tc.trackModel.getBlock(line, path[2]).getOccupied());
+					}
+				}
+			}
 			//Compound evaluation expression
 			result &= (boolean) e.evaluate(context); 
 		}
@@ -132,7 +138,18 @@ public class PLC {
 		Expression e = jexl.createExpression(logic);
 		JexlContext context = new MapContext();
 		//Compute evaluation 3 times in order to assure vitality of signal
-		for(int iii = 0; iii < 3; iii++){ 
+		for(int iii = 0; iii < 3; iii++){
+			/*if(tc.trackModel.getBlock(line, cb-2) != null){
+				context.set("ppb_occupied", tc.trackModel.getBlock(line, cb-2).getOccupied());
+			} else if(tc.trackModel.getBlock(line, cb-1) != null){
+				context.set("pb_occupied", tc.trackModel.getBlock(line, cb-1).getOccupied());
+			} else if(tc.trackModel.getBlock(line, cb) != null){
+				context.set("cb_occupied", tc.trackModel.getBlock(line, cb).getOccupied());
+			} else if(tc.trackModel.getBlock(line, cb+1) != null){
+				context.set("nb_occupied", tc.trackModel.getBlock(line, cb+1).getOccupied());
+			} else if(tc.trackModel.getBlock(line, cb+2) != null){
+				context.set("nnb_occupied", tc.trackModel.getBlock(line, cb+2).getOccupied());
+			}*/
 			context.set("ppb_occupied", tc.trackModel.getBlock(line, cb-2).getOccupied());
 			context.set("pb_occupied", tc.trackModel.getBlock(line, cb-1).getOccupied());
 			context.set("cb_occupied", tc.trackModel.getBlock(line, cb).getOccupied());
