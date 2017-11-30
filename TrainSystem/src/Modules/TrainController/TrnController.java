@@ -123,7 +123,8 @@ public class TrnController {
 				eBrakesOn();
 			}
 			else if (overallAuth == 0 && actualSpeed == 0) {
-				//Do nuthin'
+				sBrakesOff();
+				eBrakesOff();
 			}
 			else {
 				calcPowerOutput();
@@ -157,7 +158,7 @@ public class TrnController {
 				eBrakesOn();
 			}
 			else if (overallAuth == 0 && actualSpeed == 0) {
-				//Do nuthin'
+				sBrakesOff();
 			}
 			else {
 				calcPowerOutput();
@@ -319,6 +320,7 @@ public class TrnController {
 	private void stationCheck() {
 		if (actualSpeed == 0 && currentBlockInfo.getStationName() != "") {
 			inStation = true;
+			sBrakesOff();
 			announceArrived(currentBlockInfo.getStationName());
 			trainDirection = controller.receiveTrainDirection(trainID);
 			if (driveMode == 0) {
