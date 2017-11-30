@@ -8,6 +8,7 @@ public class TrainInfo {
 	
 	private String name;
 	private double[] position;
+	private String block;
 	private LocalDateTime timeSignalReceived;
 	private double[] previousPosition;
 	private LocalDateTime timePreviousSignalReceived;
@@ -30,6 +31,7 @@ public class TrainInfo {
 		output[0] = name;
 		output[1] = timeSignalReceived;
 		output[2] = Arrays.toString(position);
+		output[3] = block;
 		output[4] = speed;
 		output[5] = authority;
 		return output;
@@ -38,6 +40,13 @@ public class TrainInfo {
 	public void updatePosition(double[] pos) {
 		timeSignalReceived = LocalDateTime.now();
 		position = pos;
+		// todo do more
+	}
+
+	public void updatePosition(double[] pos, String block) {
+		timeSignalReceived = LocalDateTime.now();
+		position = pos;
+		this.block = block;
 		// todo do more
 	}
 

@@ -37,4 +37,19 @@ public class MboBlock {
 			this.x_coordinates = x_coordinates;
 			this.y_coordinates = y_coordinates;
 	}
+
+	public boolean onBlock(double x, double y) {
+		boolean result = false;
+		for (int i = 0; i < x_coordinates.length; i++) {
+			if (x == x_coordinates[i] && y == y_coordinates[i]) {
+				result = true;
+				break;
+			}
+		}
+		return result;
+	}
+
+	public String getID() {
+		return String.format("%s %s%d", line, section, id);
+	}
 }

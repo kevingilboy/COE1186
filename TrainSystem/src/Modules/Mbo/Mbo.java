@@ -44,9 +44,11 @@ public class Mbo implements Module {
 			}
 			this.updateTrainInfo();
 			// red A1
-			trains.get("RED 1").updatePosition(new double[]{227.416376,119.890932});
+			double[] red1 = {227.416376,119.890932};
+			double[] red2 = {251.654612,106.711009};
+ 			trains.get("RED 1").updatePosition(red1, getBlockFromCoordinates(red1));
 			// red A3
-			trains.get("RED 2").updatePosition(new double[]{251.654612,106.711009});
+			trains.get("RED 2").updatePosition(red2, getBlockFromCoordinates(red2));
 			gui.update();
 		}
 //		build_initTrains();
@@ -54,7 +56,7 @@ public class Mbo implements Module {
 
 	private void initTrack() {
 		redLine = new TrackCsvParser().parse("Modules\\Mbo\\RedLineFinal.csv");
-		redLine = new TrackCsvParser().parse("Modules\\Mbo\\GreenLineFinal.csv");
+		greenLine = new TrackCsvParser().parse("Modules\\Mbo\\GreenLineFinal.csv");
 	}
 
 	private void startGui() {
@@ -133,9 +135,24 @@ public class Mbo implements Module {
 		// update train's position
 		//double x = Double.parseDouble(vals[1]);
 		//double y = Double.parseDouble(vals[2]);
-		trains.get(train).updatePosition(pos);
+		String blockId = getBlockFromCoordinates(pos);
+		trains.get(train).updatePosition(pos, blockId);
 
 		return true;
+	}
+
+	private String getBlockFromCoordinates(double[] pos) {
+		for (MboBlock block : redLine) {
+			if (block.onBlock(pos[0], pos[1])) {
+				return block.getID();
+			}
+		}
+		for (MboBlock block : greenLine) {
+			if (block.onBlock(pos[0], pos[1])) {
+				return block.getID();
+			}
+		}
+		return null;
 	}
 
 	private void transmitSafeBrakingDistance(String trainID, double distance) {
