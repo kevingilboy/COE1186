@@ -94,12 +94,19 @@ public class PLC {
 		JexlContext context = new MapContext();
 		//Compute evaluation 3 times in order to assure vitality of signal
 		for(int iii = 0; iii < 3; iii++){ 
+			//TODO - from KG
 			context.set("ppb_occupied", tc.trackModel.getBlock(line, path[0]-2).getOccupied());
 			context.set("pb_occupied", tc.trackModel.getBlock(line, path[0]-1).getOccupied());
-			context.set("cb_occupied", tc.trackModel.getBlock(line, path[0]).getOccupied());
-			//TODO FROM KG - check if PATH[1] and [2] EXIST
-			context.set("nb_occupied", tc.trackModel.getBlock(line, path[1]).getOccupied());
-			context.set("nnb_occupied", tc.trackModel.getBlock(line, path[2]).getOccupied());
+			
+			if(path.length>1) {
+				context.set("cb_occupied", tc.trackModel.getBlock(line, path[0]).getOccupied());
+				if(path.length>=2) {
+					context.set("nb_occupied", tc.trackModel.getBlock(line, path[1]).getOccupied());
+					if(path.length>=3) {
+						context.set("nnb_occupied", tc.trackModel.getBlock(line, path[2]).getOccupied());
+					}
+				}
+			}
 			//Compound evaluation expression
 			result &= (boolean) e.evaluate(context); 
 		}
