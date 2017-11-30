@@ -33,7 +33,7 @@ public class PIController {
 	private double setpointRange;		//set to zero to do nothing
 	
 	/*public static void main(String[] args) {
-		new PIController(100, 2);
+		new PIController(2000, 0.8071);
 	}*/
 	
 	
