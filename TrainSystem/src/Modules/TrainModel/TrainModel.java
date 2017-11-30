@@ -38,7 +38,6 @@ public class TrainModel implements Module{
 	 * built in java hash of the Train ID strings
 	 */
 	public TrainModel(){
-		// while(trackModel == null) {}
 		trainList = new HashMap<Integer, Train>();
 		// Train train = new Train(line, "Train 1", this);
 	}
@@ -77,7 +76,8 @@ public class TrainModel implements Module{
 		Train newTrain = new Train(line, trainID, this, this.trackModel);
 		instantiateGUI(newTrain);
 		trainList.put(trainID.hashCode(), newTrain);
-		trackModel.dispatchTrain(line, trainID, this.getTrain(trainID).getPosition());
+		trackModel.dispatchTrain(line, trainID, newTrain.getPosition());
+		System.out.println("(TrainModel) Train dispatched: " + trainID);
 	}
 	
 	/**
