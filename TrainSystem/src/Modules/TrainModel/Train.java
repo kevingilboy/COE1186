@@ -622,7 +622,7 @@ public class Train {
      */
     public void setEBrake(boolean ebrake) {
     	this.emerBrake = ebrake;
-    	trnMdl.setPassengerEmergencyBrake(this.trainID, ebrake);
+    	//trnMdl.setPassengerEmergencyBrake(this.trainID, ebrake);
     }
     
     /**
