@@ -490,8 +490,8 @@ public class Train {
      */
     public double[] getCoordinates() {
     	double []coords = this.position.getCoordinates();
-    	coords[0] = this.currentX;
-    	coords[1] = this.currentY;
+    	this.currentX = coords[0];
+    	this.currentY = coords[1];
     	return coords;
     }
     
