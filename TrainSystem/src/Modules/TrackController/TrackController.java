@@ -158,7 +158,7 @@ public class TrackController implements Module{
 						} else {
 							//TAIL
 							//set state to normal
-							transmitSwitchState(associatedLine, authority[0], trackModel.getBlock(line, blockId).getSwitch().setState(true));
+							transmitSwitchState(associatedLine, authority[0], true);
 							distAuthority = calcAuthDist(authority);
 							trackModel.transmitCtcAuthority(trainName, distAuthority);
 						}					
@@ -187,7 +187,7 @@ public class TrackController implements Module{
 					} else {
 						//TAIL
 						//set state to normal
-						transmitSwitchState(associatedLine, authority[1], trackModel.getBlock(line, blockId).getSwitch().setState(true));
+						transmitSwitchState(associatedLine, authority[1], true);
 						distAuthority = calcAuthDist(authority);
 						trackModel.transmitCtcAuthority(trainName, distAuthority);
 					}
