@@ -198,7 +198,7 @@ public class TrainModel implements Module{
 	 * @param setpoint
 	 * @return
 	 */
-	public double suggestSetpointSpeed(String trainID, double setpoint) {
+	public double transmitSuggestSetpointSpeed(String trainID, double setpoint) {
 		this.getTrain(trainID).setSetpoint(setpoint);
 		return setpoint;
 	}
