@@ -86,7 +86,6 @@ public class TrackModel implements Module{
 
 	// INTER-MODULE COMMUNICATION CLASSES
 	public void dispatchTrain(String line, String trainID, Position pos){
-		
 		if ((line.toLowerCase()).equals("red")){
 			redTrainIDs.add(trainID);
 			redPositions.add(pos);
