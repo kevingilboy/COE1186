@@ -366,12 +366,12 @@ public class Train {
     	
     	// decelerates the train based on the values given in the spec sheet for the emergency brake
     	if (emerBrake) {
-    		this.trainAcceleration = (TRAIN_MAX_ACCELERATION_E_BRAKE*1);
+    		this.trainAcceleration += (TRAIN_MAX_ACCELERATION_E_BRAKE*1);
     	}
     	
     	// decelerates the train based onthe values given in the spec sheet for the service brake
     	if(serviceBrake) {
-    		this.trainAcceleration = (TRAIN_MAX_ACCELERATION_SERVICE_BRAKE*1);
+    		this.trainAcceleration += (TRAIN_MAX_ACCELERATION_SERVICE_BRAKE*1);
     	}
     	
     	// Step 5: Calculate the final speed by adding the old speed with the acceleration x the time elapsed (one second)
