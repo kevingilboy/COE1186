@@ -32,6 +32,7 @@ public class Mbo implements Module {
 		this.trains = new TreeMap<String,TrainInfo>();
 		this.crc = new CRC32();
 		startGui();
+		testInitTrains();
 		while (true) {
 			try {
 				Thread.sleep(2000);
@@ -39,6 +40,8 @@ public class Mbo implements Module {
 
 			}
 			this.updateTrainInfo();
+			trains.get("RED 1").updatePosition(new double[]{3,4});
+			trains.get("GREEN 2").updatePosition(new double[]{-6,-8});
 			gui.update();
 		}
 //		build_initTrains();
@@ -63,7 +66,6 @@ public class Mbo implements Module {
 
 	public void testInitTrains() {
 		trains.put("RED 1", new TrainInfo("RED 1"));
-		trains.put("RED 2", new TrainInfo("RED 2"));
 		trains.put("GREEN 1", new TrainInfo("GREEN 1"));
 		trains.put("GREEN 2", new TrainInfo("GREEN 2"));
 	}
@@ -152,6 +154,7 @@ public class Mbo implements Module {
 			double newDist = Math.pow((Math.pow(dispX, 2) + Math.pow(dispY, 2)), 0.5);
 			if (newDist < minDistance) minDistance = newDist;
 		}
+		System.out.printf("Authority for %s: %f\n", trainID, minDistance);
 		return minDistance;
 	}
 

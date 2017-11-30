@@ -1,6 +1,7 @@
 package Modules.Mbo;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 
 public class TrainInfo {
@@ -20,14 +21,17 @@ public class TrainInfo {
 		this.position = new double[2];
 		this.position[0] = 0.0;
 		this.position[1] = 0.0;
+		this.velocity = new double[]{0,0};
 		timeSignalReceived = LocalDateTime.now();
 	}
 
 	public Object[] toDataArray() {
-		Object[] output = new Object[3];
+		Object[] output = new Object[6];
 		output[0] = name;
 		output[1] = timeSignalReceived;
 		output[2] = Arrays.toString(position);
+		output[4] = speed;
+		output[5] = authority;
 		return output;
 	}
 
@@ -47,9 +51,15 @@ public class TrainInfo {
 
 	public void setAuthority(double auth) {
 		authority = auth;
+		System.out.printf("Authority for %s is %f\n", name, authority);
 	}
 
 	private void calculateVelocity() {
+		double elapsedHours = timePreviousSignalReceived.until(timeSignalReceived, ChronoUnit.MILLIS);
+		velocity[0] = (position[0] - previousPosition[0]) / elapsedHours;
+		velocity[1] = (position[1] - previousPosition[1]) / elapsedHours;
+		speed = Math.pow(Math.pow(velocity[0], 2) + Math.pow(velocity[1], 2), 0.5) * 100;
+
 
 	}
 
