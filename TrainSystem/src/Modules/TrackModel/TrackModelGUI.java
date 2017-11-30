@@ -442,6 +442,12 @@ public class TrackModelGUI implements ActionListener{
 		icon_switch.setBounds(673, 251, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_switch);
 
+		// HSS LOGO
+		JLabel icon_logo = new JLabel("");
+		icon_logo.setIcon(new ImageIcon("Modules\\TrackModel\\Images\\HSS_TrainSim_Logo.png"));
+		icon_logo.setBounds(1080 - 110, 560 - 130, 100, 100);
+		frame_tmGUI.getContentPane().add(icon_logo);
+
 		// STATION INFORMATION
 		JLabel label_station = new JLabel("STATION");
 		label_station.setHorizontalAlignment(SwingConstants.LEFT);

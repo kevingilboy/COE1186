@@ -63,6 +63,7 @@ public class TrnControllerGUI {
 	private boolean emergency;
 	private boolean lights;
 	private int suggestedDoor;	//1 for right, -1 for left, 0 for neither
+	private double speedLimit;
 	
 	private TrnController controller;
 	
@@ -139,6 +140,9 @@ public class TrnControllerGUI {
 					try {
 						double d;
 						d = Double.parseDouble(newSpeedField.getText());
+						if (d > speedLimit) {
+							d = speedLimit;
+						}
 						setpointValue.setText(newSpeedField.getText() + " mi/hr");
 						newSpeedField.setText("");
 						setpoint = d;
@@ -562,6 +566,10 @@ public class TrnControllerGUI {
 	
 	public void setSpeed(double s) {
 		speed = (s * SPEEDCONVERSION);
+	}
+	
+	public void setSpeedLimit(double s) {	//input is in m/s
+		speedLimit = (s * SPEEDCONVERSION);
 	}
 	
 	public void setSetpoint(double s) {

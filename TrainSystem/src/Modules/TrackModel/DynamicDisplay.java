@@ -89,13 +89,6 @@ public class DynamicDisplay{
         }
 
         public void mouseReleased(MouseEvent e) {
-
-        	// TESTING ONLY:
-        	// Dispatch a train on by clicking on
-        	// the track window
-        	Position pos = new Position(blocks);
-        	dispatchTrain("train 1", pos);
-        	 
             mouseDownCompCoords = null;
         }
 

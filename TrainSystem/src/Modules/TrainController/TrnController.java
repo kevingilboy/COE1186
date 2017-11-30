@@ -93,7 +93,9 @@ public class TrnController {
 		passEBrakes = controller.receivePassengerEmergencyBrake(trainID);
 		currentBlock = controller.receiveTrainPosition(trainID);
 		currentBlockInfo = mapInfo.get(currentBlock);
-		speedLimit = currentBlockInfo.getSpeedLimit();
+		speedLimit = (double)currentBlockInfo.getSpeedLimit();
+		controlGUI.setSpeedLimit(speedLimit);
+		//System.out.println(speedLimit + "");
 		beacon = controller.receiveBeaconValue(trainID);
 		calcAuth();
 		
@@ -123,7 +125,8 @@ public class TrnController {
 				eBrakesOn();
 			}
 			else if (overallAuth == 0 && actualSpeed == 0) {
-				//Do nuthin'
+				sBrakesOff();
+				eBrakesOff();
 			}
 			else {
 				calcPowerOutput();
@@ -157,7 +160,7 @@ public class TrnController {
 				eBrakesOn();
 			}
 			else if (overallAuth == 0 && actualSpeed == 0) {
-				//Do nuthin'
+				sBrakesOff();
 			}
 			else {
 				calcPowerOutput();
@@ -260,6 +263,9 @@ public class TrnController {
 	}
 	
 	public void setSetpointSpeed(double speed) {
+		if (speed > speedLimit) {
+			speed = speedLimit;
+		}
 		setpointSpeed = speed;
 	}
 	
@@ -319,6 +325,7 @@ public class TrnController {
 	private void stationCheck() {
 		if (actualSpeed == 0 && currentBlockInfo.getStationName() != "") {
 			inStation = true;
+			sBrakesOff();
 			announceArrived(currentBlockInfo.getStationName());
 			trainDirection = controller.receiveTrainDirection(trainID);
 			if (driveMode == 0) {
