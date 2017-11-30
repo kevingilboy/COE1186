@@ -11,11 +11,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
-import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
+import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.Font;
 
 public class TrainControllerGUI {
 
@@ -23,7 +26,17 @@ public class TrainControllerGUI {
 	private int height;
 	private int logoHeight;
 	
+	private double p;
+	private double i;
+	
+	private boolean ready;
+	
 	private JFrame frame;
+	
+	private JTextField pField;
+	private JTextField iField;
+	
+	private JButton confirmButton;
 
 	private JPanel contentPane;
 	
@@ -43,6 +56,9 @@ public class TrainControllerGUI {
 	 * Create the frame.
 	 */
 	public TrainControllerGUI() {
+		p = 200;
+		i = 300;
+		ready = true;
 		guiList = new ArrayList<TrnControllerGUI>();
 		buttonList = new ArrayList<JButton>();
 		yCount = 80;
@@ -62,15 +78,74 @@ public class TrainControllerGUI {
 		titleLabel.setBounds(118, 17, 200, 42);
 		contentPane.add(titleLabel);
 		
+		JLabel dispatchLabel = new JLabel("Dispatch Values");
+		dispatchLabel.setBounds(241, 76, 109, 16);
+		contentPane.add(dispatchLabel);
+		
+		pField = new JTextField();			//p
+		pField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				ready = false;
+				confirmButton.setEnabled(true);
+			}
+		});
+		pField.setBounds(241, 106, 130, 26);
+		contentPane.add(pField);
+		pField.setColumns(10);
+		pField.setText(p + "");
+		
+		iField = new JTextField();			//i
+		iField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				ready = false;
+				confirmButton.setEnabled(true);
+			}
+		});
+		iField.setBounds(241, 154, 130, 26);
+		contentPane.add(iField);
+		iField.setColumns(10);
+		iField.setText(i + "");
+		
+		JLabel pLabel = new JLabel("P");
+		pLabel.setBounds(229, 111, 16, 16);
+		contentPane.add(pLabel);
+		
+		JLabel iLabel = new JLabel("I");
+		iLabel.setBounds(229, 159, 16, 16);
+		contentPane.add(iLabel);
+		
+		confirmButton = new JButton("Confirm");
+		confirmButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					p = Double.parseDouble(pField.getText());
+					pField.setText(p + "");
+				}
+				catch (NumberFormatException E) {
+					pField.setText(p + "");
+				}
+				try {
+					i = Double.parseDouble(iField.getText());
+					iField.setText(i + "");
+				}
+				catch (NumberFormatException E) {
+					iField.setText(i + "");
+				}
+				ready = true;
+				confirmButton.setEnabled(false);
+			}
+		});
+		confirmButton.setBounds(241, 195, 117, 29);
+		confirmButton.setEnabled(false);
+		contentPane.add(confirmButton);
+		
 		logoPineapple.setBounds(300, logoHeight, 150, 150);
 		contentPane.add(logoPineapple);
 		
 		frame.setVisible(true);
-		
-		//add("train 1");
-		//add("train 2");
-		//updateGUI();
-		//frame.setVisible(true);
 	}
 	
 	public void add(TrnControllerGUI g) {
@@ -86,7 +161,6 @@ public class TrainControllerGUI {
 				I.setVisible(true);
 			}
 		});
-		//buttonList.add(B);
 		B.setBounds(30, yCount, 120, 30);
 		B.setVisible(true);
 		B.setEnabled(true);
@@ -99,5 +173,23 @@ public class TrainControllerGUI {
 			logoPineapple.setBounds(300, logoHeight, 150, 150);
 		}
 		frame.repaint();
+	}
+	
+	public double getP() {
+		if (ready) {
+			return p;
+		} 
+		else {
+			return -1;
+		}
+	}
+	
+	public double getI() {
+		if (ready) {
+			return i;
+		} 
+		else {
+			return -1;
+		}
 	}
 }

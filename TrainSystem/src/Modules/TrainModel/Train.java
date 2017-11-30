@@ -101,6 +101,7 @@ public class Train {
     //private Station nextStation;
     private int arrivalStatus;
     private int numPassengers;
+    private int crew;
     private String station;
     private int beacon;
     
@@ -145,14 +146,19 @@ public class Train {
     	this.trainCars = 1;
     	this.trainCapacity = TRAIN_CAPACITY * this.trainCars;
         this.trainHeight = TRAIN_HEIGHT;
-        this.trainWeight = TRAIN_WEIGHT * this.trainCars;
+        this.trainWeight = (TRAIN_WEIGHT * this.trainCars) + crew * AVE_PASSENGER_WEIGHT;
         this.trainLength = TRAIN_LENGTH * this.trainCars;
         this.trainWidth = TRAIN_WIDTH;
+        this.crew = 1; // crew will always be one driver
         
         // Track Information
-        this.prevBlock = 0;
-        this.currentBlock = 0;
-        this.nextBlock = 0;
+        this.currentBlock = this.trkMdl.getTrack(line).size()-1;
+        this.nextBlock = position.getCurrentBlock();
+        
+        //this.currentBlock = 0;
+        //this.nextBlock = 0;
+        //this.prevBlock = 0;
+        
         this.grade = 0;
         this.currentSpeedLimit = 0;
         this.GPSAntenna = true;
@@ -173,15 +179,15 @@ public class Train {
         
         // Speed/Authority
         this.currentSpeed = 0;
-        this.CTCSpeed = 45;
-        this.CTCAuthority = 100; // 100 miles
+        this.CTCSpeed = 0;
+        this.CTCAuthority = 0;
         this.powerIn = 0.0;
         
         // Train Operations
         this.leftDoorIsOpen = false;
         this.rightDoorIsOpen = false;
         this.lightsAreOn  =false;
-        this.temperature = 70;
+        this.temperature = 0;
         this.serviceBrake = false;
         this.emerBrake = false;
         
@@ -244,7 +250,8 @@ public class Train {
         	this.emerBrake = false;
         }
 
-        this.trainModelGUI.numCarsSpinner.setText(Integer.toString(this.trainCars));
+        this.trainCars = this.trainModelGUI.numCars();
+        this.trainModelGUI.crewCountLabel.setText(Integer.toString(crew));
         this.trainModelGUI.heightVal.setText(Double.toString(truncateTo(this.trainHeight, 2)));
         this.trainModelGUI.widthVal.setText(Double.toString(truncateTo(this.trainWidth, 2)));
         this.trainModelGUI.lengthVal.setText(Double.toString(truncateTo(this.trainLength, 2)));
@@ -285,6 +292,7 @@ public class Train {
      	
      	this.trainModelGUI.numPassengers.setText(Integer.toString(this.numPassengers));
      	this.trainModelGUI.authorityVal.setText(Double.toString(this.CTCAuthority));
+     	this.trainModelGUI.ctcSpeedLabel.setText(Double.toString(this.CTCSpeed));
      	
      	if(serviceBrake == true) {
      		this.trainModelGUI.serviceLabel.setText("ON");
@@ -323,6 +331,7 @@ public class Train {
     public void updateVelocity() {
     	// Step 1: input power and convert the power to a force based on the starting velocity
     	//powerIn = 180;
+    	setWeight();
     	double trainMass = trainWeight*KG_PER_POUND;
     	
     	// this is ensuring that we never get a negative speed
@@ -412,39 +421,66 @@ public class Train {
     	return this.trainID;
     }
     
-    public void activateEngineFailure() {
-    	this.engineFailureActive = true;
+    // TODO: NOT SURE IF NECESSARY? Are failures only GUI features? Or do I actually have to tell other modules
+    // that I am failing in some way?
+    public void engineFailureStatus() {
+    	this.engineFailureActive = trainModelGUI.engineFailStatus();
     }
     
-    public void activateSignalFailure() {
+    // TODO: NOT SURE IF NECESSARY? Are failures only GUI features? Or do I actually have to tell other modules
+    // that I am failing in some way?
+    public void signalFailureStatus() {
     	// TODO
-    	this.setGPSAntenna(false);
-    	this.setMBOAntenna(false);
-    	this.signalFailureActive = true;
+    	this.signalFailureActive = trainModelGUI.signalFailStatus();
+    	if(this.signalFailureActive) {
+        	this.setGPSAntenna(false);
+        	this.setMBOAntenna(false);
+    	} else {
+    		this.setGPSAntenna(true);
+        	this.setMBOAntenna(true);
+    	}
+
+    	
     }
     
-    public void activateBrakeFailure() {
-    	this.brakeFailureActive = true;
+    // TODO: NOT SURE IF NECESSARY? Are failures only GUI features? Or do I actually have to tell other modules
+    // that I am failing in some way?
+    public void brakeFailureStatus() {
+    	this.brakeFailureActive = trainModelGUI.brakeFailStatus();
     }
     
-    public void endFailureMode() {
-    	this.engineFailureActive = false;
-    	this.signalFailureActive = false;
-    	this.brakeFailureActive = false;
-    }
-    
+    /**
+     * Sets the arrival status for display
+     * 
+     * @param status
+     */
     public void setArrivalStatus(int status) {
     	this.arrivalStatus = status;
     }
     
+    /**
+     * Sets the station name for display
+     * 
+     * @param station
+     */
     public void setStation(String station) {
     	this.station = station;
     }
     
+    /**
+     * sets the current value of the beacon
+     * 
+     * @param beaconVal
+     */
     public void setBeacon(int beaconVal) {
     	this.beacon = beaconVal;
     }
     
+    /**
+     * Returns the current beacon value
+     * 
+     * @return
+     */
     public int getBeacon() {
     	return this.beacon;
     }
@@ -459,25 +495,34 @@ public class Train {
     	return coords;
     }
     
+    /**
+     * Returns the position of the train
+     * 
+     * @return position
+     */
     public Position getPosition(){
         return this.position;
     }
     
+    /**
+     * sets the current position of the train
+     * 
+     * @param pos
+     */
     public void setPosition(Position pos) {
     	this.position = pos;
     	//setGrade();
     }
     
- // Called by the Train Controller
+    /**
+     * Returns the current block id as an integer
+     * 
+     * @return
+     */
     public int getBlock(){
         return this.position.getCurrentBlock();
     }
-    
-    // Called by the MBO
-    /*public double[] getCoordinates(){
-        
-    }*/
-    
+
     /**
      * Startings of a method to compute the checksum of the signal sent to the MBO with the
      * Train's current position as X and Y coordinates
@@ -493,6 +538,7 @@ public class Train {
     
     /**
      * Set the current x and y positions of the current train
+     * 
      * @param pos
      */
     public void setCoordinates(double[] pos) {
@@ -500,12 +546,18 @@ public class Train {
     	this.currentY = pos[1];
     }
     
+    /**
+     * Returns the line color of this train
+     * 
+     * @return
+     */
     public String getLine() {
     	return this.lineColor;
     }
     
     /**
      * Sets the grade of the current block/position of the train
+     * 
      * @param g
      */
     public void setGrade() {
@@ -517,6 +569,7 @@ public class Train {
     
     /**
      * Returns the set point speed for this specific train object
+     * 
      * @return
      */
     public double getSetpoint() {
@@ -541,46 +594,98 @@ public class Train {
     
     /**
      * Returns the train's current velocity
+     * 
      * @return
      */
     public double getVelocity() {
     	return this.currentSpeed;
     }
     
-    
+    /**
+     * returns the train's current authority
+     * 
+     * @return
+     */
     public double getAuthority() {
     	return this.CTCAuthority;
     }
     
+    /**
+     * Sets the train's authority
+     * 
+     * @param authority
+     */
     public void setAuthority(double authority) {
     	this.CTCAuthority = authority;
     }
     
+    /**
+     * Sets the status of the emergency brake by the train controller or the passengers
+     * 
+     * @param ebrake
+     */
     public void setEBrake(boolean ebrake) {
     	this.emerBrake = ebrake;
     	trnMdl.setPassengerEmergencyBrake(this.trainID, ebrake);
     }
     
+    /**
+     * Sets the status of the service brake as commanded by the train controller
+     * 
+     * @param sBrake
+     */
     public void setServiceBrake(boolean sBrake) {
     	this.serviceBrake = sBrake;
     }
     
+    /**
+     * Returns the emergency brake status - for the train controller to know if the passengers
+     * activated it or not
+     * 
+     * @return
+     */
     public boolean getEBrake() {
     	return this.emerBrake;
     }
     
+    /**
+     * Sets the status of the right doors of the train
+     * 
+     * @param right
+     */
     public void setRightDoors(boolean right) {
     	this.rightDoorIsOpen = right;
+    	if(this.rightDoorIsOpen) {
+    		setNumDeparting();
+    	}
     }
     
+    /**
+     * Sets the status of the left doors in the train
+     * 
+     * @param left
+     */
     public void setLeftDoors(boolean left) {
     	this.leftDoorIsOpen = left;
+    	if(this.leftDoorIsOpen) {
+    		setNumDeparting();
+    	}
     }
     
+    /**
+     * Sets the light status of the current train
+     * 
+     * @param lights
+     */
     public void setLights(boolean lights) {
     	this.lightsAreOn = lights;
     }
     
+    /**
+     * Sets the cabin temperature of the current train
+     * 
+     * @param temp
+     */
     public void setTemp(int temp) {
     	this.temperature = temp;
     }
@@ -588,28 +693,59 @@ public class Train {
     /**
      * Sets the number of passengers exiting the train using a random number generator
      * This method should only ever be called when train is STOPPED at a station
+     * 
      * @param numPassengers
      * @return
      */
-    public int setNumDeparting() {
+    public void setNumDeparting() {
     	Random rand = new Random();
 
     	int  n = rand.nextInt(this.numPassengers);
-    	if (this.numPassengers - n >= 0) {
+    	if (this.numPassengers - n <= 0) {
     		this.numPassengers = this.numPassengers - n;
-    		return this.numPassengers;
+    		//return this.numPassengers;
     	}
-    	return 0;
+    	//return 0;
     }
     
+    /**
+     * Computes the current weight of the train
+     */
+    private void setWeight() {
+    	this.trainWeight = (this.crew + this.numPassengers) * AVE_PASSENGER_WEIGHT;
+    }
+    
+    /**
+     * Sets the current speed limit based on the current position of the train
+     * 
+     * @param speedLim
+     */
+    public void setSpeedLimit(int speedLim) {
+    	this.currentSpeedLimit = trkMdl.getBlock(this.lineColor,this.currentBlock).getSpeedLimit();
+    }
+    
+    /**
+     * Sets the status of the MBO antenna
+     * 
+     * @param status
+     */
     public void setMBOAntenna(boolean status) {
     	this.MBOAntenna = status;
     }
     
+    /**
+     * Sets the status of the trains GPS
+     * 
+     * @param status
+     */
     public void setGPSAntenna(boolean status) {
     	this.GPSAntenna = status;
     }
     
+    /**
+     * Exits all active train model GUIs
+     * @param yes
+     */
     public void setExitAllGuis(boolean yes) {
     	if(yes)
     		trnMdl.exitAll();

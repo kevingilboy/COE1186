@@ -8,6 +8,8 @@ javac Shared/Module.java
 javac Shared/SimTime.java
 javac Modules/Ctc/Ctc.java
 javac Modules/TrackController/TrackController.java
+javac Modules/TrackController/TrackControllerGUI.java
+javac Modules/TrackController/PLC.java
 javac Modules/TrackModel/TrackModel.java
 javac Modules/TrainModel/TrainModel.java
 javac Modules/TrainController/TrainController.java
