@@ -322,7 +322,7 @@ public class Ctc implements Module,TimeControl {
 		visited[prevBlockId] = true;
 		
 		do {
-			System.out.println(currBlockId);
+			//System.out.println(currBlockId);
 			if(visited[currBlockId] == true) break;
 			//If block is occupied, treat the bidirectional stretch as occupied
 			Boolean currOccupied = getTrackCircuit(line, currBlockId);
