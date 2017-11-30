@@ -137,7 +137,7 @@ public class Train {
     public Train(String line, String trainID, TrainModel tm, TrackModel tkmdl) {
     	this.trkMdl = tkmdl;
     	this.lineColor = line;
-    	this.track = this.trkMdl.getTrack(this.lineColor);
+    	this.track = this.trkMdl.getTrack(line);
     	this.position = new Position(track);
     	this.trnMdl = tm;
     	this.trainActive = true;
