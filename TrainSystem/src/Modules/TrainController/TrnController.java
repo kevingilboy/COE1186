@@ -94,6 +94,7 @@ public class TrnController {
 		currentBlock = controller.receiveTrainPosition(trainID);
 		currentBlockInfo = mapInfo.get(currentBlock);
 		speedLimit = currentBlockInfo.getSpeedLimit();
+		controlGUI.setSpeedLimit(speedLimit);
 		//System.out.println(speedLimit + "");
 		beacon = controller.receiveBeaconValue(trainID);
 		calcAuth();
