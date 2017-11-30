@@ -25,12 +25,15 @@ public class Mbo implements Module {
 	private MboGui gui;
 	private SimTime time;
 	private TreeMap<String, TrainInfo> trains;
+	private ArrayList<MboBlock> redLine;
+	private ArrayList<MboBlock> greenLine;
 	private CRC32 crc;
 
 	public Mbo(){
 		thisMbo = this;
 		this.trains = new TreeMap<String,TrainInfo>();
 		this.crc = new CRC32();
+		initTrack();
 		startGui();
 		testInitTrains();
 		while (true) {
@@ -40,11 +43,18 @@ public class Mbo implements Module {
 
 			}
 			this.updateTrainInfo();
-			trains.get("RED 1").updatePosition(new double[]{3,4});
-			trains.get("GREEN 2").updatePosition(new double[]{-6,-8});
+			// red A1
+			trains.get("RED 1").updatePosition(new double[]{227.416376,119.890932});
+			// red A3
+			trains.get("RED 2").updatePosition(new double[]{251.654612,106.711009});
 			gui.update();
 		}
 //		build_initTrains();
+	}
+
+	private void initTrack() {
+		redLine = new TrackCsvParser().parse("Modules\\Mbo\\RedLineFinal.csv");
+		redLine = new TrackCsvParser().parse("Modules\\Mbo\\GreenLineFinal.csv");
 	}
 
 	private void startGui() {
@@ -67,7 +77,7 @@ public class Mbo implements Module {
 	public void testInitTrains() {
 		trains.put("RED 1", new TrainInfo("RED 1"));
 		trains.put("GREEN 1", new TrainInfo("GREEN 1"));
-		trains.put("GREEN 2", new TrainInfo("GREEN 2"));
+		trains.put("RED 2", new TrainInfo("RED 2"));
 	}
 
 	public Object[][] getTrainData() {
