@@ -98,11 +98,12 @@ public class TrackModel implements Module{
 	}
 
 	public void transmitCtcAuthority(String trainName, double authority){
-		// ...
+		trainModel.transmitCtcAuthority(trainName, authority);
 	}
 
 	public void transmitSuggestedTrainSetpointSpeed(String trainName, int speed){
-		// ...
+		//TODO filter speed to speed limit (I recommend questionmark colon)
+		trainModel.transmitSuggestSetpointSpeed(trainName, speed);
 	}
 
 	// Respond to the Simulator's regularly call to this modules's updateTime()
