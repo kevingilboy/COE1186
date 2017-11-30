@@ -137,7 +137,7 @@ public class Train {
     public Train(String line, String trainID, TrainModel tm, TrackModel tkmdl) {
     	this.trkMdl = tkmdl;
     	this.lineColor = line;
-    	this.track = this.trkMdl.getTrack(this.lineColor);
+    	this.track = this.trkMdl.getTrack(line);
     	this.position = new Position(track);
     	this.trnMdl = tm;
     	this.trainActive = true;
@@ -702,9 +702,11 @@ public class Train {
 
     	int  n = rand.nextInt(this.numPassengers);
     	if (this.numPassengers - n <= 0) {
-    		this.numPassengers = this.numPassengers - n;
+    		this.numPassengers = 0;
     		//return this.numPassengers;
-    	}
+    	} else {
+            this.numPassengers = this.numPassengers - n;
+        }
     	//return 0;
     }
     

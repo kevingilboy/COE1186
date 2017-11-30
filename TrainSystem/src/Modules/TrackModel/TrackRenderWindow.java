@@ -92,7 +92,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         previous_xy_coords.add(previous_xy_coord);
 
         trainIDs.add(trainID);
-        positions.add(new Position(blocks));
+        positions.add(pos);
         activeTrains++;
     }
 
