@@ -60,12 +60,12 @@ public class Simulator {
 		trackModel.ctc = ctc;
 
 		trainModel.trackModel = trackModel;
+		trainModel.mbo = mbo;
 
 		trainController.trackModel = trackModel;
 		trainController.trainModel = trainModel;
 
 		mbo.trainController = trainController;
-		mbo.trainModel = trainModel;
 		
 		temperature = 69;
 		weather = "SUNNY";

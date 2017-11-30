@@ -125,28 +125,29 @@ public class TrackController implements Module{
 	}
 	
 	//CTC Functions
-	public void transmitSuggestedTrainSetpointSpeed(String trainName, int speed){
+	public void transmitSuggestedTrainSetpointSpeed(String trainName, double speed){
 		trackModel.transmitSuggestedTrainSetpointSpeed(trainName, speed);
 	}
 	// transmit as int[] authority = currentBlock, nextBlocks[]
 	public void transmitCtcAuthority(String trainName, int[] authority){
 		boolean canProceed = tcplc.canProceedPath(authority);
 		double distAuthority = 0;
-		if(canProceed){
+		if(canProceed && authority.length > 1){
 			if(trackModel.getBlock(associatedLine, authority[1]).getSwitch() != null){
 				boolean canSwitch = tcplc.canSwitchPath(authority);
-				if(canSwitch){
-					if(compareSwitchState(authority[0], authority[1])){//switch state not correct
+				if(canSwitch && authority.length > 2){
+					if(!(compareSwitchState(authority[1], authority[2]))){//switch state not correct
 						transmitSwitchState(associatedLine, authority[1], !trackModel.getBlock(line, blockId).getSwitch().getState());
 						distAuthority = calcAuthDist(authority);
 						trackModel.transmitCtcAuthority(trainName, distAuthority);
-					} else {
-						transmitSwitchState(associatedLine, authority[1], trackModel.getBlock(line, blockId).getSwitch().getState());
+					} else { //switch is in the right state
+						//transmitSwitchState(associatedLine, authority[1], trackModel.getBlock(line, blockId).getSwitch().getState());
 						distAuthority = calcAuthDist(authority);
 						trackModel.transmitCtcAuthority(trainName, distAuthority);
 					}
 				} else { //has switch but cant switch state (correct or not)
-					if (trackModel.getBlock(associatedLine, authority[1]).getLight() != null){
+					trackModel.transmitCtcAuthority(trainName, distAuthority);
+					/*if (trackModel.getBlock(associatedLine, authority[1]).getLight() != null){
 						if(trackModel.getBlock(associatedLine, authority[1]).getLight().getState() != false){
 							distAuthority = calcAuthDist(authority);
 							trackModel.transmitCtcAuthority(trainName, distAuthority);
@@ -155,13 +156,13 @@ public class TrackController implements Module{
 						}
 					} else {//cant switch switch and has no light
 						trackModel.transmitCtcAuthority(trainName, distAuthority);
-					}
+					}*/
 				}
 			} else { //nb doesnt have switch && can proceed
 				distAuthority = calcAuthDist(authority);
 				trackModel.transmitCtcAuthority(trainName, distAuthority);
 			}
-		} else { //cannot proceed
+		} else { //cannot proceed or authority is only current block
 			trackModel.transmitCtcAuthority(trainName, distAuthority);
 		}
 	}
@@ -199,15 +200,15 @@ public class TrackController implements Module{
 	}
 	
 	//Helper Functions
-	private boolean compareSwitchState(int cb, int nb){
-		if(trackModel.getBlock(associatedLine,cb).getSwitch().getState()){
-			if(trackModel.getBlock(associatedLine,cb).getSwitch().getPortNormal() == nb){
+	private boolean compareSwitchState(int nb, int nnb){
+		if(trackModel.getBlock(associatedLine,nb).getSwitch().getState()){
+			if(trackModel.getBlock(associatedLine,nb).getSwitch().getPortNormal() == nnb){
 				return true;
 			} else {
 				return false;
 			}
 		} else { //state = false
-			if(trackModel.getBlock(associatedLine,cb).getSwitch().getPortAlternate() == nb){
+			if(trackModel.getBlock(associatedLine,nb).getSwitch().getPortAlternate() == nnb){
 				return true;
 			} else {
 				return false;

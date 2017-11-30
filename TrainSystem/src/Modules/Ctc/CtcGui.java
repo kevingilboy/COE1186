@@ -367,6 +367,9 @@ public class CtcGui {
 				
 				trainCreationTable.setSchedule(new Schedule((Line)trainCreationLine.getSelectedItem()));
 				enableTrainCreationComponents();
+				
+				trainCreationTable.setEnabled(false);
+				addToDispatchToQueue.setEnabled(false);
 			}
 		});
 		addToDispatchToQueue.setBounds(251, 475, 171, 67);
@@ -822,9 +825,9 @@ public class CtcGui {
 		
 		//If a schedule was selected, restore the selection in the table
 		if(dispatchSelectedTable.schedule!=null) {
-			for(int i=0;i<dispatchSelectedTable.schedule.line.queueData.getColumnCount();i++) {
-				if(dispatchSelectedTable.schedule.line.queueData.getValueAt(i, 0).equals(dispatchSelectedTable.schedule.name)) {
-					dispatchSelectedTable.schedule.line.queueTable.setRowSelectionInterval(i, i);
+			for(int i=0;i<dispatchSelectedTable.schedule.line.dispatchedData.getColumnCount();i++) {
+				if(dispatchSelectedTable.schedule.line.dispatchedData.getValueAt(i, 0).equals(dispatchSelectedTable.schedule.name)) {
+					dispatchSelectedTable.schedule.line.dispatchedTable.setRowSelectionInterval(i, i);
 					break;
 				}
 			}

@@ -52,17 +52,17 @@ public class TrnController {
 		trainID = id;
 		line = ln;
 		currentStation = null;
-		ready = false;
+		ready = true;
 		if (line.equals("RED")) {
-			currentBlock = 77;	//yard
+			currentBlock = 76;	//yard
 		}
 		else {
-			currentBlock = 152;	//yard_OUT
+			currentBlock = 151;	//yard_OUT
 		}
 		controller = C;
 		pi = new PIController(p, i);
 		driveMode = 0;
-		blockMode = 0;
+		blockMode = 1;
 		beacon = 0;
 		ctcAuth = 0;
 		mboAuth = 0;
@@ -83,17 +83,20 @@ public class TrnController {
 		stationList = s;
 		trainDirection = 0;
 		mainGUI = g;
-		controlGUI = new TrnControllerGUI(pi, this, trainID);
+		controlGUI = new TrnControllerGUI(this, trainID);
 		g.add(controlGUI);
 	}
 	
 	public boolean updateTime() {
 		actualSpeed = controller.receiveTrainActualSpeed(trainID);
 		ctcAuth = controller.receiveCtcAuthority(trainID);
-		passEBrakes = controller.receivePassengerEmergencyBrake(trainID);	//NEED TO IMPLEMENT
+		passEBrakes = controller.receivePassengerEmergencyBrake(trainID);
 		currentBlock = controller.receiveTrainPosition(trainID);
-		currentBlockInfo = mapInfo.get(currentBlock - 1);
+		currentBlockInfo = mapInfo.get(currentBlock);
 		speedLimit = currentBlockInfo.getSpeedLimit();
+		beacon = controller.receiveBeaconValue(trainID);
+		calcAuth();
+		
 		if (driveMode == 0) {		//if auto
 			setpointSpeed = controller.receiveSetpointSpeed(trainID);
 			if (inStation) {
@@ -115,21 +118,25 @@ public class TrnController {
 				engineOff();
 				sBrakesOn();
 			}
+			else if (overallAuth == 0 && actualSpeed > 0) {
+				engineOff();
+				eBrakesOn();
+			}
+			else if (overallAuth == 0 && actualSpeed == 0) {
+				//Do nuthin'
+			}
 			else {
-				calcAuth();
 				calcPowerOutput();
-				if (currentBlock != 0) {
-					stationCheck();
-					if (lightCheck()) {
-						lightsOn();
-					}
-					else {
-						lightsOff();
-					}
+				stationCheck();
+				if (lightCheck()) {
+					lightsOn();
+				}
+				else {
+					lightsOff();
 				}
 			}
 		}
-		else {		//if manual - THIS NEEDS WORK
+		else {		//if manual
 			if (inStation) {
 				if (actualSpeed > 0) {
 					stationTimeCounter = 0;
@@ -145,13 +152,19 @@ public class TrnController {
 				engineOff();
 				sBrakesOn();
 			}
+			else if (overallAuth == 0 && actualSpeed > 0) {
+				engineOff();
+				eBrakesOn();
+			}
+			else if (overallAuth == 0 && actualSpeed == 0) {
+				//Do nuthin'
+			}
 			else {
-				calcAuth();
 				calcPowerOutput();
 				stationCheck();
 			}
 		}
-		decodeBeacon();		//may have to poll the train model for beacon info as well
+		decodeBeacon();
 		updateGUI();
 		return true;
 	}
@@ -173,67 +186,56 @@ public class TrnController {
 	public void openLeft() {
 		leftDoor = true;
 		controller.transmitLeft(trainID, leftDoor);
-		controlGUI.setLeft(true);
 	}
 	
 	public void closeLeft() {
 		leftDoor = false;
 		controller.transmitLeft(trainID, leftDoor);
-		controlGUI.setLeft(false);
 	}
 	
 	public void openRight() {
 		rightDoor = true;
 		controller.transmitRight(trainID, rightDoor);
-		controlGUI.setRight(true);
 	}
 	
 	public void closeRight() {
 		rightDoor = false;
 		controller.transmitRight(trainID, rightDoor);
-		controlGUI.setRight(false);
 	}
 	
 	public void lightsOn() {
 		lightState = true;
 		controller.transmitLights(trainID, lightState);
-		controlGUI.setLights(true);
 	}
 	
 	public void lightsOff() {
 		lightState = false;
 		controller.transmitLights(trainID, lightState);
-		controlGUI.setLights(false);
 	}
 	
 	public void sBrakesOn() {
 		sBrakes = true;
 		controller.transmitService(trainID, sBrakes);
-		controlGUI.setService(true);
 	}
 	
 	public void sBrakesOff() {
 		sBrakes = false;
 		controller.transmitService(trainID, sBrakes);
-		controlGUI.setService(false);
 	}
 	
 	public void eBrakesOn() {
 		eBrakes = true;
 		controller.transmitEmergency(trainID, eBrakes);
-		controlGUI.setEmergency(true);
 	}
 	
 	public void eBrakesOff() {
 		eBrakes = false;
 		controller.transmitEmergency(trainID, eBrakes);
-		controlGUI.setEmergency(false);
 	}
 	
 	public void engineOff() {
 		power = 0;
 		controller.transmitPower(trainID, power);
-		controlGUI.setPower(power);
 	}
 	
 	public void setTemperature(int temp) {
@@ -259,7 +261,6 @@ public class TrnController {
 	
 	public void setSetpointSpeed(double speed) {
 		setpointSpeed = speed;
-		controlGUI.setSetpoint(speed);
 	}
 	
 	public void setPassengerEmergencyBrake(boolean status) {
@@ -284,19 +285,17 @@ public class TrnController {
 			}
 			power = pi.getOutput(actualSpeed, setpointSpeed);
 		}
-		controlGUI.setPower(power);
 		controller.transmitPower(trainID, power);
 	}
 	
 	private void calcAuth() {
+		distToStation = ctcAuth;
 		if (blockMode == 1) {
 			overallAuth = ctcAuth;
 		}
 		else {
-			distToStation = ctcAuth;
 			overallAuth = Math.min(ctcAuth, mboAuth);
 		}
-		controlGUI.setAuth(overallAuth);
 	}
 	
 	private boolean brakingCheck() {
@@ -321,8 +320,8 @@ public class TrnController {
 		if (actualSpeed == 0 && currentBlockInfo.getStationName() != "") {
 			inStation = true;
 			announceArrived(currentBlockInfo.getStationName());
+			trainDirection = controller.receiveTrainDirection(trainID);
 			if (driveMode == 0) {
-				trainDirection = controller.receiveTrainDirection(trainID);
 				if (currentBlockInfo.getDirection() == 1 || currentBlockInfo.getDirection() == -1) {
 					if (currentBlockInfo.getPositive()) {
 						openRight();
@@ -350,6 +349,37 @@ public class TrnController {
 					}
 				}
 			}
+			else {
+				if (currentBlockInfo.getDirection() == 1 || currentBlockInfo.getDirection() == -1) {
+					if (currentBlockInfo.getPositive()) {
+						controlGUI.setSuggestedDoor(1);
+					}
+					else {
+						controlGUI.setSuggestedDoor(-1);
+					}
+				}
+				else {
+					if (trainDirection == 1) {
+						if (currentBlockInfo.getPositive()) {
+							controlGUI.setSuggestedDoor(1);
+						}
+						else {
+							controlGUI.setSuggestedDoor(-1);
+						}
+					}
+					else {
+						if (currentBlockInfo.getNegative()) {
+							controlGUI.setSuggestedDoor(1);
+						}
+						else {
+							controlGUI.setSuggestedDoor(-1);
+						}
+					}
+				}
+			}
+		}
+		else {
+			controlGUI.setSuggestedDoor(0);
 		}
 	}
 	

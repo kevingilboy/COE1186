@@ -1,5 +1,6 @@
 //Michael Kotcher
 //This is a Java translation of the MiniPID open source controller
+//shortened to include only the necessary pieces
 //https://github.com/tekdemo/MiniPID
 
 //I BELIEVE that the output is in Watts
@@ -32,8 +33,10 @@ public class PIController {
 	private double setpointRange;		//set to zero to do nothing
 	
 	/*public static void main(String[] args) {
-		new PIController(200, 300);
+		new PIController(2000, 0.8071);
 	}*/
+	
+	
 	
 	public PIController(double p, double i) {
 		P = p;
@@ -55,59 +58,7 @@ public class PIController {
 		lastOutput = 0;
 		outputFilter = 0.1;
 		setpointRange = 0;
-		//System.out.println(getOutput(0, 45));
-	}
-	
-	public void setP(double p) {
-		P = p;
-		checkSigns();
-	}
-	
-	public void setI(double i) {
-		if (I != 0) {
-			errorSum = errorSum * I / i;
-		}
-		if (maxIOutput != 0) {
-			maxError = maxIOutput / i;
-		}
-		I = i;
-		checkSigns();
-	}
-	
-	public double getP() {
-		return P;
-	}
-	
-	public double getI() {
-		return I;
-	}
-	
-	public void setMaxIOutput(double maximum) {		//Not used
-		/* Internally maxError and Izone are similar, but scaled for different purposes. 
-		 * The maxError is generated for simplifying math, since calculations against 
-		 * the max error are far more common than changing the I term or Izone. 
-		 */
-		maxIOutput = maximum;
-		if (I != 0) {
-			maxError = maxIOutput / I;
-		}
-	}
-	
-	public void setOutputLimits(double minimum,double maximum){		//Limits are 0 and 820 kW
-		if (maximum < minimum) {
-			return;
-		}
-		maxOutput = maximum;
-		minOutput = minimum;
-
-		// Ensure the bounds of the I term are within the bounds of the allowable output swing
-		if (maxIOutput == 0 || maxIOutput > (maximum - minimum)) {
-			setMaxIOutput(maximum - minimum);
-		}
-	}
-	
-	public void setSetpoint(double setpoint) {
-		this.setpoint = setpoint;
+		//System.out.println(getOutput(40, 45));
 	}
 	
 	public double getOutput(double actual, double setpoint) {
@@ -194,33 +145,6 @@ public class PIController {
 		return output;
 	}
 	
-	public double getOutput() {
-		return getOutput(lastActual, setpoint);
-	}
-	
-	public double getOutput(double actual) {
-		return getOutput(actual, setpoint);
-	}
-	
-	public void reset() {		//Probably not used
-		firstRun = true;
-		errorSum = 0;
-	}
-	
-	/*public void setOutputRampRate(double rate) {		//Not used
-		outputRampRate = rate;
-	}
-	
-	public void setSetpointRange(double range) {		//Not used, unless I can get have speed limit
-		setpointRange = range;
-	}
-	
-	public void setOutputFilter(double strength) {		//Not used
-		if (strength == 0 || bounded(strength, 0, 1)) {
-			outputFilter = strength;
-		}
-	}*/
-	
 	private double clamp(double value, double min, double max) {
 		if (value > max) {
 			return max;
@@ -236,13 +160,13 @@ public class PIController {
 	}
 	
 	private void checkSigns() {
-		if (reversed) {	//all values should be below zero
+		if (reversed) {				//all values should be below zero
 			if (P > 0)
 				P *= -1;
 			if (I > 0)
 				I *= -1;
 		}
-		else {	//all values should be above zero
+		else {						//all values should be above zero
 			if(P < 0)
 				P *= -1;
 			if(I < 0)
