@@ -85,6 +85,7 @@ public class TrainController implements Module {
 	
 	public void transmitEmergency(String trainID, boolean status) {
 		trainModel.setDriverEmergencyBrake(trainID, status);
+		trainModel.setPassengerEmergencyBrake(trainID, status);
 	}
 	
 	public void transmitLights(String trainID, boolean status) {
@@ -136,7 +137,7 @@ public class TrainController implements Module {
 		for (Block B : redBlocks) {
 			S = B.getStation();
 			if(S==null) {
-				redInfo.add(new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), null, false, false, B.getDirection()));
+				redInfo.add(new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), "", false, false, B.getDirection()));
 			}
 			else {
 				redInfo.add(new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), S.getId(), S.getDoorSideDirectionPositive(), S.getDoorSideDirectionNegative(), B.getDirection()));
@@ -145,7 +146,7 @@ public class TrainController implements Module {
 		for (Block B : greenBlocks) {
 			S = B.getStation();
 			if(S==null) {
-				greenInfo.add(new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), null, false, false, B.getDirection()));			
+				greenInfo.add(new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), "", false, false, B.getDirection()));			
 			}
 			else {
 				greenInfo.add(new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), S.getId(), S.getDoorSideDirectionPositive(), S.getDoorSideDirectionNegative(), B.getDirection()));			

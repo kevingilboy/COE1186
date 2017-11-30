@@ -101,7 +101,7 @@ public class TrackModel implements Module{
 		trainModel.transmitCtcAuthority(trainName, authority);
 	}
 
-	public void transmitSuggestedTrainSetpointSpeed(String trainName, int speed){
+	public void transmitSuggestedTrainSetpointSpeed(String trainName, double speed){
 		//TODO filter speed to speed limit (I recommend questionmark colon)
 		trainModel.transmitSuggestSetpointSpeed(trainName, speed);
 	}

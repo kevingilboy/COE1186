@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.math.BigInteger;
 import java.util.zip.CRC32;
+import java.awt.EventQueue;
+import java.lang.reflect.InvocationTargetException;
 
 import Shared.Module;
 import Shared.SimTime;
@@ -19,21 +21,48 @@ public class Mbo implements Module {
 
 	public TrainController trainController;
 	public TrainModel trainModel;
+	private Mbo thisMbo;
+	private MboGui gui;
 	private SimTime time;
 	private TreeMap<String, TrainInfo> trains;
+	private ArrayList<MboBlock> redLine;
+	private ArrayList<MboBlock> greenLine;
 	private CRC32 crc;
 
 	public Mbo(){
+		thisMbo = this;
 		this.trains = new TreeMap<String,TrainInfo>();
 		this.crc = new CRC32();
-//		build_initTrains();
+		initTrack();
+		startGui();
+	}
+
+	private void initTrack() {
+		redLine = new TrackCsvParser().parse("Modules\\Mbo\\RedLineFinal.csv");
+		greenLine = new TrackCsvParser().parse("Modules\\Mbo\\GreenLineFinal.csv");
+	}
+
+	private void startGui() {
+		try {
+			EventQueue.invokeAndWait(new Runnable() {
+				public void run() {
+					try {
+						gui = new MboGui(thisMbo);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+		}
+		gui.setVisible(true);
 	}
 
 	public void testInitTrains() {
-		trains.put("RED 1", new TrainInfo("RED 1"));
-		trains.put("RED 2", new TrainInfo("RED 2"));
-		trains.put("GREEN 1", new TrainInfo("GREEN 1"));
-		trains.put("GREEN 2", new TrainInfo("GREEN 2"));
+		trains.put("BLUE 1", new TrainInfo("BLUE 1"));
+		trains.put("BLUE 2", new TrainInfo("BLUE 2"));
+		trains.put("BLUE 3", new TrainInfo("BLUE 3"));
 	}
 
 	public Object[][] getTrainData() {
@@ -89,9 +118,24 @@ public class Mbo implements Module {
 		// update train's position
 		//double x = Double.parseDouble(vals[1]);
 		//double y = Double.parseDouble(vals[2]);
-		trains.get(train).updatePosition(pos);
+		String blockId = getBlockFromCoordinates(pos);
+		trains.get(train).updatePosition(pos, blockId);
 
 		return true;
+	}
+
+	private String getBlockFromCoordinates(double[] pos) {
+		for (MboBlock block : redLine) {
+			if (block.onBlock(pos[0], pos[1])) {
+				return block.getID();
+			}
+		}
+		for (MboBlock block : greenLine) {
+			if (block.onBlock(pos[0], pos[1])) {
+				return block.getID();
+			}
+		}
+		return null;
 	}
 
 	private void transmitSafeBrakingDistance(String trainID, double distance) {
@@ -120,6 +164,7 @@ public class Mbo implements Module {
 			double newDist = Math.pow((Math.pow(dispX, 2) + Math.pow(dispY, 2)), 0.5);
 			if (newDist < minDistance) minDistance = newDist;
 		}
+		System.out.printf("Authority for %s: %f\n", trainID, minDistance);
 		return minDistance;
 	}
 
@@ -135,5 +180,25 @@ public class Mbo implements Module {
 	public boolean communicationEstablished() {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	public static void main(String[] args) {
+		new Mbo();
+		/*testInitTrains();
+		while (true) {
+			try {
+				Thread.sleep(2000);
+			} catch (Exception e) {
+
+			}
+			this.updateTrainInfo();
+			// red A1
+			double[] red1 = {227.416376,119.890932};
+			double[] red2 = {251.654612,106.711009};
+ 			trains.get("RED 1").updatePosition(red1, getBlockFromCoordinates(red1));
+			// red A3
+			trains.get("RED 2").updatePosition(red2, getBlockFromCoordinates(red2));
+			gui.update();
+		}*/
 	}
 }

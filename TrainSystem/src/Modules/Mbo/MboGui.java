@@ -27,7 +27,8 @@ public class MboGui extends JFrame implements ActionListener {
     private DefaultTableModel trainInfoTableModel, trainScheduleTableModel;
     private JLabel pineapple, pineapple2;
 
-	public MboGui() {
+	public MboGui(Mbo mbo) {
+		this.mbo = mbo;
         init();
 	}
 
@@ -36,7 +37,6 @@ public class MboGui extends JFrame implements ActionListener {
 		// initialize class attributes
 		this.font = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
 		fileChooser = new JFileChooser();
-		mbo = new Mbo();
 		//fileChooser.setForeground(Color.WHITE);
 
 		// initialize the jframe
@@ -83,6 +83,7 @@ public class MboGui extends JFrame implements ActionListener {
 							"<html><center>Calculated<br>Location</center></html>",
 							"<html><center>Calculated<br>Velocity<br>(mi/s)</center></html>",
 							"<html><center>Transmitted<br>Authority<br>(mi)</center></html>"};
+		System.out.println("About to try with " + mbo);
 		this.trainData = mbo.getTrainData();
 		trainInfoTableModel = new DefaultTableModel(trainData, trainInfoColumns) {
     		public boolean isCellEditable(int row, int column) {
@@ -294,7 +295,6 @@ public class MboGui extends JFrame implements ActionListener {
 	}
 
 	public void update() {
-		mbo.testInitTrains();
 		this.timeBox.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
 		this.trainData = mbo.getTrainData();
 		this.trainInfoTableModel.setDataVector(this.trainData, this.trainInfoColumns);
@@ -310,7 +310,7 @@ public class MboGui extends JFrame implements ActionListener {
 	public static void main(String[] args) throws InterruptedException {
 
     	//MaterialLookAndFeel ui = new MaterialLookAndFeel(GUITheme.DARK_THEME);
-    	MboGui MboGui = new MboGui();
+    	MboGui MboGui = new MboGui(new Mbo());
         EventQueue.invokeLater(() -> {
             //MboGui = new MboGui();
 			MboGui.setVisible(true);
