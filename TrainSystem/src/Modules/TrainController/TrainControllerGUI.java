@@ -43,8 +43,8 @@ public class TrainControllerGUI {
 	private ArrayList<TrnControllerGUI> guiList;
 	private ArrayList<JButton> buttonList;
 	
-	private JLabel logoPineapple = new JLabel(new ImageIcon("pineapple_icon.png"));
-
+	private JLabel icon_logo;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -63,9 +63,12 @@ public class TrainControllerGUI {
 		buttonList = new ArrayList<JButton>();
 		yCount = 80;
 		height = 400;
-		logoHeight = 210;
+		logoHeight = 280;
 		
 		Font standardFont = new Font("Lucida Grande", Font.PLAIN, 16);
+		
+		icon_logo = new JLabel("");
+		icon_logo.setIcon(new ImageIcon("Modules\\TrackModel\\Images\\HSS_TrainSim_Logo.png"));
 		
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -150,8 +153,8 @@ public class TrainControllerGUI {
 		confirmButton.setEnabled(false);
 		contentPane.add(confirmButton);
 		
-		logoPineapple.setBounds(300, logoHeight, 150, 150);
-		contentPane.add(logoPineapple);
+		icon_logo.setBounds(330, logoHeight, 100, 100);
+		contentPane.add(icon_logo);
 		
 		frame.setVisible(true);
 	}
@@ -179,7 +182,7 @@ public class TrainControllerGUI {
 			height = height + 60;
 			logoHeight = logoHeight + 60;
 			frame.setBounds(100, 100, 450, height);
-			logoPineapple.setBounds(300, logoHeight, 150, 150);
+			icon_logo.setBounds(300, logoHeight, 150, 150);
 		}
 		frame.repaint();
 	}
