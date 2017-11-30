@@ -396,9 +396,7 @@ public class TrainModel implements Module{
 	 * @param trainID
 	 */
 	public void setMBOSignal(String trainID) {
-		System.out.print("Sending signal to MBO...");
 		mbo.receiveTrainPosition(trainID, getCoordinates(trainID), this.getTrain(trainID).checkSum());
-		System.out.println("sent.");
 		// call method to send the MBO an "incoming signal" status that passes a trainID
 	}
 

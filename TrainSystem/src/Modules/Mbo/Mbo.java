@@ -34,6 +34,7 @@ public class Mbo implements Module {
 	final private static double G = 9.8;
 
 	public Mbo(){
+		this.time = new SimTime(7,0,0);
 		thisMbo = this;
 		this.trains = new TreeMap<String,TrainInfo>();
 		this.crc = new CRC32();
@@ -96,9 +97,12 @@ public class Mbo implements Module {
 
 	@Override
 	public boolean updateTime(SimTime time) {
+		//System.out.println("entering MBO");
 		this.time = time;
 		this.updateTrainInfo();
+		//System.out.println("gui");
 		gui.update();
+		//System.out.println("done");
 		return true;
 	}
 
@@ -124,9 +128,17 @@ public class Mbo implements Module {
 		// update train's position
 		//double x = Double.parseDouble(vals[1]);
 		//double y = Double.parseDouble(vals[2]);
-		trains.get(train).updatePosition(pos, getBlockFromCoordinates(pos).getID(), time);
+		String blockId;
+		MboBlock block = getBlockFromCoordinates(pos);
+		if (block == null) {
+			blockId = new String();
+		} else {
+			blockId = block.getID();
+		}
+		trains.get(train).updatePosition(pos, blockId, time);
 		//System.out.printf("Put %s on %s\n", train, trains.get(train).getBlockName());
 
+		System.out.println("received train position...");
 		return true;
 	}
 
@@ -156,8 +168,11 @@ public class Mbo implements Module {
 		for (String train : trains.keySet()) {
 			//System.out.printf("Updating info for %s\n", train);
 			trains.get(train).setAuthority(calculateAuthority(train));
-			trains.get(train).setSafeBrakingDistance(calculateSafeBrakingDistance(train));
-		//	trainController.setMboAuthority(train, trains.get(train).getAuthority());
+			//System.out.printf("auth for %s\n", train);
+			//trains.get(train).setSafeBrakingDistance(calculateSafeBrakingDistance(train));
+			//System.out.printf("Updated %s\n", train);
+			trainController.setMboAuthority(train, trains.get(train).getAuthority());
+			//trainController.setSafeBrakingDistance(train, trains.get(train).getSafeBrakingDistance());
 		}
 	}
 
@@ -186,6 +201,7 @@ public class Mbo implements Module {
 		TrainInfo train = trains.get(trainID);
 		//MboBlock block = train.getBlock();
 		MboBlock block = getBlockFromCoordinates(train.getPosition());
+		if (block == null) return 1000; // HACK
 		//System.out.printf("Block is %s\n", block);
 		ArrayList<MboBlock> line;
 		if (block.getLine().equals("red")) {
@@ -206,7 +222,9 @@ public class Mbo implements Module {
 		int distance = 0;
 		while (potentialSpeed > 0) {
 			MboBlock potentialBlock = getBlockAfterMoving(line, blockIndex, blockDisplacement, distance);
+			//System.out.printf("block index %s\n", potentialBlock);
 			potentialSpeed = calculateSpeedAfterMeter(potentialSpeed, potentialBlock);
+			//System.out.printf("speed %f\n", potentialSpeed);
 			distance += 1;
 		}
 		//System.out.printf("%s can stop in %d meters.\n", train, distance);
@@ -215,9 +233,12 @@ public class Mbo implements Module {
 
     private MboBlock getBlockAfterMoving(ArrayList<MboBlock> line, int index, int displacement, int distance) {
     	distance -= line.get(index).getLength() - displacement;
+    	//System.out.println(distance);
     	while (distance > 0) {
     		index++;
-    		distance -= line.get(index % line.size()).getLength();
+    		if (index >= line.size()) index = 0;
+    		distance -= line.get(index).getLength();
+    		//System.out.printf("index %d\n", index);
     	}
     	return line.get(index);
     }
