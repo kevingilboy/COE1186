@@ -451,7 +451,7 @@ public class TrainModelGUI extends JFrame {
 		contentPane.add(lblStatus);
 		
 		arrivalStatusLabel.setFont(new Font("Dialog", Font.PLAIN, 18));
-		arrivalStatusLabel.setBounds(204, 449, 121, 20);
+		arrivalStatusLabel.setBounds(164, 449, 139, 20);
 		contentPane.add(arrivalStatusLabel);
 		
 		passengersEnRoute.setFont(new Font("Dialog", Font.PLAIN, 18));
@@ -621,11 +621,11 @@ public class TrainModelGUI extends JFrame {
 		contentPane.add(mboAntennaStatusLabel);
 		
 		stationVal.setFont(new Font("Dialog", Font.PLAIN, 18));
-		stationVal.setBounds(204, 391, 69, 20);
+		stationVal.setBounds(178, 391, 125, 20);
 		contentPane.add(stationVal);
 		
 		timeVal.setFont(new Font("Dialog", Font.PLAIN, 18));
-		timeVal.setBounds(204, 420, 121, 20);
+		timeVal.setBounds(178, 420, 125, 20);
 		contentPane.add(timeVal);
 		
 		leftDoorStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -643,7 +643,7 @@ public class TrainModelGUI extends JFrame {
 		
 		
 		numPassengers.setFont(new Font("Dialog", Font.PLAIN, 18));
-		numPassengers.setBounds(204, 472, 103, 20);
+		numPassengers.setBounds(200, 472, 103, 20);
 		contentPane.add(numPassengers);
 		
 		authorityVal.setFont(new Font("Dialog", Font.PLAIN, 18));
