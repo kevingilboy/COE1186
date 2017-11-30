@@ -35,6 +35,22 @@ public class Mbo implements Module {
 		this.crc = new CRC32();
 		initTrack();
 		startGui();
+		testInitTrains();
+		while (true) {
+			try {
+				Thread.sleep(2000);
+			} catch (Exception e) {
+
+			}
+			this.updateTrainInfo();
+			// red A1
+			double[] red1 = {227.416376,119.890932};
+			double[] red2 = {251.654612,106.711009};
+ 			trains.get("RED 1").updatePosition(red1, getBlockFromCoordinates(red1).getID());
+			// red A3
+			trains.get("RED 2").updatePosition(red2, getBlockFromCoordinates(red2).getID());
+			gui.update();
+		}
 	}
 
 	private void initTrack() {
@@ -60,9 +76,9 @@ public class Mbo implements Module {
 	}
 
 	public void testInitTrains() {
-		trains.put("BLUE 1", new TrainInfo("BLUE 1"));
-		trains.put("BLUE 2", new TrainInfo("BLUE 2"));
-		trains.put("BLUE 3", new TrainInfo("BLUE 3"));
+		trains.put("RED 1", new TrainInfo("RED 1"));
+		trains.put("RED 2", new TrainInfo("RED 2"));
+		trains.put("RED 3", new TrainInfo("RED 3"));
 	}
 
 	public Object[][] getTrainData() {
@@ -118,21 +134,21 @@ public class Mbo implements Module {
 		// update train's position
 		//double x = Double.parseDouble(vals[1]);
 		//double y = Double.parseDouble(vals[2]);
-		String blockId = getBlockFromCoordinates(pos);
+		String blockId = getBlockFromCoordinates(pos).getID();
 		trains.get(train).updatePosition(pos, blockId);
 
 		return true;
 	}
 
-	private String getBlockFromCoordinates(double[] pos) {
+	private MboBlock getBlockFromCoordinates(double[] pos) {
 		for (MboBlock block : redLine) {
 			if (block.onBlock(pos[0], pos[1])) {
-				return block.getID();
+				return block;
 			}
 		}
 		for (MboBlock block : greenLine) {
 			if (block.onBlock(pos[0], pos[1])) {
-				return block.getID();
+				return block;
 			}
 		}
 		return null;
@@ -149,6 +165,7 @@ public class Mbo implements Module {
 	public void updateTrainInfo() {
 		for (String train : trains.keySet()) {
 			trains.get(train).setAuthority(calculateAuthority(train));
+			trains.get(train).setSafeBrakingDistance(calculateSafeBrakingDistance(train));
 		//	trainController.setMboAuthority(train, trains.get(train).getAuthority());
 		}
 	}
@@ -173,7 +190,96 @@ public class Mbo implements Module {
 	}
 
 	private double calculateSafeBrakingDistance(String trainID) {
-		return 0;	
+
+		// get the current block
+		TrainInfo train = trains.get(trainID);
+		MboBlock block = getBlockFromCoordinates(train.getPosition());
+		ArrayList<MboBlock> line;
+		if (block.getLine().equals("red")) {
+			line = redLine;
+		} else {
+			line = greenLine;
+		}
+		int blockIndex = line.indexOf(block);
+		System.out.printf("%s on %s at %s.\n", trainID, block.getLine(), block.getID());
+
+		// get displacement into block
+		// the ith coordinate is i meters in
+		double xval = train.getPosition()[0];
+		int blockDisplacement = Arrays.asList(block.getXCoordinates()).indexOf(xval);
+		System.out.printf("%s is %d meters in at %f.\n", trainID, blockDisplacement, xval);
+		
+
+		// Step 1: input power and convert the power to a force based on the starting velocity
+	    //double trainMass = trainWeight*KG_PER_POUND;
+    	double trainMass = 75000; // TODO put a real mass in!!
+/*
+    	// this is ensuring that we never get a negative speed
+    	if (this.currentSpeed == 0) {
+    		this.force = (this.powerIn * 1000)/1;
+    	} else {
+    		this.force = (this.powerIn * 1000)/this.currentSpeed;
+    	}
+    	setGrade();
+    	// Step 2: Calculate the slope of the train's current angle (Degrees = Tan-1 (Slope Percent/100))
+    	this.slope = Math.atan2(this.grade,100);
+    	double angle = Math.toDegrees(this.slope);
+    	
+    	// Step 3: Calculate the forces acting on the train using the coefficient of friction
+    	// and the train's weight in lbs converted to kg divided over the wheels (where the force is technically
+    	// being applied times gravity (G)
+    	this.normalForce = (trainMass/12) * G * Math.sin(angle);	// divide by 12 for the number of wheels
+    	this.downwardForce = (trainMass/12) * G * Math.cos(angle);	// divide by 12 for the number of wheels
+
+    	// compute friction force
+    	this.friction = (FRICTION_COEFFICIENT * this.downwardForce) + this.normalForce;
+    	
+    	// sum of the forces
+    	this.totalForce = this.force - this.friction;
+    	    	
+    	this.force = this.totalForce;
+    	
+    	// Step 4: Calculate acceleration using the F = ma equation, where m = the mass of the body moving
+    	this.trainAcceleration = this.force/trainMass;
+    	
+    	// and have to check to make sure this acceleration does not exceed our max.
+    	if (this.trainAcceleration >= TRAIN_MAX_ACCELERATION * 1) {	// time elapsed (one second)
+    		// set the acceleration as the max acceleration because we cannot exceed that
+    		this.trainAcceleration = TRAIN_MAX_ACCELERATION * 1;	// time elapsed (one second)
+    	}
+    	
+    	// decelerates the train based on the values given in the spec sheet for the emergency brake
+    	if (emerBrake) {
+    		this.trainAcceleration = (TRAIN_MAX_ACCELERATION_E_BRAKE*1);
+    	}
+    	
+    	// decelerates the train based onthe values given in the spec sheet for the service brake
+    	if(serviceBrake) {
+    		this.trainAcceleration = (TRAIN_MAX_ACCELERATION_SERVICE_BRAKE*1);
+    	}
+    	
+    	// Step 5: Calculate the final speed by adding the old speed with the acceleration x the time elapsed (one second)
+    	this.finalSpeed = this.currentSpeed + (this.trainAcceleration * 1);
+    	
+    	// NO NEGATIVE SPEEDS YINZ
+    	if(this.finalSpeed < 0) {
+            this.finalSpeed = 0;
+        }
+    	
+    	// resetting the current speed based on our calculations
+    	this.currentSpeed =  this.finalSpeed;
+    	this.distTravelled = this.currentSpeed * 1; // speed times the time between clock ticks = distance travelled
+    	//System.out.println(finalSpeed);
+    	
+    	if(!(currentBlock == this.position.getCurrentBlock())) {
+    		metersIn = 0;
+    	} else {
+    		metersIn += this.distTravelled;
+    	}
+    	this.position.moveTrain(this.distTravelled); // method call to tell the position class how far to move the train
+    	
+    */
+		return Double.MAX_VALUE;	
 	}
 
 	@Override
@@ -184,21 +290,5 @@ public class Mbo implements Module {
 
 	public static void main(String[] args) {
 		new Mbo();
-		/*testInitTrains();
-		while (true) {
-			try {
-				Thread.sleep(2000);
-			} catch (Exception e) {
-
-			}
-			this.updateTrainInfo();
-			// red A1
-			double[] red1 = {227.416376,119.890932};
-			double[] red2 = {251.654612,106.711009};
- 			trains.get("RED 1").updatePosition(red1, getBlockFromCoordinates(red1));
-			// red A3
-			trains.get("RED 2").updatePosition(red2, getBlockFromCoordinates(red2));
-			gui.update();
-		}*/
 	}
 }
