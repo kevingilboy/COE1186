@@ -122,8 +122,8 @@ public class TrainModelGUI extends JFrame {
 	public JLabel lightStatusLabel = new JLabel();
 	public JLabel numPassengers = new JLabel();
 	public JLabel authorityVal = new JLabel();
-	public JLabel serviceLabel = new JLabel();
 	public JLabel emergencyLabel = new JLabel();
+	public JLabel serviceLabel = new JLabel();
 	public JLabel ctcSpeedLabel = new JLabel();
 	
 	public JLabel lblLine = new JLabel();
@@ -675,13 +675,13 @@ public class TrainModelGUI extends JFrame {
 		lblEmergencyBrake.setBounds(371, 277, 154, 20);
 		contentPane.add(lblEmergencyBrake);
 		
-		serviceLabel.setFont(new Font("Dialog", Font.PLAIN, 18));
-		serviceLabel.setBounds(529, 277, 69, 20);
-		contentPane.add(serviceLabel);
-		
 		emergencyLabel.setFont(new Font("Dialog", Font.PLAIN, 18));
-		emergencyLabel.setBounds(529, 245, 69, 20);
+		emergencyLabel.setBounds(529, 277, 69, 20);
 		contentPane.add(emergencyLabel);
+		
+		serviceLabel.setFont(new Font("Dialog", Font.PLAIN, 18));
+		serviceLabel.setBounds(529, 245, 69, 20);
+		contentPane.add(serviceLabel);
 		btnEndFailure.setBounds(855, 268, 94, 29);
 		
 		contentPane.add(btnEndFailure);
