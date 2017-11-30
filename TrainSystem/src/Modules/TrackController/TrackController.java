@@ -125,7 +125,7 @@ public class TrackController implements Module{
 	}
 	
 	//CTC Functions
-	public void transmitSuggestedTrainSetpointSpeed(String trainName, int speed){
+	public void transmitSuggestedTrainSetpointSpeed(String trainName, double speed){
 		trackModel.transmitSuggestedTrainSetpointSpeed(trainName, speed);
 	}
 	// transmit as int[] authority = currentBlock, nextBlocks[]
@@ -200,6 +200,7 @@ public class TrackController implements Module{
 	
 	//Helper Functions
 	private boolean compareSwitchState(int nb, int nnb){
+		Boolean state = trackModel.getBlock(associatedLine,nb).getSwitch().getState();
 		if(trackModel.getBlock(associatedLine,nb).getSwitch().getState()){
 			if(trackModel.getBlock(associatedLine,nb).getSwitch().getPortNormal() == nnb){
 				return true;
