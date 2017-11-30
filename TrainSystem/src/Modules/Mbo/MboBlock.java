@@ -38,6 +38,14 @@ public class MboBlock {
 			this.y_coordinates = y_coordinates;
 	}
 
+	public String getLine() {
+		return line;
+	}
+
+	public double[] getXCoordinates() {
+		return x_coordinates;
+	}
+
 	public boolean onBlock(double x, double y) {
 		boolean result = false;
 		for (int i = 0; i < x_coordinates.length; i++) {

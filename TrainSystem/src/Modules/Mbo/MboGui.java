@@ -30,6 +30,7 @@ public class MboGui extends JFrame implements ActionListener {
 	public MboGui(Mbo mbo) {
 		this.mbo = mbo;
         init();
+		MboGui.setVisible(true);
 	}
 
 	private void init() {
@@ -295,6 +296,7 @@ public class MboGui extends JFrame implements ActionListener {
 	}
 
 	public void update() {
+		mbo.testInitTrains();
 		this.timeBox.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
 		this.trainData = mbo.getTrainData();
 		this.trainInfoTableModel.setDataVector(this.trainData, this.trainInfoColumns);
