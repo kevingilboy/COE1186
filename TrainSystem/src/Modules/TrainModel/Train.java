@@ -53,6 +53,7 @@ public class Train {
     public final double FEET_PER_METER = 3.28;         
     public final double KG_PER_POUND = 0.454; 
     public final String DEGREE = "\u00b0";
+    public final double MS_TO_MPH = 2.23694;
     
     public final int APPROACHING = 0;
     public final int ARRIVING = 1;
@@ -260,7 +261,7 @@ public class Train {
         this.trainModelGUI.lengthVal.setText(Double.toString(truncateTo(this.trainLength, 2)));
         this.trainModelGUI.weightVal.setText(Double.toString(truncateTo(this.trainWeight, 2)));
         this.trainModelGUI.capacityVal.setText(Integer.toString(this.trainCapacity));
-        this.trainModelGUI.powerVal.setText(Double.toString(this.powerIn/1000));
+        this.trainModelGUI.powerVal.setText(Double.toString(truncateTo(this.powerIn/1000,2)));
         
         if(GPSAntenna == true) {
         	this.trainModelGUI.gpsAntennaStatusLabel.setText("ON");
@@ -274,7 +275,7 @@ public class Train {
         }
      	
      	this.trainModelGUI.timeVal.setText(trnMdl.currentTime.toString());
-     	this.trainModelGUI.stationVal.setText("Pioneer");
+     	this.trainModelGUI.stationVal.setText(this.station);
      	
      	if(rightDoorIsOpen == true) {
         	this.trainModelGUI.rightDoorStatusLabel.setText("OPEN");
@@ -295,7 +296,7 @@ public class Train {
      	
      	this.trainModelGUI.numPassengers.setText(Integer.toString(this.numPassengers));
      	this.trainModelGUI.authorityVal.setText(Double.toString(truncateTo(this.CTCAuthority,2)));
-     	this.trainModelGUI.ctcSpeedLabel.setText(Double.toString(truncateTo(this.CTCSpeed*2.23694,2)));
+     	this.trainModelGUI.ctcSpeedLabel.setText(Double.toString(truncateTo(this.CTCSpeed*MS_TO_MPH,2)));
      	
      	if(serviceBrake == true) {
      		this.trainModelGUI.serviceLabel.setText("ON");
@@ -315,7 +316,7 @@ public class Train {
      	} else {
      		this.trainModelGUI.arrivalStatusLabel.setText("DEPARTING");
      	}
-     	this.trainModelGUI.currentSpeedLabel.setText(Double.toString(truncateTo((this.currentSpeed*SECONDS_PER_HOUR/METERS_PER_MILE), 2)));
+     	this.trainModelGUI.currentSpeedLabel.setText(Double.toString(truncateTo((this.currentSpeed*MS_TO_MPH), 2)));
          
      	if (this.lineColor.equals("GREEN")) {
      		this.trainModelGUI.lblLine.setText(lineColor);
