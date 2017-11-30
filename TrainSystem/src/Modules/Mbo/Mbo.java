@@ -35,23 +35,6 @@ public class Mbo implements Module {
 		this.crc = new CRC32();
 		initTrack();
 		startGui();
-		testInitTrains();
-		while (true) {
-			try {
-				Thread.sleep(2000);
-			} catch (Exception e) {
-
-			}
-			this.updateTrainInfo();
-			// red A1
-			double[] red1 = {227.416376,119.890932};
-			double[] red2 = {251.654612,106.711009};
- 			trains.get("RED 1").updatePosition(red1, getBlockFromCoordinates(red1));
-			// red A3
-			trains.get("RED 2").updatePosition(red2, getBlockFromCoordinates(red2));
-			gui.update();
-		}
-//		build_initTrains();
 	}
 
 	private void initTrack() {
@@ -77,9 +60,9 @@ public class Mbo implements Module {
 	}
 
 	public void testInitTrains() {
-		trains.put("RED 1", new TrainInfo("RED 1"));
-		trains.put("GREEN 1", new TrainInfo("GREEN 1"));
-		trains.put("RED 2", new TrainInfo("RED 2"));
+		trains.put("BLUE 1", new TrainInfo("BLUE 1"));
+		trains.put("BLUE 2", new TrainInfo("BLUE 2"));
+		trains.put("BLUE 3", new TrainInfo("BLUE 3"));
 	}
 
 	public Object[][] getTrainData() {
@@ -201,5 +184,21 @@ public class Mbo implements Module {
 
 	public static void main(String[] args) {
 		new Mbo();
+		/*testInitTrains();
+		while (true) {
+			try {
+				Thread.sleep(2000);
+			} catch (Exception e) {
+
+			}
+			this.updateTrainInfo();
+			// red A1
+			double[] red1 = {227.416376,119.890932};
+			double[] red2 = {251.654612,106.711009};
+ 			trains.get("RED 1").updatePosition(red1, getBlockFromCoordinates(red1));
+			// red A3
+			trains.get("RED 2").updatePosition(red2, getBlockFromCoordinates(red2));
+			gui.update();
+		}*/
 	}
 }
