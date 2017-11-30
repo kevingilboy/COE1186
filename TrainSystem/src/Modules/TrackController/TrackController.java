@@ -133,8 +133,22 @@ public class TrackController implements Module{
 		boolean canProceed = tcplc.canProceedPath(authority);
 		double distAuthority = 0;
 		if(canProceed && authority.length > 1){
-			if(trackModel.getBlock(associatedLine, authority[1]).getSwitch() != null){
-				boolean canSwitch = tcplc.canSwitchPath(authority);
+			boolean canSwitch = tcplc.canSwitchPath(authority);
+			if(trackModel.getBlock(associatedLine, authority[0).getSwitch() != null){
+				if(canSwitch && authority.length > 2){
+					if(!(compareSwitchState(authority[0], authority[1]))){//switch state not correct
+						transmitSwitchState(associatedLine, authority[0], !trackModel.getBlock(line, blockId).getSwitch().getState());
+						distAuthority = calcAuthDist(authority);
+						trackModel.transmitCtcAuthority(trainName, distAuthority);
+					} else { //switch is in the right state
+						//transmitSwitchState(associatedLine, authority[1], trackModel.getBlock(line, blockId).getSwitch().getState());
+						distAuthority = calcAuthDist(authority);
+						trackModel.transmitCtcAuthority(trainName, distAuthority);
+					}
+				} else { //has switch but cant switch state (correct or not)
+					trackModel.transmitCtcAuthority(trainName, distAuthority);
+				}
+			} else if (trackModel.getBlock(associatedLine, authority[1]).getSwitch() != null){
 				if(canSwitch && authority.length > 2){
 					if(!(compareSwitchState(authority[1], authority[2]))){//switch state not correct
 						transmitSwitchState(associatedLine, authority[1], !trackModel.getBlock(line, blockId).getSwitch().getState());
