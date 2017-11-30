@@ -313,9 +313,12 @@ public class Train {
      		this.trainModelGUI.arrivalStatusLabel.setText("ARRIVING");
      	} else if (this.arrivalStatus == EN_ROUTE) {
      		this.trainModelGUI.arrivalStatusLabel.setText("EN ROUTE");
+     	} else if (this.arrivalStatus == APPROACHING) {
+     		this.trainModelGUI.arrivalStatusLabel.setText("APPROACHING");
      	} else {
      		this.trainModelGUI.arrivalStatusLabel.setText("DEPARTING");
      	}
+     	
      	this.trainModelGUI.currentSpeedLabel.setText(Double.toString(truncateTo((this.currentSpeed*MS_TO_MPH), 2)));
          
      	if (this.lineColor.equals("GREEN")) {
