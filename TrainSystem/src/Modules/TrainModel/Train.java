@@ -260,7 +260,7 @@ public class Train {
         this.trainModelGUI.lengthVal.setText(Double.toString(truncateTo(this.trainLength, 2)));
         this.trainModelGUI.weightVal.setText(Double.toString(truncateTo(this.trainWeight, 2)));
         this.trainModelGUI.capacityVal.setText(Integer.toString(this.trainCapacity));
-        this.trainModelGUI.powerVal.setText(Double.toString(this.powerIn/1000));
+        this.trainModelGUI.powerVal.setText(Double.toString(truncateTo(this.powerIn/1000,2)));
         
         if(GPSAntenna == true) {
         	this.trainModelGUI.gpsAntennaStatusLabel.setText("ON");
@@ -315,7 +315,7 @@ public class Train {
      	} else {
      		this.trainModelGUI.arrivalStatusLabel.setText("DEPARTING");
      	}
-     	this.trainModelGUI.currentSpeedLabel.setText(Double.toString(truncateTo((this.currentSpeed*SECONDS_PER_HOUR/METERS_PER_MILE), 2)));
+     	this.trainModelGUI.currentSpeedLabel.setText(Double.toString(truncateTo((this.currentSpeed*2.23694), 2)));
          
      	if (this.lineColor.equals("GREEN")) {
      		this.trainModelGUI.lblLine.setText(lineColor);
