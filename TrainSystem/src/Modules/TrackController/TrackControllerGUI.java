@@ -60,7 +60,7 @@ public class TrackControllerGUI extends JFrame{
 		}
 
 		drawTrackControllerGui(tc, line, blocks);
-		this.setVisible(true);
+		// this.setVisible(true); UNCOMMENT BEFORE PUSHING THIS BRANCH
 	}
 	
 	/**
