@@ -39,13 +39,13 @@ public class Simulator {
 	public Simulator() throws InterruptedException {		
 		//Initialize all modules
 		ctc = new Ctc();
-		trackController = new TrackController();
+		//trackController = new TrackController();
 		trackModel = new TrackModel();
 		trainController = new TrainController();
 		trainModel = new TrainModel();
 		mbo = new Mbo();
 		
-		modules = new Module[]{ctc,trackController,trackModel,trainModel, trainController, mbo};
+		modules = new Module[]{ctc,trackModel,trainModel, trainController, mbo};
 		
 		//Pass cross references
 		ctc.simulator = this;
@@ -53,7 +53,7 @@ public class Simulator {
 		ctc.trainModel = trainModel;
 		ctc.trainController = trainController;
 
-		trackController.trackModel = trackModel;
+		//trackController.trackModel = trackModel;
 
 		trackModel.simulator = this;
 		trackModel.trainModel = trainModel;
@@ -76,8 +76,8 @@ public class Simulator {
 			while(!module.communicationEstablished()) {};
 		}
 		
-		//Pause timer
-		//pause();
+		//Wait for Ctc to press play...
+		//play();
 	}
 	
 	public void pause() {
