@@ -49,6 +49,9 @@ public class TrainModel implements Module{
 	@Override
 	public boolean updateTime(SimTime time) {
 		currentTime = time;
+		/*if(!shown) {
+			dispatchTrain("train1","GREEN");
+		}*/
 		if(!trainList.isEmpty()) {
 			if(!shown) { // if no GUI has yet been shown. This should only ever be true once
 				int ID = trainList.keySet().iterator().next();
