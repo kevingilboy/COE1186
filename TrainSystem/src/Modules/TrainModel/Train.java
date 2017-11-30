@@ -241,17 +241,6 @@ public class Train {
      */
     public void setValuesForDisplay() {
     	this.trainModelGUI.tempLabel.setText(Integer.toString(this.temperature) + DEGREE + "F");
-         
-        if(this.trainModelGUI.serviceBrakeStatus()) {	// if the brakes were applied (button pressed)
-        	this.serviceBrake = true;
-        } else {
-        	this.serviceBrake = false;
-        }
-        if(this.trainModelGUI.emerBrakeStatus()) {	// if the e brake was pushed (button pressed)
-        	this.emerBrake = true;
-        } else {
-        	this.emerBrake = false;
-        }
 
         this.trainCars = this.trainModelGUI.numCars();
         this.trainWheels = this.trainCars * TRAIN_NUM_WHEELS;
@@ -295,15 +284,15 @@ public class Train {
         }
      	
      	this.trainModelGUI.numPassengers.setText(Integer.toString(this.numPassengers));
-     	this.trainModelGUI.authorityVal.setText(Double.toString(truncateTo(this.CTCAuthority,2)));
+     	this.trainModelGUI.authorityVal.setText(Double.toString(truncateTo(this.CTCAuthority/METERS_PER_MILE,2)));
      	this.trainModelGUI.ctcSpeedLabel.setText(Double.toString(truncateTo(this.CTCSpeed*MS_TO_MPH,2)));
      	
-     	if(serviceBrake == true) {
+     	if(serviceBrake) {
      		this.trainModelGUI.serviceLabel.setText("ON");
         } else {
         	this.trainModelGUI.serviceLabel.setText("OFF");
         }
-     	if(emerBrake == true) {
+     	if(emerBrake) {
      		this.trainModelGUI.emergencyLabel.setText("ON");
         } else {
         	this.trainModelGUI.emergencyLabel.setText("OFF");
@@ -313,6 +302,8 @@ public class Train {
      		this.trainModelGUI.arrivalStatusLabel.setText("ARRIVING");
      	} else if (this.arrivalStatus == EN_ROUTE) {
      		this.trainModelGUI.arrivalStatusLabel.setText("EN ROUTE");
+     	} else if (this.arrivalStatus == APPROACHING) {
+     		this.trainModelGUI.arrivalStatusLabel.setText("APPROACHING");
      	} else {
      		this.trainModelGUI.arrivalStatusLabel.setText("DEPARTING");
      	}
@@ -375,12 +366,12 @@ public class Train {
     	
     	// decelerates the train based on the values given in the spec sheet for the emergency brake
     	if (emerBrake) {
-    		this.trainAcceleration = (TRAIN_MAX_ACCELERATION_E_BRAKE*1);
+    		this.trainAcceleration += (TRAIN_MAX_ACCELERATION_E_BRAKE*1);
     	}
     	
     	// decelerates the train based onthe values given in the spec sheet for the service brake
     	if(serviceBrake) {
-    		this.trainAcceleration = (TRAIN_MAX_ACCELERATION_SERVICE_BRAKE*1);
+    		this.trainAcceleration += (TRAIN_MAX_ACCELERATION_SERVICE_BRAKE*1);
     	}
     	
     	// Step 5: Calculate the final speed by adding the old speed with the acceleration x the time elapsed (one second)
@@ -631,7 +622,7 @@ public class Train {
      */
     public void setEBrake(boolean ebrake) {
     	this.emerBrake = ebrake;
-    	trnMdl.setPassengerEmergencyBrake(this.trainID, ebrake);
+    	//trnMdl.setPassengerEmergencyBrake(this.trainID, ebrake);
     }
     
     /**
