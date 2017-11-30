@@ -4,6 +4,7 @@ import Shared.Module;
 import Shared.SimTime;
 
 import Modules.TrackModel.TrackCsvParser;
+import Modules.TrackController.TrackController;
 import Modules.TrackModel.Block;
 
 import java.awt.EventQueue;
@@ -59,6 +60,12 @@ public abstract class CtcCore implements Module,TimeControl {
 		}
 		currentTime = new SimTime(time);
 		
+		//Trigger TrackControllers to update before proceeding
+		for(TrackController tc : ctc.trackControllers) {
+			//Wait for tc to update before continuing
+			while(!tc.updateTime(currentTime)) {};
+		}
+		
 		//Throughput
 		calculateThroughput();
 		
@@ -70,19 +77,23 @@ public abstract class CtcCore implements Module,TimeControl {
 				gui.autoDispatchFromQueue(name);
 			}
 		}
-		
-		//Calculate authority
+			
 		for(Train train : trains.values()) {
-			/*
+			//Calculate authority
 			ArrayList<Integer> authorityAl = train.calculateAuthorityPath();
+			
+			TrackController wayside = ctc.getWaysideOfBlock(train.line,train.currLocation);
 			
 			int[] authority = new int[authorityAl.size()];
 			for(int i=0; i<authorityAl.size(); i++) {
 				authority[i] = authorityAl.get(i);
 			}
 			
-			transmitCtcAuthority(train.name, authority);
-			*/
+			transmitCtcAuthority(train.name, wayside, authority);
+			
+			//Calculate speed
+			train.calculateSuggestedSpeed();
+			transmitSuggestedSpeed(train.name, wayside, train.suggestedSpeed);
 		}
 		
 		gui.repaint();
@@ -150,10 +161,10 @@ public abstract class CtcCore implements Module,TimeControl {
 	/*
 	 * TRANSMITTERS
 	 */
-	protected void transmitSuggestedSpeed(String name, int speed) {
-		ctc.trackController.transmitSuggestedTrainSetpointSpeed(name,speed);
+	protected void transmitSuggestedSpeed(String name, TrackController wayside, int speed) {
+		wayside.transmitSuggestedTrainSetpointSpeed(name,speed);
 	}
-	protected void transmitCtcAuthority(String name, int[] auth) {
-		ctc.trackController.transmitCtcAuthority(name,auth);
+	protected void transmitCtcAuthority(String name, TrackController wayside, int[] auth) {
+		wayside.transmitCtcAuthority(name,auth);
 	}
 }

@@ -51,7 +51,7 @@ public class CtcGui {
 	/*
 	 * Dispatched train tables
 	 */
-	private Object[] dispatchedTrainsColumnNames = {"Train","Location","Speed","Authority","Passengers"};
+	private Object[] dispatchedTrainsColumnNames = {"Train","Location","Sug. Speed","Authority","Passengers"};
 	private Object[][] dispatchedTrainsInitialData = new Object[0][dispatchedTrainsColumnNames.length];
 
 	private ScheduleJTable dispatchSelectedTable;
@@ -307,6 +307,22 @@ public class CtcGui {
 		trainCreationLine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				trainCreationTable.setSchedule(new Schedule((Line)trainCreationLine.getSelectedItem()));
+				
+				//Restore name and time
+				String name = trainCreationName.getText();
+				String time = trainCreationDepartTime.getText();
+				
+				Boolean validName = name!=null && !name.equals("");
+				Boolean validTime = SimTime.isValid(time);
+				
+				if(validName) {
+					trainCreationTable.schedule.setName(name);
+				}
+				if(validTime) {
+					trainCreationTable.schedule.setDepartureTime(new SimTime(time));
+					trainCreationTable.fireScheduleChanged();	
+				}
+				
 				enableTrainCreationComponents();
 			}
 		});
@@ -362,6 +378,7 @@ public class CtcGui {
 		contentPane.add(scrollPane_1);
 		
 		trainCreationTable = new ScheduleJTable();
+		trainCreationTable.setEnabled(false);
 		trainCreationTable.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent arg0) {
 				enableTrainCreationComponents();
@@ -383,6 +400,21 @@ public class CtcGui {
 		contentPane.add(lblQueue);
 		
 		JTabbedPane queueTabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		queueTabbedPane.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				if(queueSelectedTable!=null) {
+					queueSelectedTable.clear();
+					queueDepartTime.setText("");
+					
+					btnDeleteQueueSchedule.setEnabled(false);
+					btnDispatchQueueSchedule.setEnabled(false);
+					
+					for(Line line : Line.values()) {
+						line.queueTable.clearSelection();
+					}
+				}
+			}
+		});
 		queueTabbedPane.setFont(new Font("SansSerif", Font.PLAIN, 16));
 		queueTabbedPane.setBounds(489, 174, 406, 187);
 		contentPane.add(queueTabbedPane);
@@ -431,6 +463,9 @@ public class CtcGui {
 
 				queueSelectedTable.clear();
 				queueDepartTime.setText("");
+				
+				btnDeleteQueueSchedule.setEnabled(false);
+				btnDispatchQueueSchedule.setEnabled(false);
 			}
 		});
 		btnDeleteQueueSchedule.setBounds(713, 402, 171, 41);
@@ -497,10 +532,21 @@ public class CtcGui {
 		lblDispatchedTrains.setBounds(920, 142, 468, 33);
 		contentPane.add(lblDispatchedTrains);
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setFont(new Font("SansSerif", Font.PLAIN, 16));
-		tabbedPane.setBounds(946, 174, 425, 187);
-		contentPane.add(tabbedPane);
+		JTabbedPane dispatchedTabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		dispatchedTabbedPane.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				if(dispatchSelectedTable!=null) {
+					dispatchSelectedTable.clear();
+					manualSpeedSetEnabled(false);
+					for(Line line : Line.values()) {
+						line.dispatchedTable.clearSelection();
+					}
+				}
+			}
+		});
+		dispatchedTabbedPane.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		dispatchedTabbedPane.setBounds(946, 174, 425, 187);
+		contentPane.add(dispatchedTabbedPane);
 		
 		for(Line line : Line.values()) {
 			JScrollPane scrollPane = new JScrollPane();
@@ -515,12 +561,11 @@ public class CtcGui {
 					String trainName = (String) line.dispatchedData.getValueAt(row, 0);
 					Schedule schedule = ctc.getTrainByName(trainName).schedule;
 					dispatchSelectedTable.setSchedule(schedule);
-					btnSuggestSpeed.setEnabled(true);
-					suggestedSpeed.setEnabled(true);
+					manualSpeedSetEnabled(true);
 				}
 			});
 			scrollPane.setViewportView(line.dispatchedTable);
-			tabbedPane.addTab(line.toString(), null, scrollPane, null);
+			dispatchedTabbedPane.addTab(line.toString(), null, scrollPane, null);
 		}
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -543,24 +588,26 @@ public class CtcGui {
 		frame.getContentPane().add(lblSuggestSpeed);
 		
 		suggestedSpeed = new JTextField();
-		suggestedSpeed.setEnabled(false);
 		suggestedSpeed.setColumns(10);
 		suggestedSpeed.setBounds(1260, 439, 52, 39);
 		frame.getContentPane().add(suggestedSpeed);
 		
 		btnSuggestSpeed = new JButton("Send");
-		btnSuggestSpeed.setEnabled(false);
 		btnSuggestSpeed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String speed = suggestedSpeed.getText();
 				if(speed.contains("[0-9]+")) {
-					ctc.transmitSuggestedSpeed(dispatchSelectedTable.schedule.name, Integer.parseInt(speed));
+					Train train = ctc.getTrainByName(dispatchSelectedTable.schedule.name);
+					train.overrideSuggestedSpeed = true;
+					train.suggestedSpeed = Integer.parseInt(speed);
 				}
 			}
 		});
 		btnSuggestSpeed.setFont(new Font("Dialog", Font.PLAIN, 16));
 		btnSuggestSpeed.setBounds(1319, 441, 66, 32);
 		frame.getContentPane().add(btnSuggestSpeed);
+		
+		manualSpeedSetEnabled(false);
 		
 		/**
 		 * BOTTOM FRAME
@@ -688,13 +735,17 @@ public class CtcGui {
 	private void enableTrainCreationComponents() {
 		String name = trainCreationName.getText();
 		String time = trainCreationDepartTime.getText();
-		Boolean validProps = name!=null && !name.equals("") && SimTime.isValid(time);
 		
-		//If valid name and time, allow schedule editing
-		trainCreationTable.setEnabled(validProps);
-
-		//If valid name and time, and schedule has one stop then allow schedule to be dispatched
-		addToDispatchToQueue.setEnabled(validProps && trainCreationTable.schedule.stops.size()>0);
+		Boolean validName = name!=null && !name.equals("");
+		Boolean validTime = SimTime.isValid(time);
+		
+		if(validName && validTime) {
+			//If valid name and time, allow schedule editing
+			trainCreationTable.setEnabled(true);
+	
+			//If valid name and time, and schedule has one stop then allow schedule to be dispatched
+			addToDispatchToQueue.setEnabled(trainCreationTable.schedule.stops.size()>0);
+		}
 	}
 	
 	/*
@@ -760,7 +811,7 @@ public class CtcGui {
 		for(String trainName:ctc.trains.keySet()) {
 			train = ctc.getTrainByName(trainName);
 			//Object[] row; //build the row here, but for now we fake the functionality below
-			Object[] row = {train.name,train.line.blocks[train.currLocation],train.speed,train.authority+" mi",train.passengers};
+			Object[] row = {train.name,train.line.blocks[train.currLocation],train.suggestedSpeed,train.authority+" mi",train.passengers};
 			train.line.dispatchedData.addRow(row);
 		}
 
@@ -778,6 +829,11 @@ public class CtcGui {
 				}
 			}
 		}
+	}
+	
+	private void manualSpeedSetEnabled(Boolean b) {
+		btnSuggestSpeed.setEnabled(b);
+		suggestedSpeed.setEnabled(b);
 	}
 
 	/*
