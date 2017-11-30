@@ -100,7 +100,7 @@ public class TrainModel implements Module{
 				trainModelGUI.addTraintoGUIList(t);
 			}
 			// adds this new train to all the other train's GUI lists
-			if(trainList.size() > 1) {
+			if(trainList.size() > 0) {
 				TrainModelGUI otherGUI = t.getTrainGUI();
 				otherGUI.addTraintoGUIList(train);	
 			}
