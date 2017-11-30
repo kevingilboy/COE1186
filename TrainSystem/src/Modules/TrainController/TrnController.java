@@ -92,7 +92,7 @@ public class TrnController {
 		ctcAuth = controller.receiveCtcAuthority(trainID);
 		passEBrakes = controller.receivePassengerEmergencyBrake(trainID);	//NEED TO IMPLEMENT
 		currentBlock = controller.receiveTrainPosition(trainID);
-		currentBlockInfo = mapInfo.get(currentBlock - 1);
+		currentBlockInfo = mapInfo.get(currentBlock);
 		speedLimit = currentBlockInfo.getSpeedLimit();
 		if (driveMode == 0) {		//if auto
 			setpointSpeed = controller.receiveSetpointSpeed(trainID);

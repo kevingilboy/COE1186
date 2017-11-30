@@ -92,7 +92,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         previous_xy_coords.add(previous_xy_coord);
 
         trainIDs.add(trainID);
-        positions.add(new Position(blocks));
+        positions.add(pos);
         activeTrains++;
     }
 
@@ -300,8 +300,12 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
     public void drawTrains(Graphics2D g2d){
         for (int i = 0; i < activeTrains; i++){
                 
+            /* Hard-coded train movement (track model debug only)
             int scaledMetersToMove = (int)(blocks.get(positions.get(i).getCurrentBlock()).getLength()) / 10;
             int direction = positions.get(i).moveTrain( scaledMetersToMove );
+            */
+           
+            int direction = positions.get(i).getCurrentDirection();
 
             if (direction == 1){
                 (xy_coords.get(i))[0] = (positions.get(i).getCoordinates())[0];
