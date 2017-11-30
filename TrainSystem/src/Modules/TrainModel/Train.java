@@ -702,7 +702,7 @@ public class Train {
 
     	int  n = rand.nextInt(this.numPassengers);
     	if (this.numPassengers - n <= 0) {
-    		this.numPasengers = 0;
+    		this.numPassengers = 0;
     		//return this.numPassengers;
     	} else {
             this.numPassengers = this.numPassengers - n;
