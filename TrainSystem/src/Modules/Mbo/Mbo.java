@@ -119,6 +119,7 @@ public class Mbo implements Module {
 
 		// check that checksum is valid
 		crc.reset();
+		System.out.printf("Received %f:%f for %s\n", pos[0], pos[1], train);
 		//String[] segments = signal.split(":");
 		//long checksum = Long.parseLong(segments[1]);
 		crc.update(String.format("%s;%.0f;%.0f",train,pos[0],pos[1]).getBytes());
