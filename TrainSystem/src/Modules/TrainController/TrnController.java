@@ -95,6 +95,7 @@ public class TrnController {
 		currentBlockInfo = mapInfo.get(currentBlock);
 		speedLimit = currentBlockInfo.getSpeedLimit();
 		beacon = controller.receiveBeaconValue(trainID);
+		calcAuth();
 		if (driveMode == 0) {		//if auto
 			setpointSpeed = controller.receiveSetpointSpeed(trainID);
 			if (inStation) {
@@ -116,8 +117,15 @@ public class TrnController {
 				engineOff();
 				sBrakesOn();
 			}
+			else if (overallAuth == 0 && actualSpeed > 0) {
+				engineOff();
+				eBrakesOn();
+			}
+			else if (overallAuth == 0 && actualSpeed == 0) {
+				//Do nuthin'
+			}
 			else {
-				calcAuth();
+				//calcAuth();
 				calcPowerOutput();
 				stationCheck();
 				if (lightCheck()) {
@@ -144,8 +152,15 @@ public class TrnController {
 				engineOff();
 				sBrakesOn();
 			}
+			else if (overallAuth == 0 && actualSpeed > 0) {
+				engineOff();
+				eBrakesOn();
+			}
+			else if (overallAuth == 0 && actualSpeed == 0) {
+				//Do nuthin'
+			}
 			else {
-				calcAuth();
+				//calcAuth();
 				calcPowerOutput();
 				stationCheck();
 			}
