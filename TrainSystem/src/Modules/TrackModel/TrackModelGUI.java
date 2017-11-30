@@ -56,6 +56,7 @@ public class TrackModelGUI implements ActionListener{
 	private JFrame frame_tmGUI;
 	private JPanel panel_dynamicRender;
 	JComboBox comboBox_selectTrack;
+	JComboBox comboBox_sectionId;
 	JLabel label_blockID;
 	JLabel label_lengthVal;
 	JLabel label_gradeVal;
@@ -206,7 +207,7 @@ public class TrackModelGUI implements ActionListener{
 						blockSelected = trackSelected.get(0);
 					}
 					currentDisplay.dynamicTrackView.blockSelected = blockSelected;
-					showBlockInfo(blockSelected);
+					showBlockInfo(trackSelected.get(blockSelected.getId()));
 				}
 			} 
 		});
@@ -239,31 +240,32 @@ public class TrackModelGUI implements ActionListener{
 		frame_tmGUI.getContentPane().add(button_selectBlockLeft);
 		
 		// SECTION AND ID SELECTION (DO THIS LATER)
-		JLabel label_selectSection = new JLabel("SECTION");
-		label_selectSection.setHorizontalAlignment(SwingConstants.RIGHT);
-		label_selectSection.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_selectSection.setFont(new Font("Tw Cen MT Condensed", Font.PLAIN, 28));
-		label_selectSection.setBounds(422, 121, 83, 22);
-		frame_tmGUI.getContentPane().add(label_selectSection);
-		
-		JLabel label_selectID = new JLabel("ID");
-		label_selectID.setHorizontalAlignment(SwingConstants.RIGHT);
-		label_selectID.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_selectID.setFont(new Font("Tw Cen MT Condensed", Font.PLAIN, 28));
-		label_selectID.setBounds(422, 158, 83, 22);
-		frame_tmGUI.getContentPane().add(label_selectID);
+		JLabel label_selectSectionId = new JLabel("SECTION/ID");
+		label_selectSectionId.setHorizontalAlignment(SwingConstants.RIGHT);
+		label_selectSectionId.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
+		label_selectSectionId.setFont(new Font("Tw Cen MT Condensed", Font.PLAIN, 28));
+		label_selectSectionId.setBounds(400, 121, 110, 22);
+		frame_tmGUI.getContentPane().add(label_selectSectionId);
 
-		JComboBox comboBox_section = new JComboBox();
-		comboBox_section.setForeground(Color.WHITE);
-		comboBox_section.setBackground(Color.WHITE);
-		comboBox_section.setBounds(513, 116, 76, 30);
-		frame_tmGUI.getContentPane().add(comboBox_section);
-		
-		JComboBox comboBox_id = new JComboBox();
-		comboBox_id.setForeground(Color.WHITE);
-		comboBox_id.setBackground(Color.WHITE);
-		comboBox_id.setBounds(513, 154, 76, 30);
-		frame_tmGUI.getContentPane().add(comboBox_id);
+		comboBox_sectionId = new JComboBox();
+		comboBox_sectionId.setForeground(Color.BLACK);
+		comboBox_sectionId.setBackground(Color.WHITE);
+		comboBox_sectionId.setBounds(520, 116, 76, 30);
+		frame_tmGUI.getContentPane().add(comboBox_sectionId);
+
+		ItemListener blockSelectionListener = new ItemListener() {
+			public void itemStateChanged(ItemEvent itemEvent) {
+				int state = itemEvent.getStateChange();
+				ItemSelectable is = itemEvent.getItemSelectable();
+
+				int selectedBlockId = Integer.parseInt(selectedString(is).substring(1)) - 1;
+				blockSelected = trackSelected.get(selectedBlockId);
+				currentDisplay.dynamicTrackView.blockSelected = blockSelected;
+				showBlockInfo(blockSelected);
+			}
+	    };
+
+	    comboBox_sectionId.addItemListener(blockSelectionListener);
 
 		//----------------- BLOCK INFO DISPLAY ------------------//	
 		// BLOCK INFO LABEL - STATIC
@@ -397,7 +399,7 @@ public class TrackModelGUI implements ActionListener{
 		frame_tmGUI.getContentPane().add(label_trackHeated);
 		
 		icon_trackHeated = new JLabel("");
-		icon_trackHeated.setIcon(new ImageIcon("Modules\\TrackModel\\images\\statusIcon_grey.png"));
+		icon_trackHeated.setIcon(new ImageIcon("Modules\\TrackModel\\images\\statusIcon_green.png"));
 		icon_trackHeated.setBounds(890, 157, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_trackHeated);
 
@@ -735,6 +737,11 @@ public class TrackModelGUI implements ActionListener{
 
 		comboBox_selectTrack.addItem("RED LINE");
 		comboBox_selectTrack.setSelectedItem("RED LINE");
+
+		for (int i = 0; i < trackSelected.size(); i++){
+			comboBox_sectionId.addItem(trackSelected.get(i).getSection() + (i+1));
+		}
+
 		startTimer();
 	}
 
