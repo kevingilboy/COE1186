@@ -678,6 +678,7 @@ public class TrackModelGUI implements ActionListener{
 	class OpenL implements ActionListener {
 	    public void actionPerformed(ActionEvent e) {
 
+	    	/*
 			JFileChooser c = new JFileChooser();
 			int rVal = c.showOpenDialog(frame_tmGUI);
 
@@ -710,6 +711,7 @@ public class TrackModelGUI implements ActionListener{
 				showBlockInfo(blockSelected);
 				startTimer();
 			}
+			*/
 	    }
 	}
 	
@@ -733,6 +735,7 @@ public class TrackModelGUI implements ActionListener{
 
 		comboBox_selectTrack.addItem("RED LINE");
 		comboBox_selectTrack.setSelectedItem("RED LINE");
+		startTimer();
 	}
 
 	public void startTimer(){
