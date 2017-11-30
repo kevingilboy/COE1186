@@ -54,10 +54,10 @@ public class TrnController {
 		currentStation = null;
 		ready = false;
 		if (line.equals("RED")) {
-			currentBlock = 77;	//yard
+			currentBlock = 76;	//yard
 		}
 		else {
-			currentBlock = 152;	//yard_OUT
+			currentBlock = 151;	//yard_OUT
 		}
 		controller = C;
 		pi = new PIController(p, i);
@@ -92,7 +92,7 @@ public class TrnController {
 		ctcAuth = controller.receiveCtcAuthority(trainID);
 		passEBrakes = controller.receivePassengerEmergencyBrake(trainID);
 		currentBlock = controller.receiveTrainPosition(trainID);
-		currentBlockInfo = mapInfo.get(currentBlock - 1);
+		currentBlockInfo = mapInfo.get(currentBlock);
 		speedLimit = currentBlockInfo.getSpeedLimit();
 		beacon = controller.receiveBeaconValue(trainID);
 		if (driveMode == 0) {		//if auto
