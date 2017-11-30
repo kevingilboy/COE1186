@@ -8,7 +8,7 @@ public class TrainInfo {
 	
 	private String name;
 	private double[] position;
-	private String block;
+	private MboBlock block;
 	private LocalDateTime timeSignalReceived;
 	private double[] previousPosition;
 	private LocalDateTime timePreviousSignalReceived;
@@ -32,7 +32,8 @@ public class TrainInfo {
 		output[0] = name;
 		output[1] = timeSignalReceived;
 		output[2] = Arrays.toString(position);
-		output[3] = block;
+		System.out.println(name + "Block is " + block);
+		output[3] = block.getID();
 		output[4] = speed;
 		output[5] = authority;
 		return output;
@@ -44,9 +45,10 @@ public class TrainInfo {
 		// todo do more
 	}
 
-	public void updatePosition(double[] pos, String block) {
+	public void updatePosition(double[] pos, MboBlock block) {
 		timeSignalReceived = LocalDateTime.now();
 		position = pos;
+		System.out.println("Setting " + name + " on " + block);
 		this.block = block;
 		// todo do more
 	}
@@ -55,8 +57,16 @@ public class TrainInfo {
 		return position;
 	}
 
+	public MboBlock getBlock() {
+		return block;
+	}
+
 	public double getAuthority() {
 		return authority;
+	}
+
+	public double getSpeed() {
+		return speed;
 	}
 
 	public void setAuthority(double auth) {
