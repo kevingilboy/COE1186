@@ -284,7 +284,7 @@ public class Train {
         }
      	
      	this.trainModelGUI.numPassengers.setText(Integer.toString(this.numPassengers));
-     	this.trainModelGUI.authorityVal.setText(Double.toString(truncateTo(this.CTCAuthority,2)));
+     	this.trainModelGUI.authorityVal.setText(Double.toString(truncateTo(this.CTCAuthority/METERS_PER_MILE,2)));
      	this.trainModelGUI.ctcSpeedLabel.setText(Double.toString(truncateTo(this.CTCSpeed*MS_TO_MPH,2)));
      	
      	if(serviceBrake) {
