@@ -307,7 +307,7 @@ public class Train {
      	} else {
      		this.trainModelGUI.arrivalStatusLabel.setText("DEPARTING");
      	}
-     	
+
      	this.trainModelGUI.currentSpeedLabel.setText(Double.toString(truncateTo((this.currentSpeed*MS_TO_MPH), 2)));
          
      	if (this.lineColor.equals("GREEN")) {

@@ -36,7 +36,10 @@ public class Schedule {
 	}
 	
 	public int getNextStop() {
-		return stops.get(nextStopIndex).blockId;
+		if(stops.size()==0) 
+			return -1;
+		else
+			return stops.get(nextStopIndex).blockId;
 	}
 	
 	public void removeStop(int index) {

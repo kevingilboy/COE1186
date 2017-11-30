@@ -51,6 +51,9 @@ public class PLC {
 				else if(logic[0].equals("crossing")) {
 					crossingLogic = logic[1];
 				}
+				else if(logic[0].equals("maintenance")) {
+					maintenanceLogic = logic[1];
+				}
 			}			
         } catch (FileNotFoundException e) {
             e.printStackTrace();

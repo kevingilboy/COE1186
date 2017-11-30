@@ -129,6 +129,7 @@ public class TrnController {
 				eBrakesOff();
 			}
 			else {
+				//calcAuth();
 				calcPowerOutput();
 				stationCheck();
 				if (lightCheck()) {
@@ -163,6 +164,7 @@ public class TrnController {
 				sBrakesOff();
 			}
 			else {
+				//calcAuth();
 				calcPowerOutput();
 				stationCheck();
 			}

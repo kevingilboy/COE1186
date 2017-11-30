@@ -77,7 +77,7 @@ public class TrainModelGUI extends JFrame {
 	private JLabel lblGpsAntenna = new JLabel("GPS Antenna:");
 	private JLabel lblMboAntenna = new JLabel("MBO Antenna:");
 	private JLabel lblNextStation = new JLabel("Next Station:");
-	private JLabel lblTimeOfArrival = new JLabel("Current Time:");
+	private JLabel lblTimeOfArrival = new JLabel("Time:");
 	private JLabel lblStatus = new JLabel("Status:");
 	private JLabel passengersEnRoute = new JLabel("Passengers:");
 	private JLabel lblCurrentSpeed = new JLabel("Current Speed:");
@@ -443,15 +443,16 @@ public class TrainModelGUI extends JFrame {
 		contentPane.add(lblNextStation);
 		lblTimeOfArrival.setFont(new Font("Dialog", Font.PLAIN, 18));
 		
-		lblTimeOfArrival.setBounds(60, 420, 129, 20);
+		lblTimeOfArrival.setBounds(60, 420, 85, 20);
 		contentPane.add(lblTimeOfArrival);
 		
 		lblStatus.setFont(new Font("Dialog", Font.PLAIN, 18));
 		lblStatus.setBounds(60, 447, 69, 20);
 		contentPane.add(lblStatus);
+		arrivalStatusLabel.setHorizontalAlignment(SwingConstants.TRAILING);
 		
 		arrivalStatusLabel.setFont(new Font("Dialog", Font.PLAIN, 18));
-		arrivalStatusLabel.setBounds(164, 449, 139, 20);
+		arrivalStatusLabel.setBounds(144, 447, 159, 20);
 		contentPane.add(arrivalStatusLabel);
 		
 		passengersEnRoute.setFont(new Font("Dialog", Font.PLAIN, 18));
@@ -619,10 +620,12 @@ public class TrainModelGUI extends JFrame {
 		mboAntennaStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		mboAntennaStatusLabel.setBounds(528, 525, 69, 20);
 		contentPane.add(mboAntennaStatusLabel);
+		stationVal.setHorizontalAlignment(SwingConstants.TRAILING);
 		
 		stationVal.setFont(new Font("Dialog", Font.PLAIN, 18));
 		stationVal.setBounds(178, 391, 125, 20);
 		contentPane.add(stationVal);
+		timeVal.setHorizontalAlignment(SwingConstants.TRAILING);
 		
 		timeVal.setFont(new Font("Dialog", Font.PLAIN, 18));
 		timeVal.setBounds(178, 420, 125, 20);
@@ -640,6 +643,7 @@ public class TrainModelGUI extends JFrame {
 		lightStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lightStatusLabel.setBounds(528, 474, 69, 20);
 		contentPane.add(lightStatusLabel);
+		numPassengers.setHorizontalAlignment(SwingConstants.TRAILING);
 		
 		
 		numPassengers.setFont(new Font("Dialog", Font.PLAIN, 18));
