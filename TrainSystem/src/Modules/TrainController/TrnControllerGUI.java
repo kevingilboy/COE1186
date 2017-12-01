@@ -17,6 +17,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.Font;
 import java.awt.Image;
+import java.text.DecimalFormat;
 
 public class TrnControllerGUI {
 
@@ -68,6 +69,9 @@ public class TrnControllerGUI {
 	
 	public final double SPEEDCONVERSION = 2.23694;			//1 m/s = 2.23694 mph
 	public final double DISTANCECONVERSION = 0.000621371;	//1 m = 0.000621371 miles
+	public final double POWERCONVERSION = 1000;				//1 kW = 1000 W
+	
+	DecimalFormat df = new DecimalFormat("#.####");
 	
 	/*public static void main(String[] args) {
 		new TrnControllerGUI(new PIController(1,0), new TrnController(), "Train 1");
@@ -89,40 +93,46 @@ public class TrnControllerGUI {
 		controller = c;
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		frame.setBounds(600, 100, 500, 380);
+		frame.setBounds(600, 500, 600, 480);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frame.setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel idenLabel = new JLabel(s + "");
-		idenLabel.setFont(new Font("Lucida Grande", Font.BOLD, 15));
-		idenLabel.setBounds(20, 20, 130, 26);
+		idenLabel.setFont(new Font("Lucida Grande", Font.BOLD, 20));
+		idenLabel.setBounds(20, 20, 200, 43);
 		contentPane.add(idenLabel);
 		
 		JLabel speedLabel = new JLabel("Current Speed:");
-		speedLabel.setBounds(20, 75, 99, 16);
+		speedLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		speedLabel.setBounds(20, 75, 127, 26);
 		contentPane.add(speedLabel);
 		
 		speedValue = new JLabel(speed + " mi/hr");
-		speedValue.setBounds(146, 75, 139, 16);
+		speedValue.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		speedValue.setBounds(183, 75, 139, 26);
 		contentPane.add(speedValue);
 		
 		JLabel newSpeedLabel = new JLabel("New Speed:");
-		newSpeedLabel.setBounds(20, 114, 77, 16);
+		newSpeedLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		newSpeedLabel.setBounds(20, 114, 109, 26);
 		contentPane.add(newSpeedLabel);
 		
 		newSpeedField = new JTextField();
-		newSpeedField.setBounds(141, 109, 107, 26);
+		newSpeedField.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		newSpeedField.setBounds(183, 111, 107, 32);
 		contentPane.add(newSpeedField);
 		newSpeedField.setColumns(10);
 		newSpeedField.setText("");
 		
 		JLabel newSpeedUnitLabel = new JLabel("mi/hr");
-		newSpeedUnitLabel.setBounds(251, 114, 61, 16);
+		newSpeedUnitLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		newSpeedUnitLabel.setBounds(290, 113, 61, 26);
 		contentPane.add(newSpeedUnitLabel);
 		
 		speedSet = new JButton("Set New Speed");
+		speedSet.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		speedSet.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -144,50 +154,59 @@ public class TrnControllerGUI {
 				}
 			}
 		});
-		speedSet.setBounds(15, 142, 117, 29);
+		speedSet.setBounds(15, 152, 132, 37);
 		contentPane.add(speedSet);
 		
 		JLabel setpointLabel = new JLabel("Setpoint Speed:");
-		setpointLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-		setpointLabel.setBounds(20, 183, 104, 16);
+		setpointLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		setpointLabel.setBounds(20, 201, 127, 26);
 		contentPane.add(setpointLabel);
 		
 		setpointValue = new JLabel(setpoint + " mi/hr");
-		setpointValue.setBounds(146, 183, 139, 16);
+		setpointValue.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		setpointValue.setBounds(183, 204, 139, 22);
 		contentPane.add(setpointValue);
 		
 		JLabel powerLabel = new JLabel("Power Output:");
-		powerLabel.setBounds(20, 211, 99, 16);
+		powerLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		powerLabel.setBounds(20, 239, 127, 26);
 		contentPane.add(powerLabel);
 		
-		powerValue = new JLabel(power + " W");
-		powerValue.setBounds(146, 211, 139, 16);
+		powerValue = new JLabel(power + " kW");
+		powerValue.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		powerValue.setBounds(183, 242, 151, 22);
 		contentPane.add(powerValue);
 		
 		JLabel authorityLabel = new JLabel("Current Authority:");
-		authorityLabel.setBounds(20, 238, 117, 16);
+		authorityLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		authorityLabel.setBounds(20, 277, 151, 26);
 		contentPane.add(authorityLabel);
 		
 		authorityValue = new JLabel(authority + " mi");
-		authorityValue.setBounds(146, 238, 139, 16);
+		authorityValue.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		authorityValue.setBounds(183, 279, 151, 22);
 		contentPane.add(authorityValue);
 		
 		JLabel temperatureLabel = new JLabel("Temperature:");
-		temperatureLabel.setBounds(20, 266, 99, 16);
+		temperatureLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		temperatureLabel.setBounds(20, 315, 112, 21);
 		contentPane.add(temperatureLabel);
 		
 		tempField = new JTextField();
-		tempField.setBounds(141, 261, 107, 26);
+		tempField.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		tempField.setBounds(183, 308, 102, 32);
 		contentPane.add(tempField);
 		tempField.setColumns(10);
 		tempField.setText(temperature + "");
 		
 		JLabel tempUnitLabel = new JLabel("F");
-		tempUnitLabel.setBounds(251, 266, 61, 16);
+		tempUnitLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		tempUnitLabel.setBounds(288, 316, 61, 16);
 		contentPane.add(tempUnitLabel);
 		
 		tempSet = new JButton("Set");
-		tempSet.setBounds(15, 294, 117, 29);
+		tempSet.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		tempSet.setBounds(15, 348, 132, 37);
 		tempSet.setEnabled(false);
 		contentPane.add(tempSet);
 		
@@ -217,10 +236,12 @@ public class TrnControllerGUI {
 		});
 		
 		JLabel sBrakesLabel = new JLabel("Service Brakes");
-		sBrakesLabel.setBounds(334, 78, 99, 16);
+		sBrakesLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+		sBrakesLabel.setBounds(376, 89, 200, 37);
 		contentPane.add(sBrakesLabel);
 		
 		sBrakesOn = new JRadioButton("On");
+		sBrakesOn.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		sBrakesOn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -232,11 +253,12 @@ public class TrnControllerGUI {
 				}
 			}
 		});
-		sBrakesOn.setBounds(324, 92, 61, 23);
+		sBrakesOn.setBounds(376, 116, 80, 40);
 		sBrakesOn.setSelected(false);
 		contentPane.add(sBrakesOn);
 		
 		sBrakesOff = new JRadioButton("Off");
+		sBrakesOff.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		sBrakesOff.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -248,15 +270,17 @@ public class TrnControllerGUI {
 				}
 			}
 		});
-		sBrakesOff.setBounds(404, 92, 61, 23);
+		sBrakesOff.setBounds(481, 116, 80, 40);
 		sBrakesOff.setSelected(true);
 		contentPane.add(sBrakesOff);
 		
 		JLabel eBrakesLabel = new JLabel("Emergency Brakes");
-		eBrakesLabel.setBounds(334, 129, 117, 16);
+		eBrakesLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+		eBrakesLabel.setBounds(376, 153, 200, 37);
 		contentPane.add(eBrakesLabel);
 		
 		eBrakesOn = new JRadioButton("On");
+		eBrakesOn.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		eBrakesOn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -268,11 +292,12 @@ public class TrnControllerGUI {
 				}
 			}
 		});
-		eBrakesOn.setBounds(324, 143, 61, 23);
+		eBrakesOn.setBounds(376, 181, 80, 40);
 		eBrakesOn.setSelected(false);
 		contentPane.add(eBrakesOn);
 		
 		eBrakesOff = new JRadioButton("Off");
+		eBrakesOff.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		eBrakesOff.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -284,15 +309,17 @@ public class TrnControllerGUI {
 				}
 			}
 		});
-		eBrakesOff.setBounds(404, 143, 61, 23);
+		eBrakesOff.setBounds(481, 181, 80, 40);
 		eBrakesOff.setSelected(true);
 		contentPane.add(eBrakesOff);
 		
 		JLabel rightDoorLabel = new JLabel("Right Doors");
-		rightDoorLabel.setBounds(334, 182, 99, 16);
+		rightDoorLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+		rightDoorLabel.setBounds(376, 216, 200, 37);
 		contentPane.add(rightDoorLabel);
 		
 		rightOpen = new JRadioButton("Open");
+		rightOpen.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		rightOpen.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -304,11 +331,12 @@ public class TrnControllerGUI {
 				}
 			}
 		});
-		rightOpen.setBounds(324, 196, 65, 23);
+		rightOpen.setBounds(376, 244, 80, 40);
 		rightOpen.setSelected(false);
 		contentPane.add(rightOpen);
 		
 		rightClose = new JRadioButton("Close");
+		rightClose.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		rightClose.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -320,15 +348,17 @@ public class TrnControllerGUI {
 				}
 			}
 		});
-		rightClose.setBounds(404, 196, 67, 23);
+		rightClose.setBounds(481, 244, 80, 40);
 		rightClose.setSelected(true);
 		contentPane.add(rightClose);
 		
 		JLabel leftDoorLabel = new JLabel("Left Doors");
-		leftDoorLabel.setBounds(334, 231, 86, 16);
+		leftDoorLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+		leftDoorLabel.setBounds(376, 277, 200, 37);
 		contentPane.add(leftDoorLabel);
 		
 		leftOpen = new JRadioButton("Open");
+		leftOpen.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		leftOpen.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -340,11 +370,12 @@ public class TrnControllerGUI {
 				}
 			}
 		});
-		leftOpen.setBounds(324, 247, 65, 23);
+		leftOpen.setBounds(376, 305, 80, 40);
 		leftOpen.setSelected(false);
 		contentPane.add(leftOpen);
 		
 		leftClose = new JRadioButton("Close");
+		leftClose.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		leftClose.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -356,15 +387,17 @@ public class TrnControllerGUI {
 				}
 			}
 		});
-		leftClose.setBounds(404, 247, 67, 23);
+		leftClose.setBounds(481, 305, 80, 40);
 		leftClose.setSelected(true);
 		contentPane.add(leftClose);
 		
 		JLabel lightLabel = new JLabel("Lights");
-		lightLabel.setBounds(334, 286, 61, 16);
+		lightLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+		lightLabel.setBounds(376, 341, 200, 37);
 		contentPane.add(lightLabel);
 		
 		lightOn = new JRadioButton("On");
+		lightOn.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		lightOn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -376,11 +409,12 @@ public class TrnControllerGUI {
 				}
 			}
 		});
-		lightOn.setBounds(324, 300, 61, 23);
+		lightOn.setBounds(376, 369, 80, 40);
 		lightOn.setSelected(false);
 		contentPane.add(lightOn);
 		
 		lightOff = new JRadioButton("Off");
+		lightOff.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		lightOff.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -392,15 +426,17 @@ public class TrnControllerGUI {
 				}
 			}
 		});
-		lightOff.setBounds(404, 300, 61, 23);
+		lightOff.setBounds(481, 369, 80, 40);
 		lightOff.setSelected(true);
 		contentPane.add(lightOff);
 		
 		JLabel modeLabel = new JLabel("Driving Mode");
-		modeLabel.setBounds(334, 26, 103, 16);
+		modeLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+		modeLabel.setBounds(376, 20, 200, 37);
 		contentPane.add(modeLabel);
 		
 		modeAuto = new JRadioButton("Auto");
+		modeAuto.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		modeAuto.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -410,11 +446,12 @@ public class TrnControllerGUI {
 				controller.setDriveMode(driveMode);
 			}
 		});
-		modeAuto.setBounds(324, 40, 65, 23);
+		modeAuto.setBounds(376, 48, 80, 40);
 		modeAuto.setSelected(true);
 		contentPane.add(modeAuto);
 		
 		modeManual = new JRadioButton("Manual");
+		modeManual.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		modeManual.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -424,7 +461,7 @@ public class TrnControllerGUI {
 				controller.setDriveMode(driveMode);
 			}
 		});
-		modeManual.setBounds(404, 40, 77, 23);
+		modeManual.setBounds(481, 48, 80, 40);
 		modeManual.setSelected(false);
 		contentPane.add(modeManual);
 		
@@ -447,10 +484,10 @@ public class TrnControllerGUI {
 	}
 	
 	public boolean guiUpdate() {
-		speedValue.setText(speed + " mi/hr");
-		setpointValue.setText(setpoint + " mi/hr");
-		authorityValue.setText(authority + " mi");
-		powerValue.setText(power + " W");
+		speedValue.setText(df.format(speed) + " mi/hr");
+		setpointValue.setText(df.format(setpoint) + " mi/hr");
+		authorityValue.setText(df.format(authority) + " mi");
+		powerValue.setText(df.format(power) + " kW");
 		if (left) {
 			leftOpen.setSelected(true);
 			leftClose.setSelected(false);
@@ -544,7 +581,7 @@ public class TrnControllerGUI {
 	}
 	
 	public void setPower(double p) {
-		power = p;
+		power = (p / POWERCONVERSION);
 	}
 	
 	public void setTemp(int t) {

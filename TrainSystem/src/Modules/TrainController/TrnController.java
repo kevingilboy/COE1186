@@ -39,6 +39,7 @@ public class TrnController {
 	private boolean passEBrakes;
 	private boolean inStation;
 	private boolean ready;
+	private boolean passed;
 	private ArrayList<BlockInfo> mapInfo;
 	private BlockInfo currentBlockInfo;
 	private String[] stationList;
@@ -85,6 +86,7 @@ public class TrnController {
 		mainGUI = g;
 		controlGUI = new TrnControllerGUI(this, trainID);
 		g.add(controlGUI);
+		passed = false;
 	}
 	
 	public boolean updateTime() {
@@ -129,20 +131,26 @@ public class TrnController {
 				eBrakesOff();
 			}
 			else {
-				//calcAuth();
 				calcPowerOutput();
-				stationCheck();
-				if (lightCheck()) {
+				//stationCheck();
+				/*if (lightCheck()) {
 					lightsOn();
 				}
 				else {
 					lightsOff();
-				}
+				}*/
+			}
+			if (lightCheck()) {
+				lightsOn();
+			}
+			else {
+				lightsOff();
 			}
 		}
 		else {		//if manual
 			if (inStation) {
-				if (actualSpeed > 0) {
+				calcPowerOutput();
+				if (power > 0) {
 					stationTimeCounter = 0;
 					inStation = false;
 					announceDeparting(currentStation);
@@ -164,12 +172,13 @@ public class TrnController {
 				sBrakesOff();
 			}
 			else {
-				//calcAuth();
 				calcPowerOutput();
-				stationCheck();
+				//stationCheck();
 			}
 		}
 		decodeBeacon();
+		stationCheck();
+		//decodeBeacon();
 		updateGUI();
 		return true;
 	}
@@ -328,6 +337,7 @@ public class TrnController {
 		if (actualSpeed == 0 && currentBlockInfo.getStationName() != "") {
 			inStation = true;
 			sBrakesOff();
+			eBrakesOff();
 			announceArrived(currentBlockInfo.getStationName());
 			trainDirection = controller.receiveTrainDirection(trainID);
 			if (driveMode == 0) {
@@ -394,8 +404,8 @@ public class TrnController {
 	
 	private void decodeBeacon()
 	{
-		String stationName;
-		if (beacon != 0)
+		String stationName = stationList[beacon];
+		/*if (beacon != 0)
 		{
 			if (currentStation == null) {
 				stationName = stationList[beacon];
@@ -406,6 +416,26 @@ public class TrnController {
 				currentStation = null;
 				announceEnRoute();
 			}
+		}
+		else {
+			announceEnRoute();
+		}*/
+		if (!stationName.equals("") && currentStation == null) {
+			currentStation = stationName;
+			announceApproach(stationName);
+		}
+		else if (!stationName.equals("") && currentStation == stationName && passed) {
+			currentStation = null;
+			passed = false;
+			announceEnRoute();
+		}
+		else if (stationName.equals("") && currentStation != null) {
+			passed = true;
+			announceApproach(stationName);
+		}
+		else {
+			passed = false;
+			announceEnRoute();
 		}
 	}
 	
