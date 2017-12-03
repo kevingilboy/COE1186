@@ -154,7 +154,7 @@ public class TrnControllerGUI {
 				}
 			}
 		});
-		speedSet.setBounds(15, 152, 132, 37);
+		speedSet.setBounds(15, 152, 180, 37);
 		contentPane.add(speedSet);
 		
 		JLabel setpointLabel = new JLabel("Setpoint Speed:");
@@ -206,7 +206,7 @@ public class TrnControllerGUI {
 		
 		tempSet = new JButton("Set");
 		tempSet.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		tempSet.setBounds(15, 348, 132, 37);
+		tempSet.setBounds(15, 348, 180, 37);
 		tempSet.setEnabled(false);
 		contentPane.add(tempSet);
 		
