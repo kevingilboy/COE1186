@@ -134,9 +134,13 @@ public class TrackController implements Module{
 						if (switchStateCalc) {
 							//correct state
 							transmitSwitchState(associatedLine, authority[1], trackModel.getBlock(associatedLine, authority[1]).getSwitch().getState());
+							distAuthority = calcAuthDist(authority);
+							trackModel.transmitCtcAuthority(trainName, distAuthority);
 						} else {
 							//not correct state so switch it
 							transmitSwitchState(associatedLine, authority[1], !trackModel.getBlock(associatedLine, authority[1]).getSwitch().getState());
+							distAuthority = calcAuthDist(authority);
+							trackModel.transmitCtcAuthority(trainName, distAuthority);
 						}
 					} else {
 						//cant switch
@@ -193,10 +197,10 @@ public class TrackController implements Module{
 	
 	//Helper Functions
 	private boolean compareSwitchState(int nb, int nnb){
-		System.out.println("Switch State: "+(String)trackModel.getBlock(associatedLine,nb).getSwitch().getState());
+		//System.out.println("Switch State: "+(String)trackModel.getBlock(associatedLine,nb).getSwitch().getState());
 		if(trackModel.getBlock(associatedLine,nb).getSwitch().getState()){
 			//state = true
-			System.out.println("Switch Port: "+(String)trackModel.getBlock(associatedLine,nb).getSwitch().getPortNormal());
+			//System.out.println("Switch Port: "+(String)trackModel.getBlock(associatedLine,nb).getSwitch().getPortNormal());
 			if(trackModel.getBlock(associatedLine,nb).getSwitch().getPortNormal() == nnb){
 				return true;
 			} else {
@@ -204,7 +208,7 @@ public class TrackController implements Module{
 			}
 		} else { 
 			//state = false
-			System.out.println("Switch Port: "+(String)trackModel.getBlock(associatedLine,nb).getSwitch().getPortAlternate());
+			//System.out.println("Switch Port: "+(String)trackModel.getBlock(associatedLine,nb).getSwitch().getPortAlternate());
 			if(trackModel.getBlock(associatedLine,nb).getSwitch().getPortAlternate() == nnb){
 				return true;
 			} else {

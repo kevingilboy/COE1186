@@ -121,9 +121,9 @@ public class PLC {
 				//context.set("cb_port_alt", tc.trackModel.getBlock(line, path[0]).getPortAlternate());
 				if(path.length>=2) {
 					//context.set("nb", path[1]);
-					context.set("nb_state", tc.trackModel.getBlock(line, path[1]).getState());
-					context.set("nb_port_norm", tc.trackModel.getBlock(line, path[1]).getPortNormal());
-					context.set("nb_port_alt", tc.trackModel.getBlock(line, path[1]).getPortAlternate());
+					context.set("nb_state", tc.trackModel.getBlock(line, path[1]).getSwitch().getState());
+					context.set("nb_port_norm", tc.trackModel.getBlock(line, path[1]).getSwitch().getPortNormal());
+					context.set("nb_port_alt", tc.trackModel.getBlock(line, path[1]).getSwitch().getPortAlternate());
 					if(path.length>=3) {
 						context.set("nnb", path[2]);
 						//context.set("nnb_state", tc.trackModel.getBlock(line, path[2]).getState());
@@ -144,7 +144,7 @@ public class PLC {
 	}
 	
 	public boolean canSwitchBlock(int cb){
-		return vitalCheckBlock(switchLogic, cb);
+		return vitalCheckBlock(canSwitchLogic, cb);
 	}
 	
 	public boolean canCrossingBlock(int cb){
