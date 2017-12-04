@@ -51,24 +51,23 @@ public class TrackControllerGUI extends JFrame{
 	private String section;
 	private String[] blocks;
 	
-	public TrackControllerGUI(TrackController tc){
+	public TrackControllerGUI(TrackController tc, String controllerName){
 		this.tc = tc;
 		this.line = tc.associatedLine;
 		this.blocks = Arrays.copyOf(tc.associatedBlocks, tc.associatedBlocks.length);
 		for(int i=0; i<blocks.length; i++){
 			blocks[i] = Integer.toString((Integer.parseInt(blocks[i])+1));//offset for displaying
 		}
-
-		drawTrackControllerGui(tc, line, blocks);
+		drawTrackControllerGui(tc, line, blocks, controllerName);
 		this.setVisible(true);
 	}
 	
 	/**
 	 * Create the frame.
 	 */
-	public void drawTrackControllerGui(TrackController tc, String line, String[] blocks) {
+	public void drawTrackControllerGui(TrackController tc, String line, String[] blocks, String name) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("Track Controller");
+		setTitle("Track Controller "+name);
 		setBounds(100, 100, 870, 490);
 		setResizable(false);
 		contentPane = new JPanel();
@@ -126,7 +125,7 @@ public class TrackControllerGUI extends JFrame{
 		trackInfoPanel.add(separator3);
 		
 		//GUI Title
-		JLabel labelTrackControllerInterface = new JLabel("<html><b>Track Controller Interface</b><html>");
+		JLabel labelTrackControllerInterface = new JLabel("<html><b>Track Controller "+name+"</b><html>");
 		labelTrackControllerInterface.setBounds(346, 0, 502, 54);
 		panel.add(labelTrackControllerInterface);
 		labelTrackControllerInterface.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
@@ -172,10 +171,10 @@ public class TrackControllerGUI extends JFrame{
 		textLine.setColumns(10);
 		
 		//Controller Specifier
-		JLabel labelController = new JLabel("<html><b>Controller - G1</b><html>");
+		/*JLabel labelController = new JLabel("<html><b>Controller - "+name+"</b><html>");
 		labelController.setBounds(0, -1, 502, 32);
 		trackInfoPanel.add(labelController);
-		labelController.setHorizontalAlignment(SwingConstants.CENTER);
+		labelController.setHorizontalAlignment(SwingConstants.CENTER);*/
 	
 		//Block Status
 		/*JLabel labelStatus = new JLabel("Status");
