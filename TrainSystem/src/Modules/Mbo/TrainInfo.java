@@ -60,7 +60,7 @@ public class TrainInfo {
 
 	public void setAuthority(double auth) {
 		authority = auth;
-		System.out.printf("Authority for %s is %f\n", name, authority);
+		//System.out.printf("Authority for %s is %f\n", name, authority);
 	}
 
 	private void calculateVelocity() {

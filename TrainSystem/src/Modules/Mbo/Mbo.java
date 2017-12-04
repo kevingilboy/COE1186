@@ -164,7 +164,7 @@ public class Mbo implements Module {
 			double newDist = Math.pow((Math.pow(dispX, 2) + Math.pow(dispY, 2)), 0.5);
 			if (newDist < minDistance) minDistance = newDist;
 		}
-		System.out.printf("Authority for %s: %f\n", trainID, minDistance);
+		//System.out.printf("Authority for %s: %f\n", trainID, minDistance);
 		return minDistance;
 	}
 
