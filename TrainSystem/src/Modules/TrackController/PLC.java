@@ -11,9 +11,10 @@ public class PLC {
 	private TrackController tc;
 	//PLC Variables
 	private JexlEngine jexl;
-	private String proceedLogic;
+	private String canProceedLogic;
 	private String lightLogic;
-	private String switchLogic;
+	private String canSwitchLogic;
+	private String switchingLogic;
 	private String crossingLogic;
 	private String maintenanceLogic;
 	private String line;
@@ -40,13 +41,16 @@ public class PLC {
 					logic[i] = logic[i].replaceAll("\\s+","");
 				}
 				if(logic[0].equals("proceed")) {
-					proceedLogic = logic[1];
+					canProceedLogic = logic[1];
 				}
 				else if(logic[0].equals("light")) {
 					lightLogic = logic[1];
 				}
 				else if(logic[0].equals("switch")) {
-					switchLogic = logic[1];
+					canSwitchLogic = logic[1];
+				}
+				else if(logic[0].equals("state")) {
+					switchingLogic = logic[1];
 				}
 				else if(logic[0].equals("crossing")) {
 					crossingLogic = logic[1];
@@ -72,34 +76,19 @@ public class PLC {
 	}
 	//Given path[]
 	public boolean canProceedPath(int[] path){
-		return vitalCheckPath(proceedLogic, path);
-	}
-	
-	public boolean canLightPath(int[] path){
-		return vitalCheckPath(lightLogic, path);
+		return vitalCheckCanPath(canProceedLogic, path);
 	}
 	
 	public boolean canSwitchPath(int[] path){
-		return vitalCheckPath(switchLogic, path);
+		return vitalCheckCanPath(canSwitchLogic, path);
 	}
 	
-	public boolean canCrossingPath(int[] path){
-		return vitalCheckPath(crossingLogic, path);
-	}
-	
-	public boolean canMaintenancePath(int[] path){
-		return vitalCheckPath(maintenanceLogic, path);
-	}
-	
-	private boolean vitalCheckPath(String logic, int[] path){
+	private boolean vitalCheckCanPath(String logic, int[] path){
 		boolean result = true;
 		Expression e = jexl.createExpression(logic);
 		JexlContext context = new MapContext();
 		//Compute evaluation 3 times in order to assure vitality of signal
 		for(int iii = 0; iii < 3; iii++){ 
-			//Don't need these for things using authority
-			//context.set("ppb_occupied", tc.trackModel.getBlock(line, path[0]-2).getOccupied());
-			//context.set("pb_occupied", tc.trackModel.getBlock(line, path[0]-1).getOccupied());
 			if(path.length>=1) {
 				context.set("cb_occupied", tc.trackModel.getBlock(line, path[0]).getOccupied());
 				if(path.length>=2) {
@@ -115,11 +104,41 @@ public class PLC {
 		return result;
 	}
 	
-	//Given block
-	public boolean canProceedBlock(int cb){
-		return vitalCheckBlock(proceedLogic, cb);
+	public boolean switchStatePath(int[] path){
+		return vitalSwitchStatePath(switchingLogic, path);
 	}
 	
+	private boolean vitalSwitchStatePath(String logic, int[] path){
+		boolean result = true;
+		Expression e = jexl.createExpression(logic);
+		JexlContext context = new MapContext();
+		//Compute evaluation 3 times in order to assure vitality of signal
+		for(int iii = 0; iii < 3; iii++){ 
+			if(path.length>=1) {
+				//context.set("cb", path[0]);
+				//context.set("cb_state", tc.trackModel.getBlock(line, path[0]).getState());
+				//context.set("cb_port_norm", tc.trackModel.getBlock(line, path[0]).getPortNormal());
+				//context.set("cb_port_alt", tc.trackModel.getBlock(line, path[0]).getPortAlternate());
+				if(path.length>=2) {
+					//context.set("nb", path[1]);
+					context.set("nb_state", tc.trackModel.getBlock(line, path[1]).getState());
+					context.set("nb_port_norm", tc.trackModel.getBlock(line, path[1]).getPortNormal());
+					context.set("nb_port_alt", tc.trackModel.getBlock(line, path[1]).getPortAlternate());
+					if(path.length>=3) {
+						context.set("nnb", path[2]);
+						//context.set("nnb_state", tc.trackModel.getBlock(line, path[2]).getState());
+						//context.set("nnb_port_norm", tc.trackModel.getBlock(line, path[2]).getPortNormal());
+						//context.set("nnb_port_alt", tc.trackModel.getBlock(line, path[2]).getPortAlternate());
+					}
+				}
+			}
+			//Compound evaluation expression
+			result &= (boolean) e.evaluate(context); 
+		}
+		return result;
+	}
+	
+	//Given block	
 	public boolean canLightBlock(int cb){
 		return vitalCheckBlock(lightLogic, cb);
 	}
@@ -142,22 +161,11 @@ public class PLC {
 		JexlContext context = new MapContext();
 		//Compute evaluation 3 times in order to assure vitality of signal
 		for(int iii = 0; iii < 3; iii++){
-			/*if(tc.trackModel.getBlock(line, cb-2) != null){
-				context.set("ppb_occupied", tc.trackModel.getBlock(line, cb-2).getOccupied());
-			} else if(tc.trackModel.getBlock(line, cb-1) != null){
-				context.set("pb_occupied", tc.trackModel.getBlock(line, cb-1).getOccupied());
-			} else if(tc.trackModel.getBlock(line, cb) != null){
-				context.set("cb_occupied", tc.trackModel.getBlock(line, cb).getOccupied());
-			} else if(tc.trackModel.getBlock(line, cb+1) != null){
-				context.set("nb_occupied", tc.trackModel.getBlock(line, cb+1).getOccupied());
-			} else if(tc.trackModel.getBlock(line, cb+2) != null){
-				context.set("nnb_occupied", tc.trackModel.getBlock(line, cb+2).getOccupied());
-			}*/
-			context.set("ppb_occupied", tc.trackModel.getBlock(line, cb-2).getOccupied());
+			//context.set("ppb_occupied", tc.trackModel.getBlock(line, cb-2).getOccupied());
 			context.set("pb_occupied", tc.trackModel.getBlock(line, cb-1).getOccupied());
 			context.set("cb_occupied", tc.trackModel.getBlock(line, cb).getOccupied());
 			context.set("nb_occupied", tc.trackModel.getBlock(line, cb+1).getOccupied());
-			context.set("nnb_occupied", tc.trackModel.getBlock(line, cb+2).getOccupied());
+			//context.set("nnb_occupied", tc.trackModel.getBlock(line, cb+2).getOccupied());
 			//Compound evaluation expression
 			result &= (boolean) e.evaluate(context); 
 		}
