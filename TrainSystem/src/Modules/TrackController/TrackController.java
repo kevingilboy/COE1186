@@ -40,15 +40,6 @@ public class TrackController implements Module{
 		this.tcplc = new PLC(this, initialPLCPath);
 		this.tc = this;
 	}
-	
-	/*
-	public TrackController(){
-		//initialize first track controller -- Maybe remove the initialization 
-		//from the simulator so that CTC initializes all of them?
-		this.tcgui = new TrackControllerGUI(this);
-		this.tcplc = new PLC(this, initialPLCPath);
-		this.tc = this;
-	}*/
 
 	@Override
 	public boolean updateTime(SimTime time) {
