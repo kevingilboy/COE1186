@@ -95,6 +95,7 @@ public class TrnController {
 		departSignaled = false;
 		enRouteSignaled = true;
 		inStation = false;
+		stationTimeCounter = 0;
 	}
 	
 	public boolean updateTime() {
@@ -103,9 +104,9 @@ public class TrnController {
 		passEBrakes = controller.receivePassengerEmergencyBrake(trainID);
 		currentBlock = controller.receiveTrainPosition(trainID);
 		currentBlockInfo = mapInfo.get(currentBlock);
-		if (!currentBlockInfo.getStationName().equals("")) {
+		/*if (!currentBlockInfo.getStationName().equals("")) {
 			System.out.println("station");
-		}
+		}*/
 		speedLimit = (double)currentBlockInfo.getSpeedLimit();
 		controlGUI.setSpeedLimit(speedLimit);
 		beacon = controller.receiveBeaconValue(trainID);
@@ -404,16 +405,19 @@ public class TrnController {
 	
 	private void decodeBeacon() {
 		if (!inStation) {
-			if (beacon == 0 && currentBlockInfo.getStationName().equals("")) {
+			if (beacon == 0 && currentBlockInfo.getStationName().equals("") && (approachSignaled || departSignaled || enRouteSignaled)) {
 				announceEnRoute();
 				currentStation = null;
 			}
-			else if (beacon != 0 && enRouteSignaled) {
+			else if (beacon != 0 && (enRouteSignaled || approachSignaled)) {
 				currentStation = stationList[beacon];
 				announceApproach(currentStation);
 			}
-			else if (beacon == 0 && approachSignaled) {
+			else if (beacon == 0 && approachSignaled && !currentBlockInfo.getStationName().equals("")) {
 				announceApproach(currentStation);
+			}
+			else if (beacon == 0 && departSignaled && !currentBlockInfo.getStationName().equals("")) {
+				announceDeparting(currentStation);
 			}
 			else if (beacon != 0 && departSignaled) {
 				announceDeparting(currentStation);
