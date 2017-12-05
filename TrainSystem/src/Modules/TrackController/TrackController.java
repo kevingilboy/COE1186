@@ -19,7 +19,7 @@ public class TrackController implements Module{
 	private String initialPLCPath = "Modules/TrackController/init.plc";
 	//Set internally per block
 	private String line;
-	private String section; //might not need this
+	//private String section; //might not need this
 	private int blockId;
 	private boolean hasLight;
 	private boolean lightState;
@@ -27,7 +27,7 @@ public class TrackController implements Module{
 	private boolean switchState;
 	private boolean hasCrossing;
 	private boolean crossingState;
-	private boolean status; //might not need this
+	//private boolean status; //might not need this
 	private boolean occupancy;
 
 	//Constructor
@@ -40,10 +40,17 @@ public class TrackController implements Module{
 		this.tcplc = new PLC(this, initialPLCPath);
 		this.tc = this;
 	}
-
+	
+	//Functions from Module
 	@Override
 	public boolean updateTime(SimTime time) {
 		updateStates();
+		return true;
+	}
+	
+	@Override
+	public boolean communicationEstablished() {
+		// TODO Auto-generated method stub
 		return true;
 	}
 	
@@ -61,7 +68,7 @@ public class TrackController implements Module{
 	public void receiveBlockInfo(String line, int blockId){
 		this.line = line;
 		this.blockId = blockId;
-		status = trackModel.getBlock(line, blockId).getStatus();
+		//status = trackModel.getBlock(line, blockId).getStatus();
 		occupancy = trackModel.getBlock(line, blockId).getOccupied();
 		if (trackModel.getBlock(line, blockId).getLight() != null){
 			hasLight = true;
@@ -196,6 +203,7 @@ public class TrackController implements Module{
 	}
 	
 	//Helper Functions
+	/*
 	private boolean compareSwitchState(int nb, int nnb){
 		//System.out.println("Switch State: "+(String)trackModel.getBlock(associatedLine,nb).getSwitch().getState());
 		if(trackModel.getBlock(associatedLine,nb).getSwitch().getState()){
@@ -215,7 +223,7 @@ public class TrackController implements Module{
 				return false;
 			}
 		}
-	} 
+	} */
 	
 	private double calcAuthDist(int[] authority){
 		double distAuth = 0;
@@ -223,11 +231,5 @@ public class TrackController implements Module{
 			distAuth += trackModel.getBlock(line, authority[i]).getLength();
 		}
 		return distAuth;
-	}
-
-	@Override
-	public boolean communicationEstablished() {
-		// TODO Auto-generated method stub
-		return true;
 	}
 }
