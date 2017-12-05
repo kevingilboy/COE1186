@@ -24,6 +24,7 @@ public class TrainController implements Module {
 	private ArrayList<BlockInfo> greenInfo;
 	private SimTime time;
 	private String[] stationList;
+	private int blockMode;
 	
 	public final int APPROACHING = 0;
 	public final int ARRIVED = 1;
@@ -45,10 +46,10 @@ public class TrainController implements Module {
 			i = mainGUI.getI();
 		}
 		if (line.equals("RED")) {
-			controlList.put(trainID, new TrnController(trainID, line, this, redInfo, mainGUI, stationList, p, i));
+			controlList.put(trainID, new TrnController(trainID, line, this, redInfo, mainGUI, stationList, p, i, blockMode));
 		}
 		else {
-			controlList.put(trainID, new TrnController(trainID, line, this, greenInfo, mainGUI, stationList, p, i));
+			controlList.put(trainID, new TrnController(trainID, line, this, greenInfo, mainGUI, stationList, p, i, blockMode));
 		}
 	}
 	
@@ -126,6 +127,15 @@ public class TrainController implements Module {
 	
 	public int receiveBeaconValue(String trainID) {
 		return trainModel.getBeacon(trainID);
+	}
+	
+	public void setBlockMode(String modeString) {
+		if (modeString.equals("MOVING")) {
+			blockMode = 0;
+		}
+		else {	//modeString.equals("FIXED")
+			blockMode = 1;
+		}
 	}
 	
 	public void receiveMap() {

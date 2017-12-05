@@ -53,7 +53,7 @@ public class TrnController {
 	public final int DEPARTING = 2;
 	public final int ENROUTE = 3;
 	
-	public TrnController(String id, String ln, TrainController C, ArrayList<BlockInfo> map, TrainControllerGUI g, String[] s, double p, double i) {
+	public TrnController(String id, String ln, TrainController C, ArrayList<BlockInfo> map, TrainControllerGUI g, String[] s, double p, double i, int b) {
 		trainID = id;
 		line = ln;
 		currentStation = null;
@@ -67,7 +67,8 @@ public class TrnController {
 		controller = C;
 		pi = new PIController(p, i);
 		driveMode = 0;
-		blockMode = 1;
+		//blockMode = b;
+		blockMode = 1; //fixed for now
 		beacon = 0;
 		ctcAuth = 0;
 		mboAuth = 0;
@@ -153,6 +154,7 @@ public class TrnController {
 		}
 		else {		//if manual
 			if (inStation) {
+				System.out.println("In Station");
 				calcPowerOutput();
 				if (actualSpeed > 0 && power > 0) {
 					stationTimeCounter = 0;
@@ -292,7 +294,7 @@ public class TrnController {
 	
 	private void calcPowerOutput()
 	{
-		if (sBrakes || eBrakes) {
+		if (sBrakes || eBrakes || leftDoor || rightDoor) {
 			power = 0;
 		}
 		else if (!ready) {
@@ -342,7 +344,7 @@ public class TrnController {
 			eBrakesOff();
 			announceArrived(currentBlockInfo.getStationName());
 			trainDirection = controller.receiveTrainDirection(trainID);
-			if (driveMode == 0) {
+			if (driveMode == 0) {		//auto driving
 				if (currentBlockInfo.getDirection() == 1 || currentBlockInfo.getDirection() == -1) {
 					if (currentBlockInfo.getPositive()) {
 						openRight();
@@ -370,7 +372,9 @@ public class TrnController {
 					}
 				}
 			}
-			else {
+			else {		//manual driving
+				setpointSpeed = 0;
+				controlGUI.setSetpoint(0);
 				if (currentBlockInfo.getDirection() == 1 || currentBlockInfo.getDirection() == -1) {
 					if (currentBlockInfo.getPositive()) {
 						controlGUI.setSuggestedDoor(1);
