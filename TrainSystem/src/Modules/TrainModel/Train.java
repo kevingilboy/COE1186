@@ -243,7 +243,7 @@ public class Train {
     	this.trainModelGUI.tempLabel.setText(Integer.toString(this.temperature) + DEGREE + "F");
 
         //this.trainCars = this.trainModelGUI.numCars();
-    	updateWeight();
+    	
         this.trainWheels = this.trainCars * TRAIN_NUM_WHEELS;
         this.trainModelGUI.crewCountLabel.setText(Integer.toString(crew));
         this.trainModelGUI.heightVal.setText(Double.toString(truncateTo(this.trainHeight, 2)));
@@ -328,7 +328,6 @@ public class Train {
      */
     public void updateVelocity() {
     	// Step 1: input power and convert the power to a force based on the starting velocity
-    	//powerIn = 180;
     	setWeight();
     	double trainMass = trainWeight*KG_PER_POUND;
     	
@@ -339,6 +338,7 @@ public class Train {
     		this.force = (this.powerIn)/this.currentSpeed;
     	}
     	setGrade();
+    	
     	// Step 2: Calculate the slope of the train's current angle (Degrees = Tan-1 (Slope Percent/100))
     	this.slope = Math.atan2(this.grade,100);
     	double angle = Math.toDegrees(this.slope);
@@ -692,10 +692,6 @@ public class Train {
     	this.numPassengers += num;
     }
     
-    private void updateWeight() {
-    	this.trainWeight = (this.trainCars* TRAIN_WEIGHT)+((crew+this.numPassengers)*AVE_PASSENGER_WEIGHT);
-    }
-    
     /**
      * Sets the number of passengers exiting the train using a random number generator
      * This method should only ever be called when train is STOPPED at a station
@@ -720,7 +716,7 @@ public class Train {
      * Computes the current weight of the train
      */
     private void setWeight() {
-    	this.trainWeight = (this.crew + this.numPassengers) * AVE_PASSENGER_WEIGHT;
+    	this.trainWeight = (this.trainCars*TRAIN_WEIGHT) + (this.crew + this.numPassengers) * AVE_PASSENGER_WEIGHT;
     }
     
     /**
