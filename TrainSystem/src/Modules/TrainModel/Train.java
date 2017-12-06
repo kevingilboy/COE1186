@@ -145,7 +145,7 @@ public class Train {
     	this.trainActive = true;
     	this.trainID = trainID;
     	// Train Specs
-    	this.trainCars = 1;
+    	this.trainCars = 2;
     	this.trainCapacity = TRAIN_CAPACITY * this.trainCars;
         this.trainHeight = TRAIN_HEIGHT;
         this.trainWeight = (TRAIN_WEIGHT * this.trainCars) + crew * AVE_PASSENGER_WEIGHT;
@@ -284,6 +284,7 @@ public class Train {
         }
      	
      	this.trainModelGUI.numPassengers.setText(Integer.toString(this.numPassengers));
+     	this.trainModelGUI.numCarsSpinner.setText(Integer.toString(this.trainCars));
      	this.trainModelGUI.authorityVal.setText(Double.toString(truncateTo(this.CTCAuthority/METERS_PER_MILE,2)));
      	this.trainModelGUI.ctcSpeedLabel.setText(Double.toString(truncateTo(this.CTCSpeed*MS_TO_MPH,2)));
      	
