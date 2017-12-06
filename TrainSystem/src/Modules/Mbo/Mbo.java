@@ -138,7 +138,7 @@ public class Mbo implements Module {
 		trains.get(train).updatePosition(pos, blockId, time);
 		//System.out.printf("Put %s on %s\n", train, trains.get(train).getBlockName());
 
-		System.out.println("received train position...");
+		//System.out.println("received train position...");
 		return true;
 	}
 
@@ -171,7 +171,7 @@ public class Mbo implements Module {
 			//System.out.printf("auth for %s\n", train);
 			//trains.get(train).setSafeBrakingDistance(calculateSafeBrakingDistance(train));
 			//System.out.printf("Updated %s\n", train);
-			trainController.setMboAuthority(train, trains.get(train).getAuthority());
+			//trainController.setMboAuthority(train, trains.get(train).getAuthority());
 			//trainController.setSafeBrakingDistance(train, trains.get(train).getSafeBrakingDistance());
 		}
 	}
