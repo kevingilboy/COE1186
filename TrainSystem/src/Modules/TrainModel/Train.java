@@ -687,6 +687,10 @@ public class Train {
     	this.temperature = temp;
     }
     
+    public void setNumEmbarking(int num) {
+    	this.numPassengers += num;
+    }
+    
     /**
      * Sets the number of passengers exiting the train using a random number generator
      * This method should only ever be called when train is STOPPED at a station
