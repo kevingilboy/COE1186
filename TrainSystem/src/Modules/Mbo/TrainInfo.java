@@ -38,21 +38,21 @@ public class TrainInfo {
 		Object[] output = new Object[7];
 		output[0] = name;
 		output[1] = timeSignalReceived.toString();
-		output[2] = Arrays.toString(position);
+		output[2] = String.format("(%.3f, %.3f)", position[0], position[1]);
 		//System.out.printf("%s on %s.\n", name, blockName);
 		output[3] = blockName;
-		output[4] = speed;
-		output[5] = authority;
-		output[6] = safeBrakingDistance;
+		output[4] = String.format("%.3f", speed);
+		output[5] = String.format("%.3f", authority);
+		output[6] = String.format("%.3f", safeBrakingDistance);
 		//System.out.printf("Dist %f\n", safeBrakingDistance);
 		return output;
 	}
 
 	public void updatePosition(double[] pos, SimTime time) {
-		timePreviousSignalReceived.ms = timeSignalReceived.ms;
-		timePreviousSignalReceived.sec = timeSignalReceived.sec;
-		timePreviousSignalReceived.min = timeSignalReceived.min;
-		timePreviousSignalReceived.hr = timePreviousSignalReceived.hr;
+		//timePreviousSignalReceived.ms = timeSignalReceived.ms;
+		//timePreviousSignalReceived.sec = timeSignalReceived.sec;
+		//timePreviousSignalReceived.min = timeSignalReceived.min;
+		//timePreviousSignalReceived.hr = timePreviousSignalReceived.hr;
 		lastSignalSec = signalSec;
 		signalSec = time.sec;
 		timeSignalReceived = time;/*
@@ -60,8 +60,8 @@ public class TrainInfo {
 		timeSignalReceived.sec = time.ms;
 		timeSignalReceived.min = time.ms;
 		timeSignalReceived.ms = time.ms;*/
+		previousPosition = pos;
 		position = pos;
-
 		calculateVelocity();
 		//System.out.printf("%s at %f:%f\n", name, pos[0], pos[1]);
 	}
@@ -109,14 +109,13 @@ public class TrainInfo {
 		//double elapsedSec = timePreviousSignalReceived.until(timeSignalReceived, ChronoUnit.MILLIS);
 		int elapsedSec = signalSec - lastSignalSec;
 		// System.out.printf("time %d %d\n", signalSec, lastSignalSec);
-		if (elapsedSec == 0) {
-			velocity[0] = 0;
-			velocity[1] = 0;
-		} else {
-			velocity[0] = (position[0] - previousPosition[0]) / (double)elapsedSec;
+		if (elapsedSec != 0) {
+			System.out.printf("pos %.3f prev %.3f\n", position[0], previousPosition[0]);
+			velocity[0] = (position[0] - previousPosition[0]);// / (double)elapsedSec;
 			velocity[1] = (position[1] - previousPosition[1]) / (double)elapsedSec;
 		}
-		speed = Math.pow(Math.pow(velocity[0], 2) + Math.pow(velocity[1], 2), 0.5);
+		//speed = Math.pow(Math.pow(velocity[0], 2) + Math.pow(velocity[1], 2), 0.5) / 3600.0;
+		speed = velocity[0];
 	}
 
 	private void updateLatestSignal() {
