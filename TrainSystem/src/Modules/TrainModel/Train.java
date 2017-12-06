@@ -148,7 +148,7 @@ public class Train {
     	this.trainCars = 2;
     	this.trainCapacity = TRAIN_CAPACITY * this.trainCars;
         this.trainHeight = TRAIN_HEIGHT;
-        this.trainWeight = (TRAIN_WEIGHT * this.trainCars) + crew * AVE_PASSENGER_WEIGHT;
+        this.trainWeight = (TRAIN_WEIGHT * this.trainCars) + ((crew + numPassengers) * AVE_PASSENGER_WEIGHT);
         this.trainLength = TRAIN_LENGTH * this.trainCars;
         this.trainWidth = TRAIN_WIDTH;
         this.crew = 1; // crew will always be one driver
@@ -242,7 +242,8 @@ public class Train {
     public void setValuesForDisplay() {
     	this.trainModelGUI.tempLabel.setText(Integer.toString(this.temperature) + DEGREE + "F");
 
-        this.trainCars = this.trainModelGUI.numCars();
+        //this.trainCars = this.trainModelGUI.numCars();
+    	updateWeight();
         this.trainWheels = this.trainCars * TRAIN_NUM_WHEELS;
         this.trainModelGUI.crewCountLabel.setText(Integer.toString(crew));
         this.trainModelGUI.heightVal.setText(Double.toString(truncateTo(this.trainHeight, 2)));
@@ -689,6 +690,10 @@ public class Train {
     
     public void setNumEmbarking(int num) {
     	this.numPassengers += num;
+    }
+    
+    private void updateWeight() {
+    	this.trainWeight = (this.trainCars* TRAIN_WEIGHT)+((crew+this.numPassengers)*AVE_PASSENGER_WEIGHT);
     }
     
     /**
