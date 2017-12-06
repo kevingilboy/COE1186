@@ -399,6 +399,10 @@ public class TrainModel implements Module{
 		mbo.receiveTrainPosition(trainID, getCoordinates(trainID), this.getTrain(trainID).checkSum());
 		// call method to send the MBO an "incoming signal" status that passes a trainID
 	}
+	
+	public void setPassengersEmbarking(String trainID, int num) {
+		this.getTrain(trainID).setNumEmbarking(num);
+	}
 
 	@Override
 	public boolean communicationEstablished() {
