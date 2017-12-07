@@ -46,8 +46,8 @@ public class TrackCsvParser{
 				int direction 			= Integer.parseInt(blockData[8]);
 
 				/* Parse cell 15 */
-				double[] x_coordinates = new double[(int)length];
-				double[] y_coordinates = new double[(int)length];
+				Double[] x_coordinates = new Double[(int)length];
+				Double[] y_coordinates = new Double[(int)length];
 
 				String coordDelimiter = ";";
 				String xyDelimiter = "_";

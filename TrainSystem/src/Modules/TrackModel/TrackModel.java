@@ -142,4 +142,9 @@ public class TrackModel implements Module{
 		// ... 
 		return true;
 	}
+
+	public void updateDynamicDisplay(SimTime currentTime) {
+		// TODO METHOD MADE BY ONE KEV FOR ANOTHER KEV
+		// ... ;)
+	}
 }
