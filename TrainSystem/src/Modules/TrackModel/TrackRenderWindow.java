@@ -37,7 +37,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
     Color lineColor;
 
     // Information for rendering each active train on the track
-    int[] pingCounters = new int[100];
+    // int[] pingCounters = new int[100];
     int activeTrains = 0;
     ArrayList<String> trainIDs = new ArrayList<String>();
     ArrayList<Position> positions = new ArrayList<Position>();
@@ -334,12 +334,15 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                 ((xy_coords.get(i))[0]).intValue() - 30, ((xy_coords.get(i))[1]).intValue() - 30);
      
             g2d.setColor(lineColor);
+
+            /*
             (pingCounters[i])++;
             int radius = (pingCounters[i] % 14);
             Shape circle = new Ellipse2D.Double(((xy_coords.get(i))[0]).intValue() - radius, 
                             ((xy_coords.get(i))[1]).intValue() - radius,
                             2.0*radius, 2.0*radius );
             g2d.draw(circle);
+            */
 
             if (direction == -2){
                 removeTrain();
