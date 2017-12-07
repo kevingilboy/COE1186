@@ -101,7 +101,7 @@ public class Mbo implements Module {
 		this.time = time;
 		this.updateTrainInfo();
 		//System.out.println("gui");
-		gui.update();
+		gui.update(time);
 		//System.out.println("done");
 		return true;
 	}
@@ -169,7 +169,7 @@ public class Mbo implements Module {
 			//System.out.printf("Updating info for %s\n", train);
 			trains.get(train).setAuthority(calculateAuthority(train));
 			//System.out.printf("auth for %s\n", train);
-			//trains.get(train).setSafeBrakingDistance(calculateSafeBrakingDistance(train));
+			trains.get(train).setSafeBrakingDistance(calculateSafeBrakingDistance(train));
 			//System.out.printf("Updated %s\n", train);
 			//trainController.setMboAuthority(train, trains.get(train).getAuthority());
 			//trainController.setSafeBrakingDistance(train, trains.get(train).getSafeBrakingDistance());

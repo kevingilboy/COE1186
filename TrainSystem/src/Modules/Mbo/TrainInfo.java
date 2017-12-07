@@ -8,6 +8,9 @@ import Shared.SimTime;
 
 public class TrainInfo {
 	
+	private final double SECONDS_PER_HOUR = 3600.0;
+	private final double METERS_PER_MILE = 1609.34;
+
 	private String name;
 	private double[] position;
 	private MboBlock block;
@@ -41,9 +44,9 @@ public class TrainInfo {
 		output[2] = String.format("(%.3f, %.3f)", position[0], position[1]);
 		//System.out.printf("%s on %s.\n", name, blockName);
 		output[3] = blockName;
-		output[4] = String.format("%.3f", speed);
-		output[5] = String.format("%.3f", authority);
-		output[6] = String.format("%.3f", safeBrakingDistance);
+		output[4] = String.format("%.3f", speed * (SECONDS_PER_HOUR / METERS_PER_MILE));
+		output[5] = String.format("%.3f", authority / METERS_PER_MILE);
+		output[6] = String.format("%.3f", safeBrakingDistance / METERS_PER_MILE);
 		//System.out.printf("Dist %f\n", safeBrakingDistance);
 		return output;
 	}
@@ -60,7 +63,7 @@ public class TrainInfo {
 		timeSignalReceived.sec = time.ms;
 		timeSignalReceived.min = time.ms;
 		timeSignalReceived.ms = time.ms;*/
-		previousPosition = pos;
+		previousPosition = position;
 		position = pos;
 		calculateVelocity();
 		//System.out.printf("%s at %f:%f\n", name, pos[0], pos[1]);
@@ -110,12 +113,15 @@ public class TrainInfo {
 		int elapsedSec = signalSec - lastSignalSec;
 		// System.out.printf("time %d %d\n", signalSec, lastSignalSec);
 		if (elapsedSec != 0) {
-			System.out.printf("pos %.3f prev %.3f\n", position[0], previousPosition[0]);
-			velocity[0] = (position[0] - previousPosition[0]);// / (double)elapsedSec;
+			//System.out.printf("pos %.3f prev %.3f\n", position[0], previousPosition[0]);
+			//System.out.printf("pos %.3f prev %.3f\n", position[1], previousPosition[1]);
+			velocity[0] = (position[0] - previousPosition[0]) / (double)elapsedSec;
 			velocity[1] = (position[1] - previousPosition[1]) / (double)elapsedSec;
+			//System.out.printf("0 %.3f 1 %.3f\n", velocity[0], velocity[1]);
 		}
-		//speed = Math.pow(Math.pow(velocity[0], 2) + Math.pow(velocity[1], 2), 0.5) / 3600.0;
-		speed = velocity[0];
+
+		// calculate the speed in m/s
+		speed = Math.pow(Math.pow(velocity[0], 2) + Math.pow(velocity[1], 2), 0.5);
 	}
 
 	private void updateLatestSignal() {
