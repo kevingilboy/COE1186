@@ -671,7 +671,8 @@ public class CtcGui {
 		selectedBlockToggle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Block block = getSelectedBlock();
-				block.getSwitch().setState(selectedBlockToggle.isSelected());
+				ctc.setSwitchState((Line)blockLineComboBox.getSelectedItem(),block.getId(),selectedBlockToggle.isSelected());
+				updateSelectedBlock(true);
 			}
 		});
 		selectedBlockToggle.setFont(new Font("Dialog", Font.PLAIN, 16));

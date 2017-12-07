@@ -127,6 +127,34 @@ public class Ctc implements Module,TimeControl {
 	}
 	
 	/**
+	 * Updates the local copy of a block from the Wayside
+	 */
+	protected void updateLocalBlockFromWayside(Line line, int blockNum){
+		Boolean trackModelOccupied = getTrackCircuit(line, blockNum);
+		Boolean broken = false;
+		Boolean occupied = false;
+		if(trackModelOccupied) {
+			occupied = true;
+			broken = true; //assume broken until proven not broken
+			for(Train train : ctc.trains.values()) {
+				//If it is a train on the block, it is occupied and not broken
+				if(train.line == line && train.currLocation == blockNum) {
+					broken = false;
+				}
+			}
+			
+		}
+		line.blocks[blockNum].setRailStatus(!broken);
+		line.blocks[blockNum].setOccupancy(occupied);
+		
+		//Get switch state via wayside
+		Boolean switchState = getSwitchState(line,blockNum);
+		if(switchState!=null) {
+			line.blocks[blockNum].getSwitch().setState(switchState);
+		}
+	}
+	
+	/**
 	 * Checks the TrackModel block occupancy via the TrackController
 	 */
 	public Boolean getTrackCircuit(Line line, int blockNum) {
@@ -147,6 +175,33 @@ public class Ctc implements Module,TimeControl {
 			return(sw.getState());
 		}
 		return null;
+	}
+	
+	/**
+	 * Sets the TrackModel block to repaired via the TrackController
+	 */
+	protected void repairBlock(Line line, int blockNum) {
+		TrackController wayside = getWaysideOfBlock(line, blockNum);
+		Block block = wayside.receiveBlockInfoForCtc(line.toString(), blockNum);
+		block.setMaintenance(false);
+	}
+
+	/**
+	 * Sets the TrackModel block to maintenance mode via the TrackController
+	 */
+	protected void setBlockMaintenance(Line line, int blockNum) {
+		TrackController wayside = getWaysideOfBlock(line, blockNum);
+		Block block = wayside.receiveBlockInfoForCtc(line.toString(), blockNum);
+		block.setMaintenance(true);
+	}
+	
+	/**
+	 * Sets the TrackModel block to maintenance mode via the TrackController
+	 */
+	protected void setSwitchState(Line line, int blockNum, Boolean state) {
+		TrackController wayside = getWaysideOfBlock(line, blockNum);
+		Block block = wayside.receiveBlockInfoForCtc(line.toString(), blockNum);
+		block.getSwitch().setState(state);
 	}
 	
 	
@@ -495,28 +550,7 @@ public class Ctc implements Module,TimeControl {
 			//Iterate through each block
 			for(int location=0;location<line.yardOut;location++) {
 				//Get block occupancy via wayside				
-				Boolean trackModelOccupied = getTrackCircuit(line, location);
-				Boolean broken = false;
-				Boolean occupied = false;
-				if(trackModelOccupied) {
-					occupied = true;
-					broken = true; //assume broken until proven not broken
-					for(Train train : ctc.trains.values()) {
-						//If it is a train on the block, it is occupied and not broken
-						if(train.line == line && train.currLocation == location) {
-							broken = false;
-						}
-					}
-					
-				}
-				line.blocks[location].setRailStatus(broken);
-				line.blocks[location].setOccupancy(occupied);
-				
-				//Get switch state via wayside
-				Boolean switchState = getSwitchState(line,location);
-				if(switchState!=null) {
-					line.blocks[location].getSwitch().setState(switchState);
-				}
+				updateLocalBlockFromWayside(line,location);
 			}
 		}
 		
@@ -575,7 +609,7 @@ public class Ctc implements Module,TimeControl {
 			tc.trackModel = trackModel;
 		}
 		
-		gui.updateSelectedBlock();
+		gui.updateSelectedBlock(true);
 		
 		return true;
 	}
