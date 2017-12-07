@@ -497,6 +497,12 @@ public class Ctc implements Module,TimeControl {
 		 * UPDATE TRAIN LOCATIONS
 		 */
 		for(Train train : trains.values()) {
+			//Check for dwelled trains that need to move on
+			if(train.dwelling && currentTime.equals(train.timeToFinishDwelling)) {
+				train.schedule.removeStop(0);
+				train.dwelling = false;
+			}
+			
 			//Check if train has moved
 			int currentLocation = train.currLocation;
 			int nextLocation = getNextBlockId(train.line, train.currLocation, train.prevLocation);
@@ -507,9 +513,10 @@ public class Ctc implements Module,TimeControl {
 				train.prevLocation = currentLocation;
 				train.currLocation = nextLocation;
 				
-				//Remove stop if we reach it
-				if(train.currLocation == train.schedule.getNextStop()) {
-					train.schedule.removeStop(0);
+				//Make train dwell if at stop
+				if(train.currLocation == train.schedule.getNextStop() && train.dwelling==false) {
+					train.dwelling = true;
+					train.timeToFinishDwelling = currentTime.add(train.schedule.stops.get(0).timeToDwell);
 				}
 			}
 			else {
