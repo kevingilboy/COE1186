@@ -11,8 +11,8 @@ public class MboBlock {
 	private double cumElevation;
 	private int speedLimit;
 	private int direction;
-	private double[] x_coordinates;
-	private double[] y_coordinates;
+	private Double[] x_coordinates;
+	private Double[] y_coordinates;
 
 	public MboBlock(String line,
 	 				String section,
@@ -23,8 +23,8 @@ public class MboBlock {
 					double cumElevation,
 					int speedLimit,
 					int direction,
-					double[] x_coordinates,
-					double[] y_coordinates) {
+					Double[] x_coordinates,
+					Double[] y_coordinates) {
 			this.line = line;
 			this.section = section;
 			this.id = id;
@@ -38,9 +38,25 @@ public class MboBlock {
 			this.y_coordinates = y_coordinates;
 	}
 
+	public String getLine() {
+		return line;
+	}
+
+	public double getLength() {
+		return length;
+	}
+
+	public double getGrade() {
+		return grade;
+	}
+
+	public Double[] getXCoordinates() {
+		return x_coordinates;
+	}
+
 	public boolean onBlock(double x, double y) {
 		boolean result = false;
-		for (int i = 0; i < x_coordinates.length; i++) {
+		for (int i = 0; i < x_coordinates.length-2; i++) {
 			if (x == x_coordinates[i] && y == y_coordinates[i]) {
 				result = true;
 				break;
