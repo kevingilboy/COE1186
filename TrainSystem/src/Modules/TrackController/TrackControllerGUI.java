@@ -59,7 +59,7 @@ public class TrackControllerGUI extends JFrame{
 			blocks[i] = Integer.toString((Integer.parseInt(blocks[i])+1));//offset for displaying
 		}
 		drawTrackControllerGui(tc, line, blocks, controllerName);
-		System.out.println(this);
+		//System.out.println(this);
 		this.setVisible(true);
 	}
 	
