@@ -35,6 +35,7 @@ import javax.swing.border.LineBorder;
 public class TrackControllerGUI extends JFrame{
 	//Parent Class
 	public TrackController tc;
+	public TrackControllerGUI thisgui;
 	//GUI Variables
 	private JPanel contentPane;
 	private JTextField textStatus;
@@ -58,7 +59,9 @@ public class TrackControllerGUI extends JFrame{
 		for(int i=0; i<blocks.length; i++){
 			blocks[i] = Integer.toString((Integer.parseInt(blocks[i])+1));//offset for displaying
 		}
+		this.thisgui = this;
 		drawTrackControllerGui(tc, line, blocks, controllerName);
+		System.out.println(this);
 		this.setVisible(true);
 	}
 	
@@ -277,9 +280,12 @@ public class TrackControllerGUI extends JFrame{
 	class UploadPLC implements ActionListener {
 	    public void actionPerformed(ActionEvent e){
 			JFileChooser c = new JFileChooser();
-			String plcPath = c.getCurrentDirectory().toString() + "/" + c.getSelectedFile().getName();
-			System.out.println("path = " + plcPath);
-			boolean parserSuccess = tc.getTcplc().parsePLC(plcPath);
+			int rVal = c.showOpenDialog(null);
+			if(rVal == JFileChooser.APPROVE_OPTION) {
+				String plcPath = c.getCurrentDirectory().toString() + "/" + c.getSelectedFile().getName();
+				System.out.println("path = " + plcPath);
+				boolean parserSuccess = tc.getTcplc().parsePLC(plcPath);
+			}
 	    }
 	}
 	
@@ -335,4 +341,7 @@ public class TrackControllerGUI extends JFrame{
 		return selectedBlockId;
 	}
 	
+	public void showTrackControllerGUI(TrackControllerGUI thisgui){
+		//thisgui.setVisibile(true);
+	}
 }
