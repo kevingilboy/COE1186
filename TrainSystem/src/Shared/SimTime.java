@@ -1,10 +1,15 @@
 package Shared;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class SimTime {
 	public int hr;
 	public int min;
 	public int sec;
 	public int ms;
+	
+    static Pattern checkTwoDigit = Pattern.compile("^[0-9]{2}$");
 	
 	public SimTime(int hours, int minutes, int seconds) {
 		hr = hours;
@@ -93,6 +98,9 @@ public class SimTime {
 					return false;
 				}
 				if(component.length()!=2) {
+					return false;
+				}
+				if(checkTwoDigit.matcher(component).find()) {
 					return false;
 				}
 			}
