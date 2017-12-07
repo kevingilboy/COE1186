@@ -24,15 +24,35 @@ public class Schedule {
 		stops = new ArrayList<Stop>();
 	}
 	
+	/**
+	 * Add a stop without a dwell time (yet...)
+	 */
 	public void addStop(int index, int blockId) {
-		//If stop does not exist, then add it. Else replace the current stop
+		//If stop does not exist, then add it. Else update the current stop
 		if(index>=stops.size()) {
 			stops.add(index,new Stop(blockId));
 		}
 		else {
-			stops.set(index,new Stop(blockId));
+			Stop existingStop = stops.get(index);
+			existingStop.blockId = blockId;
 		}
-		calculateDwellTimes();
+		
+		//We can still calculate time between stops
+		calculateTimeToDestinations();
+	}
+	
+	/**
+	 * Add a stop with a dwell time (may or may not exist)
+	 */
+	public void addStop(int index, SimTime timeToDwell) {
+		//If stop does not exist, then add it. Else update the current stop
+		if(index>=stops.size()) {
+			stops.add(index,new Stop(timeToDwell));
+		}
+		else {
+			Stop existingStop = stops.get(index);
+			existingStop.timeToDwell = timeToDwell;
+		}
 	}
 	
 	public int getNextStop() {
@@ -46,7 +66,7 @@ public class Schedule {
 		stops.remove(index);
 		
 		//Recalc dwell times in case a stop is removed from the middle of the schedule
-		calculateDwellTimes();
+		calculateTimeToDestinations();
 	}
 
 
@@ -61,7 +81,7 @@ public class Schedule {
 	/**
 	 * This function calculates time between stops
 	 */
-	private void calculateDwellTimes() {
+	private void calculateTimeToDestinations() {
 		Queue<ArrayList<Integer>> q = new LinkedList<ArrayList<Integer>>();
 		ArrayList<Integer> path;
 		int currBlockId = line.yardOut;
@@ -137,19 +157,12 @@ public class Schedule {
 					ArrayList<Integer> newPath = cloneAndAppendAL(path,nextBlockId);
 					q.add(newPath);
 				}
-				/*
-				for(int j=1; j<path.size(); j++) {
-					int i = path.get(j);
-					System.out.print(line.blocks[i].getSection()+Integer.toString(i+1)+", ");
-				}
-				System.out.println("");
-				*/
 			} //while q not empty
 			
 			path.remove(0);
 			
 			//-------------------
-			// Calculate and set the dwell time
+			// Calculate and set the time to destination
 			//-------------------
 			double runningTime = 0;
 			for(int blockId : path) {
@@ -158,7 +171,7 @@ public class Schedule {
 			int hr = (int)runningTime/3600;
 			int min = (int)(runningTime%3600)/60;
 			int sec = (int)runningTime%60;
-			stop.timeToDwell = new SimTime(hr,min,sec);
+			stop.timeToDest = new SimTime(hr,min,sec);
 			
 			//-------------------
 			// Determine the new curr and prev blocks
@@ -174,34 +187,6 @@ public class Schedule {
 			}
 			
 		} //for each stop
-	}
-	private void calculateDwellTimesOld() {
-		//TODO convert this to BFS algorithm
-		int currBlockId = line.yardOut;
-		int prevBlockId = -1;
-		
-		TrackIterator ti;
-		
-		//Cycle through each stop
-		for(Stop stop : stops) {
-			//Store the cumulative travel time in runningTime
-			double runningTime = 0;
-			
-			//Loop until the stop is reached by the iterator
-			while(stop.blockId != currBlockId) {	
-				runningTime += line.blocks[currBlockId].getSpeedLimit()/1000.0 * line.blocks[currBlockId].getLength();
-				
-				ti = new TrackIterator(line.blocksAL, currBlockId, prevBlockId);
-				prevBlockId = currBlockId;
-				currBlockId = ti.nextBlock();
-			}
-			
-			//Set the dwell time
-			int hr = (int)runningTime/3600;
-			int min = (int)(runningTime%3600)/60;
-			int sec = (int)runningTime%60;
-			stop.timeToDwell = new SimTime(hr,min,sec);
-		}
 	}
 	
 	public <T> ArrayList<T> cloneAndAppendAL(ArrayList<T> oldAl, T newEl) {
@@ -220,8 +205,16 @@ public class Schedule {
 		Object[][] grid = new Object[stops.size()][3];
 		for(int i=0;i<stops.size();i++) {
 			Stop stop = stops.get(i);
-			grid[i][0] = line.blocks[stop.blockId].toString();
-			grid[i][1] = stop.timeToDwell.toString();
+			
+			//Get params
+			int blockId = stop.blockId;
+			SimTime timeToDwell = stop.timeToDwell;
+			SimTime timeToDest = stop.timeToDest;
+			
+			//Handle null cases since some stops might not have dwells
+			grid[i][0] = blockId != -1 ? line.blocks[blockId].toString() : "";
+			grid[i][1] = timeToDwell != null ? timeToDwell.toString() : "";
+			grid[i][2] = timeToDest != null ? timeToDest.toString() : "";
 		}
 		return grid;
 	}

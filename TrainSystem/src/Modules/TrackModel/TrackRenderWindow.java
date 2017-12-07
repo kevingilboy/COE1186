@@ -37,7 +37,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
     Color lineColor;
 
     // Information for rendering each active train on the track
-    int[] pingCounters = new int[100];
+    // int[] pingCounters = new int[100];
     int activeTrains = 0;
     ArrayList<String> trainIDs = new ArrayList<String>();
     ArrayList<Position> positions = new ArrayList<Position>();
@@ -62,7 +62,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
 
     // Initialize the timer
     public void initializeTimer(){
-        timer = new Timer(30, this); // milliseconds
+        timer = new Timer(250, this); // milliseconds
         timer.setInitialDelay(0);
         timer.start(); // Start the timer
     }
@@ -178,53 +178,6 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
             }
         }
 
-        // Highlight entire failed section with failed block
-        g2d.setColor(new Color(100, 0, 0));
-        for (int i = 0; i < blocks.size(); i++){
-
-            if (blocks.get(i).getStatus() == Block.STATUS_NOT_WORKING){
-                double[] x_coords = blocks.get(i).getXCoordinates();
-                double[] y_coords = blocks.get(i).getYCoordinates();
-
-                // Highlight entire section of track until nearest switch 
-                // when a block fails to indicate that a train cannot
-                // move on that section
-                
-                boolean exit = false;
-                int j = i;
-                do {
-                    x_coords = blocks.get(j).getXCoordinates();
-                    y_coords = blocks.get(j).getYCoordinates();
-
-                    for (int k = 0; k < x_coords.length-2; k++){
-                        g2d.drawRect((int)x_coords[k], (int)y_coords[k],
-                                    2, 2);
-                    }
-                    if (j < blocks.size() - 1){
-                        j++;
-                    } else {
-                        exit = true;
-                    }
-                } while ((blocks.get(j).getSwitch() == null) && (!exit));
-
-                j = i;
-                do {
-                    x_coords = blocks.get(j).getXCoordinates();
-                    y_coords = blocks.get(j).getYCoordinates();
-
-                    for (int k = 0; k < x_coords.length-2; k++){
-                        g2d.drawRect((int)x_coords[k], (int)y_coords[k],
-                                    2, 2);
-                    }
-                    if (j > 0){
-                        j--;
-                    } else {
-                        exit = true;
-                    }
-                } while ((blocks.get(j).getSwitch() == null) && (!exit));
-            }
-        }
-
         // Highlight failed blocks
         g2d.setColor(new Color(170, 0, 0));
         for (int i = 0; i < blocks.size(); i++){
@@ -334,12 +287,15 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                 ((xy_coords.get(i))[0]).intValue() - 30, ((xy_coords.get(i))[1]).intValue() - 30);
      
             g2d.setColor(lineColor);
+
+            /*
             (pingCounters[i])++;
             int radius = (pingCounters[i] % 14);
             Shape circle = new Ellipse2D.Double(((xy_coords.get(i))[0]).intValue() - radius, 
                             ((xy_coords.get(i))[1]).intValue() - radius,
                             2.0*radius, 2.0*radius );
             g2d.draw(circle);
+            */
 
             if (direction == -2){
                 removeTrain();
