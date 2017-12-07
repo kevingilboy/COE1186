@@ -136,6 +136,20 @@ public class Ctc implements Module,TimeControl {
 		return occupied;
 	}
 	
+	/**
+	 * Checks the TrackModel switch state via the TrackController
+	 */
+	public Boolean getSwitchState(Line line, int blockNum) {
+		TrackController wayside = getWaysideOfBlock(line, blockNum);
+		Block block = wayside.receiveBlockInfoForCtc(line.toString(), blockNum);
+		Switch sw = block.getSwitch();
+		if(sw!=null) {
+			return(sw.getState());
+		}
+		return null;
+	}
+	
+	
 	/*
 	 * ------------------------------
 	 *  SCHEDULES
@@ -408,10 +422,14 @@ public class Ctc implements Module,TimeControl {
 		}
 		currentTime = new SimTime(time);
 		
-		//Throughput
+		/*
+		 * THROUGHPUT
+		 */
 		calculateThroughput();
 		
-		//Auto-dispatch from queue
+		/*
+		 * AUTO-DISPATCH
+		 */
 		for(Schedule schedule : schedules.values()) {
 			if(schedule.departureTime.equals(currentTime)) {
 				String name = schedule.name;
@@ -471,7 +489,7 @@ public class Ctc implements Module,TimeControl {
 		}
 		
 		/*
-		 * CHECK BLOCKS FOR FAILURES
+		 * CHECK BLOCKS FOR FAILURES AND SWITCH STATES
 		 */
 		for(Line line : Line.values()) {
 			//Iterate through each block
@@ -493,6 +511,12 @@ public class Ctc implements Module,TimeControl {
 				}
 				line.blocks[location].setRailStatus(broken);
 				line.blocks[location].setOccupancy(occupied);
+				
+				//Get switch state via wayside
+				Boolean switchState = getSwitchState(line,location);
+				if(switchState!=null) {
+					line.blocks[location].getSwitch().setState(switchState);
+				}
 			}
 		}
 		
