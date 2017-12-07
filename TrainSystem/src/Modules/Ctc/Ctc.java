@@ -419,11 +419,11 @@ public class Ctc implements Module,TimeControl {
 				gui.autoDispatchFromQueue(name);
 			}
 		}
-			
+		
+		/*
+		 * UPDATE TRAIN LOCATIONS
+		 */
 		for(Train train : trains.values()) {
-			/*
-			 * LOCATION
-			 */
 			//Check if train has moved
 			int currentLocation = train.currLocation;
 			int nextLocation = getNextBlockId(train.line, train.currLocation, train.prevLocation);
@@ -468,7 +468,38 @@ public class Ctc implements Module,TimeControl {
 					}
 				}
 			}
-			
+		}
+		
+		/*
+		 * CHECK BLOCKS FOR FAILURES
+		 */
+		for(Line line : Line.values()) {
+			//Iterate through each block
+			for(int location=0;location<line.yardOut;location++) {
+				//Get block occupancy via wayside				
+				Boolean trackModelOccupied = getTrackCircuit(line, location);
+				Boolean broken = false;
+				Boolean occupied = false;
+				if(trackModelOccupied) {
+					occupied = true;
+					broken = true; //assume broken until proven not broken
+					for(Train train : ctc.trains.values()) {
+						//If it is a train on the block, it is occupied and not broken
+						if(train.line == line && train.currLocation == location) {
+							broken = false;
+						}
+					}
+					
+				}
+				line.blocks[location].setRailStatus(broken);
+				line.blocks[location].setOccupancy(occupied);
+			}
+		}
+		
+		/*
+		 * SPPED & AUTHORITY
+		 */
+		for(Train train : trains.values()) {			
 			//Get Wayside of current location
 			TrackController wayside = getWaysideOfBlock(train.line,train.currLocation);
 			
@@ -496,7 +527,9 @@ public class Ctc implements Module,TimeControl {
 			transmitSuggestedSpeed(train.name, wayside, suggestedSpeedInMps);
 		}
 		
-		//Trigger TrackControllers to update
+		/*
+		 * UPDATE TRACKCONTROLLERS
+		 */
 		for(TrackController tc : trackControllers) {
 			//Wait for tc to update before continuing
 			while(!tc.updateTime(currentTime)) {};
@@ -509,7 +542,6 @@ public class Ctc implements Module,TimeControl {
 	
 	@Override
 	public boolean communicationEstablished() {
-		//TODO prettify
 		trackControllers = new TrackController[4];
 		trackControllers[0] = new TrackController("Green",new String[]{"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149"},"G1");
 		trackControllers[1] = new TrackController("Green",new String[]{"53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","150","151"},"G2");
