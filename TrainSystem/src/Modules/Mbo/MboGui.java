@@ -14,6 +14,9 @@ import java.time.format.DateTimeFormatter;
 import java.io.*;
 import javax.swing.border.*;
 
+import Shared.Module;
+import Shared.SimTime;
+
 public class MboGui extends JFrame implements ActionListener {
    
     private JLabel timeBox;
@@ -35,7 +38,7 @@ public class MboGui extends JFrame implements ActionListener {
 	private void init() {
 
 		// initialize class attributes
-		this.font = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
+		this.font = new Font(Font.SANS_SERIF, Font.PLAIN, 40);
 		fileChooser = new JFileChooser();
 		//fileChooser.setForeground(Color.WHITE);
 
@@ -67,7 +70,8 @@ public class MboGui extends JFrame implements ActionListener {
 	private void initInfoPanel(JPanel infoPanel) {
 		
 		// create a search bar
-		JTextField searchBox = new JTextField("Search for a particular train...", 40);
+		JTextField searchBox = new JTextField(" Search for a particular train...");
+		searchBox.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
 
 		// create a clock
 		this.timeBox = new JLabel(LocalDateTime.now().toString());
@@ -84,6 +88,7 @@ public class MboGui extends JFrame implements ActionListener {
 							"<html><center>Calculated<br>Velocity<br>(mi/s)</center></html>",
 							"<html><center>Transmitted<br>Authority<br>(mi)</center></html>",
 							"<html><center>Transmitted Safe Braking Distance<br>(mi)</center></html>"};
+		//trainInfoColumns.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
 		//System.out.println("About to try with " + mbo);
 		this.trainData = mbo.getTrainData();
 		trainInfoTableModel = new DefaultTableModel(trainData, trainInfoColumns) {
@@ -91,6 +96,7 @@ public class MboGui extends JFrame implements ActionListener {
       			return false;
     		}
   		};
+  		//trainInfoTable = new JTable(this.trainData, this.trainInfoColumns);
 		trainInfoTable = new JTable(trainInfoTableModel);
 		trainInfoTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		trainInfoTable.setFillsViewportHeight(true);
@@ -101,6 +107,10 @@ public class MboGui extends JFrame implements ActionListener {
 		mapIcon = new ImageIcon(mapIcon.getImage().getScaledInstance(349, 467, Image.SCALE_DEFAULT));
 		JLabel map = new JLabel(mapIcon);
 		
+		// set sizes of layout components
+		//searchBox.setPreferredSize(new Dimension(40, 40));
+		//this.timeBox.setPreferredSize(new Dimension(40, 40));
+
         // populate the information panel
 		GroupLayout infoPanelLayout = new GroupLayout(infoPanel);
 		infoPanel.setLayout(infoPanelLayout);
@@ -108,7 +118,9 @@ public class MboGui extends JFrame implements ActionListener {
 		infoPanelLayout.setAutoCreateGaps(true);
 		infoPanelLayout.setHorizontalGroup(infoPanelLayout.createSequentialGroup()
 				                                          .addGroup(infoPanelLayout.createParallelGroup()
-															                       .addComponent(this.timeBox, GroupLayout.Alignment.CENTER)
+															                       .addComponent(this.timeBox, GroupLayout.Alignment.CENTER,
+															                       				 GroupLayout.PREFERRED_SIZE, 160,
+          																						 GroupLayout.PREFERRED_SIZE)
 																				   .addComponent(map))
 				                                          .addGroup(infoPanelLayout.createParallelGroup()
 					                                                               .addComponent(searchBox)
@@ -116,8 +128,14 @@ public class MboGui extends JFrame implements ActionListener {
 																				   .addComponent(pineapple, GroupLayout.Alignment.TRAILING)));
         infoPanelLayout.setVerticalGroup(infoPanelLayout.createSequentialGroup()
 				                                        .addGroup(infoPanelLayout.createParallelGroup()
-					                                                             .addComponent(this.timeBox, GroupLayout.Alignment.CENTER)
-					                                                             .addComponent(searchBox))
+					                                                             .addComponent(this.timeBox,
+					                                                             			   GroupLayout.Alignment.CENTER,
+															                       			   GroupLayout.PREFERRED_SIZE, 50,
+          																					   GroupLayout.PREFERRED_SIZE)
+					                                                             .addComponent(searchBox,
+					                                                             			   GroupLayout.Alignment.CENTER,
+															                       			   GroupLayout.PREFERRED_SIZE, 50,
+          																					   GroupLayout.PREFERRED_SIZE))
 				                                        .addGroup(infoPanelLayout.createParallelGroup()
 															                     .addComponent(map)
 															                     .addGroup(infoPanelLayout.createSequentialGroup()
@@ -150,7 +168,7 @@ public class MboGui extends JFrame implements ActionListener {
 		JTable trainTable = new JTable(trainScheduleTableModel);
 		trainTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		trainTable.setFillsViewportHeight(true);
-		//trainTable.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+		trainTable.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
 		JScrollPane trainScrollPane = new JScrollPane(trainTable);
 
 		// operator schedule table
@@ -259,7 +277,7 @@ public class MboGui extends JFrame implements ActionListener {
 			}
 		}
 	}
-
+	
 	public void actionPerformed(ActionEvent e) {
 		// handle generate file action
 		if (e.getSource() == generateButton) {
@@ -295,10 +313,16 @@ public class MboGui extends JFrame implements ActionListener {
 		pack();
 	}
 
-	public void update() {
-		this.timeBox.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+	public void update(SimTime time) {
+		this.timeBox.setText(time.toString());
 		this.trainData = mbo.getTrainData();
-		this.trainInfoTableModel.setDataVector(this.trainData, this.trainInfoColumns);
+		//this.trainInfoTableModel.setDataVector(this.trainData, this.trainInfoColumns);
+		DefaultTableModel model = new DefaultTableModel(this.trainData, this.trainInfoColumns);
+		//for (Object[] row : trainData) model.addRow(row);
+		trainInfoTable.setModel(model);
+		//trainInfoTableModel.fireTableDataChanged();
+		//((DefaultTableModel) this.trainInfoTable.getModel()).fireTableDataChanged();
+		mbo.testInitTrains(); // TODO get this out of here!
 		//for (int i; i < this.trainData.length; i++) {
 		//	for (int j; j < this.trainData[0].length; j++) {
 		//		this.trainInfoTableModel
@@ -317,7 +341,7 @@ public class MboGui extends JFrame implements ActionListener {
 			MboGui.setVisible(true);
 		});
 		while (true) {
-			MboGui.update();
+			MboGui.update(new SimTime(7,0,0));
 			try {
 			    Thread.sleep(100);
 			} catch (Exception ex) {
