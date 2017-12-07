@@ -80,7 +80,6 @@ public class TrainModel implements Module{
 		instantiateGUI(newTrain);
 		trainList.put(trainID.hashCode(), newTrain);
 		trackModel.dispatchTrain(line, trainID, newTrain.getPosition());
-		System.out.println("(TrainModel) Train dispatched: " + trainID);
 	}
 	
 	/**
@@ -148,7 +147,9 @@ public class TrainModel implements Module{
 	 * @param beaconVal
 	 */
 	public void setBeacon(String trainID, int beaconVal) {
-		this.getTrain(trainID).setBeacon(beaconVal);
+		if (this.getTrain(trainID) != null){
+			this.getTrain(trainID).setBeacon(beaconVal);
+		}
 	}
 	
 	/**
@@ -158,7 +159,11 @@ public class TrainModel implements Module{
 	 * @return
 	 */
 	public int getBeacon(String trainID) {
-		return this.getTrain(trainID).getBeacon();
+		int beacon = 0;
+		if (this.getTrain(trainID) != null){
+			beacon = this.getTrain(trainID).getBeacon();
+		}
+		return beacon;
 	}
 	
 	/**
@@ -187,7 +192,10 @@ public class TrainModel implements Module{
 	 * @return
 	 */
 	public double transmitCtcAuthority(String trainID, double authority) {
-		this.getTrain(trainID).setAuthority(authority);
+		// Check that this train exists
+		if (this.getTrain(trainID) != null){
+			this.getTrain(trainID).setAuthority(authority);
+		}
 		return authority;
 	}
 	
@@ -199,7 +207,9 @@ public class TrainModel implements Module{
 	 * @return
 	 */
 	public double transmitSuggestSetpointSpeed(String trainID, double setpoint) {
-		this.getTrain(trainID).setSetpoint(setpoint);
+		if (this.getTrain(trainID) != null){
+			this.getTrain(trainID).setSetpoint(setpoint);
+		}
 		return setpoint;
 	}
 	
@@ -398,6 +408,10 @@ public class TrainModel implements Module{
 	public void setMBOSignal(String trainID) {
 		mbo.receiveTrainPosition(trainID, getCoordinates(trainID), this.getTrain(trainID).checkSum());
 		// call method to send the MBO an "incoming signal" status that passes a trainID
+	}
+	
+	public void setPassengersEmbarking(String trainID, int num) {
+		this.getTrain(trainID).setNumEmbarking(num);
 	}
 
 	@Override
