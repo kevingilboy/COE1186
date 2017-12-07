@@ -179,10 +179,13 @@ public class TrackController implements Module{
 		}
 	}
 	
-	public void transmitCtcSwitchState(String line, int blockId, boolean state){
+	public boolean transmitCtcSwitchState(String line, int blockId, boolean state){
 		boolean canSwitch = tcplc.canSwitchBlock(blockId);
 		if(canSwitch){
 			transmitSwitchState(line, blockId, state);
+			return true;
+		} else {
+			return false;
 		}
 	}
 	

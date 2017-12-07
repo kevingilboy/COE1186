@@ -144,7 +144,7 @@ public class PLC {
 	}
 	
 	public boolean canSwitchBlock(int cb){
-		return vitalCheckBlock(canSwitchLogic, cb);
+		return vitalCheckSwitchBlock(canSwitchLogic, cb);
 	}
 	
 	public boolean canCrossingBlock(int cb){
@@ -166,6 +166,22 @@ public class PLC {
 			context.set("cb_occupied", tc.trackModel.getBlock(line, cb).getOccupied());
 			context.set("nb_occupied", tc.trackModel.getBlock(line, cb+1).getOccupied());
 			//context.set("nnb_occupied", tc.trackModel.getBlock(line, cb+2).getOccupied());
+			//Compound evaluation expression
+			result &= (boolean) e.evaluate(context); 
+		}
+		return result;
+	}
+	
+	private boolean vitalCheckSwitchBlock(String logic, int cb){
+		boolean result = true;
+		Expression e = jexl.createExpression(logic);
+		JexlContext context = new MapContext();
+		int norm = tc.trackModel.getBlock(line, cb).getSwitch().getPortNormal();
+		int alt = tc.trackModel.getBlock(line, cb).getSwitch().getPortAlternate();
+		//Compute evaluation 3 times in order to assure vitality of signal
+		for(int iii = 0; iii < 3; iii++){
+			context.set("norm_occupied", tc.trackModel.getBlock(line, norm).getOccupied());
+			context.set("alt_occupied", tc.trackModel.getBlock(line, alt).getOccupied());
 			//Compound evaluation expression
 			result &= (boolean) e.evaluate(context); 
 		}
