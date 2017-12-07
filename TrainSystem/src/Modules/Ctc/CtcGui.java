@@ -646,7 +646,9 @@ public class CtcGui {
 		btnCloseTrack = new JButton("Close for Maintenance");
 		btnCloseTrack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO close the block
+				Block block = getSelectedBlock();
+				ctc.setBlockMaintenance((Line)blockLineComboBox.getSelectedItem(),block.getId());
+				updateSelectedBlock(true);
 			}
 		});
 		btnCloseTrack.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -656,7 +658,9 @@ public class CtcGui {
 		btnRepairBlock = new JButton("Repair Block");
 		btnRepairBlock.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO fix the block
+				Block block = getSelectedBlock();
+				ctc.repairBlock((Line)blockLineComboBox.getSelectedItem(),block.getId());
+				updateSelectedBlock(true);
 			}
 		});
 		btnRepairBlock.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -708,7 +712,7 @@ public class CtcGui {
 		setBlockSpinnerLimits();
 		blockNumberSpinner.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent evt) {
-				updateSelectedBlock();
+				updateSelectedBlock(true);
 			}
 		});
 		blockNumberSpinner.setBounds(631, 686, 70, 28);
@@ -852,38 +856,30 @@ public class CtcGui {
 		Line line = (Line)blockLineComboBox.getSelectedItem();
 		int blockNumber = (int) blockNumberSpinner.getValue();
 		
-		Block block = line.blocks[blockNumber + 1];
+		Block block = line.blocks[blockNumber - 1];
 
 		return block;
 	}
 	
-	void updateSelectedBlock() {
+	void updateSelectedBlock(boolean forceFetchData) {
 		Block block = getSelectedBlock();
 		Line line = (Line)blockLineComboBox.getSelectedItem();
 		
-		Boolean trackModelOccupied = ctc.getTrackCircuit(line, block.getId());
-		Boolean broken = false;
-		if(trackModelOccupied) {
-			broken = true;
-			for(Train train : ctc.trains.values()) {
-				//If it is a train on the block, it is occupied and not broken
-				if(train.line == line && train.currLocation == block.getId()) {
-					broken = false;
-				}
-			}
-			
-			if(broken) {
-				setIndicator(selectedBlockStatusIndicator,"red");
-				setIndicator(selectedBlockOccupiedIndicator,"red");
-			}
-			else {
-				setIndicator(selectedBlockStatusIndicator,"green");
-				setIndicator(selectedBlockOccupiedIndicator,"green");
-			}
-			
+		if(forceFetchData) {
+			ctc.updateLocalBlockFromWayside(line,block.getId());
+		}
+		
+		if(block.getStatus()) {
+			setIndicator(selectedBlockStatusIndicator,"green");
 		}
 		else {
-			setIndicator(selectedBlockStatusIndicator,"grey");
+			setIndicator(selectedBlockStatusIndicator,"red");
+		}
+		
+		if(block.getOccupied()) {
+			setIndicator(selectedBlockOccupiedIndicator,"green");
+		}
+		else {
 			setIndicator(selectedBlockOccupiedIndicator,"grey");
 		}
 		
@@ -924,7 +920,7 @@ public class CtcGui {
 		clockLabel.setText(ctc.currentTime.toString());
 		
 		//Update the info of the selected block
-		updateSelectedBlock();
+		updateSelectedBlock(false);
 		
 		//Update the locations of trains
 		updateDispatchedTable();
