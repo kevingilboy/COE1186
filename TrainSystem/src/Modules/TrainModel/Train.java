@@ -145,10 +145,10 @@ public class Train {
     	this.trainActive = true;
     	this.trainID = trainID;
     	// Train Specs
-    	this.trainCars = 1;
+    	this.trainCars = 2;
     	this.trainCapacity = TRAIN_CAPACITY * this.trainCars;
         this.trainHeight = TRAIN_HEIGHT;
-        this.trainWeight = (TRAIN_WEIGHT * this.trainCars) + crew * AVE_PASSENGER_WEIGHT;
+        this.trainWeight = (TRAIN_WEIGHT * this.trainCars) + ((crew + numPassengers) * AVE_PASSENGER_WEIGHT);
         this.trainLength = TRAIN_LENGTH * this.trainCars;
         this.trainWidth = TRAIN_WIDTH;
         this.crew = 1; // crew will always be one driver
@@ -165,7 +165,7 @@ public class Train {
         this.grade = 0;
         //this.currentSpeedLimit = 0;
         this.GPSAntenna = true;
-        this.MBOAntenna = false;
+        this.MBOAntenna = true;
         
         // Failure Modes Activation
         this.engineFailureActive = false;
@@ -242,7 +242,7 @@ public class Train {
     public void setValuesForDisplay() {
     	this.trainModelGUI.tempLabel.setText(Integer.toString(this.temperature) + DEGREE + "F");
 
-        this.trainCars = this.trainModelGUI.numCars();
+        //this.trainCars = this.trainModelGUI.numCars();
         this.trainWheels = this.trainCars * TRAIN_NUM_WHEELS;
         this.trainModelGUI.crewCountLabel.setText(Integer.toString(crew));
         this.trainModelGUI.heightVal.setText(Double.toString(truncateTo(this.trainHeight, 2)));
@@ -252,11 +252,13 @@ public class Train {
         this.trainModelGUI.capacityVal.setText(Integer.toString(this.trainCapacity));
         this.trainModelGUI.powerVal.setText(Double.toString(truncateTo(this.powerIn/1000,2)));
         
+        GPSAntenna = this.trainModelGUI.signalFailStatus();
         if(GPSAntenna == true) {
         	this.trainModelGUI.gpsAntennaStatusLabel.setText("ON");
         } else {
         	this.trainModelGUI.gpsAntennaStatusLabel.setText("OFF");
         }
+        MBOAntenna = this.trainModelGUI.signalFailStatus();
         if(MBOAntenna == true) {
         	this.trainModelGUI.mboAntennaStatusLabel.setText("ON");
         } else {
@@ -284,6 +286,7 @@ public class Train {
         }
      	
      	this.trainModelGUI.numPassengers.setText(Integer.toString(this.numPassengers));
+     	this.trainModelGUI.numCarsSpinner.setText(Integer.toString(this.trainCars));
      	this.trainModelGUI.authorityVal.setText(Double.toString(truncateTo(this.CTCAuthority/METERS_PER_MILE,2)));
      	this.trainModelGUI.ctcSpeedLabel.setText(Double.toString(truncateTo(this.CTCSpeed*MS_TO_MPH,2)));
      	
@@ -326,7 +329,6 @@ public class Train {
      */
     public void updateVelocity() {
     	// Step 1: input power and convert the power to a force based on the starting velocity
-    	//powerIn = 180;
     	setWeight();
     	double trainMass = trainWeight*KG_PER_POUND;
     	
@@ -337,6 +339,7 @@ public class Train {
     		this.force = (this.powerIn)/this.currentSpeed;
     	}
     	setGrade();
+    	
     	// Step 2: Calculate the slope of the train's current angle (Degrees = Tan-1 (Slope Percent/100))
     	this.slope = Math.atan2(this.grade,100);
     	double angle = Math.toDegrees(this.slope);
@@ -344,8 +347,8 @@ public class Train {
     	// Step 3: Calculate the forces acting on the train using the coefficient of friction
     	// and the train's weight in lbs converted to kg divided over the wheels (where the force is technically
     	// being applied times gravity (G)
-    	this.normalForce = (trainMass/this.trainWheels) * G * Math.sin(angle);	// divide by 12 for the number of wheels
-    	this.downwardForce = (trainMass/this.trainWheels) * G * Math.cos(angle);	// divide by 12 for the number of wheels
+    	this.normalForce = (trainMass/this.trainWheels) * G * Math.sin((angle*Math.PI)/180);	// divide by 12 for the number of wheels
+    	this.downwardForce = (trainMass/this.trainWheels) * G * Math.cos((angle*Math.PI)/180);	// divide by 12 for the number of wheels
 
     	// compute friction force
     	this.friction = (FRICTION_COEFFICIENT * this.downwardForce) + this.normalForce;
@@ -686,6 +689,10 @@ public class Train {
     	this.temperature = temp;
     }
     
+    public void setNumEmbarking(int num) {
+    	this.numPassengers += num;
+    }
+    
     /**
      * Sets the number of passengers exiting the train using a random number generator
      * This method should only ever be called when train is STOPPED at a station
@@ -710,7 +717,7 @@ public class Train {
      * Computes the current weight of the train
      */
     private void setWeight() {
-    	this.trainWeight = (this.crew + this.numPassengers) * AVE_PASSENGER_WEIGHT;
+    	this.trainWeight = (this.trainCars*TRAIN_WEIGHT) + (this.crew + this.numPassengers) * AVE_PASSENGER_WEIGHT;
     }
     
     /**
