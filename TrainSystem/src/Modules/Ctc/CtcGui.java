@@ -92,7 +92,7 @@ public class CtcGui {
 	private JButton btnPause;
 	private JButton btnPlay;
 	private int currentSpeedupIndex = 0;
-	private int[] availableSpeedups = {1,2,4,8,16,32};
+	private int[] availableSpeedups = {1,2,5,10};
 	private JButton btnDecSpeed;
 	private JButton btnIncSpeed;
 	
