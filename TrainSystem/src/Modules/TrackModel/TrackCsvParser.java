@@ -173,7 +173,6 @@ public class TrackCsvParser{
 
 				/* Add block to list of blocks */
 				blocks.add(currentBlock);
-
 			} // end while(readline())
 		} catch (FileNotFoundException e) {
         	e.printStackTrace();
@@ -187,6 +186,18 @@ public class TrackCsvParser{
                 	e.printStackTrace();
             	}
         	}
+    	}
+
+    	// Assign each switch references to its normal and alternate switches
+    	for (int i = 0; i < blocks.size(); i++){
+    		if (blocks.get(i).getSwitch() != null){
+    			Switch s = blocks.get(i).getSwitch();
+    			Switch s_normal = blocks.get(s.getPortNormal()).getSwitch();
+    			Switch s_alternate = blocks.get(s.getPortAlternate()).getSwitch();
+
+    			s.setSwitchNormal(s_normal);
+    			s.setSwitchAlternate(s_alternate);
+    		}
     	}
 
     	return blocks;
