@@ -9,7 +9,7 @@ public class SimTime {
 	public int sec;
 	public int ms;
 	
-    static Pattern checkTwoDigit = Pattern.compile("^[0-9]{2}$");
+    static Pattern checkTwoDigit = Pattern.compile("^[0-9]{2}:[0-9]{2}:[0-9]{2}$");
 	
 	public SimTime(int hours, int minutes, int seconds) {
 		hr = hours;
@@ -89,22 +89,14 @@ public class SimTime {
 	}
 	
 	public static boolean isValid(String timeString) {
+		//Check to make sure the string has the right format
+		if(!checkTwoDigit.matcher(timeString).find()) {
+			return false;
+		}
+		
 		//Split into its parts
 		String[] components = timeString.split(":");
-		if (components.length==3) {
-			//Need to check for blank Strings and short Strings
-			for(String component : components) {
-				if(component.equals("")) {
-					return false;
-				}
-				if(component.length()!=2) {
-					return false;
-				}
-				if(checkTwoDigit.matcher(component).find()) {
-					return false;
-				}
-			}
-			
+		if (components.length==3) { //redundant check for three components
 			//Check if all in the right bounds
 			int h = Integer.parseInt(components[0]);
 			int m = Integer.parseInt(components[1]);
