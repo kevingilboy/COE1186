@@ -129,11 +129,13 @@ public class TrainController implements Module {
 		return trainModel.getBeacon(trainID);
 	}
 	
-	public void setBlockMode(String modeString) {
-		if (modeString.equals("MOVING")) {
+	public void enableMovingBlockMode(Boolean isMovingBlock) {
+		if (isMovingBlock) {
+			//Set to moving block mode
 			blockMode = 0;
 		}
-		else {	//modeString.equals("FIXED")
+		else {
+			//Set to fixed block mode
 			blockMode = 1;
 		}
 	}
