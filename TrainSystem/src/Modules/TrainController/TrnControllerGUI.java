@@ -41,19 +41,6 @@ public class TrnControllerGUI {
 	private JLabel setpointValue;
 	private JLabel powerValue;
 	private JLabel authorityValue;
-	
-	/*private JRadioButton modeManual;
-	private JRadioButton modeAuto;
-	private JRadioButton sBrakesOn;
-	private JRadioButton sBrakesOff;
-	private JRadioButton eBrakesOn;
-	private JRadioButton eBrakesOff;
-	private JRadioButton rightOpen;
-	private JRadioButton rightClose;
-	private JRadioButton leftOpen;
-	private JRadioButton leftClose;
-	private JRadioButton lightOn;
-	private JRadioButton lightOff;*/
 		
 	private int mode;	
 	private String trainID;
@@ -246,40 +233,6 @@ public class TrnControllerGUI {
 		sBrakesLabel.setBounds(376, 89, 200, 37);
 		contentPane.add(sBrakesLabel);
 		
-		/*sBrakesOn = new JRadioButton("On");
-		sBrakesOn.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		sBrakesOn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (driveMode == 1) {
-					sBrakesOn.setSelected(true);
-					sBrakesOff.setSelected(false);
-					service = true;
-					controller.sBrakesOn();
-				}
-			}
-		});
-		sBrakesOn.setBounds(376, 116, 80, 40);
-		sBrakesOn.setSelected(false);
-		contentPane.add(sBrakesOn);
-		
-		sBrakesOff = new JRadioButton("Off");
-		sBrakesOff.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		sBrakesOff.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (driveMode == 1) {
-					sBrakesOn.setSelected(false);
-					sBrakesOff.setSelected(true);
-					service = false;
-					controller.sBrakesOff();
-				}
-			}
-		});
-		sBrakesOff.setBounds(481, 116, 80, 40);
-		sBrakesOff.setSelected(true);
-		contentPane.add(sBrakesOff);*/
-		
 		serviceBtn = new JButton();
 		serviceBtn.setText("OFF");
 		serviceBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
@@ -308,40 +261,6 @@ public class TrnControllerGUI {
 		eBrakesLabel.setBounds(376, 153, 200, 37);
 		contentPane.add(eBrakesLabel);
 		
-		/*eBrakesOn = new JRadioButton("On");
-		eBrakesOn.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		eBrakesOn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (driveMode == 1) {
-					eBrakesOn.setSelected(true);
-					eBrakesOff.setSelected(false);
-					emergency = true;
-					controller.eBrakesOn();
-				}
-			}
-		});
-		eBrakesOn.setBounds(376, 181, 80, 40);
-		eBrakesOn.setSelected(false);
-		contentPane.add(eBrakesOn);
-		
-		eBrakesOff = new JRadioButton("Off");
-		eBrakesOff.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		eBrakesOff.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (driveMode == 1) {
-					eBrakesOn.setSelected(false);
-					eBrakesOff.setSelected(true);
-					emergency = false;
-					controller.eBrakesOff();
-				}
-			}
-		});
-		eBrakesOff.setBounds(481, 181, 80, 40);
-		eBrakesOff.setSelected(true);
-		contentPane.add(eBrakesOff);*/
-		
 		emergencyBtn = new JButton();
 		emergencyBtn.setText("OFF");
 		emergencyBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
@@ -369,40 +288,6 @@ public class TrnControllerGUI {
 		rightDoorLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
 		rightDoorLabel.setBounds(376, 216, 200, 37);
 		contentPane.add(rightDoorLabel);
-		
-		/*rightOpen = new JRadioButton("Open");
-		rightOpen.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		rightOpen.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (driveMode == 1 && suggestedDoor == 1) {
-					rightOpen.setSelected(true);
-					rightClose.setSelected(false);
-					right = true;
-					controller.openRight();
-				}
-			}
-		});
-		rightOpen.setBounds(376, 244, 80, 40);
-		rightOpen.setSelected(false);
-		contentPane.add(rightOpen);
-		
-		rightClose = new JRadioButton("Close");
-		rightClose.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		rightClose.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (driveMode == 1) {
-					rightOpen.setSelected(false);
-					rightClose.setSelected(true);
-					right = false;
-					controller.closeRight();
-				}
-			}
-		});
-		rightClose.setBounds(481, 244, 80, 40);
-		rightClose.setSelected(true);
-		contentPane.add(rightClose);*/
 		
 		rightBtn = new JButton();
 		rightBtn.setText("CLOSED");
@@ -435,40 +320,6 @@ public class TrnControllerGUI {
 		leftDoorLabel.setBounds(376, 277, 200, 37);
 		contentPane.add(leftDoorLabel);
 		
-		/*leftOpen = new JRadioButton("Open");
-		leftOpen.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		leftOpen.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (driveMode == 1 && suggestedDoor == -1) {
-					leftOpen.setSelected(true);
-					leftClose.setSelected(false);
-					left = true;
-					controller.openLeft();
-				}
-			}
-		});
-		leftOpen.setBounds(376, 305, 80, 40);
-		leftOpen.setSelected(false);
-		contentPane.add(leftOpen);
-		
-		leftClose = new JRadioButton("Close");
-		leftClose.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		leftClose.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (driveMode == 1) {
-					leftOpen.setSelected(false);
-					leftClose.setSelected(true);
-					left = false;
-					controller.closeLeft();
-				}
-			}
-		});
-		leftClose.setBounds(481, 305, 80, 40);
-		leftClose.setSelected(true);
-		contentPane.add(leftClose);*/
-		
 		leftBtn = new JButton();
 		leftBtn.setText("CLOSED");
 		leftBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
@@ -500,40 +351,6 @@ public class TrnControllerGUI {
 		lightLabel.setBounds(376, 341, 200, 37);
 		contentPane.add(lightLabel);
 		
-		/*lightOn = new JRadioButton("On");
-		lightOn.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		lightOn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (driveMode == 1) {
-					lightOn.setSelected(true);
-					lightOff.setSelected(false);
-					lights = true;
-					controller.lightsOn();
-				}
-			}
-		});
-		lightOn.setBounds(376, 369, 80, 40);
-		lightOn.setSelected(false);
-		contentPane.add(lightOn);
-		
-		lightOff = new JRadioButton("Off");
-		lightOff.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		lightOff.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (driveMode == 1) {
-					lightOn.setSelected(false);
-					lightOff.setSelected(true);
-					lights = false;
-					controller.lightsOff();
-				}
-			}
-		});
-		lightOff.setBounds(481, 369, 80, 40);
-		lightOff.setSelected(true);
-		contentPane.add(lightOff);*/
-		
 		lightBtn = new JButton();
 		lightBtn.setText("OFF");
 		lightBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
@@ -562,36 +379,6 @@ public class TrnControllerGUI {
 		modeLabel.setBounds(376, 20, 200, 37);
 		contentPane.add(modeLabel);
 		
-		/*modeAuto = new JRadioButton("Auto");
-		modeAuto.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		modeAuto.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				modeAuto.setSelected(true);
-				modeManual.setSelected(false);
-				driveMode = 0;
-				controller.setDriveMode(driveMode);
-			}
-		});
-		modeAuto.setBounds(376, 48, 80, 40);
-		modeAuto.setSelected(true);
-		contentPane.add(modeAuto);
-		
-		modeManual = new JRadioButton("Manual");
-		modeManual.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		modeManual.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				modeAuto.setSelected(false);
-				modeManual.setSelected(true);
-				driveMode = 1;
-				controller.setDriveMode(driveMode);
-			}
-		});
-		modeManual.setBounds(481, 48, 80, 40);
-		modeManual.setSelected(false);
-		contentPane.add(modeManual);*/
-		
 		modeBtn = new JButton();
 		modeBtn.setText("AUTO");
 		modeBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
@@ -615,16 +402,6 @@ public class TrnControllerGUI {
 		
 		speedSet.setEnabled(false);
 		tempSet.setEnabled(false);
-		/*sBrakesOn.setEnabled(false);
-		sBrakesOff.setEnabled(false);
-		eBrakesOn.setEnabled(false);
-		eBrakesOff.setEnabled(false);
-		rightOpen.setEnabled(false);
-		rightClose.setEnabled(false);
-		leftOpen.setEnabled(false);
-		leftClose.setEnabled(false);
-		lightOn.setEnabled(false);
-		lightOff.setEnabled(false);*/
 		serviceBtn.setEnabled(false);
 		emergencyBtn.setEnabled(false);
 		rightBtn.setEnabled(false);
@@ -642,68 +419,38 @@ public class TrnControllerGUI {
 		authorityValue.setText(df.format(authority) + " mi");
 		powerValue.setText(df.format(power) + " kW");
 		if (left) {
-			/*leftOpen.setSelected(true);
-			leftClose.setSelected(false);*/
 			leftBtn.setText("OPEN");
 		}
 		else {
-			/*leftOpen.setSelected(false);
-			leftClose.setSelected(true);*/
 			leftBtn.setText("CLOSED");
 		}
 		if (right) {
-			/*rightOpen.setSelected(true);
-			rightClose.setSelected(false);*/
 			rightBtn.setText("OPEN");
 		}
 		else {
-			/*rightOpen.setSelected(false);
-			rightClose.setSelected(true);*/
 			rightBtn.setText("CLOSED");
 		}
 		if (service) {
-			/*sBrakesOn.setSelected(true);
-			sBrakesOff.setSelected(false);*/
 			serviceBtn.setText("ON");
 		}
 		else {
-			/*sBrakesOn.setSelected(false);
-			sBrakesOff.setSelected(true);*/
 			serviceBtn.setText("OFF");
 		}
 		if (emergency) {
-			/*eBrakesOn.setSelected(true);
-			eBrakesOff.setSelected(false);*/
 			emergencyBtn.setText("ON");
 		}
 		else {
-			/*eBrakesOn.setSelected(false);
-			eBrakesOff.setSelected(true);*/
 			emergencyBtn.setText("OFF");
 		}
 		if (lights) {
-			/*lightOn.setSelected(true);
-			lightOff.setSelected(false);*/
 			lightBtn.setText("ON");
 		}
 		else {
-			/*lightOn.setSelected(false);
-			lightOff.setSelected(true);*/
 			lightBtn.setText("OFF");
 		}
 		if (driveMode == 1) {
 			speedSet.setEnabled(true);
 			tempSet.setEnabled(true);
-			/*sBrakesOn.setEnabled(true);
-			sBrakesOff.setEnabled(true);
-			eBrakesOn.setEnabled(true);
-			eBrakesOff.setEnabled(true);
-			rightOpen.setEnabled(true);
-			rightClose.setEnabled(true);
-			leftOpen.setEnabled(true);
-			leftClose.setEnabled(true);
-			lightOn.setEnabled(true);
-			lightOff.setEnabled(true);*/
 			serviceBtn.setEnabled(true);
 			emergencyBtn.setEnabled(true);
 			rightBtn.setEnabled(true);
@@ -715,16 +462,6 @@ public class TrnControllerGUI {
 		else {
 			speedSet.setEnabled(false);
 			tempSet.setEnabled(false);
-			/*sBrakesOn.setEnabled(false);
-			sBrakesOff.setEnabled(false);
-			eBrakesOn.setEnabled(false);
-			eBrakesOff.setEnabled(false);
-			rightOpen.setEnabled(false);
-			rightClose.setEnabled(false);
-			leftOpen.setEnabled(false);
-			leftClose.setEnabled(false);
-			lightOn.setEnabled(false);
-			lightOff.setEnabled(false);*/
 			serviceBtn.setEnabled(false);
 			emergencyBtn.setEnabled(false);
 			rightBtn.setEnabled(false);

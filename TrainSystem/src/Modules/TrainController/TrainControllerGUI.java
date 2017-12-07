@@ -79,7 +79,7 @@ public class TrainControllerGUI {
 		contentPane.setLayout(null);
 		
 		JLabel titleLabel = new JLabel("Train Controller Module");
-		titleLabel.setFont(standardFont);
+		titleLabel.setFont(new Font("Lucida Grande", Font.BOLD, 20));
 		titleLabel.setBounds(98, 6, 304, 53);
 		contentPane.add(titleLabel);
 		
