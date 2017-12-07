@@ -90,7 +90,7 @@ public class SimTime {
 	
 	public static boolean isValid(String timeString) {
 		//Check to make sure the string has the right format
-		if(!checkTwoDigit.matcher(timeString).find()) {
+		if(!checkTwoDigit.matcher(timeString).matches()) {
 			return false;
 		}
 		
