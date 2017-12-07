@@ -723,17 +723,7 @@ public class TrackModelGUI implements ActionListener{
 	    }
 	}
 	
-	public void initTracksOnStartup() {
-		trackModel.setTrack("green", (new TrackCsvParser()).parse("Modules/TrackModel/Track Layout/GreenLineFinal.csv"));
-		trackSelected = trackModel.getTrack("green");
-		blockSelected = trackSelected.get(0);
-
-		greenLineDisplay = new DynamicDisplay(trackModel.getTrack("green"));
-		currentDisplay = greenLineDisplay;
-
-		comboBox_selectTrack.addItem("GREEN LINE");
-		comboBox_selectTrack.setSelectedItem("GREEN LINE");
-		
+	public void initTracksOnStartup() {		
 		trackModel.setTrack("red", (new TrackCsvParser()).parse("Modules/TrackModel/Track Layout/RedLineFinal.csv"));
 		trackSelected = trackModel.getTrack("red");
 		blockSelected = trackSelected.get(0);
@@ -743,6 +733,16 @@ public class TrackModelGUI implements ActionListener{
 
 		comboBox_selectTrack.addItem("RED LINE");
 		comboBox_selectTrack.setSelectedItem("RED LINE");
+
+		trackModel.setTrack("green", (new TrackCsvParser()).parse("Modules/TrackModel/Track Layout/GreenLineFinal.csv"));
+		trackSelected = trackModel.getTrack("green");
+		blockSelected = trackSelected.get(0);
+
+		greenLineDisplay = new DynamicDisplay(trackModel.getTrack("green"));
+		currentDisplay = greenLineDisplay;
+
+		comboBox_selectTrack.addItem("GREEN LINE");
+		comboBox_selectTrack.setSelectedItem("GREEN LINE");
 
 		for (int i = 0; i < trackSelected.size(); i++){
 			comboBox_sectionId.addItem(trackSelected.get(i).getSection() + (i+1));
