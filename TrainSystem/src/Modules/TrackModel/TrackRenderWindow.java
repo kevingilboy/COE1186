@@ -178,53 +178,6 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
             }
         }
 
-        // Highlight entire failed section with failed block
-        g2d.setColor(new Color(100, 0, 0));
-        for (int i = 0; i < blocks.size(); i++){
-
-            if (blocks.get(i).getStatus() == Block.STATUS_NOT_WORKING){
-                double[] x_coords = blocks.get(i).getXCoordinates();
-                double[] y_coords = blocks.get(i).getYCoordinates();
-
-                // Highlight entire section of track until nearest switch 
-                // when a block fails to indicate that a train cannot
-                // move on that section
-                
-                boolean exit = false;
-                int j = i;
-                do {
-                    x_coords = blocks.get(j).getXCoordinates();
-                    y_coords = blocks.get(j).getYCoordinates();
-
-                    for (int k = 0; k < x_coords.length-2; k++){
-                        g2d.drawRect((int)x_coords[k], (int)y_coords[k],
-                                    2, 2);
-                    }
-                    if (j < blocks.size() - 1){
-                        j++;
-                    } else {
-                        exit = true;
-                    }
-                } while ((blocks.get(j).getSwitch() == null) && (!exit));
-
-                j = i;
-                do {
-                    x_coords = blocks.get(j).getXCoordinates();
-                    y_coords = blocks.get(j).getYCoordinates();
-
-                    for (int k = 0; k < x_coords.length-2; k++){
-                        g2d.drawRect((int)x_coords[k], (int)y_coords[k],
-                                    2, 2);
-                    }
-                    if (j > 0){
-                        j--;
-                    } else {
-                        exit = true;
-                    }
-                } while ((blocks.get(j).getSwitch() == null) && (!exit));
-            }
-        }
-
         // Highlight failed blocks
         g2d.setColor(new Color(170, 0, 0));
         for (int i = 0; i < blocks.size(); i++){
