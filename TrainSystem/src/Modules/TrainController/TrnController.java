@@ -116,7 +116,7 @@ public class TrnController {
 			setpointSpeed = controller.receiveSetpointSpeed(trainID);
 			if (inStation) {
 				stationTimeCounter++;
-				if (stationTimeCounter == 120)
+				if (stationTimeCounter >= 120)
 				{
 					stationTimeCounter = 0;
 					closeLeft();
@@ -154,7 +154,8 @@ public class TrnController {
 		}
 		else {		//if manual
 			if (inStation) {
-				System.out.println("In Station");
+				//System.out.println("In Station");
+				stationTimeCounter++;
 				calcPowerOutput();
 				if (actualSpeed > 0 && power > 0) {
 					stationTimeCounter = 0;
@@ -183,6 +184,9 @@ public class TrnController {
 		}
 		decodeBeacon();
 		stationCheck();
+		if (!inStation) {
+			controlGUI.setSuggestedDoor(0);
+		}
 		updateGUI();
 		return true;
 	}
@@ -403,9 +407,9 @@ public class TrnController {
 				}
 			}
 		}
-		else {
+		/*else {
 			controlGUI.setSuggestedDoor(0);
-		}
+		}*/
 	}
 	
 	private void decodeBeacon() {

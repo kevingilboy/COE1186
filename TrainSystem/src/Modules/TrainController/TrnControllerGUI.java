@@ -411,10 +411,13 @@ public class TrnControllerGUI {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (driveMode == 1) {
-					if (rightBtn.getText().equals("CLOSED")) {
+					if (rightBtn.getText().equals("CLOSED") && suggestedDoor == 1) {
 						rightBtn.setText("OPEN");
 						right = true;
 						controller.openRight();
+					}
+					else if (rightBtn.getText().equals("CLOSED") && suggestedDoor != 1) {
+						//do nothing
 					}
 					else {
 						rightBtn.setText("CLOSED");
@@ -473,10 +476,13 @@ public class TrnControllerGUI {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (driveMode == 1) {
-					if (leftBtn.getText().equals("CLOSED")) {
+					if (leftBtn.getText().equals("CLOSED") && suggestedDoor == -1) {
 						leftBtn.setText("OPEN");
 						left = true;
 						controller.openLeft();
+					}
+					else if (leftBtn.getText().equals("CLOSED") && suggestedDoor != -1) {
+						//do nothing
 					}
 					else {
 						leftBtn.setText("CLOSED");
