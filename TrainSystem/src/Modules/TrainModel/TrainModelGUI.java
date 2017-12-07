@@ -132,8 +132,7 @@ public class TrainModelGUI extends JFrame {
 	public JLabel lengthVal = new JLabel();
 	public JLabel widthVal = new JLabel();
 	public JLabel capacityVal = new JLabel();
-	private JSpinner numCarsSpinner = new JSpinner();
-	private JButton setCars = new JButton("Set");
+	public JLabel numCarsSpinner = new JLabel();
 	private JLabel lblCrew = new JLabel("Crew:");
 	JLabel crewCountLabel = new JLabel();
 	public JLabel arrivalStatusLabel = new JLabel();
@@ -223,7 +222,6 @@ public class TrainModelGUI extends JFrame {
 		//double currSpeed = trainModel.setTrainValues();
 		//System.out.println(currSpeed);
 	}
-	
 	public boolean serviceBrakeStatus() {
 		return serviceBrake;
 	}
@@ -243,12 +241,8 @@ public class TrainModelGUI extends JFrame {
 	public boolean brakeFailStatus() {
 		return brakeFail;
 	}
-	
-	public int numCars() {
-		return numCars;
-	}
-	
 
+	
 	/**
 	 * Create the frame.
 	 */
@@ -693,21 +687,6 @@ public class TrainModelGUI extends JFrame {
 		
 		numCarsSpinner.setBounds(164, 213, 59, 20);
 		contentPane.add(numCarsSpinner);
-		setCars.setForeground(Color.BLACK);
-		setCars.setBackground(Color.WHITE);
-		setCars.setFont(new Font("Dialog", Font.PLAIN, 18));
-		
-		setCars.setBounds(234, 213, 69, 20);
-		contentPane.add(setCars);
-		setCars.addActionListener(new ActionListener()
-		{
-		  public void actionPerformed(ActionEvent e)
-		  {
-			  // send the power command through when the button is pressed
-
-			  numCars = Integer.parseInt(numCarsSpinner.getValue().toString());
-		  }
-		});
 		
 		lblCrew.setFont(new Font("Dialog", Font.PLAIN, 18));
 		lblCrew.setBounds(60, 277, 69, 20);

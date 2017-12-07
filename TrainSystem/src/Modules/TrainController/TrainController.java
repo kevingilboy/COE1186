@@ -24,6 +24,7 @@ public class TrainController implements Module {
 	private ArrayList<BlockInfo> greenInfo;
 	private SimTime time;
 	private String[] stationList;
+	private int blockMode;
 	
 	public final int APPROACHING = 0;
 	public final int ARRIVED = 1;
@@ -33,7 +34,7 @@ public class TrainController implements Module {
 	public TrainController() {
 		controlList = new HashMap<String, TrnController>();
 		mainGUI = new TrainControllerGUI();
-		stationList = new String[]{"Pioneer", "Edgebrook", "Station", "Whited", "South Bank", "Central", "Inglewood", "Overbrook", "Glenbury", "Dormont", "Mt. Lebanon", "Poplar", "Castle Shannon", "Glenbury", "Overbrook", "Inglewood", "Central", "Shadyside", "Herron Avenue", "Swissville", "Penn Station", "Steel Plaza", "First Avenue", "Station Square", "South Hills Junction"};
+		stationList = new String[]{"", "Pioneer", "Edgebrook", "Station", "Whited", "South Bank", "Central", "Inglewood", "Overbrook", "Glenbury", "Dormont", "Mt. Lebanon", "Poplar", "Castle Shannon", "Glenbury", "Overbrook", "Inglewood", "Central", "Shadyside", "Herron Avenue", "Swissville", "Penn Station", "Steel Plaza", "First Avenue", "Station Square", "South Hills Junction"};
 	}
 	
 	public void dispatchTrain(String trainID, String line) {
@@ -45,10 +46,10 @@ public class TrainController implements Module {
 			i = mainGUI.getI();
 		}
 		if (line.equals("RED")) {
-			controlList.put(trainID, new TrnController(trainID, line, this, redInfo, mainGUI, stationList, p, i));
+			controlList.put(trainID, new TrnController(trainID, line, this, redInfo, mainGUI, stationList, p, i, blockMode));
 		}
 		else {
-			controlList.put(trainID, new TrnController(trainID, line, this, greenInfo, mainGUI, stationList, p, i));
+			controlList.put(trainID, new TrnController(trainID, line, this, greenInfo, mainGUI, stationList, p, i, blockMode));
 		}
 	}
 	
@@ -126,6 +127,17 @@ public class TrainController implements Module {
 	
 	public int receiveBeaconValue(String trainID) {
 		return trainModel.getBeacon(trainID);
+	}
+	
+	public void enableMovingBlockMode(Boolean isMovingBlock) {
+		if (isMovingBlock) {
+			//Set to moving block mode
+			blockMode = 0;
+		}
+		else {
+			//Set to fixed block mode
+			blockMode = 1;
+		}
 	}
 	
 	public void receiveMap() {
