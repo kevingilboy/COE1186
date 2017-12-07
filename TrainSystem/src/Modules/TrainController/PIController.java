@@ -33,8 +33,10 @@ public class PIController {
 	private double setpointRange;		//set to zero to do nothing
 	
 	/*public static void main(String[] args) {
-		new PIController(200, 300);
+		new PIController(2000, 0.8071);
 	}*/
+	
+	
 	
 	public PIController(double p, double i) {
 		P = p;
@@ -56,7 +58,7 @@ public class PIController {
 		lastOutput = 0;
 		outputFilter = 0.1;
 		setpointRange = 0;
-		//System.out.println(getOutput(0, 45));
+		//System.out.println(getOutput(40, 45));
 	}
 	
 	public double getOutput(double actual, double setpoint) {
