@@ -222,7 +222,6 @@ public class TrainModelGUI extends JFrame {
 		//double currSpeed = trainModel.setTrainValues();
 		//System.out.println(currSpeed);
 	}
-	
 	public boolean serviceBrakeStatus() {
 		return serviceBrake;
 	}
@@ -242,12 +241,8 @@ public class TrainModelGUI extends JFrame {
 	public boolean brakeFailStatus() {
 		return brakeFail;
 	}
-	
-	public int numCars() {
-		return numCars;
-	}
-	
 
+	
 	/**
 	 * Create the frame.
 	 */
