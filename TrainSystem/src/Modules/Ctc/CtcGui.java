@@ -746,7 +746,7 @@ public class CtcGui {
 			trainCreationTable.setEnabled(true);
 	
 			//If valid name and time, and schedule has one stop then allow schedule to be dispatched
-			addToDispatchToQueue.setEnabled(trainCreationTable.schedule.stops.size()>0);
+			addToDispatchToQueue.setEnabled(trainCreationTable.schedule.stops.size()>0 && trainCreationTable.checkDataValid());
 		}
 		else {
 			//Else disable table and ability to add to queue
