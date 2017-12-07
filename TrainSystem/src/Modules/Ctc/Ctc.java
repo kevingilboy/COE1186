@@ -198,10 +198,10 @@ public class Ctc implements Module,TimeControl {
 	/**
 	 * Sets the TrackModel block to maintenance mode via the TrackController
 	 */
-	protected void setSwitchState(Line line, int blockNum, Boolean state) {
+	protected boolean setSwitchState(Line line, int blockNum, Boolean state) {
 		TrackController wayside = getWaysideOfBlock(line, blockNum);
-		Block block = wayside.receiveBlockInfoForCtc(line.toString(), blockNum);
-		block.getSwitch().setState(state);
+		boolean success = wayside.transmitCtcSwitchState(line.toString(), blockNum, state);
+		return success;
 	}
 	
 	
