@@ -45,7 +45,7 @@ public class Simulator {
 		trainModel = new TrainModel();
 		mbo = new Mbo();
 		
-		modules = new Module[]{ctc,trackModel,trainModel, trainController, mbo};
+		modules = new Module[]{ctc,mbo,trainController,trackModel,trainModel};
 		
 		//Pass cross references
 		ctc.simulator = this;
@@ -122,6 +122,8 @@ public class Simulator {
 				//Wait for module to finish updating before proceeding
 				while(!module.updateTime(currentTime)) {};
 			}
+			trackModel.updateDynamicDisplay(currentTime);
+			
 			//Increment time
 			currentTime.incrementTime(ticksPerSecond);
 			
