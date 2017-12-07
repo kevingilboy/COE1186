@@ -10,15 +10,19 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
+import javax.swing.BorderFactory;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.Font;
+import java.awt.Color;
 
 public class TrainControllerGUI {
 
@@ -39,6 +43,7 @@ public class TrainControllerGUI {
 	private JButton confirmButton;
 
 	private JPanel contentPane;
+	private JPanel panel;
 	
 	private ArrayList<TrnControllerGUI> guiList;
 	private ArrayList<JButton> buttonList;
@@ -61,14 +66,11 @@ public class TrainControllerGUI {
 		ready = true;
 		guiList = new ArrayList<TrnControllerGUI>();
 		buttonList = new ArrayList<JButton>();
-		yCount = 80;
+		yCount = 110;
 		height = 400;
 		logoHeight = 280;
 		
 		Font standardFont = new Font("Lucida Grande", Font.PLAIN, 16);
-		
-		icon_logo = new JLabel("");
-		icon_logo.setIcon(new ImageIcon("Modules\\TrackModel\\Images\\HSS_TrainSim_Logo.png"));
 		
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -78,15 +80,33 @@ public class TrainControllerGUI {
 		frame.setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		Border blackline = BorderFactory.createLineBorder(Color.black);
+		
+		panel = new JPanel();
+		panel.setBounds(259, 63, 162, 196);
+		contentPane.add(panel);
+		panel.setLayout(null);
+		panel.setBorder(blackline);
+		
 		JLabel titleLabel = new JLabel("Train Controller Module");
 		titleLabel.setFont(new Font("Lucida Grande", Font.BOLD, 20));
-		titleLabel.setBounds(98, 6, 304, 53);
+		titleLabel.setBounds(95, 15, 253, 42);
 		contentPane.add(titleLabel);
+		
+		JLabel activeLabel = new JLabel("Active Trains");
+		activeLabel.setFont(standardFont);
+		activeLabel.setBounds(51, 63, 117, 32);
+		contentPane.add(activeLabel);
+		
+		JLabel controllerLabel = new JLabel("PI Controller\n");
+		controllerLabel.setBounds(27, 6, 104, 20);
+		panel.add(controllerLabel);
+		controllerLabel.setFont(standardFont);
 		
 		JLabel dispatchLabel = new JLabel("Dispatch Values");
 		dispatchLabel.setFont(standardFont);
-		dispatchLabel.setBounds(241, 76, 140, 18);
-		contentPane.add(dispatchLabel);
+		dispatchLabel.setBounds(16, 35, 125, 16);
+		panel.add(dispatchLabel);
 		
 		pField = new JTextField();			//p
 		pField.addKeyListener(new KeyAdapter() {
@@ -96,9 +116,9 @@ public class TrainControllerGUI {
 				confirmButton.setEnabled(true);
 			}
 		});
-		pField.setBounds(241, 106, 161, 36);
+		pField.setBounds(18, 66, 138, 29);
 		pField.setFont(standardFont);
-		contentPane.add(pField);
+		panel.add(pField);
 		pField.setColumns(10);
 		pField.setText(p + "");
 		
@@ -110,21 +130,21 @@ public class TrainControllerGUI {
 				confirmButton.setEnabled(true);
 			}
 		});
-		iField.setBounds(241, 154, 161, 36);
+		iField.setBounds(18, 107, 138, 29);
 		iField.setFont(standardFont);
-		contentPane.add(iField);
+		panel.add(iField);
 		iField.setColumns(10);
 		iField.setText(i + "");
 		
 		JLabel pLabel = new JLabel("P");
-		pLabel.setBounds(229, 109, 16, 31);
+		pLabel.setBounds(6, 73, 16, 16);
 		pLabel.setFont(standardFont);
-		contentPane.add(pLabel);
+		panel.add(pLabel);
 		
 		JLabel iLabel = new JLabel("I");
-		iLabel.setBounds(229, 158, 16, 29);
+		iLabel.setBounds(8, 114, 16, 16);
 		iLabel.setFont(standardFont);
-		contentPane.add(iLabel);
+		panel.add(iLabel);
 		
 		confirmButton = new JButton("Confirm");
 		confirmButton.addMouseListener(new MouseAdapter() {
@@ -148,11 +168,13 @@ public class TrainControllerGUI {
 				confirmButton.setEnabled(false);
 			}
 		});
-		confirmButton.setBounds(241, 203, 140, 37);
+		confirmButton.setBounds(16, 150, 130, 35);
 		confirmButton.setFont(standardFont);
 		confirmButton.setEnabled(false);
-		contentPane.add(confirmButton);
+		panel.add(confirmButton);
 		
+		icon_logo = new JLabel("");
+		icon_logo.setIcon(new ImageIcon("Modules\\TrackModel\\Images\\HSS_TrainSim_Logo.png"));
 		icon_logo.setBounds(330, logoHeight, 100, 100);
 		contentPane.add(icon_logo);
 		
@@ -160,9 +182,17 @@ public class TrainControllerGUI {
 	}
 	
 	public void add(TrnControllerGUI g) {
-		System.out.println("add");
+		Font standardFont = new Font("Lucida Grande", Font.PLAIN, 16);
+		
+		//System.out.println("add");
 		guiList.add(g);
-		JButton B = new JButton(g.getId());
+		
+		JLabel L = new JLabel(g.getId());
+		L.setBounds(19, yCount + 8, 61, 18);
+		L.setFont(standardFont);
+		contentPane.add(L);
+		
+		JButton B = new JButton("View");
 		buttonList.add(B);
 		B.addMouseListener(new MouseAdapter() {
 			@Override
@@ -172,17 +202,18 @@ public class TrainControllerGUI {
 				I.setVisible(true);
 			}
 		});
-		B.setBounds(30, yCount, 130, 37);
-		B.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		B.setBounds(93, yCount, 130, 37);
+		B.setFont(standardFont);
 		B.setVisible(true);
 		B.setEnabled(true);
 		contentPane.add(B);
-		yCount = yCount + 60;
-		if (yCount >= (height - 60)) {
-			height = height + 60;
-			logoHeight = logoHeight + 60;
-			frame.setBounds(100, 100, 450, height);
-			icon_logo.setBounds(300, logoHeight, 150, 150);
+		
+		yCount = yCount + 50;
+		if (yCount >= (height - 50)) {
+			height = height + 50;
+			logoHeight = logoHeight + 50;
+			frame.setBounds(100, 500, 450, height);
+			icon_logo.setBounds(330, logoHeight, 100, 100);
 		}
 		frame.repaint();
 	}
