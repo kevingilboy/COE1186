@@ -122,6 +122,8 @@ public class Simulator {
 				//Wait for module to finish updating before proceeding
 				while(!module.updateTime(currentTime)) {};
 			}
+			trackModel.updateDynamicDisplay(currentTime);
+			
 			//Increment time
 			currentTime.incrementTime(ticksPerSecond);
 			
