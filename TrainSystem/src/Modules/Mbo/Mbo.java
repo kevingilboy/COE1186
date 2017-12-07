@@ -250,7 +250,7 @@ public class Mbo implements Module {
 
     	// Calculate the slope of the train's current angle (Degrees = Tan-1 (Slope Percent/100))
     	double slope = Math.atan2(block.getGrade(),100);
-    	double angle = Math.toDegrees(slope);
+//    	double angle = Math.toDegrees(slope);
     	
     	// Step 3: Calculate the forces acting on the train using the coefficient of friction
     	// and the train's weight in lbs converted to kg divided over the wheels (where the force is technically
