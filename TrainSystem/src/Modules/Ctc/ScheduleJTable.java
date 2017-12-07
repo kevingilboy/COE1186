@@ -2,20 +2,26 @@ package Modules.Ctc;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import Modules.TrackModel.Block;
+import Shared.SimTime;
 
 @SuppressWarnings("serial")
 public class ScheduleJTable extends JTable{	
-	private static Object[] columns = {"Stop","Time to Station"};
+	private static Object[] columns = {"Stop","Time to Dwell","Time to Station"};
 	private static Object[] blankRow = new Object[columns.length];
 	private ScheduleJTable table = this;
 	public Schedule schedule = null;
@@ -63,8 +69,33 @@ public class ScheduleJTable extends JTable{
 		//Add ComboBoxes to the stop selection column
 		addComboBoxToColumn();
 		
+		//Add TextAreas to the dwell time column
+		addTextAreaToColumn();
+		
 		//Trigger changes to be rendered visually
 		((DefaultTableModel) this.getModel()).fireTableDataChanged();
+	}
+	
+	public boolean checkDataValid() {
+	    DefaultTableModel dtm = (DefaultTableModel) this.getModel();
+	    int rows = dtm.getRowCount();
+	    for (int i = 0 ; i < rows ; i++) {
+	    	String block = (String)dtm.getValueAt(i,0);
+	    	String timeToDwell = (String)dtm.getValueAt(i,1);
+	    	String timeToDest = (String)dtm.getValueAt(i,2);
+	    	
+	    	//Ignore if the last blank row, it is purposefully null
+	    	if(block == null && timeToDwell == null && timeToDest == null) {
+	    		continue;
+	    	}
+	    	
+	    	//Make sure row has a block and a time to dwell
+	    	if(block.equals("") || block==null || 
+	    			timeToDwell==null || !SimTime.isValid(timeToDwell)) {
+	    		return false;
+	    	}
+	    }
+		return true;
 	}
 	
 	/**
@@ -128,5 +159,33 @@ public class ScheduleJTable extends JTable{
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         renderer.setToolTipText("Click for combo box");
         this.getColumnModel().getColumn(0).setCellRenderer(renderer);
+        
+	}
+	private void addTextAreaToColumn() {
+		//Create the ComboBox and add the line blocks to it
+		JTextField textArea = new JTextField();
+		
+		//Add a listener to the ComboBox, add stop when state changes
+		textArea.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				int row = table.getSelectedRow();
+				String timeToDwell = textArea.getText();
+				
+				if(SimTime.isValid(timeToDwell) && row>=0) {
+					schedule.addStop(row, new SimTime(timeToDwell));
+					fireScheduleChanged();
+				}
+			}
+		});
+	
+		//Put the TextArea into the JTable cell
+		DefaultCellEditor textAreaEditor = new DefaultCellEditor(textArea);
+		this.getColumnModel().getColumn(1).setCellEditor(textAreaEditor);
+		
+		//Add a tooltip
+	    DefaultTableCellRenderer textAreaRenderer = new DefaultTableCellRenderer();
+	    textAreaRenderer.setToolTipText("Type time to spend at the station");
+	    this.getColumnModel().getColumn(1).setCellRenderer(textAreaRenderer);
 	}
 }

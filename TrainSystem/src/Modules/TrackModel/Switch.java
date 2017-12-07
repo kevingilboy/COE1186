@@ -50,13 +50,17 @@ public class Switch{
 
 	public void setState(boolean newState){
 		state = newState;
-		if (state = STATE_NORMAL){
-			switchNormal.setState(STATE_NORMAL);
-			switchAlternate.setState(STATE_ALTERNATE);
+		if (state == STATE_NORMAL){
+			switchNormal.setPortState(STATE_NORMAL);
+			switchAlternate.setPortState(STATE_ALTERNATE);
 		} else if (state == STATE_ALTERNATE){
-			switchNormal.setState(STATE_ALTERNATE);
-			switchAlternate.setState(STATE_NORMAL);
+			switchNormal.setPortState(STATE_ALTERNATE);
+			switchAlternate.setPortState(STATE_NORMAL);
 		}
+	}
+	
+	protected void setPortState(boolean newState) {
+		state = newState;
 	}
 
 	public void setStatus(boolean newStatus){
