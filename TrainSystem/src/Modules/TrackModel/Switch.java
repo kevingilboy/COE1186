@@ -14,6 +14,8 @@ public class Switch{
 	private boolean edge;
 	private int portNormal;
 	private int portAlternate;
+	private Switch switchNormal;
+	private Switch switchAlternate;
 
 	public Switch(){
 		// Default state, status, edge, and ports
@@ -22,6 +24,8 @@ public class Switch{
 		edge = EDGE_TYPE_HEAD;
 		portNormal = 0;
 		portAlternate = 0;
+		switchNormal = null;
+		switchAlternate = null;
 	}
 
 	public boolean getState(){
@@ -45,8 +49,14 @@ public class Switch{
 	}
 
 	public void setState(boolean newState){
-		// NEED TO MODIFY STATE UPDATE TO UPDATE "SWITCH" AT ALL THREE PORTS
 		state = newState;
+		if (state = STATE_NORMAL){
+			switchNormal.setState(STATE_NORMAL);
+			switchAlternate.setState(STATE_ALTERNATE);
+		} else if (state == STATE_ALTERNATE){
+			switchNormal.setState(STATE_ALTERNATE);
+			switchAlternate.setState(STATE_NORMAL);
+		}
 	}
 
 	public void setStatus(boolean newStatus){
@@ -63,5 +73,13 @@ public class Switch{
 
 	public void setPortAlternate(int p){
 		portAlternate = p;
+	}
+
+	public void setSwitchNormal(Switch n){
+		switchNormal = n;
+	}
+
+	public void setSwitchAlternate(Switch s){
+		switchAlternate = s;
 	}
 }
