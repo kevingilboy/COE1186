@@ -17,6 +17,7 @@ public class Schedule {
 	public ArrayList<Stop> stops;
 	public int nextStopIndex;
 	
+	private final SimTime DEFAULT_DWELL = new SimTime("00:02:00");
 	
 	public Schedule(Line line) {
 		this.line = line;
@@ -31,6 +32,9 @@ public class Schedule {
 		//If stop does not exist, then add it. Else update the current stop
 		if(index>=stops.size()) {
 			stops.add(index,new Stop(blockId));
+			
+			//Add default time to dwell
+			stops.get(index).timeToDwell = new SimTime(DEFAULT_DWELL);
 		}
 		else {
 			Stop existingStop = stops.get(index);
