@@ -62,7 +62,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
 
     // Initialize the timer
     public void initializeTimer(){
-        timer = new Timer(30, this); // milliseconds
+        timer = new Timer(250, this); // milliseconds
         timer.setInitialDelay(0);
         timer.start(); // Start the timer
     }
