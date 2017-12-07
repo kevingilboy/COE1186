@@ -35,7 +35,6 @@ import javax.swing.border.LineBorder;
 public class TrackControllerGUI extends JFrame{
 	//Parent Class
 	public TrackController tc;
-	public TrackControllerGUI thisgui;
 	//GUI Variables
 	private JPanel contentPane;
 	private JTextField textStatus;
@@ -59,7 +58,6 @@ public class TrackControllerGUI extends JFrame{
 		for(int i=0; i<blocks.length; i++){
 			blocks[i] = Integer.toString((Integer.parseInt(blocks[i])+1));//offset for displaying
 		}
-		this.thisgui = this;
 		drawTrackControllerGui(tc, line, blocks, controllerName);
 		System.out.println(this);
 		this.setVisible(true);
