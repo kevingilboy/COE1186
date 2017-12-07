@@ -165,7 +165,7 @@ public class Train {
         this.grade = 0;
         //this.currentSpeedLimit = 0;
         this.GPSAntenna = true;
-        this.MBOAntenna = false;
+        this.MBOAntenna = true;
         
         // Failure Modes Activation
         this.engineFailureActive = false;
@@ -243,7 +243,6 @@ public class Train {
     	this.trainModelGUI.tempLabel.setText(Integer.toString(this.temperature) + DEGREE + "F");
 
         //this.trainCars = this.trainModelGUI.numCars();
-    	
         this.trainWheels = this.trainCars * TRAIN_NUM_WHEELS;
         this.trainModelGUI.crewCountLabel.setText(Integer.toString(crew));
         this.trainModelGUI.heightVal.setText(Double.toString(truncateTo(this.trainHeight, 2)));
@@ -253,11 +252,13 @@ public class Train {
         this.trainModelGUI.capacityVal.setText(Integer.toString(this.trainCapacity));
         this.trainModelGUI.powerVal.setText(Double.toString(truncateTo(this.powerIn/1000,2)));
         
+        GPSAntenna = this.trainModelGUI.signalFailStatus();
         if(GPSAntenna == true) {
         	this.trainModelGUI.gpsAntennaStatusLabel.setText("ON");
         } else {
         	this.trainModelGUI.gpsAntennaStatusLabel.setText("OFF");
         }
+        MBOAntenna = this.trainModelGUI.signalFailStatus();
         if(MBOAntenna == true) {
         	this.trainModelGUI.mboAntennaStatusLabel.setText("ON");
         } else {
@@ -346,8 +347,8 @@ public class Train {
     	// Step 3: Calculate the forces acting on the train using the coefficient of friction
     	// and the train's weight in lbs converted to kg divided over the wheels (where the force is technically
     	// being applied times gravity (G)
-    	this.normalForce = (trainMass/this.trainWheels) * G * Math.sin(angle);	// divide by 12 for the number of wheels
-    	this.downwardForce = (trainMass/this.trainWheels) * G * Math.cos(angle);	// divide by 12 for the number of wheels
+    	this.normalForce = (trainMass/this.trainWheels) * G * Math.sin((angle*Math.PI)/180);	// divide by 12 for the number of wheels
+    	this.downwardForce = (trainMass/this.trainWheels) * G * Math.cos((angle*Math.PI)/180);	// divide by 12 for the number of wheels
 
     	// compute friction force
     	this.friction = (FRICTION_COEFFICIENT * this.downwardForce) + this.normalForce;
