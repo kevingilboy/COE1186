@@ -408,12 +408,6 @@ public class Ctc implements Module,TimeControl {
 		}
 		currentTime = new SimTime(time);
 		
-		//Trigger TrackControllers to update before proceeding
-		for(TrackController tc : trackControllers) {
-			//Wait for tc to update before continuing
-			while(!tc.updateTime(currentTime)) {};
-		}
-		
 		//Throughput
 		calculateThroughput();
 		
@@ -500,6 +494,12 @@ public class Ctc implements Module,TimeControl {
 			calculateSuggestedSpeed(train);
 			double suggestedSpeedInMps = train.suggestedSpeed / 2.23694;
 			transmitSuggestedSpeed(train.name, wayside, suggestedSpeedInMps);
+		}
+		
+		//Trigger TrackControllers to update
+		for(TrackController tc : trackControllers) {
+			//Wait for tc to update before continuing
+			while(!tc.updateTime(currentTime)) {};
 		}
 		
 		gui.repaint();
