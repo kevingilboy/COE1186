@@ -377,22 +377,27 @@ public class Ctc implements Module,TimeControl {
 			}
 		} //while q not empty
 		
-		path.remove(0);
+		//Remove the first only if not coming from the yard
+		if(path.get(0)!=-1) {
+			path.remove(0);
+		}
 
 		double dist = 0;
 		for(int blockId : path) {
-			dist += train.line.blocks[blockId].getLength();
+			if(blockId>=0) {
+				dist += train.line.blocks[blockId].getLength();
+			}
 		}
 		train.authority = dist * 0.000621371192237; //convert distance to miles for display
 		
 		//-------------------
 		// Return the found path as the authority
 		//-------------------
-		/*for(int j=1; j<path.size(); j++) {
+		for(int j=1; j<path.size(); j++) {
 			int i = path.get(j);
 			System.out.print(train.line.blocks[i].getSection()+Integer.toString(i+1)+", ");
 		}
-		System.out.println("");*/
+		System.out.println("");
 		return path;
 	}
 	
