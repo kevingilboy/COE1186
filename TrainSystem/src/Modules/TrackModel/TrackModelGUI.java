@@ -37,6 +37,13 @@ import java.awt.ItemSelectable;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+import java.awt.GraphicsEnvironment;
+import java.awt.EventQueue;
+import java.awt.event.*;
+import java.io.*;
+import javax.swing.border.*;
+import java.awt.FontFormatException;
+
 import java.util.*;
 
 @SuppressWarnings("unchecked")
@@ -105,33 +112,59 @@ public class TrackModelGUI implements ActionListener{
 		initTracksOnStartup();
 	}
 
+	/*-------------------------------------------------------------------*/
 	/**
 	 * <COMMON AESTHETICS>
 	 * ALLOWABLE FONTS
 	 */
 	
 	// PLAIN-style fonts
-	Font font_10_plain = new Font("Geneva", Font.PLAIN, 10);
-	Font font_14_plain = new Font("Geneva", Font.PLAIN, 14);
-	Font font_16_plain = new Font("Geneva", Font.PLAIN, 16);
-	Font font_20_plain = new Font("Geneva", Font.PLAIN, 20);
+	Font font_10_plain = new Font("Lucida Grande", Font.PLAIN, 10);
+	Font font_14_plain = new Font("Lucida Grande", Font.PLAIN, 14);
+	Font font_16_plain = new Font("Lucida Grande", Font.PLAIN, 16);
+	Font font_20_plain = new Font("Lucida Grande", Font.PLAIN, 20);
 
 	// BOLD-style fonts
-	Font font_10_bold = new Font("Geneva", Font.BOLD, 10);
-	Font font_14_bold = new Font("Geneva", Font.BOLD, 14);
-	Font font_16_bold = new Font("Geneva", Font.BOLD, 16);
-	Font font_20_bold = new Font("Geneva", Font.BOLD, 20);
-	Font font_24_bold = new Font("Geneva", Font.BOLD, 24);
+	Font font_10_bold = new Font("Lucida Grande", Font.BOLD, 10);
+	Font font_14_bold = new Font("Lucida Grande", Font.BOLD, 14);
+	Font font_16_bold = new Font("Lucida Grande", Font.BOLD, 16);
+	Font font_20_bold = new Font("Roboto Condensed", Font.BOLD, 24);
+	Font font_24_bold = new Font("Lucida Grande", Font.BOLD, 24);
 
 	/**
 	 * <COMMON AESTHETICS>
-	 * SET LOOK AND FEEL
+	 * SET LOOK AND FEEL - CALL THIS FIRST!!!
 	 */
 	public void setLookAndFeel(){
 		try {
 			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
+		}
+
+		try {
+		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-Black.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-Bold.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-BoldItalic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Bold.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-BoldItalic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Italic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Light.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-LightItalic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Regular.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-Italic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-Light.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-LightItalic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-Medium.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-MediumItalic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-Regular.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-Thin.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-ThinItalic.ttf")));
+
+		    System.out.println("Loaded custom fonts!");
+		} catch (IOException|FontFormatException e) {
+		    System.out.println("HssVisualizer Error: Cannot load custom font.");
 		}
 	}
 
@@ -176,6 +209,7 @@ public class TrackModelGUI implements ActionListener{
 		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
 		l.setFont(font_14_bold);
 	}
+	/*-------------------------------------------------------------------*/
 
 	/**
 	 * Initialize the contents of the frame.

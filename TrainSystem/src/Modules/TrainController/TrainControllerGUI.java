@@ -50,12 +50,79 @@ public class TrainControllerGUI {
 	
 	private JLabel icon_logo;
 	
+	/*-------------------------------------------------------------------*/
 	/**
-	 * Launch the application.
+	 * <COMMON AESTHETICS>
+	 * ALLOWABLE FONTS
 	 */
-	/*public static void main(String[] args) {
-		new TrainControllerGUI();
-	}*/
+	
+	// PLAIN-style fonts
+	Font font_10_plain = new Font("Geneva", Font.PLAIN, 10);
+	Font font_14_plain = new Font("Geneva", Font.PLAIN, 14);
+	Font font_16_plain = new Font("Geneva", Font.PLAIN, 16);
+	Font font_20_plain = new Font("Geneva", Font.PLAIN, 20);
+
+	// BOLD-style fonts
+	Font font_10_bold = new Font("Geneva", Font.BOLD, 10);
+	Font font_14_bold = new Font("Geneva", Font.BOLD, 14);
+	Font font_16_bold = new Font("Geneva", Font.BOLD, 16);
+	Font font_20_bold = new Font("Geneva", Font.BOLD, 20);
+	Font font_24_bold = new Font("Geneva", Font.BOLD, 24);
+
+	/**
+	 * <COMMON AESTHETICS>
+	 * SET LOOK AND FEEL
+	 */
+	public void setLookAndFeel(){
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * <COMMON AESTHETICS>
+	 * STANDARD BUTTON, COMBOBOX, LABEL WRAPPERS
+	 */
+	public void stylizeButton(JButton b){
+		b.setFocusPainted(false);
+		b.setFont(font_14_bold);
+		b.setForeground(Color.WHITE);
+		b.setBackground(new Color(102, 0, 153)); // Purple
+	}
+
+	public void stylizeComboBox(JComboBox c){
+		c.setFont(font_14_bold);
+		((JLabel)c.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
+		c.setForeground(Color.BLACK);
+		c.setBackground(Color.WHITE);
+	}
+
+	public void stylizeHeadingLabel(JLabel l){
+		l.setFont(font_20_bold);
+		l.setForeground(new Color(204, 204, 204));
+		l.setHorizontalAlignment(SwingConstants.CENTER);
+	}
+
+	public void stylizeInfoLabel(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
+		l.setFont(font_16_bold);
+	}
+
+	public void stylizeInfoLabel_Bold(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+		l.setForeground(Color.WHITE);
+		l.setFont(font_16_bold);
+	}
+
+	public void stylizeInfoLabel_Small(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
+		l.setFont(font_14_bold);
+	}
+	/*-------------------------------------------------------------------*/
 
 	/**
 	 * Create the frame.
