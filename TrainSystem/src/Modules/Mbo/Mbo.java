@@ -66,12 +66,12 @@ public class Mbo implements Module {
 		}
 		gui.setVisible(true);
 	}
-
+/*
 	public void testInitTrains() {
 		trains.put("RED 1", new TrainInfo("RED 1", time, this));
 		trains.put("RED 2", new TrainInfo("RED 2", time, this));
 	}
-
+*/
 	public Object[][] getTrainData() {
 		return getTrainData("");
 	}
@@ -101,9 +101,9 @@ public class Mbo implements Module {
 	public boolean updateTime(SimTime time) {
 		//System.out.println("entering MBO");
 		this.time = time;
-		System.out.println("Time updated");
+		//System.out.println("Time updated");
 		this.updateTrainInfo();
-		System.out.println("Info updated");
+		//System.out.println("Info updated");
 		for (TrainInfo train : trains.values()) {
 			trainController.setMboAuthority(train.getName(), train.getAuthority());
 		//	System.out.printf("Did auth for %s\n", train.getName());
@@ -136,7 +136,7 @@ public class Mbo implements Module {
 		//String[] vals = segments[0].split(";");
 		//String train = vals[0];
 		if (trains.get(train) == null) {
-			trains.put(train, new TrainInfo(train, time, this));
+			trains.put(train, new TrainInfo(train, time, pos, this));
 		}
 
 		// update train's position
@@ -175,9 +175,9 @@ public class Mbo implements Module {
 			//System.out.printf("Updating info for %s\n", train);
 			trains.get(train).setAuthority(calculateAuthority(train));
 			//System.out.printf("auth set");
-			System.out.printf("auth for %s\n", train);
+			//System.out.printf("auth for %s\n", train);
 			trains.get(train).setSafeBrakingDistance(calculateSafeBrakingDistance(train));
-			System.out.printf("Updated %s\n", train);
+			//System.out.printf("Updated %s\n", train);
 		}
 	}
 
@@ -268,7 +268,7 @@ public class Mbo implements Module {
 
 		// get displacement into block
 		// the ith coordinate is i meters in
-		System.out.printf("%f, %f\n", train.getPosition()[0], train.getPosition()[1]);
+		//System.out.printf("%f, %f\n", train.getPosition()[0], train.getPosition()[1]);
 		double xval = train.getPosition()[0];
 		int blockDisplacement = Arrays.asList(block.getXCoordinates()).indexOf(xval);
 		//System.out.printf("%s is %d meters in at %f.\n", trainID, blockDisplacement, xval);
