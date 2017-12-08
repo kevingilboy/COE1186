@@ -87,15 +87,23 @@ public class PLC {
 		//Compute evaluation 3 times in order to assure vitality of signal
 		for(int iii = 0; iii < 3; iii++){ 
 			if(path.length >= 1) {
-				if(path[0] > 0){
-					context.set("cb_occupied", tc.trackModel.getBlock(line, path[0]).getOccupied());
+				if(path[0] < 0){
+					context.set("cb_occupied", tc.trackModel.getBlock(line, path[1]).getOccupied());
 				} else {
-					context.set("cb_occupied", false);
+					context.set("cb_occupied", tc.trackModel.getBlock(line, path[0]).getOccupied());
 				}
 				if(path.length>=2) {
-					context.set("nb_occupied", tc.trackModel.getBlock(line, path[1]).getOccupied());
+					if(path[0] < 0){
+						context.set("nb_occupied", tc.trackModel.getBlock(line, path[2]).getOccupied());
+					} else {
+						context.set("nb_occupied", tc.trackModel.getBlock(line, path[1]).getOccupied());
+					}
 					if(path.length>=3) {
-						context.set("nnb_occupied", tc.trackModel.getBlock(line, path[2]).getOccupied());
+						if(path[0] < 0){
+							context.set("nnb_occupied", tc.trackModel.getBlock(line, path[3]).getOccupied());
+						} else {
+							context.set("nnb_occupied", tc.trackModel.getBlock(line, path[2]).getOccupied());
+						}
 					}
 				}
 			}
