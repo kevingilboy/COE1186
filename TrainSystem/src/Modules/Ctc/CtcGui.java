@@ -734,6 +734,15 @@ public class CtcGui {
 		panel_1.setBackground(UIManager.getColor("Panel.background"));
 		panel_1.setBounds(704, 455, 191, 145);
 		frame.getContentPane().add(panel_1);
+		
+		JButton btnJustDoIt = new JButton("JUST DO IT");
+		btnJustDoIt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ctc.testDispatch();
+			}
+		});
+		btnJustDoIt.setBounds(1214, 520, 136, 68);
+		frame.getContentPane().add(btnJustDoIt);
 	}
 	
 	/*

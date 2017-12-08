@@ -230,6 +230,20 @@ public class Ctc implements Module,TimeControl {
 	 * ------------------------------
 	 */
 	/**
+	 * Creates a sample train to dispatch
+	 */
+	public void testDispatch() {
+		play();
+		String testName = "Train4Training";
+		Schedule schedule = new Schedule(Line.GREEN);
+		schedule.departureTime = new SimTime("11:11:11");
+		schedule.name = testName;
+		schedule.addStop(0, 104);
+		addSchedule(testName,schedule);
+		dispatchTrain(testName);
+	}
+	
+	/**
 	 * Returns a train given a name
 	 */
 	protected Train getTrainByName(String name){
@@ -518,12 +532,6 @@ public class Ctc implements Module,TimeControl {
 				//Train has moved on
 				train.prevLocation = currentLocation;
 				train.currLocation = nextLocation;
-				
-				//Make train dwell if at stop
-				if(train.currLocation == train.schedule.getNextStop() && train.dwelling==false) {
-					train.dwelling = true;
-					train.timeToFinishDwelling = currentTime.add(train.schedule.stops.get(0).timeToDwell);
-				}
 			}
 			else {
 				Switch currSwitch = train.line.blocks[currentLocation].getSwitch();
@@ -553,6 +561,13 @@ public class Ctc implements Module,TimeControl {
 						}
 					}
 				}
+			}
+			
+			//Make train dwell if at stop
+			//TODO this may be moved within the "if" when the train stops at the stop correctly
+			if(train.currLocation == train.schedule.getNextStop() && train.dwelling==false) {
+				train.dwelling = true;
+				train.timeToFinishDwelling = currentTime.add(train.schedule.stops.get(0).timeToDwell);
 			}
 		}
 		
@@ -644,4 +659,5 @@ public class Ctc implements Module,TimeControl {
 	public void setSpeedup(int newSpeed) {
 	    simulator.setSpeedup(newSpeed);
 	}
+
 }
