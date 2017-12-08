@@ -22,6 +22,7 @@ import javax.swing.UIManager;
 import Modules.TrackModel.Block;
 import Modules.TrackModel.Station;
 import Modules.TrackModel.TrackModel;
+import Shared.SimTime;
 
 /**
  * Class that implements functionality separately for each train that is active on the track
@@ -553,6 +554,10 @@ public class Train {
      */
     public String getLine() {
     	return this.lineColor;
+    }
+    
+    public void setTime(SimTime time) {
+    	
     }
     
     /**
