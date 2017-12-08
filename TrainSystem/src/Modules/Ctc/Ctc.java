@@ -198,10 +198,10 @@ public class Ctc implements Module,TimeControl {
 	/**
 	 * Sets the TrackModel block to maintenance mode via the TrackController
 	 */
-	protected void setSwitchState(Line line, int blockNum, Boolean state) {
+	protected boolean setSwitchState(Line line, int blockNum, Boolean state) {
 		TrackController wayside = getWaysideOfBlock(line, blockNum);
-		Block block = wayside.receiveBlockInfoForCtc(line.toString(), blockNum);
-		block.getSwitch().setState(state);
+		boolean success = wayside.transmitCtcSwitchState(line.toString(), blockNum, state);
+		return success;
 	}
 	
 	
@@ -388,7 +388,7 @@ public class Ctc implements Module,TimeControl {
 				dist += train.line.blocks[blockId].getLength();
 			}
 		}
-		train.authority = dist * 0.000621371192237; //convert distance to miles for display
+		train.authority = dist; //convert distance to miles for display
 		
 		//-------------------
 		// Return the found path as the authority
@@ -402,7 +402,8 @@ public class Ctc implements Module,TimeControl {
 	}
 	
 	public void calculateSuggestedSpeed(Train train) {
-		train.suggestedSpeed = train.line.blocks[train.currLocation].getSpeedLimit();
+		//Send speed limit if not dwelling, else send 0
+		train.suggestedSpeed = train.dwelling==false ? train.line.blocks[train.currLocation].getSpeedLimit() : 0;
 	}
 	
 	private boolean bidirectionalStretchOccupied(Line line, int currBlockId, int prevBlockId, int selfLocation) {
@@ -502,6 +503,12 @@ public class Ctc implements Module,TimeControl {
 		 * UPDATE TRAIN LOCATIONS
 		 */
 		for(Train train : trains.values()) {
+			//Check for dwelled trains that need to move on
+			if(train.dwelling && currentTime.equals(train.timeToFinishDwelling)) {
+				train.schedule.removeStop(0);
+				train.dwelling = false;
+			}
+			
 			//Check if train has moved
 			int currentLocation = train.currLocation;
 			int nextLocation = getNextBlockId(train.line, train.currLocation, train.prevLocation);
@@ -512,9 +519,10 @@ public class Ctc implements Module,TimeControl {
 				train.prevLocation = currentLocation;
 				train.currLocation = nextLocation;
 				
-				//Remove stop if we reach it
-				if(train.currLocation == train.schedule.getNextStop()) {
-					train.schedule.removeStop(0);
+				//Make train dwell if at stop
+				if(train.currLocation == train.schedule.getNextStop() && train.dwelling==false) {
+					train.dwelling = true;
+					train.timeToFinishDwelling = currentTime.add(train.schedule.stops.get(0).timeToDwell);
 				}
 			}
 			else {
@@ -586,8 +594,7 @@ public class Ctc implements Module,TimeControl {
 			 */
 			//Calculate speed
 			calculateSuggestedSpeed(train);
-			double suggestedSpeedInMps = train.suggestedSpeed / 2.23694;
-			transmitSuggestedSpeed(train.name, wayside, suggestedSpeedInMps);
+			transmitSuggestedSpeed(train.name, wayside, train.suggestedSpeed);
 		}
 		
 		/*
