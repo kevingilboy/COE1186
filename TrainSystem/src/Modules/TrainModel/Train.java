@@ -31,7 +31,7 @@ import Modules.TrackModel.TrackModel;
  *
  */
 public class Train {
-	public final double TRAIN_WEIGHT = 163600; 	// currently in lbs
+	public final double TRAIN_WEIGHT = 81800; 	// currently in lbs
 	public final int TRAIN_CAPACITY = 222; 	// per 1 car
 	public final double TRAIN_LENGTH = 32.2; 	// in meters currently
 	public final double TRAIN_WIDTH = 2.65; 	// m currently
