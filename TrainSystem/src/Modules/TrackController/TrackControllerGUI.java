@@ -67,7 +67,7 @@ public class TrackControllerGUI extends JFrame{
 	 * Create the frame.
 	 */
 	public void drawTrackControllerGui(TrackController tc, String line, String[] blocks, String name) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setTitle("Track Controller "+name);
 		setBounds(100, 100, 870, 490);
 		setResizable(false);
@@ -339,7 +339,7 @@ public class TrackControllerGUI extends JFrame{
 		return selectedBlockId;
 	}
 	
-	public void showTrackControllerGUI(TrackControllerGUI thisgui){
-		//thisgui.setVisibile(true);
+	public void showTrackControllerGUI(){
+		this.setVisible(true);
 	}
 }

@@ -126,12 +126,14 @@ public class TrackModel implements Module{
 			int beaconInfo = 0;
 
 			for (int i = 0; i < track.size(); i++){
-				if (track.get(i).getBeacon() != null){
-					if (track.get(i).getOccupied()){
-						blockID = i;
-						beaconInfo = track.get(i).getBeacon().getInfo();
-						trainModel.setBeaconBlockOccupancy(line, blockID, beaconInfo);
-					}
+				if ((track.get(i).getBeacon() != null) && (track.get(i).getOccupied())){
+					blockID = i;
+					beaconInfo = track.get(i).getBeacon().getInfo();
+					trainModel.setBeaconBlockOccupancy(line, blockID, beaconInfo);
+				} else if ((track.get(i).getBeacon() == null) && (track.get(i).getOccupied())){
+					blockID = i;
+					beaconInfo = 0;
+					trainModel.setBeaconBlockOccupancy(line, blockID, beaconInfo);
 				}
 			}
 		}
