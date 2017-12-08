@@ -21,6 +21,9 @@ public class Train {
 	public double authority;
 	public int passengers;
 	
+	public boolean dwelling;
+	public SimTime timeToFinishDwelling;
+	
 	public Train(Schedule schedule) {
 		this.schedule = schedule;
 		this.name = schedule.name;
@@ -30,6 +33,8 @@ public class Train {
 		//Set up locations for the iterator
 		prevLocation = -1;
 		currLocation = line.yardOut;
+		
+		dwelling = false;
 	}
 	
 }

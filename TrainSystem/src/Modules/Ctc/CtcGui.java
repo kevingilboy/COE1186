@@ -671,8 +671,13 @@ public class CtcGui {
 		selectedBlockToggle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Block block = getSelectedBlock();
-				ctc.setSwitchState((Line)blockLineComboBox.getSelectedItem(),block.getId(),selectedBlockToggle.isSelected());
-				updateSelectedBlock(true);
+				boolean success = ctc.setSwitchState((Line)blockLineComboBox.getSelectedItem(),block.getId(),selectedBlockToggle.isSelected());
+				if(!success) {
+					selectedBlockToggle.setSelected(selectedBlockToggle.isSelected());
+				}
+				else {
+					updateSelectedBlock(true);
+				}
 			}
 		});
 		selectedBlockToggle.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -729,6 +734,15 @@ public class CtcGui {
 		panel_1.setBackground(UIManager.getColor("Panel.background"));
 		panel_1.setBounds(704, 455, 191, 145);
 		frame.getContentPane().add(panel_1);
+		
+		JButton btnJustDoIt = new JButton("JUST DO IT");
+		btnJustDoIt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ctc.testDispatch();
+			}
+		});
+		btnJustDoIt.setBounds(1214, 520, 136, 68);
+		frame.getContentPane().add(btnJustDoIt);
 	}
 	
 	/*
@@ -818,7 +832,11 @@ public class CtcGui {
 		for(String trainName:ctc.trains.keySet()) {
 			train = ctc.getTrainByName(trainName);
 			//Object[] row; //build the row here, but for now we fake the functionality below
-			Object[] row = {train.name,train.line.blocks[train.currLocation],train.suggestedSpeed,train.authority+" mi",train.passengers};
+			Object[] row = {train.name,
+					train.line.blocks[train.currLocation],
+					String.format("%.2f",train.suggestedSpeed*0.621371)+" mph",
+					String.format("%.3f",train.authority* 0.000621371192237)+" mi",
+					train.passengers};
 			train.line.dispatchedData.addRow(row);
 		}
 

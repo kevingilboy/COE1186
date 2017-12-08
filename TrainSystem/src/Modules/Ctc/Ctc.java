@@ -45,6 +45,8 @@ public class Ctc implements Module,TimeControl {
 	public TrainModel trainModel = null;
 	public TrainController trainController = null;
 	
+	int testTrainNum = 0;
+	
 	public Ctc() {
 		ctc = this;
 
@@ -198,10 +200,10 @@ public class Ctc implements Module,TimeControl {
 	/**
 	 * Sets the TrackModel block to maintenance mode via the TrackController
 	 */
-	protected void setSwitchState(Line line, int blockNum, Boolean state) {
+	protected boolean setSwitchState(Line line, int blockNum, Boolean state) {
 		TrackController wayside = getWaysideOfBlock(line, blockNum);
-		Block block = wayside.receiveBlockInfoForCtc(line.toString(), blockNum);
-		block.getSwitch().setState(state);
+		boolean success = wayside.transmitCtcSwitchState(line.toString(), blockNum, state);
+		return success;
 	}
 	
 	
@@ -229,6 +231,20 @@ public class Ctc implements Module,TimeControl {
 	 *  TRAINS
 	 * ------------------------------
 	 */
+	/**
+	 * Creates a sample train to dispatch
+	 */
+	public void testDispatch() {
+		play();
+		String testName = "TestTrain"+testTrainNum++;
+		Schedule schedule = new Schedule(Line.GREEN);
+		schedule.departureTime = new SimTime("11:11:11");
+		schedule.name = testName;
+		schedule.addStop(0, 104);
+		addSchedule(testName,schedule);
+		dispatchTrain(testName);
+	}
+	
 	/**
 	 * Returns a train given a name
 	 */
@@ -388,7 +404,7 @@ public class Ctc implements Module,TimeControl {
 				dist += train.line.blocks[blockId].getLength();
 			}
 		}
-		train.authority = dist * 0.000621371192237; //convert distance to miles for display
+		train.authority = dist; //convert distance to miles for display
 		
 		//-------------------
 		// Return the found path as the authority
@@ -402,7 +418,8 @@ public class Ctc implements Module,TimeControl {
 	}
 	
 	public void calculateSuggestedSpeed(Train train) {
-		train.suggestedSpeed = train.line.blocks[train.currLocation].getSpeedLimit();
+		//Send speed limit if not dwelling, else send 0
+		train.suggestedSpeed = train.dwelling==false ? train.line.blocks[train.currLocation].getSpeedLimit() : 0;
 	}
 	
 	private boolean bidirectionalStretchOccupied(Line line, int currBlockId, int prevBlockId, int selfLocation) {
@@ -502,6 +519,12 @@ public class Ctc implements Module,TimeControl {
 		 * UPDATE TRAIN LOCATIONS
 		 */
 		for(Train train : trains.values()) {
+			//Check for dwelled trains that need to move on
+			if(train.dwelling && currentTime.equals(train.timeToFinishDwelling)) {
+				train.schedule.removeStop(0);
+				train.dwelling = false;
+			}
+			
 			//Check if train has moved
 			int currentLocation = train.currLocation;
 			int nextLocation = getNextBlockId(train.line, train.currLocation, train.prevLocation);
@@ -511,11 +534,6 @@ public class Ctc implements Module,TimeControl {
 				//Train has moved on
 				train.prevLocation = currentLocation;
 				train.currLocation = nextLocation;
-				
-				//Remove stop if we reach it
-				if(train.currLocation == train.schedule.getNextStop()) {
-					train.schedule.removeStop(0);
-				}
 			}
 			else {
 				Switch currSwitch = train.line.blocks[currentLocation].getSwitch();
@@ -545,6 +563,13 @@ public class Ctc implements Module,TimeControl {
 						}
 					}
 				}
+			}
+			
+			//Make train dwell if at stop
+			//TODO this may be moved within the "if" when the train stops at the stop correctly
+			if(train.currLocation == train.schedule.getNextStop() && train.dwelling==false) {
+				train.dwelling = true;
+				train.timeToFinishDwelling = currentTime.add(train.schedule.stops.get(0).timeToDwell);
 			}
 		}
 		
@@ -586,8 +611,7 @@ public class Ctc implements Module,TimeControl {
 			 */
 			//Calculate speed
 			calculateSuggestedSpeed(train);
-			double suggestedSpeedInMps = train.suggestedSpeed / 2.23694;
-			transmitSuggestedSpeed(train.name, wayside, suggestedSpeedInMps);
+			transmitSuggestedSpeed(train.name, wayside, train.suggestedSpeed);
 		}
 		
 		/*
@@ -637,4 +661,5 @@ public class Ctc implements Module,TimeControl {
 	public void setSpeedup(int newSpeed) {
 	    simulator.setSpeedup(newSpeed);
 	}
+
 }

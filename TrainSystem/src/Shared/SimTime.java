@@ -88,6 +88,32 @@ public class SimTime {
 		return hoursBetween;
 	}
 	
+	public SimTime add(SimTime t) {
+		double time = convertToHours(this);
+		double timeToElapse = convertToHours(t);
+		
+		time += timeToElapse;
+		
+		SimTime result = convertToSimTime(time);
+		return result;
+	}
+	
+	private double convertToHours(SimTime st) {
+		return st.hr + st.min/60.0 + st.sec/3600.0;
+	}
+	
+	private SimTime convertToSimTime(double hours) {
+		int hr = (int) Math.floor(hours);
+		
+		double minutes = (hours - hr) * 60;
+		int min = (int) Math.floor(minutes);
+		
+		double seconds = (minutes - min) * 60;
+		int sec = (int) Math.floor(seconds);
+		
+		return new SimTime(hr,min,sec);
+	}
+	
 	public static boolean isValid(String timeString) {
 		//Check to make sure the string has the right format
 		if(!checkTwoDigit.matcher(timeString).matches()) {
