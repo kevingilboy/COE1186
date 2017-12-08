@@ -25,7 +25,7 @@ public class Simulator {
 	public String weather;
 	
 	private Timer timer;
-	private boolean simulationRunning = false;
+	public boolean simulationRunning = false;
 	private boolean timerTaskRunning = false;
 	
 	private Module[] modules;
