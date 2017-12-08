@@ -305,7 +305,7 @@ public class Ctc implements Module,TimeControl {
 			//-------------------
 			// If block is occupied, ditch the path
 			//-------------------
-			if(train.line.blocks[currBlockId].getOccupied()) {
+			if(train.line.blocks[currBlockId].getOccupied() && currBlockId != selfLocation) {
 				path.remove(path.size()-1);
 				continue;
 			}
