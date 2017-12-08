@@ -135,7 +135,7 @@ public class TrackController implements Module{
 				//can proceed and authority >2
 				if (trackModel.getBlock(associatedLine, authority[1]).getSwitch() != null){
 					//can proceed and nb has switch
-					boolean canSwitch = tcplc.canSwitchPath(authority);
+					boolean canSwitch = tcplc.canSwitchBlock(authority[1]);
 					if (canSwitch){
 						boolean switchStateCalc = tcplc.switchStatePath(authority);
 						if (switchStateCalc) {
