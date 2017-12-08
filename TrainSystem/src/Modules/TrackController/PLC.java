@@ -74,18 +74,19 @@ public class PLC {
         }
 		return true;
 	}
+	
 	//Given path[]
 	public boolean canProceedPath(int[] path){
-		return vitalCheckCanPath(canProceedLogic, path);
+		return vitalProceedCheckPath(canProceedLogic, path);
 	}
 	
-	private boolean vitalCheckCanPath(String logic, int[] path){
+	private boolean vitalProceedCheckPath(String logic, int[] path){
 		boolean result = true;
 		Expression e = jexl.createExpression(logic);
 		JexlContext context = new MapContext();
 		//Compute evaluation 3 times in order to assure vitality of signal
 		for(int iii = 0; iii < 3; iii++){ 
-			if(path.length>=1) {
+			if((path.length >= 1) && (path[0] > 0)) {
 				context.set("cb_occupied", tc.trackModel.getBlock(line, path[0]).getOccupied());
 				if(path.length>=2) {
 					context.set("nb_occupied", tc.trackModel.getBlock(line, path[1]).getOccupied());
@@ -130,22 +131,12 @@ public class PLC {
 		JexlContext context = new MapContext();
 		//Compute evaluation 3 times in order to assure vitality of signal
 		for(int iii = 0; iii < 3; iii++){ 
-			if(path.length>=1) {
-				//context.set("cb", path[0]);
-				//context.set("cb_state", tc.trackModel.getBlock(line, path[0]).getState());
-				//context.set("cb_port_norm", tc.trackModel.getBlock(line, path[0]).getPortNormal());
-				//context.set("cb_port_alt", tc.trackModel.getBlock(line, path[0]).getPortAlternate());
-				if(path.length>=2) {
-					//context.set("nb", path[1]);
-					context.set("nb_state", tc.trackModel.getBlock(line, path[1]).getSwitch().getState());
-					context.set("nb_port_norm", tc.trackModel.getBlock(line, path[1]).getSwitch().getPortNormal());
-					context.set("nb_port_alt", tc.trackModel.getBlock(line, path[1]).getSwitch().getPortAlternate());
-					if(path.length>=3) {
-						context.set("nnb", path[2]);
-						//context.set("nnb_state", tc.trackModel.getBlock(line, path[2]).getState());
-						//context.set("nnb_port_norm", tc.trackModel.getBlock(line, path[2]).getPortNormal());
-						//context.set("nnb_port_alt", tc.trackModel.getBlock(line, path[2]).getPortAlternate());
-					}
+			if(path.length>=2) {
+				context.set("nb_state", tc.trackModel.getBlock(line, path[1]).getSwitch().getState());
+				context.set("nb_port_norm", tc.trackModel.getBlock(line, path[1]).getSwitch().getPortNormal());
+				context.set("nb_port_alt", tc.trackModel.getBlock(line, path[1]).getSwitch().getPortAlternate());
+				if(path.length>=3) {
+					context.set("nnb", path[2]);
 				}
 			}
 			//Compound evaluation expression
