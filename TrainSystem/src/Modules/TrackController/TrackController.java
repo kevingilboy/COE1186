@@ -133,8 +133,12 @@ public class TrackController implements Module{
 			boolean canProceed = tcplc.canProceedPath(authority);
 			if(canProceed){
 				//can proceed and authority >2
-				if (trackModel.getBlock(associatedLine, authority[1]).getSwitch() != null){
-					//can proceed and nb has switch
+				if ((authority[0] >= 0) && (trackModel.getBlock(associatedLine, authority[0]).getSwitch() != null) && (trackModel.getBlock(associatedLine, authority[1]).getSwitch() != null)){
+					//can proceed and currently on a switch so dont do switchStateCalc
+					distAuthority = calcAuthDist(authority);
+					trackModel.transmitCtcAuthority(trainName, distAuthority);
+				} else if (trackModel.getBlock(associatedLine, authority[1]).getSwitch() != null){
+					//can proceed and entering a switch so check state
 					boolean canSwitch = tcplc.canSwitchBlock(authority[1]);
 					if (canSwitch){
 						boolean switchStateCalc = tcplc.switchStatePath(authority);
@@ -151,7 +155,16 @@ public class TrackController implements Module{
 						}
 					} else {
 						//cant switch
-						trackModel.transmitCtcAuthority(trainName, distAuthority);
+						boolean switchStateCalc = tcplc.switchStatePath(authority);
+						if (switchStateCalc) {
+							//correct state so proceed anyways
+							// -- this happens when the train approaches from the tail and detects itself occupying a tail during canSwitch logic
+							distAuthority = calcAuthDist(authority);
+							trackModel.transmitCtcAuthority(trainName, distAuthority);
+						} else {
+							//not correct state so stop
+							trackModel.transmitCtcAuthority(trainName, distAuthority);
+						}
 					}
 				} else {
 					//can proceed and doesnt have switch
@@ -206,28 +219,6 @@ public class TrackController implements Module{
 	}
 	
 	//Helper Functions
-	/*
-	private boolean compareSwitchState(int nb, int nnb){
-		//System.out.println("Switch State: "+(String)trackModel.getBlock(associatedLine,nb).getSwitch().getState());
-		if(trackModel.getBlock(associatedLine,nb).getSwitch().getState()){
-			//state = true
-			//System.out.println("Switch Port: "+(String)trackModel.getBlock(associatedLine,nb).getSwitch().getPortNormal());
-			if(trackModel.getBlock(associatedLine,nb).getSwitch().getPortNormal() == nnb){
-				return true;
-			} else {
-				return false;
-			}
-		} else { 
-			//state = false
-			//System.out.println("Switch Port: "+(String)trackModel.getBlock(associatedLine,nb).getSwitch().getPortAlternate());
-			if(trackModel.getBlock(associatedLine,nb).getSwitch().getPortAlternate() == nnb){
-				return true;
-			} else {
-				return false;
-			}
-		}
-	} */
-	
 	private double calcAuthDist(int[] authority){
 		double distAuth = 0;
 		for(int i=1; i<authority.length; i++){
