@@ -159,6 +159,7 @@ public class TrainModelGUI extends JFrame {
 	private Image ledImageRed = new ImageIcon(this.getClass().getResource("redStatusIcon.png")).getImage();
 	private Image ad1 = new ImageIcon(this.getClass().getResource("ad1.jpg")).getImage();
 	private Image spongebob1 = new ImageIcon(this.getClass().getResource("spongebob1.jpg")).getImage();
+	private Image aerotech = new ImageIcon(this.getClass().getResource("aerotech.jpg")).getImage();
 	private final JLabel ledImageLabel = new JLabel();
 	private final JLabel ledImageLabel2 = new JLabel();
 	private final JLabel ledImageLabel3 = new JLabel();
@@ -288,7 +289,7 @@ public class TrainModelGUI extends JFrame {
 		
 		JLabel advertisementImageLabel = new JLabel();
 		advertisementImageLabel.setBounds(0, 0, 1050, 200);
-		Image dimg = spongebob1.getScaledInstance(advertisementImageLabel.getWidth(), advertisementImageLabel.getHeight(),
+		Image dimg = aerotech.getScaledInstance(advertisementImageLabel.getWidth(), advertisementImageLabel.getHeight(),
 		        Image.SCALE_SMOOTH);
 		advertisementImageLabel.setIcon(new ImageIcon(dimg));
 		advertisePane.add(advertisementImageLabel);
