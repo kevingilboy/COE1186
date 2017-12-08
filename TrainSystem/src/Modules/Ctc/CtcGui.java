@@ -823,7 +823,11 @@ public class CtcGui {
 		for(String trainName:ctc.trains.keySet()) {
 			train = ctc.getTrainByName(trainName);
 			//Object[] row; //build the row here, but for now we fake the functionality below
-			Object[] row = {train.name,train.line.blocks[train.currLocation],train.suggestedSpeed,train.authority+" mi",train.passengers};
+			Object[] row = {train.name,
+					train.line.blocks[train.currLocation],
+					train.suggestedSpeed*0.621371,
+					train.authority* 0.000621371192237+" mi",
+					train.passengers};
 			train.line.dispatchedData.addRow(row);
 		}
 

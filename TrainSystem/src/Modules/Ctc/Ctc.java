@@ -388,7 +388,7 @@ public class Ctc implements Module,TimeControl {
 				dist += train.line.blocks[blockId].getLength();
 			}
 		}
-		train.authority = dist * 0.000621371192237; //convert distance to miles for display
+		train.authority = dist; //convert distance to miles for display
 		
 		//-------------------
 		// Return the found path as the authority
@@ -402,7 +402,8 @@ public class Ctc implements Module,TimeControl {
 	}
 	
 	public void calculateSuggestedSpeed(Train train) {
-		train.suggestedSpeed = train.line.blocks[train.currLocation].getSpeedLimit();
+		//Send speed limit if not dwelling, else send 0
+		train.suggestedSpeed = train.dwelling==false ? train.line.blocks[train.currLocation].getSpeedLimit() : 0;
 	}
 	
 	private boolean bidirectionalStretchOccupied(Line line, int currBlockId, int prevBlockId, int selfLocation) {
