@@ -31,7 +31,7 @@ public class PIController {
 	private double setpointRange;		//set to zero to do nothing
 	
 	/*public static void main(String[] args) {
-		new PIController(2000, 0.8071);
+		new PIController(6000, 7.26);
 	}*/
 	
 	
@@ -46,7 +46,8 @@ public class PIController {
 		maxIOutput = 0;
 		maxError = 0;
 		errorSum = 0;
-		maxOutput = 1600000; 	//1653 kW for two full train cars, rounded down to 1600 kW for safety
+		//maxOutput = 1600000; 	//1653 kW for two full train cars, rounded down to 1600 kW for safety
+		maxOutput = 120000;		//120 kW from the spec sheet
 		minOutput = 0;
 		setpoint = 0;
 		lastActual = 0;

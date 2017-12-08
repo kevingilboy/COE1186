@@ -43,7 +43,7 @@ public class TrnController {
 	private boolean arrivedSignaled;
 	private boolean departSignaled;
 	private boolean enRouteSignaled;
-	private boolean passed;
+	//private boolean passed;
 	private ArrayList<BlockInfo> mapInfo;
 	private BlockInfo currentBlockInfo;
 	private String[] stationList;
@@ -406,9 +406,6 @@ public class TrnController {
 				}
 			}
 		}
-		/*else {
-			controlGUI.setSuggestedDoor(0);
-		}*/
 	}
 	
 	private void decodeBeacon() {
