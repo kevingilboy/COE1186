@@ -137,7 +137,7 @@ public class TrackModelGUI implements ActionListener{
 
 	/**
 	 * <COMMON AESTHETICS>
-	 * STANDARD BUTTON WRAPPER
+	 * STANDARD BUTTON, COMBOBOX, LABEL WRAPPERS
 	 */
 	public void stylizeButton(JButton b){
 		b.setFocusPainted(false);
@@ -151,6 +151,30 @@ public class TrackModelGUI implements ActionListener{
 		((JLabel)c.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
 		c.setForeground(Color.BLACK);
 		c.setBackground(Color.WHITE);
+	}
+
+	public void stylizeHeadingLabel(JLabel l){
+		l.setFont(font_20_bold);
+		l.setForeground(new Color(204, 204, 204));
+		l.setHorizontalAlignment(SwingConstants.CENTER);
+	}
+
+	public void stylizeInfoLabel(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
+		l.setFont(font_16_bold);
+	}
+
+	public void stylizeInfoLabel_Bold(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+		l.setForeground(Color.WHITE);
+		l.setFont(font_16_bold);
+	}
+
+	public void stylizeInfoLabel_Small(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
+		l.setFont(font_14_bold);
 	}
 
 	/**
@@ -217,9 +241,7 @@ public class TrackModelGUI implements ActionListener{
 		//----------------- BLOCK SELECTION ------------------//		
 		// LABEL - STATIC
 		JLabel label_selectBlock = new JLabel("SELECT BLOCK");
-		label_selectBlock.setFont(font_20_bold);
-		label_selectBlock.setForeground(new Color(204, 204, 204));
-		label_selectBlock.setHorizontalAlignment(SwingConstants.CENTER);
+		stylizeHeadingLabel(label_selectBlock);
 		label_selectBlock.setBounds(395, 21, 236, 37);
 		frame_tmGUI.getContentPane().add(label_selectBlock);
 		
@@ -233,10 +255,7 @@ public class TrackModelGUI implements ActionListener{
 		
 		// SELECT BLOCK RIGHT BUTTON
 		JButton button_selectBlockRight = new JButton("\u00BB");
-		button_importTrack.setFocusPainted(false);
-		button_selectBlockRight.setForeground(new Color(255, 255, 255));
-		button_selectBlockRight.setBackground(new Color(102, 51, 153));
-		button_selectBlockRight.setFont(font_20_bold);
+		stylizeButton(button_selectBlockRight);
 		button_selectBlockRight.setBounds(559, 66, 47, 38);
 
 		button_selectBlockRight.addActionListener(new ActionListener() { 
@@ -258,10 +277,7 @@ public class TrackModelGUI implements ActionListener{
 
 		// SELECT BLOCK LEFT BUTTON
 		JButton button_selectBlockLeft = new JButton("\u00AB");
-		button_importTrack.setFocusPainted(false);	
-		button_selectBlockLeft.setForeground(Color.WHITE);
-		button_selectBlockLeft.setFont(font_20_bold);
-		button_selectBlockLeft.setBackground(new Color(102, 51, 153));
+		stylizeButton(button_selectBlockLeft);
 		button_selectBlockLeft.setBounds(412, 66, 47, 38);
 		
 		button_selectBlockLeft.addActionListener(new ActionListener() { 
@@ -283,17 +299,12 @@ public class TrackModelGUI implements ActionListener{
 		
 		// SECTION AND ID SELECTION (DO THIS LATER)
 		JLabel label_selectSectionId = new JLabel("SECTION/ID");
-		label_selectSectionId.setHorizontalAlignment(SwingConstants.RIGHT);
-		label_selectSectionId.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_selectSectionId.setFont(font_16_bold);
+		stylizeInfoLabel(label_selectSectionId);
 		label_selectSectionId.setBounds(400, 121, 110, 22);
 		frame_tmGUI.getContentPane().add(label_selectSectionId);
 
 		comboBox_sectionId = new JComboBox();
-		comboBox_sectionId.setFont(font_14_bold);
-		((JLabel) comboBox_sectionId.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
-		comboBox_sectionId.setForeground(Color.BLACK);
-		comboBox_sectionId.setBackground(Color.WHITE);
+		stylizeComboBox(comboBox_sectionId);
 		comboBox_sectionId.setBounds(520, 116, 76, 30);
 		frame_tmGUI.getContentPane().add(comboBox_sectionId);
 
@@ -314,92 +325,68 @@ public class TrackModelGUI implements ActionListener{
 		//----------------- BLOCK INFO DISPLAY ------------------//	
 		// BLOCK INFO LABEL - STATIC
 		JLabel label_blockInfo = new JLabel("BLOCK INFO");
-		label_blockInfo.setHorizontalAlignment(SwingConstants.CENTER);
-		label_blockInfo.setForeground(new Color(204, 204, 204));
-		label_blockInfo.setFont(font_20_bold);
+		stylizeHeadingLabel(label_blockInfo);
 		label_blockInfo.setBounds(721, 23, 236, 37);
 		frame_tmGUI.getContentPane().add(label_blockInfo);
 		
 		// LENGTH INFORMATION
 		JLabel label_length = new JLabel("LENGTH");
-		label_length.setHorizontalAlignment(SwingConstants.LEFT);
-		label_length.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_length.setFont(font_16_bold);
+		stylizeInfoLabel(label_length);
 		label_length.setBounds(670, 77, 113, 22);
 		frame_tmGUI.getContentPane().add(label_length);
 		
 		label_lengthVal = new JLabel("   ");
-		label_lengthVal.setHorizontalAlignment(SwingConstants.LEFT);
-		label_lengthVal.setForeground(Color.WHITE);
-		label_lengthVal.setFont(font_16_bold);
+		stylizeInfoLabel_Bold(label_lengthVal);
 		label_lengthVal.setBounds(781, 77, 103, 22);
 		frame_tmGUI.getContentPane().add(label_lengthVal);
 
 		// GRADE INFORMATION
 		JLabel label_grade = new JLabel("GRADE");
-		label_grade.setHorizontalAlignment(SwingConstants.LEFT);
-		label_grade.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_grade.setFont(font_16_bold);
+		stylizeInfoLabel(label_grade);
 		label_grade.setBounds(670, 105, 113, 22);
 		frame_tmGUI.getContentPane().add(label_grade);
 		
 		label_gradeVal = new JLabel("   ");
-		label_gradeVal.setHorizontalAlignment(SwingConstants.LEFT);
-		label_gradeVal.setForeground(Color.WHITE);
-		label_gradeVal.setFont(font_16_bold);
+		stylizeInfoLabel_Bold(label_gradeVal);
 		label_gradeVal.setBounds(781, 105, 102, 22);
 		frame_tmGUI.getContentPane().add(label_gradeVal);
 
 		// ELEVATION INFORMATION
 		JLabel label_elevation = new JLabel("ELEVATION");
-		label_elevation.setHorizontalAlignment(SwingConstants.LEFT);
-		label_elevation.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_elevation.setFont(font_16_bold);
+		stylizeInfoLabel(label_elevation);
 		label_elevation.setBounds(670, 132, 113, 22);
 		frame_tmGUI.getContentPane().add(label_elevation);
 		
 		label_elevationVal = new JLabel("   ");
-		label_elevationVal.setHorizontalAlignment(SwingConstants.LEFT);
-		label_elevationVal.setForeground(Color.WHITE);
-		label_elevationVal.setFont(font_16_bold);
+		stylizeInfoLabel_Bold(label_elevationVal);
 		label_elevationVal.setBounds(781, 132, 101, 22);
 		frame_tmGUI.getContentPane().add(label_elevationVal);
 
 		// CUMULATIVE ELEVATION INFORMATION
 		JLabel label_cumElevation = new JLabel("CUM. ELEV.");
-		label_cumElevation.setHorizontalAlignment(SwingConstants.LEFT);
-		label_cumElevation.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_cumElevation.setFont(font_16_bold);
+		stylizeInfoLabel(label_cumElevation);
 		label_cumElevation.setBounds(670, 159, 113, 22);
 		frame_tmGUI.getContentPane().add(label_cumElevation);
 			
 		label_cumElevationVal = new JLabel("   ");
-		label_cumElevationVal.setHorizontalAlignment(SwingConstants.LEFT);
-		label_cumElevationVal.setForeground(Color.WHITE);
-		label_cumElevationVal.setFont(font_16_bold);
+		stylizeInfoLabel_Bold(label_cumElevationVal);
 		label_cumElevationVal.setBounds(781, 159, 99, 22);
 		frame_tmGUI.getContentPane().add(label_cumElevationVal);
 
 		// SPEED LIMIT INFORMATION
 		JLabel label_speedLimit = new JLabel("SPEED LIMIT");
-		label_speedLimit.setHorizontalAlignment(SwingConstants.LEFT);
-		label_speedLimit.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_speedLimit.setFont(font_16_bold);
+		stylizeInfoLabel(label_speedLimit);
 		label_speedLimit.setBounds(670, 185, 113, 22);
 		frame_tmGUI.getContentPane().add(label_speedLimit);
 
 		label_speedLimitVal = new JLabel("   ");
-		label_speedLimitVal.setHorizontalAlignment(SwingConstants.LEFT);
-		label_speedLimitVal.setForeground(Color.WHITE);
-		label_speedLimitVal.setFont(font_16_bold);
+		stylizeInfoLabel_Bold(label_speedLimitVal);
 		label_speedLimitVal.setBounds(781, 185, 105, 22);
 		frame_tmGUI.getContentPane().add(label_speedLimitVal);
 
 		// OCCUPANCY INFORMATION
 		JLabel label_occupied = new JLabel("OCCUPIED");
-		label_occupied.setHorizontalAlignment(SwingConstants.LEFT);
-		label_occupied.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_occupied.setFont(font_16_bold);
+		stylizeInfoLabel(label_occupied);
 		label_occupied.setBounds(922, 75, 113, 22);
 		frame_tmGUI.getContentPane().add(label_occupied);
 
@@ -410,9 +397,7 @@ public class TrackModelGUI implements ActionListener{
 		
 		// UNDERGROUND INFORMATION
 		JLabel label_underground = new JLabel("UNDERGROUND");
-		label_underground.setHorizontalAlignment(SwingConstants.LEFT);
-		label_underground.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_underground.setFont(font_16_bold);
+		stylizeInfoLabel(label_underground);
 		label_underground.setBounds(922, 102, 167, 22);
 		frame_tmGUI.getContentPane().add(label_underground);
 
@@ -423,9 +408,7 @@ public class TrackModelGUI implements ActionListener{
 
 		// CROSSING INFORMATION
 		JLabel label_railCrossing = new JLabel("RAIL CROSSING");
-		label_railCrossing.setHorizontalAlignment(SwingConstants.LEFT);
-		label_railCrossing.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_railCrossing.setFont(font_16_bold);
+		stylizeInfoLabel(label_railCrossing);
 		label_railCrossing.setBounds(922, 129, 167, 22);
 		frame_tmGUI.getContentPane().add(label_railCrossing);
 
@@ -436,9 +419,7 @@ public class TrackModelGUI implements ActionListener{
 		
 		// TRACK HEAT INFORMATION
 		JLabel label_trackHeated = new JLabel("TRACK HEATED");
-		label_trackHeated.setHorizontalAlignment(SwingConstants.LEFT);
-		label_trackHeated.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_trackHeated.setFont(font_16_bold);
+		stylizeInfoLabel(label_trackHeated);
 		label_trackHeated.setBounds(922, 157, 167, 22);
 		frame_tmGUI.getContentPane().add(label_trackHeated);
 		
@@ -449,30 +430,22 @@ public class TrackModelGUI implements ActionListener{
 
 		// SWITCH INFORMATION
 		JLabel label_switch = new JLabel("SWITCH");
-		label_switch.setHorizontalAlignment(SwingConstants.LEFT);
-		label_switch.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_switch.setFont(font_16_bold);
+		stylizeInfoLabel(label_switch);
 		label_switch.setBounds(705, 251, 167, 22);
 		frame_tmGUI.getContentPane().add(label_switch);
 		
 		label_switchHead = new JLabel("   ");
-		label_switchHead.setHorizontalAlignment(SwingConstants.RIGHT);
-		label_switchHead.setForeground(Color.WHITE);
-		label_switchHead.setFont(font_16_bold);
+		stylizeInfoLabel_Bold(label_switchHead);
 		label_switchHead.setBounds(714, 317, 62, 22);
 		frame_tmGUI.getContentPane().add(label_switchHead);
 		
 		label_switchPortNormal = new JLabel("   ");
-		label_switchPortNormal.setHorizontalAlignment(SwingConstants.LEFT);
-		label_switchPortNormal.setForeground(Color.WHITE);
-		label_switchPortNormal.setFont(font_16_bold);
+		stylizeInfoLabel_Bold(label_switchPortNormal);
 		label_switchPortNormal.setBounds(905, 283, 69, 22);
 		frame_tmGUI.getContentPane().add(label_switchPortNormal);
 		
 		label_switchPortAlternate = new JLabel("   ");
-		label_switchPortAlternate.setHorizontalAlignment(SwingConstants.LEFT);
-		label_switchPortAlternate.setForeground(Color.WHITE);
-		label_switchPortAlternate.setFont(font_16_bold);
+		stylizeInfoLabel_Bold(label_switchPortAlternate);
 		label_switchPortAlternate.setBounds(904, 349, 64, 22);
 		frame_tmGUI.getContentPane().add(label_switchPortAlternate);
 
@@ -494,16 +467,12 @@ public class TrackModelGUI implements ActionListener{
 
 		// STATION INFORMATION
 		JLabel label_station = new JLabel("STATION");
-		label_station.setHorizontalAlignment(SwingConstants.LEFT);
-		label_station.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_station.setFont(font_16_bold);
+		stylizeInfoLabel(label_station);
 		label_station.setBounds(705, 398, 167, 22);
 		frame_tmGUI.getContentPane().add(label_station);
 			
 		label_stationName = new JLabel("   ");
-		label_stationName.setHorizontalAlignment(SwingConstants.LEFT);
-		label_stationName.setForeground(Color.WHITE);
-		label_stationName.setFont(font_16_bold);
+		stylizeInfoLabel_Bold(label_stationName);
 		label_stationName.setBounds(786, 439, 216, 22);
 		frame_tmGUI.getContentPane().add(label_stationName);
 
@@ -514,16 +483,12 @@ public class TrackModelGUI implements ActionListener{
 
 		// FAILURE INFORMATION
 		JLabel label_failures = new JLabel("FAILURES");
-		label_failures.setHorizontalAlignment(SwingConstants.CENTER);
-		label_failures.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_failures.setFont(font_16_bold);
+		stylizeInfoLabel(label_failures);
 		label_failures.setBounds(399, 269, 236, 37);
 		frame_tmGUI.getContentPane().add(label_failures);
 		
 		JLabel label_railFailure = new JLabel("RAIL");
-		label_railFailure.setHorizontalAlignment(SwingConstants.LEFT);
-		label_railFailure.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_railFailure.setFont(font_14_bold);
+		stylizeInfoLabel_Small(label_railFailure);
 		label_railFailure.setBounds(440, 304, 55, 22);
 		frame_tmGUI.getContentPane().add(label_railFailure);
 		
@@ -533,9 +498,7 @@ public class TrackModelGUI implements ActionListener{
 		frame_tmGUI.getContentPane().add(icon_railFailure);
 		
 		JLabel label_powerFailure = new JLabel("POWER");
-		label_powerFailure.setHorizontalAlignment(SwingConstants.LEFT);
-		label_powerFailure.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_powerFailure.setFont(font_14_bold);
+		stylizeInfoLabel_Small(label_powerFailure);
 		label_powerFailure.setBounds(439, 328, 78, 22);
 		frame_tmGUI.getContentPane().add(label_powerFailure);
 		
@@ -545,9 +508,7 @@ public class TrackModelGUI implements ActionListener{
 		frame_tmGUI.getContentPane().add(icon_powerFailure);
 
 		JLabel label_trackCircuitFailure = new JLabel("TRACK CIRCUIT");
-		label_trackCircuitFailure.setHorizontalAlignment(SwingConstants.LEFT);
-		label_trackCircuitFailure.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_trackCircuitFailure.setFont(font_14_bold);
+		stylizeInfoLabel_Small(label_trackCircuitFailure);
 		label_trackCircuitFailure.setBounds(439, 352, 128, 22);
 		frame_tmGUI.getContentPane().add(label_trackCircuitFailure);
 		
@@ -559,16 +520,12 @@ public class TrackModelGUI implements ActionListener{
 		
 		// FAILURE SIMULATION
 		JLabel label_simulateFailure = new JLabel("SIMULATE FAILURE");
-		label_simulateFailure.setHorizontalAlignment(SwingConstants.CENTER);
-		label_simulateFailure.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
-		label_simulateFailure.setFont(font_16_bold);
+		stylizeInfoLabel(label_simulateFailure);
 		label_simulateFailure.setBounds(395, 405, 236, 37);
 		frame_tmGUI.getContentPane().add(label_simulateFailure);
 		
 		JButton button_toggle = new JButton("TOGGLE");
-		button_toggle.setFocusPainted(false);
-		button_toggle.setForeground(Color.WHITE);
-		button_toggle.setFont(font_14_bold);
+		stylizeButton(button_toggle);
 		button_toggle.setBackground(new Color(102, 0, 153));
 		button_toggle.setBounds(550, 441, 98, 52);
 
@@ -591,9 +548,7 @@ public class TrackModelGUI implements ActionListener{
 		frame_tmGUI.getContentPane().add(button_toggle);
 
 		JComboBox comboBox_failures = new JComboBox();
-		((JLabel) comboBox_failures.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
-		comboBox_failures.setFont(font_14_bold);
-		comboBox_failures.setBackground(Color.WHITE);
+		stylizeComboBox(comboBox_failures);
 		comboBox_failures.setBounds(380, 441, 158, 52);
 		comboBox_failures.addItem("RAIL FAILURE");
 		comboBox_failures.addItem("POWER FAILURE");
