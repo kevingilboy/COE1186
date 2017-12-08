@@ -202,7 +202,7 @@ public class TrackCsvParser{
     			if (s.getEdge() == Switch.EDGE_TYPE_TAIL){
     				if (s_normal.getPortAlternate() == i){
     					s.setTailType(Switch.TAIL_TYPE_ALTERNATE);
-    					System.out.println(blocks.get(i).getLine() + " | ALT TAIL = " + Integer.toString(i));
+    					// System.out.println(blocks.get(i).getLine() + " | ALT TAIL = " + Integer.toString(i));
     				}
     			}
     		}
