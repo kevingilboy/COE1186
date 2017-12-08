@@ -61,8 +61,8 @@ public class TrainControllerGUI {
 	 * Create the frame.
 	 */
 	public TrainControllerGUI() {
-		p = 6000;
-		i = 7.2641;
+		p = 60000;
+		i = 726.41;
 		ready = true;
 		guiList = new ArrayList<TrnControllerGUI>();
 		buttonList = new ArrayList<JButton>();
