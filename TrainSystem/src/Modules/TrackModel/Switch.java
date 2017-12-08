@@ -8,6 +8,8 @@ public class Switch{
 	public static boolean STATUS_NOT_WORKING = false;
 	public static boolean EDGE_TYPE_HEAD = true;
 	public static boolean EDGE_TYPE_TAIL = false;
+	public static boolean TAIL_TYPE_NORMAL = true;
+	public static boolean TAIL_TYPE_ALTERNATE = false;
 	
 	private boolean state;
 	private boolean status;
@@ -16,6 +18,8 @@ public class Switch{
 	private int portAlternate;
 	private Switch switchNormal;
 	private Switch switchAlternate;
+
+	private boolean tailType;
 
 	public Switch(){
 		// Default state, status, edge, and ports
@@ -26,6 +30,7 @@ public class Switch{
 		portAlternate = 0;
 		switchNormal = null;
 		switchAlternate = null;
+		tailType = TAIL_TYPE_NORMAL;
 	}
 
 	public boolean getState(){
@@ -50,12 +55,23 @@ public class Switch{
 
 	public void setState(boolean newState){
 		state = newState;
-		if (state == STATE_NORMAL){
-			switchNormal.setPortState(STATE_NORMAL);
-			switchAlternate.setPortState(STATE_ALTERNATE);
-		} else if (state == STATE_ALTERNATE){
-			switchNormal.setPortState(STATE_ALTERNATE);
-			switchAlternate.setPortState(STATE_NORMAL);
+
+		if (tailType == TAIL_TYPE_ALTERNATE){
+			if (state == STATE_NORMAL){
+				switchNormal.setPortState(STATE_ALTERNATE);
+				switchAlternate.setPortState(STATE_ALTERNATE);
+			} else if (state == STATE_ALTERNATE){
+				switchNormal.setPortState(STATE_NORMAL);
+				switchAlternate.setPortState(STATE_NORMAL);
+			}
+		} else {
+			if (state == STATE_NORMAL){
+				switchNormal.setPortState(STATE_NORMAL);
+				switchAlternate.setPortState(STATE_ALTERNATE);
+			} else if (state == STATE_ALTERNATE){
+				switchNormal.setPortState(STATE_ALTERNATE);
+				switchAlternate.setPortState(STATE_NORMAL);
+			}
 		}
 	}
 	
@@ -85,5 +101,13 @@ public class Switch{
 
 	public void setSwitchAlternate(Switch s){
 		switchAlternate = s;
+	}
+
+	public void setTailType(boolean type){
+		tailType = type;
+	}
+
+	public boolean getTailType(){
+		return tailType;
 	}
 }

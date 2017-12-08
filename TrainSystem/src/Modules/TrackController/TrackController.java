@@ -135,7 +135,7 @@ public class TrackController implements Module{
 				//can proceed and authority >2
 				if (trackModel.getBlock(associatedLine, authority[1]).getSwitch() != null){
 					//can proceed and nb has switch
-					boolean canSwitch = tcplc.canSwitchPath(authority);
+					boolean canSwitch = tcplc.canSwitchBlock(authority[1]);
 					if (canSwitch){
 						boolean switchStateCalc = tcplc.switchStatePath(authority);
 						if (switchStateCalc) {
@@ -179,10 +179,13 @@ public class TrackController implements Module{
 		}
 	}
 	
-	public void transmitCtcSwitchState(String line, int blockId, boolean state){
+	public boolean transmitCtcSwitchState(String line, int blockId, boolean state){
 		boolean canSwitch = tcplc.canSwitchBlock(blockId);
 		if(canSwitch){
 			transmitSwitchState(line, blockId, state);
+			return true;
+		} else {
+			return false;
 		}
 	}
 	
