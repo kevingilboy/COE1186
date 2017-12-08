@@ -46,8 +46,8 @@ public class Mbo implements Module {
 	}
 
 	private void initTrack() {
-		redLine = new TrackCsvParser().parse("Modules\\Mbo\\RedLineFinal.csv");
-		greenLine = new TrackCsvParser().parse("Modules\\Mbo\\GreenLineFinal.csv");
+		redLine = new TrackCsvParser().parse("Modules/Mbo/RedLineFinal.csv");
+		greenLine = new TrackCsvParser().parse("Modules/Mbo/GreenLineFinal.csv");
 	}
 
 	private void startGui() {
