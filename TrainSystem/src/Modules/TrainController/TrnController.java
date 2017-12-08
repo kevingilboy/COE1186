@@ -402,7 +402,15 @@ public class TrnController {
 	
 	private void decodeBeacon() {
 		if (!inStation) {
-			/*if (beacon == 0 && currentBlockInfo.getStationName().equals("")) {
+			if (beacon == 0 && currentBlockInfo.getStationName().equals("")) {
+				announceEnRoute();
+				currentStation = null;
+				passed = false;
+			}
+			else if (beacon == 0 && currentBlockInfo.getStationName().equals("")) {
+				passed = true;
+			}
+			else if (beacon != 0 && passed) {
 				announceEnRoute();
 				currentStation = null;
 			}
@@ -418,13 +426,13 @@ public class TrnController {
 			}
 			else {
 				//do nothing, but shouldn't happen
-			}*/
+			}
 			/*if (beacon == 0 && currentBlockInfo.getStationName().equals("")) {
 				announceEnRoute();
 				currentStation = null;
 				passed = false;
 			}*/
-			if (beacon != 0 && enRouteSignaled) {
+			/*if (beacon != 0 && enRouteSignaled) {
 				currentStation = stationList[beacon];
 				announceApproach(currentStation);
 			}
@@ -445,7 +453,7 @@ public class TrnController {
 			}
 			else {
 				
-			}
+			}*/
 		}
 	}
 	
