@@ -161,6 +161,8 @@ public class TrainModelGUI extends JFrame {
 	private Image ad1 = new ImageIcon(this.getClass().getResource("ad1.jpg")).getImage();
 	private Image spongebob1 = new ImageIcon(this.getClass().getResource("spongebob1.jpg")).getImage();
 	private Image aerotech = new ImageIcon(this.getClass().getResource("aerotech.jpg")).getImage();
+	private Image safety = new ImageIcon(this.getClass().getResource("safety.jpg")).getImage();
+	private Image mouse = new ImageIcon(this.getClass().getResource("mouse.jpg")).getImage();
 	private ArrayList<Image> imgArray = new ArrayList<>();
 	private int i = 0;
 	private final JLabel ledImageLabel = new JLabel();
@@ -299,9 +301,11 @@ public class TrainModelGUI extends JFrame {
 		
 		imgArray.add(spongebob1);
 		imgArray.add(aerotech);
+		imgArray.add(mouse);
+		imgArray.add(safety);
 		JLabel advertisementImageLabel = new JLabel();
 		advertisementImageLabel.setBounds(0, 0, 1050, 200);
-		Image dimg = aerotech.getScaledInstance(advertisementImageLabel.getWidth(), advertisementImageLabel.getHeight(),
+		Image dimg = mouse.getScaledInstance(advertisementImageLabel.getWidth(), advertisementImageLabel.getHeight(),
 		        Image.SCALE_SMOOTH);
 		advertisementImageLabel.setIcon(new ImageIcon(dimg));
 		advertisePane.add(advertisementImageLabel);
