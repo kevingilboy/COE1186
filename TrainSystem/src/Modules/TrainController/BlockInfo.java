@@ -4,7 +4,7 @@ package Modules.TrainController;
 
 public class BlockInfo
 {
-	private double speedLimit;
+	private double speedLimit;		//m/s
 	private int direction;
 	private boolean underground;
 	private String stationName;
