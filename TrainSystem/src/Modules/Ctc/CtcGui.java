@@ -825,8 +825,8 @@ public class CtcGui {
 			//Object[] row; //build the row here, but for now we fake the functionality below
 			Object[] row = {train.name,
 					train.line.blocks[train.currLocation],
-					train.suggestedSpeed*0.621371,
-					train.authority* 0.000621371192237+" mi",
+					String.format("%.2f",train.suggestedSpeed*0.621371)+" mph",
+					String.format("%.3f",train.authority* 0.000621371192237)+" mi",
 					train.passengers};
 			train.line.dispatchedData.addRow(row);
 		}
