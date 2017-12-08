@@ -43,7 +43,7 @@ public class TrnController {
 	private boolean arrivedSignaled;
 	private boolean departSignaled;
 	private boolean enRouteSignaled;
-	private boolean passed;
+	//private boolean passed;
 	private ArrayList<BlockInfo> mapInfo;
 	private BlockInfo currentBlockInfo;
 	private String[] stationList;
@@ -116,7 +116,7 @@ public class TrnController {
 			setpointSpeed = controller.receiveSetpointSpeed(trainID);
 			if (inStation) {
 				stationTimeCounter++;
-				if (stationTimeCounter == 120)
+				if (stationTimeCounter >= 120)
 				{
 					stationTimeCounter = 0;
 					closeLeft();
@@ -126,21 +126,8 @@ public class TrnController {
 					calcPowerOutput();
 				}
 			}
-			else if (passEBrakes) {
-				engineOff();
-				eBrakesOn();
-			}
 			else if (brakingCheck()) {
-				engineOff();
-				sBrakesOn();
-			}
-			else if (overallAuth == 0 && actualSpeed > 0) {
-				engineOff();
-				eBrakesOn();
-			}
-			else if (overallAuth == 0 && actualSpeed == 0) {
-				sBrakesOff();
-				eBrakesOff();
+				//actions performed in function
 			}
 			else {
 				calcPowerOutput();
@@ -154,7 +141,7 @@ public class TrnController {
 		}
 		else {		//if manual
 			if (inStation) {
-				System.out.println("In Station");
+				stationTimeCounter++;
 				calcPowerOutput();
 				if (actualSpeed > 0 && power > 0) {
 					stationTimeCounter = 0;
@@ -162,20 +149,8 @@ public class TrnController {
 					announceDeparting(currentStation);
 				}
 			}
-			else if (passEBrakes) {
-				engineOff();
-				eBrakesOn();
-			}
 			else if (brakingCheck()) {
-				engineOff();
-				sBrakesOn();
-			}
-			else if (overallAuth == 0 && actualSpeed > 0) {
-				engineOff();
-				eBrakesOn();
-			}
-			else if (overallAuth == 0 && actualSpeed == 0) {
-				sBrakesOff();
+				//actions performed in function
 			}
 			else {
 				calcPowerOutput();
@@ -183,6 +158,9 @@ public class TrnController {
 		}
 		decodeBeacon();
 		stationCheck();
+		if (!inStation) {
+			controlGUI.setSuggestedDoor(0);
+		}
 		updateGUI();
 		return true;
 	}
@@ -304,7 +282,15 @@ public class TrnController {
 			if (setpointSpeed > speedLimit) {
 				setpointSpeed = speedLimit;
 			}
-			power = pi.getOutput(actualSpeed, setpointSpeed);
+			double power1 = pi.getOutput(actualSpeed, setpointSpeed);
+			double power2 = pi.getOutput(actualSpeed, setpointSpeed);
+			double power3 = pi.getOutput(actualSpeed, setpointSpeed);
+			if (power1 == power2 && power2 == power3) {
+				power = power1;
+			}
+			else {
+				power = Math.min(power1, Math.min(power2, power3));
+			}
 		}
 		controller.transmitPower(trainID, power);
 	}
@@ -320,7 +306,24 @@ public class TrnController {
 	}
 	
 	private boolean brakingCheck() {
-		if (overallAuth <= safeBrakingDistance || distToStation <= safeBrakingDistance) {
+		if (passEBrakes) {
+			engineOff();
+			eBrakesOn();
+			return true;
+		}
+		else if (overallAuth <= (safeBrakingDistance * 3/4) && actualSpeed > 0) {
+			engineOff();
+			eBrakesOn();
+			return true;
+		}
+		else if ((overallAuth <= safeBrakingDistance && actualSpeed > 0) || (distToStation <= safeBrakingDistance && actualSpeed > 0)) {
+			engineOff();
+			sBrakesOn();
+			return true;
+		}
+		else if (overallAuth == 0 && actualSpeed == 0) {
+			sBrakesOff();
+			eBrakesOff();
 			return true;
 		}
 		else {
@@ -402,9 +405,6 @@ public class TrnController {
 					}
 				}
 			}
-		}
-		else {
-			controlGUI.setSuggestedDoor(0);
 		}
 	}
 	
