@@ -27,6 +27,7 @@ public class Mbo implements Module {
 	private TreeMap<String, TrainInfo> trains;
 	private ArrayList<MboBlock> redLine;
 	private ArrayList<MboBlock> greenLine;
+	private boolean movingBlockModeEnabled;
 	private CRC32 crc;
 
 	final private static double TRAIN_MAX_ACCELERATION_SERVICE_BRAKE = -1.2;
@@ -38,6 +39,7 @@ public class Mbo implements Module {
 		thisMbo = this;
 		this.trains = new TreeMap<String,TrainInfo>();
 		this.crc = new CRC32();
+		movingBlockModeEnabled = true;
 		initTrack();
 		startGui();
 		gui.setVisible(true);
@@ -66,8 +68,8 @@ public class Mbo implements Module {
 	}
 
 	public void testInitTrains() {
-		trains.put("RED 1", new TrainInfo("RED 1", time));
-		trains.put("RED 2", new TrainInfo("RED 2", time));
+		trains.put("RED 1", new TrainInfo("RED 1", time, this));
+		trains.put("RED 2", new TrainInfo("RED 2", time, this));
 	}
 
 	public Object[][] getTrainData() {
@@ -99,11 +101,23 @@ public class Mbo implements Module {
 	public boolean updateTime(SimTime time) {
 		//System.out.println("entering MBO");
 		this.time = time;
+		System.out.println("Time updated");
 		this.updateTrainInfo();
+		System.out.println("Info updated");
+		for (TrainInfo train : trains.values()) {
+			trainController.setMboAuthority(train.getName(), train.getAuthority());
+		//	System.out.printf("Did auth for %s\n", train.getName());
+			trainController.setSafeBrakingDistance(train.getName(), train.getSafeBrakingDistance());
+		//	System.out.printf("Did dist for %s\n", train.getName());
+		}
 		//System.out.println("gui");
 		gui.update(time);
 		//System.out.println("done");
 		return true;
+	}
+
+	public void enableMovingBlockMode(boolean enabled) {
+		movingBlockModeEnabled = enabled;
 	}
 
 	// returns true if checksum is valid, otherwise false
@@ -122,7 +136,7 @@ public class Mbo implements Module {
 		//String[] vals = segments[0].split(";");
 		//String train = vals[0];
 		if (trains.get(train) == null) {
-			trains.put(train, new TrainInfo(train, time));
+			trains.put(train, new TrainInfo(train, time, this));
 		}
 
 		// update train's position
@@ -142,7 +156,7 @@ public class Mbo implements Module {
 		return true;
 	}
 
-	private MboBlock getBlockFromCoordinates(double[] pos) {
+	public MboBlock getBlockFromCoordinates(double[] pos) {
 		for (MboBlock block : redLine) {
 			if (block.onBlock(pos[0], pos[1])) {
 				return block;
@@ -156,23 +170,14 @@ public class Mbo implements Module {
 		return null;
 	}
 
-	private void transmitSafeBrakingDistance(String trainID, double distance) {
-
-	}
-
-	private void transmitMboAuthority(String trainID, double authority) {
-
-	}
-
 	public void updateTrainInfo() {
 		for (String train : trains.keySet()) {
 			//System.out.printf("Updating info for %s\n", train);
 			trains.get(train).setAuthority(calculateAuthority(train));
-			//System.out.printf("auth for %s\n", train);
+			//System.out.printf("auth set");
+			System.out.printf("auth for %s\n", train);
 			trains.get(train).setSafeBrakingDistance(calculateSafeBrakingDistance(train));
-			//System.out.printf("Updated %s\n", train);
-			//trainController.setMboAuthority(train, trains.get(train).getAuthority());
-			//trainController.setSafeBrakingDistance(train, trains.get(train).getSafeBrakingDistance());
+			System.out.printf("Updated %s\n", train);
 		}
 	}
 
@@ -195,6 +200,55 @@ public class Mbo implements Module {
 		return trains.get(trainID).getAuthority();
 	}
 
+	public int calculateDistanceBetweenPositions(double[] pos1, double[] pos2) {
+		
+		int distance = 0;
+
+		// get the blocks
+		MboBlock block1 = getBlockFromCoordinates(pos1);
+		MboBlock block2 = getBlockFromCoordinates(pos2);
+
+		// fail if blocks on different lines
+		//System.out.printf("%f %f\n", pos2[0], pos2[1]);
+		//System.out.printf("%s %s\n", block1, block2);
+		if (!block1.getLine().equals(block2.getLine())) {
+			return -1;
+		}
+
+		// get reference to line
+		ArrayList<MboBlock> line = block1.getLine().equals("RED") ? redLine : greenLine;
+		int lineLength = block1.getLine().equals("RED") ? 5598 : 14447;
+
+		// if the two are on different blocks, add the distance to the end of block1
+		int offset = block1.getOffset(pos1);
+		if (block1 != block2) {
+			distance += block1.getLength() - offset;
+			offset = 0;
+		}
+
+		// add the lengths of all blocks between these
+		int index1 = line.indexOf(block1);
+		int index2 = line.indexOf(block2);
+		while ((index1 + 1) % line.size() < index2) {
+			distance += line.get(index1).getLength();
+			index1 = (index1 + 1) % line.size();
+			//System.out.printf("Index: %d %d\n", index1, index2);
+		}
+
+		// add the displacement within the block
+		// if positions on different blocks, this is just offset of second position within block2
+		distance += block2.getOffset(pos2) - offset;
+
+		// if both were initially on the same block but pos2 < pos1, result is negative; convert to positive
+		if (distance < 0) distance += lineLength; 
+
+		//TODO figure this shit out a better way
+		// problem is as the train comes off the track
+		if (distance > lineLength / 2) distance = lineLength - distance;
+
+		return distance;
+	}
+
 	private double calculateSafeBrakingDistance(String trainID) {
 
 		// get the current block
@@ -214,17 +268,20 @@ public class Mbo implements Module {
 
 		// get displacement into block
 		// the ith coordinate is i meters in
+		System.out.printf("%f, %f\n", train.getPosition()[0], train.getPosition()[1]);
 		double xval = train.getPosition()[0];
 		int blockDisplacement = Arrays.asList(block.getXCoordinates()).indexOf(xval);
 		//System.out.printf("%s is %d meters in at %f.\n", trainID, blockDisplacement, xval);
 		
 		double potentialSpeed = train.getSpeed();
+		double speed = potentialSpeed;
 		int distance = 0;
 		while (potentialSpeed > 0) {
+		//	System.out.printf("speed %f potential %f\n", speed, potentialSpeed);
 			MboBlock potentialBlock = getBlockAfterMoving(line, blockIndex, blockDisplacement, distance);
-			//System.out.printf("block index %s\n", potentialBlock);
+		//	System.out.printf("block index %s\n", potentialBlock);
 			potentialSpeed = calculateSpeedAfterMeter(potentialSpeed, potentialBlock);
-			//System.out.printf("speed %f\n", potentialSpeed);
+		//	System.out.printf("speed %f\n", potentialSpeed);
 			distance += 1;
 		}
 		//System.out.printf("%s can stop in %d meters.\n", train, distance);

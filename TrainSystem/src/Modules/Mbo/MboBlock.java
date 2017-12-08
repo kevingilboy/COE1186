@@ -56,9 +56,24 @@ public class MboBlock {
 
 	public boolean onBlock(double x, double y) {
 		boolean result = false;
-		for (int i = 0; i < x_coordinates.length-2; i++) {
+		//System.out.printf("x: %f, y: %f\n", x, y);
+		//System.out.printf("coord: %s %s\n", x_coordinates, y_coordinates);
+		//System.out.printf("%d %f\n", x_coordinates.length, x_coordinates[0]);
+		for (int i = 0; i < x_coordinates.length; i++) {
+		//	System.out.printf("index %d\n", i);
 			if (x == x_coordinates[i] && y == y_coordinates[i]) {
 				result = true;
+				break;
+			}
+		}
+		return result;
+	}
+
+	public int getOffset(double[] pos) {
+		int result = -1;
+		for (int i = 0; i < x_coordinates.length; i++) {
+			if (pos[0] == x_coordinates[i] && pos[1] == y_coordinates[i]) {
+				result = i;
 				break;
 			}
 		}
