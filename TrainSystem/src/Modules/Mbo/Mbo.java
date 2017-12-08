@@ -128,12 +128,10 @@ public class Mbo implements Module {
 		//System.out.printf("Received %f:%f for %s\n", pos[0], pos[1], train);
 		//String[] segments = signal.split(":");
 		//long checksum = Long.parseLong(segments[1]);
-		crc.update(String.format("%s;%.0f;%.0f",train,pos[0],pos[1]).getBytes());
+    	String signal = train + ":" + Double.toString(pos[0]) + "," + Double.toString(pos[1]);
+		crc.update(signal.getBytes());
 		//System.out.printf("Checksum %s: %x %x\n", train, crc.getValue(), checksum);
-		if (checksum != crc.getValue()) {
-			System.out.printf("%f %f CHECKSUM FAIL!\n", checksum, crc.getValue());
-			return false;
-		}
+		if (checksum != crc.getValue()) return false;
 
 		// add train if necessary
 		//String[] vals = segments[0].split(";");
