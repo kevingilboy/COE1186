@@ -79,10 +79,6 @@ public class PLC {
 		return vitalCheckCanPath(canProceedLogic, path);
 	}
 	
-	public boolean canSwitchPath(int[] path){
-		return vitalCheckSwitchPath(canSwitchLogic, path);
-	}
-	
 	private boolean vitalCheckCanPath(String logic, int[] path){
 		boolean result = true;
 		Expression e = jexl.createExpression(logic);
@@ -103,6 +99,10 @@ public class PLC {
 		}
 		return result;
 	}
+	/*
+	public boolean canSwitchPath(int[] path){
+		return vitalCheckSwitchPath(canSwitchLogic, path);
+	}
 	
 	private boolean vitalCheckSwitchPath(String logic, int[] path){
 		boolean result = true;
@@ -119,7 +119,7 @@ public class PLC {
 		}
 		return result;
 	}
-	
+	*/
 	public boolean switchStatePath(int[] path){
 		return vitalSwitchStatePath(switchingLogic, path);
 	}
@@ -159,8 +159,8 @@ public class PLC {
 		return vitalCheckBlock(lightLogic, cb);
 	}
 	
-	public boolean canSwitchBlock(int cb){
-		return vitalCheckSwitchBlock(canSwitchLogic, cb);
+	public boolean canSwitchBlock(int nb){
+		return vitalCheckSwitchBlock(canSwitchLogic, nb);
 	}
 	
 	public boolean canCrossingBlock(int cb){
@@ -188,12 +188,12 @@ public class PLC {
 		return result;
 	}
 	
-	private boolean vitalCheckSwitchBlock(String logic, int cb){
+	private boolean vitalCheckSwitchBlock(String logic, int nb){
 		boolean result = true;
 		Expression e = jexl.createExpression(logic);
 		JexlContext context = new MapContext();
-		int norm = tc.trackModel.getBlock(line, cb).getSwitch().getPortNormal();
-		int alt = tc.trackModel.getBlock(line, cb).getSwitch().getPortAlternate();
+		int norm = tc.trackModel.getBlock(line, nb).getSwitch().getPortNormal();
+		int alt = tc.trackModel.getBlock(line, nb).getSwitch().getPortAlternate();
 		//Compute evaluation 3 times in order to assure vitality of signal
 		for(int iii = 0; iii < 3; iii++){
 			context.set("norm_occupied", tc.trackModel.getBlock(line, norm).getOccupied());
