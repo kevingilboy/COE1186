@@ -206,6 +206,10 @@ public class Ctc implements Module,TimeControl {
 		return success;
 	}
 	
+	public void launchWaysideGui(int i) {
+		trackControllers[i].tcgui.showTrackControllerGUI();
+	}
+	
 	
 	/*
 	 * ------------------------------
