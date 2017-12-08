@@ -27,11 +27,10 @@ public class TrainInfo {
 	private SimTime timeSignalTransmitted;
 	private Mbo mbo;
 
-	public TrainInfo(String name, SimTime time, Mbo mbo) {
+	public TrainInfo(String name, SimTime time, double[] position, Mbo mbo) {
 		this.name = name;
 		this.position = new double[2];
-		this.position[0] = 0.0;
-		this.position[1] = 0.0;
+		this.position = position;
 		this.velocity = new double[]{0,0};
 		timeSignalReceived = time;
 		timePreviousSignalReceived = time;
@@ -123,7 +122,7 @@ public class TrainInfo {
 			//System.out.printf("pos %.3f prev %.3f\n", position[1], previousPosition[1]);
 			velocity[0] = (position[0] - previousPosition[0]) / (double)elapsedSec;
 			velocity[1] = (position[1] - previousPosition[1]) / (double)elapsedSec;
-			System.out.printf("0 %.3f 1 %.3f\n", velocity[0], velocity[1]);
+			//System.out.printf("0 %.3f 1 %.3f\n", velocity[0], velocity[1]);
 		}
 
 		// calculate the speed in m/s
@@ -140,6 +139,7 @@ public class TrainInfo {
 			MboBlock block = mbo.getBlockFromCoordinates(position);
 			int offset = block.getOffset(position);
 			MboBlock previousBlock = mbo.getBlockFromCoordinates(previousPosition);
+			//System.out.printf("%s on %s at %f, %f\n", name, previousBlock, previousPosition[0], previousPosition[1]);
 			int prevOffset = previousBlock.getOffset(previousPosition);
 
 			// if trains are on same block, distance traveled is absolute distance between offsets
