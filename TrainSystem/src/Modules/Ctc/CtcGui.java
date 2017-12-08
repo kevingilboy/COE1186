@@ -625,22 +625,22 @@ public class CtcGui {
 		JLabel lbltrackStatusAnd = new JLabel("<html><u>Track Status<br> and Maintenance</u></htm>");
 		lbltrackStatusAnd.setHorizontalAlignment(SwingConstants.LEFT);
 		lbltrackStatusAnd.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lbltrackStatusAnd.setBounds(383, 651, 163, 63);
+		lbltrackStatusAnd.setBounds(251, 650, 163, 63);
 		frame.getContentPane().add(lbltrackStatusAnd);
 
 		JLabel hazardIcon = new JLabel();
 		hazardIcon.setIcon(new ImageIcon(CtcGui.class.getResource("/javax/swing/plaf/metal/icons/ocean/warning.png")));
-		hazardIcon.setBounds(509, 657, 37, 32);
+		hazardIcon.setBounds(377, 656, 37, 32);
 		frame.getContentPane().add(hazardIcon);
 		
 		JLabel selectedBlockLine = new JLabel("Line");
 		selectedBlockLine.setFont(new Font("SansSerif", Font.ITALIC, 14));
-		selectedBlockLine.setBounds(575, 657, 37, 33);
+		selectedBlockLine.setBounds(443, 656, 37, 33);
 		frame.getContentPane().add(selectedBlockLine);
 		
 		JLabel selectedBlockNum = new JLabel("Block");
 		selectedBlockNum.setFont(new Font("SansSerif", Font.ITALIC, 14));
-		selectedBlockNum.setBounds(631, 657, 37, 33);
+		selectedBlockNum.setBounds(499, 656, 37, 33);
 		frame.getContentPane().add(selectedBlockNum);
 		
 		btnCloseTrack = new JButton("Close for Maintenance");
@@ -652,7 +652,7 @@ public class CtcGui {
 			}
 		});
 		btnCloseTrack.setFont(new Font("Dialog", Font.PLAIN, 16));
-		btnCloseTrack.setBounds(815, 672, 200, 32);
+		btnCloseTrack.setBounds(683, 671, 200, 32);
 		frame.getContentPane().add(btnCloseTrack);
 		
 		btnRepairBlock = new JButton("Repair Block");
@@ -664,7 +664,7 @@ public class CtcGui {
 			}
 		});
 		btnRepairBlock.setFont(new Font("Dialog", Font.PLAIN, 16));
-		btnRepairBlock.setBounds(815, 705, 200, 32);
+		btnRepairBlock.setBounds(683, 704, 200, 32);
 		frame.getContentPane().add(btnRepairBlock);
 		
 		selectedBlockToggle = new JToggleButton("Toggle Switch");
@@ -681,26 +681,26 @@ public class CtcGui {
 			}
 		});
 		selectedBlockToggle.setFont(new Font("Dialog", Font.PLAIN, 16));
-		selectedBlockToggle.setBounds(815, 639, 200, 32);
+		selectedBlockToggle.setBounds(683, 638, 200, 32);
 		frame.getContentPane().add(selectedBlockToggle);
 		
 		JLabel lblOccupied = new JLabel("Occupied");
 		lblOccupied.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		lblOccupied.setBounds(725, 688, 70, 33);
+		lblOccupied.setBounds(593, 687, 70, 33);
 		frame.getContentPane().add(lblOccupied);
 		
 		selectedBlockOccupiedIndicator = new JLabel();
-		selectedBlockOccupiedIndicator.setBounds(791, 688, 45, 32);
+		selectedBlockOccupiedIndicator.setBounds(659, 687, 45, 32);
 		setIndicator(selectedBlockOccupiedIndicator,"grey");
 		frame.getContentPane().add(selectedBlockOccupiedIndicator);
 		
 		JLabel lblStatus = new JLabel("Status");
 		lblStatus.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		lblStatus.setBounds(745, 655, 52, 33);
+		lblStatus.setBounds(613, 654, 52, 33);
 		frame.getContentPane().add(lblStatus);
 		
 		selectedBlockStatusIndicator = new JLabel();
-		selectedBlockStatusIndicator.setBounds(791, 655, 45, 32);
+		selectedBlockStatusIndicator.setBounds(659, 654, 45, 32);
 		setIndicator(selectedBlockStatusIndicator,"grey");
 		frame.getContentPane().add(selectedBlockStatusIndicator);
 		
@@ -711,7 +711,7 @@ public class CtcGui {
 			}
 		});
 		blockLineComboBox.setModel(new DefaultComboBoxModel<Line>(Line.values()));
-		blockLineComboBox.setBounds(558, 687, 71, 26);
+		blockLineComboBox.setBounds(426, 686, 71, 26);
 		frame.getContentPane().add(blockLineComboBox);
 		
 		blockNumberSpinner = new JSpinner();
@@ -721,12 +721,12 @@ public class CtcGui {
 				updateSelectedBlock(true);
 			}
 		});
-		blockNumberSpinner.setBounds(631, 686, 70, 28);
+		blockNumberSpinner.setBounds(499, 685, 70, 28);
 		frame.getContentPane().add(blockNumberSpinner);
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(SystemColor.inactiveCaption);
-		panel.setBounds(709, 638, 325, 101);
+		panel.setBounds(577, 637, 325, 101);
 		frame.getContentPane().add(panel);
 		
 		JPanel panel_1 = new JPanel();
@@ -743,6 +743,53 @@ public class CtcGui {
 		});
 		btnJustDoIt.setBounds(1214, 520, 136, 68);
 		frame.getContentPane().add(btnJustDoIt);
+		
+		JCheckBox chckbxManualOverride = new JCheckBox("Manual Override");
+		chckbxManualOverride.setEnabled(false);
+		chckbxManualOverride.setBounds(1270, 478, 115, 18);
+		frame.getContentPane().add(chckbxManualOverride);
+		
+		JButton btnR1 = new JButton("R1");
+		btnR1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ctc.launchWaysideGui(2);
+			}
+		});
+		btnR1.setBounds(925, 667, 65, 32);
+		frame.getContentPane().add(btnR1);
+		
+		JButton btnR2 = new JButton("R2");
+		btnR2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ctc.launchWaysideGui(3);
+			}
+		});
+		btnR2.setBounds(996, 667, 65, 32);
+		frame.getContentPane().add(btnR2);
+		
+		JButton btnG2 = new JButton("G2");
+		btnG2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ctc.launchWaysideGui(1);
+			}
+		});
+		btnG2.setBounds(996, 700, 65, 32);
+		frame.getContentPane().add(btnG2);
+		
+		JButton btnG1 = new JButton("G1");
+		btnG1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ctc.launchWaysideGui(0);
+			}
+		});
+		btnG1.setBounds(925, 700, 65, 32);
+		frame.getContentPane().add(btnG1);
+		
+		JLabel lblwaysideGuis = new JLabel("<html><center><b><u>Wayside GUIs</u></b></center></html>");
+		lblwaysideGuis.setHorizontalAlignment(SwingConstants.CENTER);
+		lblwaysideGuis.setFont(new Font("SansSerif", Font.BOLD, 20));
+		lblwaysideGuis.setBounds(920, 621, 146, 57);
+		frame.getContentPane().add(lblwaysideGuis);
 	}
 	
 	/*
