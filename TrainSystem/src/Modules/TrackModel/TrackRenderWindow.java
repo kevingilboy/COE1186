@@ -138,8 +138,8 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
             }
         }
 
-        // Draw gray station outlines
-        g2d.setColor(Color.GRAY);
+        // Draw station outlines
+        g2d.setColor(lineColor);
         for (int i = 0; i < blocks.size(); i++){
             if ((blocks.get(i).getStation()) != null){
                 double[] x_coords = blocks.get(i).getXCoordinates();

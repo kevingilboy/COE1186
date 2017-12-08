@@ -115,6 +115,7 @@ public class TrackCsvParser{
 						switch_.setEdgeType(edgeType);
 						switch_.setPortNormal(Integer.parseInt(switchData[1]) - 1); // Subtract 1 for indexing
 						switch_.setPortAlternate(Integer.parseInt(switchData[2]) - 1); // Subtract 1 for indexing
+
 					}
 				} catch (NumberFormatException e){
 					// ...
@@ -197,6 +198,13 @@ public class TrackCsvParser{
 
     			s.setSwitchNormal(s_normal);
     			s.setSwitchAlternate(s_alternate);
+
+    			if (s.getEdge() == Switch.EDGE_TYPE_TAIL){
+    				if (s_normal.getPortAlternate() == i){
+    					s.setTailType(Switch.TAIL_TYPE_ALTERNATE);
+    					// System.out.println(blocks.get(i).getLine() + " | ALT TAIL = " + Integer.toString(i));
+    				}
+    			}
     		}
     	}
 
