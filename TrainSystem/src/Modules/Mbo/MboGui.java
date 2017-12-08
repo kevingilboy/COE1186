@@ -277,7 +277,7 @@ public class MboGui extends JFrame implements ActionListener {
 			}
 		}
 	}
-	
+
 	public void actionPerformed(ActionEvent e) {
 		// handle generate file action
 		if (e.getSource() == generateButton) {
@@ -322,7 +322,6 @@ public class MboGui extends JFrame implements ActionListener {
 		trainInfoTable.setModel(model);
 		//trainInfoTableModel.fireTableDataChanged();
 		//((DefaultTableModel) this.trainInfoTable.getModel()).fireTableDataChanged();
-		mbo.testInitTrains(); // TODO get this out of here!
 		//for (int i; i < this.trainData.length; i++) {
 		//	for (int j; j < this.trainData[0].length; j++) {
 		//		this.trainInfoTableModel

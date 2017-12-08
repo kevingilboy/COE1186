@@ -25,8 +25,9 @@ public class TrainInfo {
 	private double authority;
 	private double safeBrakingDistance;
 	private SimTime timeSignalTransmitted;
+	private Mbo mbo;
 
-	public TrainInfo(String name, SimTime time) {
+	public TrainInfo(String name, SimTime time, Mbo mbo) {
 		this.name = name;
 		this.position = new double[2];
 		this.position[0] = 0.0;
@@ -35,6 +36,7 @@ public class TrainInfo {
 		timeSignalReceived = time;
 		timePreviousSignalReceived = time;
 		this.previousPosition = position;
+		this.mbo = mbo;
 	}
 
 	public Object[] toDataArray() {
@@ -65,7 +67,7 @@ public class TrainInfo {
 		timeSignalReceived.ms = time.ms;*/
 		previousPosition = position;
 		position = pos;
-		calculateVelocity();
+		calculateSpeed();
 		//System.out.printf("%s at %f:%f\n", name, pos[0], pos[1]);
 	}
 
@@ -88,6 +90,10 @@ public class TrainInfo {
 
 	public double getAuthority() {
 		return authority;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public double getSpeed() {
@@ -117,11 +123,37 @@ public class TrainInfo {
 			//System.out.printf("pos %.3f prev %.3f\n", position[1], previousPosition[1]);
 			velocity[0] = (position[0] - previousPosition[0]) / (double)elapsedSec;
 			velocity[1] = (position[1] - previousPosition[1]) / (double)elapsedSec;
-			//System.out.printf("0 %.3f 1 %.3f\n", velocity[0], velocity[1]);
+			System.out.printf("0 %.3f 1 %.3f\n", velocity[0], velocity[1]);
 		}
 
 		// calculate the speed in m/s
 		speed = Math.pow(Math.pow(velocity[0], 2) + Math.pow(velocity[1], 2), 0.5);
+	}
+
+	private void calculateSpeed() {
+		int elapsedSec = signalSec - lastSignalSec;
+		if (elapsedSec != 0) {
+
+			// traveling an entire block between signals requires traveling at least 35m in 0.25s
+			// this requires traveling at a speed of >= 313.171 MPH
+			// will thus assume that no train will travel an entire block between signals
+			MboBlock block = mbo.getBlockFromCoordinates(position);
+			int offset = block.getOffset(position);
+			MboBlock previousBlock = mbo.getBlockFromCoordinates(previousPosition);
+			int prevOffset = previousBlock.getOffset(previousPosition);
+
+			// if trains are on same block, distance traveled is absolute distance between offsets
+			// otherwise, distance to end of first block plus offset in second block
+			double distance;
+			if (block.equals(previousBlock)) {
+				distance = Math.abs(offset - prevOffset);
+			} else {
+				distance = offset + (previousBlock.getLength() - prevOffset);
+			}
+
+			// and then speed is distance / time
+			speed = distance / (float) elapsedSec;
+		}
 	}
 
 	private void updateLatestSignal() {
