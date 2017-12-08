@@ -703,8 +703,7 @@ public class Train {
      */
     public void setNumDeparting() {
     	Random rand = new Random();
-
-    	int  n = rand.nextInt(this.numPassengers);
+    	int  n = rand.nextInt(this.numPassengers+1);
     	if (this.numPassengers - n <= 0) {
     		this.numPassengers = 0;
     		//return this.numPassengers;
