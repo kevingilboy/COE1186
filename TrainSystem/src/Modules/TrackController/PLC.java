@@ -86,8 +86,12 @@ public class PLC {
 		JexlContext context = new MapContext();
 		//Compute evaluation 3 times in order to assure vitality of signal
 		for(int iii = 0; iii < 3; iii++){ 
-			if((path.length >= 1) && (path[0] > 0)) {
-				context.set("cb_occupied", tc.trackModel.getBlock(line, path[0]).getOccupied());
+			if(path.length >= 1) {
+				if(path[0] > 0){
+					context.set("cb_occupied", tc.trackModel.getBlock(line, path[0]).getOccupied());
+				} else {
+					context.set("cb_occupied", false);
+				}
 				if(path.length>=2) {
 					context.set("nb_occupied", tc.trackModel.getBlock(line, path[1]).getOccupied());
 					if(path.length>=3) {
