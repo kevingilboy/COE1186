@@ -594,8 +594,7 @@ public class Ctc implements Module,TimeControl {
 			 */
 			//Calculate speed
 			calculateSuggestedSpeed(train);
-			double suggestedSpeedInMps = train.suggestedSpeed / 2.23694;
-			transmitSuggestedSpeed(train.name, wayside, suggestedSpeedInMps);
+			transmitSuggestedSpeed(train.name, wayside, train.suggestedSpeed);
 		}
 		
 		/*
