@@ -33,6 +33,8 @@ import javax.swing.JMenu;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JSpinner;
+import javax.swing.JSplitPane;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JToggleButton;
@@ -49,7 +51,9 @@ import javax.swing.JCheckBox;
  */
 public class TrainModelGUI extends JFrame {
 
+	private JSplitPane splitPane;
 	private JPanel contentPane;
+	private JPanel advertisePane;
 	private Line2D horizontalLine1;
 	private Line2D verticalLine1;
 	private Line2D verticalLine2;
@@ -262,14 +266,26 @@ public class TrainModelGUI extends JFrame {
 	}
 		
 	private void initComponents() {
+		splitPane = new JSplitPane();
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(150, 150, 1050, 655);
+		setBounds(150, 150, 1050, 850);
 		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.LIGHT_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
+		setContentPane(splitPane);
+		//setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		advertisePane = new JPanel();
+		advertisePane.setBackground(Color.LIGHT_GRAY);
+		advertisePane.setBorder(new EmptyBorder(5,5,5,5));
+		//contentPane.add(advertisePane);
+		
+		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);  // we want it to split the window verticaly
+        splitPane.setDividerLocation(650);                    // the initial position of the divider is 200 (our window is 400 pixels high)
+        splitPane.setTopComponent(contentPane);                  // at the top we want our "topPanel"
+        splitPane.setBottomComponent(advertisePane);            // and at the bottom we want our "bottomPanel"
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBounds(0, 0, 1044, 31);
