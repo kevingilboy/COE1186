@@ -87,6 +87,7 @@ public class TrnControllerGUI {
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.setBounds(600, 500, 600, 480);
+		frame.setTitle(trainID);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frame.setContentPane(contentPane);

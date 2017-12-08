@@ -66,15 +66,16 @@ public class TrainControllerGUI {
 		ready = true;
 		guiList = new ArrayList<TrnControllerGUI>();
 		buttonList = new ArrayList<JButton>();
-		yCount = 110;
-		height = 400;
-		logoHeight = 280;
+		yCount = 60;
+		height = 360;
+		logoHeight = 240;
 		
 		Font standardFont = new Font("Lucida Grande", Font.PLAIN, 16);
 		
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setBounds(100, 500, 450, height);
+		frame.setTitle("Train Controller");
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frame.setContentPane(contentPane);
@@ -83,19 +84,19 @@ public class TrainControllerGUI {
 		Border blackline = BorderFactory.createLineBorder(Color.black);
 		
 		panel = new JPanel();
-		panel.setBounds(259, 63, 162, 196);
+		panel.setBounds(259, 15, 162, 196);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		panel.setBorder(blackline);
 		
-		JLabel titleLabel = new JLabel("Train Controller Module");
+		/*JLabel titleLabel = new JLabel("Train Controller Module");
 		titleLabel.setFont(new Font("Lucida Grande", Font.BOLD, 20));
 		titleLabel.setBounds(95, 15, 253, 42);
-		contentPane.add(titleLabel);
+		contentPane.add(titleLabel);*/
 		
 		JLabel activeLabel = new JLabel("Active Trains");
 		activeLabel.setFont(standardFont);
-		activeLabel.setBounds(51, 63, 117, 32);
+		activeLabel.setBounds(51, 15, 117, 32);
 		contentPane.add(activeLabel);
 		
 		JLabel controllerLabel = new JLabel("PI Controller\n");
