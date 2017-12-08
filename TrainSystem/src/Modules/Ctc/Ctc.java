@@ -45,6 +45,8 @@ public class Ctc implements Module,TimeControl {
 	public TrainModel trainModel = null;
 	public TrainController trainController = null;
 	
+	int testTrainNum = 0;
+	
 	public Ctc() {
 		ctc = this;
 
@@ -234,7 +236,7 @@ public class Ctc implements Module,TimeControl {
 	 */
 	public void testDispatch() {
 		play();
-		String testName = "Train4Training";
+		String testName = "TestTrain"+testTrainNum++;
 		Schedule schedule = new Schedule(Line.GREEN);
 		schedule.departureTime = new SimTime("11:11:11");
 		schedule.name = testName;
