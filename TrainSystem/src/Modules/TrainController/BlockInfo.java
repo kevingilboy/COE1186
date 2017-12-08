@@ -11,9 +11,9 @@ public class BlockInfo
 	private boolean positiveDirection;
 	private boolean negativeDirection;
 	
-	public final double SPEEDCONVERSION = 2.23694;			//1 m/s = 2.23694 mph
+	public final double SPEEDCONVERSION = 3.6;			//1 m/s = 3.6 kph
 	
-	public BlockInfo(double s, boolean u, String str, boolean pd, boolean nd, int d)	//speed limit input is mph
+	public BlockInfo(double s, boolean u, String str, boolean pd, boolean nd, int d)	//speed limit input is kph
 	{
 		speedLimit = (s / SPEEDCONVERSION);
 		underground = u;

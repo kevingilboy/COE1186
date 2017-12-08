@@ -741,7 +741,6 @@ public class TrackModelGUI implements ActionListener{
 		currentDisplay = redLineDisplay;
 
 		comboBox_selectTrack.addItem("RED LINE");
-		comboBox_selectTrack.setSelectedItem("RED LINE");
 
 		trackModel.setTrack("green", (new TrackCsvParser()).parse("Modules/TrackModel/Track Layout/GreenLineFinal.csv"));
 		trackSelected = trackModel.getTrack("green");
