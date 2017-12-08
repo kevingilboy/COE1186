@@ -157,6 +157,8 @@ public class TrainModelGUI extends JFrame {
 	private final JMenuItem mntmExit = new JMenuItem("Exit All");
 	private Image ledImage = new ImageIcon(this.getClass().getResource("greyStatusIcon.png")).getImage();
 	private Image ledImageRed = new ImageIcon(this.getClass().getResource("redStatusIcon.png")).getImage();
+	private Image ad1 = new ImageIcon(this.getClass().getResource("ad1.jpg")).getImage();
+	private Image spongebob1 = new ImageIcon(this.getClass().getResource("spongebob1.jpg")).getImage();
 	private final JLabel ledImageLabel = new JLabel();
 	private final JLabel ledImageLabel2 = new JLabel();
 	private final JLabel ledImageLabel3 = new JLabel();
@@ -172,14 +174,14 @@ public class TrainModelGUI extends JFrame {
 	}*/
 	
 	public void paint(Graphics g) {
-		 	Dimension d = this.getSize();
+		 	Dimension d = contentPane.getSize();
 	        super.paint(g);  // fixes the immediate problem.
 	        Graphics2D g2 = (Graphics2D) g;
 	        horizontalLine1 = new Line2D.Float(45, d.height-290, d.width - 45, d.height-290);
 	        verticalLine1 = new Line2D.Float(d.width/3 - 10, 100 , d.width/3 - 10, d.height - 325);
 	        verticalLine2 = new Line2D.Float((2*d.width)/3-10, 100 , (2*d.width)/3-10, d.height - 325);
-	        verticalLine3 = new Line2D.Float(d.width/3 - 10, 390 , d.width/3 - 10, d.height - 45);
-	        verticalLine4 = new Line2D.Float((2*d.width)/3-10, 390 , (2*d.width)/3-10, d.height - 45);
+	        verticalLine3 = new Line2D.Float(d.width/3 - 10, 390 , d.width/3 - 10, d.height - 25);
+	        verticalLine4 = new Line2D.Float((2*d.width)/3-10, 390 , (2*d.width)/3-10, d.height - 25);
 
 	        //g2.setColor(Color.DARK_GRAY);
 	        g2.draw(horizontalLine1);
@@ -279,8 +281,17 @@ public class TrainModelGUI extends JFrame {
 		
 		advertisePane = new JPanel();
 		advertisePane.setBackground(Color.LIGHT_GRAY);
+		advertisePane.setLayout(new BorderLayout());
 		advertisePane.setBorder(new EmptyBorder(5,5,5,5));
 		//contentPane.add(advertisePane);
+		
+		
+		JLabel advertisementImageLabel = new JLabel();
+		advertisementImageLabel.setBounds(0, 0, 1050, 200);
+		Image dimg = spongebob1.getScaledInstance(advertisementImageLabel.getWidth(), advertisementImageLabel.getHeight(),
+		        Image.SCALE_SMOOTH);
+		advertisementImageLabel.setIcon(new ImageIcon(dimg));
+		advertisePane.add(advertisementImageLabel);
 		
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);  // we want it to split the window verticaly
         splitPane.setDividerLocation(650);                    // the initial position of the divider is 200 (our window is 400 pixels high)
