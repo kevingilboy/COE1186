@@ -409,11 +409,11 @@ public class Ctc implements Module,TimeControl {
 		//-------------------
 		// Return the found path as the authority
 		//-------------------
-		for(int j=1; j<path.size(); j++) {
+		/*for(int j=1; j<path.size(); j++) {
 			int i = path.get(j);
 			System.out.print(train.line.blocks[i].getSection()+Integer.toString(i+1)+", ");
 		}
-		System.out.println("");
+		System.out.println("");*/
 		return path;
 	}
 	
