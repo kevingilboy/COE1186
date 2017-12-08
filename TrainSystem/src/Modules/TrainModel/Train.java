@@ -54,6 +54,7 @@ public class Train {
     public final double KG_PER_POUND = 0.454; 
     public final String DEGREE = "\u00b0";
     public final double MS_TO_MPH = 2.23694;
+    public final double KPH_TO_MPH = 0.62137119;
     
     public final int APPROACHING = 0;
     public final int ARRIVING = 1;
@@ -288,7 +289,7 @@ public class Train {
      	this.trainModelGUI.numPassengers.setText(Integer.toString(this.numPassengers));
      	this.trainModelGUI.numCarsSpinner.setText(Integer.toString(this.trainCars));
      	this.trainModelGUI.authorityVal.setText(Double.toString(truncateTo(this.CTCAuthority/METERS_PER_MILE,2)));
-     	this.trainModelGUI.ctcSpeedLabel.setText(Double.toString(truncateTo(this.CTCSpeed*MS_TO_MPH,2)));
+     	this.trainModelGUI.ctcSpeedLabel.setText(Double.toString(truncateTo(this.CTCSpeed*KPH_TO_MPH,2)));
      	
      	if(serviceBrake) {
      		this.trainModelGUI.serviceLabel.setText("ON");
@@ -702,8 +703,7 @@ public class Train {
      */
     public void setNumDeparting() {
     	Random rand = new Random();
-
-    	int  n = rand.nextInt(this.numPassengers);
+    	int  n = rand.nextInt(this.numPassengers+1);
     	if (this.numPassengers - n <= 0) {
     		this.numPassengers = 0;
     		//return this.numPassengers;
