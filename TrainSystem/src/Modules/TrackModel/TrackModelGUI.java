@@ -643,10 +643,18 @@ public class TrackModelGUI implements ActionListener{
 				}
 			}
 
-			if (block.getSwitch().getState() == Switch.STATE_NORMAL){
-				icon_switchState.setIcon(new ImageIcon("Modules/TrackModel/images/switch_normal.png"));
-			} else if (block.getSwitch().getState() == Switch.STATE_ALTERNATE){
-				icon_switchState.setIcon(new ImageIcon("Modules/TrackModel/images/switch_alternate.png"));
+			if (block.getSwitch().getTailType() == Switch.TAIL_TYPE_NORMAL){
+				if (block.getSwitch().getState() == Switch.STATE_NORMAL){
+					icon_switchState.setIcon(new ImageIcon("Modules/TrackModel/images/switch_normal.png"));
+				} else if (block.getSwitch().getState() == Switch.STATE_ALTERNATE){
+					icon_switchState.setIcon(new ImageIcon("Modules/TrackModel/images/switch_alternate.png"));
+				}
+			} else {
+				if (block.getSwitch().getState() == Switch.STATE_ALTERNATE){
+					icon_switchState.setIcon(new ImageIcon("Modules/TrackModel/images/switch_normal.png"));
+				} else if (block.getSwitch().getState() == Switch.STATE_NORMAL){
+					icon_switchState.setIcon(new ImageIcon("Modules/TrackModel/images/switch_alternate.png"));
+				}
 			}
 
 		} else {
