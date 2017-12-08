@@ -26,31 +26,38 @@ import java.awt.event.MouseEvent;
 import java.awt.List;
 import javax.swing.JComboBox;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.Timer;
+import java.text.DecimalFormat;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JFileChooser;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.ItemSelectable;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.text.DecimalFormat;
-import javax.swing.Timer;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import java.util.*;
 
 @SuppressWarnings("unchecked")
 public class TrackModelGUI implements ActionListener{
-	// Conversion Factors
+	
+	/**
+	 * CONVERSION FACTORS FOR DISPLAY
+	 */
 	private final double METERS_TO_YARDS_FACTOR = 1.09361;
 	private final double KPH_TO_MPH_FACTOR = 0.621371;
 
-	// Track Model references
+	/**
+	 * TRACK MODEL REFERENCES
+	 */
 	private TrackModel trackModel;
 	private ArrayList<Block> trackSelected;
 	public Block blockSelected;
 
-	// GUI Components
+	/**
+	 * GUI COMPONENTS
+	 */
 	Timer infoRefreshTimer;
 
 	private JFrame frame_tmGUI;
@@ -79,25 +86,15 @@ public class TrackModelGUI implements ActionListener{
 	JLabel icon_trackCircuitFailure;
 	String selectedFailure = "RAIL FAILURE";
 
-	// GUI references
+	/**
+	 * DYNAMIC DISPLAY GUI REFERENCES
+	 */
 	public DynamicDisplay greenLineDisplay; // = new DynamicDisplay(greenLineBlocks);
 	public DynamicDisplay redLineDisplay;
 	public DynamicDisplay currentDisplay;
 
-	// Render fonts
-	Font font_10_plain = new Font("Geneva", Font.PLAIN, 10);
-	Font font_14_plain = new Font("Geneva", Font.PLAIN, 14);
-	Font font_16_plain = new Font("Geneva", Font.PLAIN, 16);
-	Font font_20_plain = new Font("Geneva", Font.PLAIN, 20);
-
-	Font font_10_bold = new Font("Geneva", Font.BOLD, 10);
-	Font font_14_bold = new Font("Geneva", Font.BOLD, 14);
-	Font font_16_bold = new Font("Geneva", Font.BOLD, 16);
-	Font font_20_bold = new Font("Geneva", Font.BOLD, 20);
-	Font font_24_bold = new Font("Geneva", Font.BOLD, 24);
-
 	/**
-	 * Create the application.
+	 * GUI CONSTRUCTOR
 	 */
 	public TrackModelGUI(TrackModel trackModel){
 		this.trackModel = trackModel;
@@ -109,7 +106,26 @@ public class TrackModelGUI implements ActionListener{
 	}
 
 	/**
-	 * Initialize the look and feel
+	 * <COMMON AESTHETICS>
+	 * ALLOWABLE FONTS
+	 */
+	
+	// PLAIN-style fonts
+	Font font_10_plain = new Font("Geneva", Font.PLAIN, 10);
+	Font font_14_plain = new Font("Geneva", Font.PLAIN, 14);
+	Font font_16_plain = new Font("Geneva", Font.PLAIN, 16);
+	Font font_20_plain = new Font("Geneva", Font.PLAIN, 20);
+
+	// BOLD-style fonts
+	Font font_10_bold = new Font("Geneva", Font.BOLD, 10);
+	Font font_14_bold = new Font("Geneva", Font.BOLD, 14);
+	Font font_16_bold = new Font("Geneva", Font.BOLD, 16);
+	Font font_20_bold = new Font("Geneva", Font.BOLD, 20);
+	Font font_24_bold = new Font("Geneva", Font.BOLD, 24);
+
+	/**
+	 * <COMMON AESTHETICS>
+	 * SET LOOK AND FEEL
 	 */
 	public void setLookAndFeel(){
 		try {
@@ -120,31 +136,45 @@ public class TrackModelGUI implements ActionListener{
 	}
 
 	/**
+	 * <COMMON AESTHETICS>
+	 * STANDARD BUTTON WRAPPER
+	 */
+	public void stylizeButton(JButton b){
+		b.setFocusPainted(false);
+		b.setFont(font_14_bold);
+		b.setForeground(Color.WHITE);
+		b.setBackground(new Color(102, 0, 153)); // Purple
+	}
+
+	public void stylizeComboBox(JComboBox c){
+		c.setFont(font_14_bold);
+		((JLabel)c.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
+		c.setForeground(Color.BLACK);
+		c.setBackground(Color.WHITE);
+	}
+
+	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
 		// OVERALL FRAME
 		frame_tmGUI = new JFrame();
 		frame_tmGUI.setTitle("Track Model View");
-		frame_tmGUI.getContentPane().setBackground(new Color(50, 50, 50));
+		frame_tmGUI.getContentPane().setBackground(new Color(35, 35, 35));
 		frame_tmGUI.setBounds(100, 100, 1080, 560);
 		frame_tmGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame_tmGUI.getContentPane().setLayout(null);
 		
 		// TRACK IMPORT BUTTON
 		JButton button_importTrack = new JButton("IMPORT TRACK");
-		button_importTrack.setFocusPainted(false);
-		button_importTrack.setFont(font_14_bold);
-		button_importTrack.setForeground(new Color(255, 255, 255));
-		button_importTrack.setBackground(new Color(102, 0, 153));
+		stylizeButton(button_importTrack);
 		button_importTrack.setBounds(16, 16, 160, 30);
 		button_importTrack.addActionListener(new OpenL()); // OPEN FILE NAVIGATOR
 		frame_tmGUI.getContentPane().add(button_importTrack);
 
 		// DROP DOWN MENU OF IMPORTED TRACKS
 		comboBox_selectTrack = new JComboBox();
-		comboBox_selectTrack.setForeground(Color.BLACK);
-		comboBox_selectTrack.setBackground(Color.WHITE);
+		stylizeComboBox(comboBox_selectTrack);
 		comboBox_selectTrack.setBounds(183, 16, 168, 30);
 
 		ItemListener trackSelectionListener = new ItemListener() {
@@ -260,6 +290,8 @@ public class TrackModelGUI implements ActionListener{
 		frame_tmGUI.getContentPane().add(label_selectSectionId);
 
 		comboBox_sectionId = new JComboBox();
+		comboBox_sectionId.setFont(font_14_bold);
+		((JLabel) comboBox_sectionId.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
 		comboBox_sectionId.setForeground(Color.BLACK);
 		comboBox_sectionId.setBackground(Color.WHITE);
 		comboBox_sectionId.setBounds(520, 116, 76, 30);
@@ -559,6 +591,8 @@ public class TrackModelGUI implements ActionListener{
 		frame_tmGUI.getContentPane().add(button_toggle);
 
 		JComboBox comboBox_failures = new JComboBox();
+		((JLabel) comboBox_failures.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
+		comboBox_failures.setFont(font_14_bold);
 		comboBox_failures.setBackground(Color.WHITE);
 		comboBox_failures.setBounds(380, 441, 158, 52);
 		comboBox_failures.addItem("RAIL FAILURE");
