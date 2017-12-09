@@ -159,12 +159,13 @@ public class TrainControllerGUI {
 		guiList = new ArrayList<TrnControllerGUI>();
 		buttonList = new ArrayList<JButton>();
 		yCount = 60;
-		height = 360;
+		height = 380;
 		logoHeight = 240;
 		
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setBounds(100, 500, 450, height);
+		frame.setResizable(false);
+		frame.setBounds(100, 500, 444, height);
 		frame.setTitle("Train Controller");
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(35, 35, 35));
@@ -282,7 +283,7 @@ public class TrainControllerGUI {
 		
 		JLabel L = new JLabel(g.getId());
 		stylizeInfoLabel_Bold(L);
-		L.setBounds(30, yCount + 8, 61, 24);
+		L.setBounds(30, yCount + 8, 100, 24);
 		contentPane.add(L);
 		
 		JButton B = new JButton("View");
@@ -296,7 +297,7 @@ public class TrainControllerGUI {
 				I.setVisible(true);
 			}
 		});
-		B.setBounds(120, yCount, 80, 37);
+		B.setBounds(150, yCount, 70, 37);
 		B.setVisible(true);
 		B.setEnabled(true);
 		contentPane.add(B);

@@ -124,6 +124,13 @@ public class TrnControllerGUI {
 		b.setBackground(new Color(102, 0, 153)); // Purple
 	}
 
+	public void stylizeButton_Disabled(JButton b){
+		b.setFocusPainted(false);
+		b.setFont(font_14_bold);
+		b.setForeground(Color.GRAY);
+		b.setBackground(new Color(50, 0, 70));
+	}
+
 	public void stylizeComboBox(JComboBox c){
 		c.setFont(font_14_bold);
 		((JLabel)c.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
@@ -194,7 +201,7 @@ public class TrnControllerGUI {
 		
 		JLabel speedLabel = new JLabel("CURRENT SPEED:");
 		stylizeInfoLabel(speedLabel);
-		speedLabel.setBounds(20, 75, 127, 26);
+		speedLabel.setBounds(20, 75, 150, 26);
 		contentPane.add(speedLabel);
 		
 		speedValue = new JLabel(speed + "mi/h");
@@ -204,7 +211,7 @@ public class TrnControllerGUI {
 		
 		JLabel newSpeedLabel = new JLabel("NEW SPEED:");
 		stylizeInfoLabel(newSpeedLabel);
-		newSpeedLabel.setBounds(20, 114, 109, 26);
+		newSpeedLabel.setBounds(20, 114, 150, 26);
 		contentPane.add(newSpeedLabel);
 		
 		newSpeedField = new JTextField();
@@ -216,7 +223,7 @@ public class TrnControllerGUI {
 		
 		JLabel newSpeedUnitLabel = new JLabel("mi/h");
 		stylizeInfoLabel(newSpeedUnitLabel);
-		newSpeedUnitLabel.setBounds(290, 113, 61, 26);
+		newSpeedUnitLabel.setBounds(274, 113, 61, 26);
 		contentPane.add(newSpeedUnitLabel);
 		
 		speedSet = new JButton("SET NEW SPEED");
@@ -231,7 +238,7 @@ public class TrnControllerGUI {
 						if (d > speedLimit) {
 							d = speedLimit;
 						}
-						setpointValue.setText(newSpeedField.getText() + " mi/hr");
+						setpointValue.setText(newSpeedField.getText() + " mi/h");
 						newSpeedField.setText("");
 						setpoint = d;
 						controller.setSetpointSpeed(setpoint / SPEEDCONVERSION);
@@ -247,7 +254,7 @@ public class TrnControllerGUI {
 		
 		JLabel setpointLabel = new JLabel("SETPOINT SPEED:");
 		stylizeInfoLabel(setpointLabel);
-		setpointLabel.setBounds(20, 201, 127, 26);
+		setpointLabel.setBounds(20, 201, 150, 26);
 		contentPane.add(setpointLabel);
 		
 		setpointValue = new JLabel(setpoint + " mi/h");
@@ -257,7 +264,7 @@ public class TrnControllerGUI {
 		
 		JLabel powerLabel = new JLabel("POWER OUTPUT:");
 		stylizeInfoLabel(powerLabel);
-		powerLabel.setBounds(20, 239, 127, 26);
+		powerLabel.setBounds(20, 239, 150, 26);
 		contentPane.add(powerLabel);
 		
 		powerValue = new JLabel(power + " kW");
@@ -265,7 +272,7 @@ public class TrnControllerGUI {
 		powerValue.setBounds(183, 242, 151, 22);
 		contentPane.add(powerValue);
 		
-		JLabel authorityLabel = new JLabel("CURRENT AUTHORITY:");
+		JLabel authorityLabel = new JLabel("CURRENT AUTH.:");
 		stylizeInfoLabel(authorityLabel);
 		authorityLabel.setBounds(20, 277, 151, 26);
 		contentPane.add(authorityLabel);
@@ -277,7 +284,7 @@ public class TrnControllerGUI {
 		
 		JLabel temperatureLabel = new JLabel("TEMPERATURE:");
 		stylizeInfoLabel(temperatureLabel);
-		temperatureLabel.setBounds(20, 315, 112, 21);
+		temperatureLabel.setBounds(20, 315, 150, 21);
 		contentPane.add(temperatureLabel);
 		
 		tempField = new JTextField();
@@ -289,7 +296,7 @@ public class TrnControllerGUI {
 		
 		JLabel tempUnitLabel = new JLabel("F");
 		stylizeInfoLabel(tempUnitLabel);
-		tempUnitLabel.setBounds(288, 316, 80, 16);
+		tempUnitLabel.setBounds(275, 316, 80, 16);
 		contentPane.add(tempUnitLabel);
 		
 		tempSet = new JButton("SET");
@@ -325,7 +332,8 @@ public class TrnControllerGUI {
 		
 		JLabel sBrakesLabel = new JLabel("SERVICE BREAKS");
 		stylizeInfoLabel(sBrakesLabel);
-		sBrakesLabel.setBounds(376, 89, 200, 37);
+		sBrakesLabel.setHorizontalAlignment(JLabel.CENTER);
+		sBrakesLabel.setBounds(374, 89, 184, 37);
 		contentPane.add(sBrakesLabel);
 		
 		serviceBtn = new JButton();
@@ -348,12 +356,13 @@ public class TrnControllerGUI {
 				}
 			}
 		});
-		serviceBtn.setBounds(374, 120, 185, 37);
+		serviceBtn.setBounds(374, 120, 184, 37);
 		contentPane.add(serviceBtn);
 		
 		JLabel eBrakesLabel = new JLabel("EMERGENCY BRAKES");
 		stylizeInfoLabel(eBrakesLabel);
-		eBrakesLabel.setBounds(376, 153, 200, 37);
+		eBrakesLabel.setHorizontalAlignment(JLabel.CENTER);
+		eBrakesLabel.setBounds(374, 153, 184, 37);
 		contentPane.add(eBrakesLabel);
 		
 		emergencyBtn = new JButton();
@@ -376,12 +385,13 @@ public class TrnControllerGUI {
 				}
 			}
 		});
-		emergencyBtn.setBounds(374, 184, 185, 37);
+		emergencyBtn.setBounds(374, 184, 184, 37);
 		contentPane.add(emergencyBtn);
 		
 		JLabel rightDoorLabel = new JLabel("RIGHT DOORS");
 		stylizeInfoLabel(rightDoorLabel);
-		rightDoorLabel.setBounds(376, 216, 200, 37);
+		rightDoorLabel.setHorizontalAlignment(JLabel.CENTER);
+		rightDoorLabel.setBounds(374, 216, 184, 37);
 		contentPane.add(rightDoorLabel);
 		
 		rightBtn = new JButton();
@@ -407,12 +417,13 @@ public class TrnControllerGUI {
 				}
 			}
 		});
-		rightBtn.setBounds(374, 246, 185, 37);
+		rightBtn.setBounds(374, 246, 184, 37);
 		contentPane.add(rightBtn);
 		
 		JLabel leftDoorLabel = new JLabel("LEFT DOORS");
 		stylizeInfoLabel(leftDoorLabel);
-		leftDoorLabel.setBounds(376, 277, 200, 37);
+		leftDoorLabel.setHorizontalAlignment(JLabel.CENTER);
+		leftDoorLabel.setBounds(374, 277, 184, 37);
 		contentPane.add(leftDoorLabel);
 		
 		leftBtn = new JButton();
@@ -438,12 +449,13 @@ public class TrnControllerGUI {
 				}
 			}
 		});
-		leftBtn.setBounds(374, 309, 185, 37);
+		leftBtn.setBounds(374, 309, 184, 37);
 		contentPane.add(leftBtn);
 		
 		JLabel lightLabel = new JLabel("LIGHTS");
 		stylizeInfoLabel(lightLabel);
-		lightLabel.setBounds(376, 341, 200, 37);
+		lightLabel.setHorizontalAlignment(JLabel.CENTER);
+		lightLabel.setBounds(376, 341, 184, 37);
 		contentPane.add(lightLabel);
 		
 		lightBtn = new JButton();
@@ -466,12 +478,13 @@ public class TrnControllerGUI {
 				}
 			}
 		});
-		lightBtn.setBounds(374, 374, 185, 37);
+		lightBtn.setBounds(374, 374, 184, 37);
 		contentPane.add(lightBtn);
 		
 		JLabel modeLabel = new JLabel("DRIVING MODE");
-		stylizeInfoLabel_Bold(modeLabel);
-		modeLabel.setBounds(376, 20, 200, 37);
+		stylizeInfoLabel(modeLabel);
+		modeLabel.setHorizontalAlignment(JLabel.CENTER);
+		modeLabel.setBounds(374, 20, 185, 37);
 		contentPane.add(modeLabel);
 		
 		modeBtn = new JButton();
@@ -551,6 +564,15 @@ public class TrnControllerGUI {
 			rightBtn.setEnabled(true);
 			leftBtn.setEnabled(true);
 			lightBtn.setEnabled(true);
+
+			stylizeButton(speedSet);
+			stylizeButton(tempSet);
+			stylizeButton(serviceBtn);
+			stylizeButton(emergencyBtn);
+			stylizeButton(rightBtn);
+			stylizeButton(leftBtn);
+			stylizeButton(lightBtn);
+
 			tempField.setEnabled(true);
 			newSpeedField.setEnabled(true);
 		}
@@ -564,6 +586,14 @@ public class TrnControllerGUI {
 			lightBtn.setEnabled(false);
 			tempField.setEnabled(false);
 			newSpeedField.setEnabled(false);
+
+			stylizeButton_Disabled(speedSet);
+			stylizeButton_Disabled(tempSet);
+			stylizeButton_Disabled(serviceBtn);
+			stylizeButton_Disabled(emergencyBtn);
+			stylizeButton_Disabled(rightBtn);
+			stylizeButton_Disabled(leftBtn);
+			stylizeButton_Disabled(lightBtn);
 		}
 		frame.repaint();
 		return true;
