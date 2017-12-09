@@ -41,7 +41,153 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.EtchedBorder;
 
+// UI STYLING
+import java.awt.GraphicsEnvironment;
+import java.awt.EventQueue;
+import java.awt.event.*;
+import java.io.*;
+import javax.swing.border.*;
+import java.awt.FontFormatException;
+import javax.swing.JComboBox;
+import javax.swing.UIManager;
+import javax.swing.SwingConstants;
+import java.awt.Color;
+import javax.swing.JTextField;
+import java.awt.Insets;
+
 public class CtcGui {
+
+	/*-------------------------------------------------------------------*/
+	/**
+	 * <COMMON AESTHETICS>
+	 * ALLOWABLE FONTS
+	 */
+	
+	Font font_14_bold = new Font("Roboto Condensed", Font.BOLD, 16);
+	Font font_16_bold = new Font("Roboto Condensed", Font.BOLD, 20);
+	Font font_20_bold = new Font("Roboto Condensed Bold", Font.BOLD, 28);
+	Font font_24_bold = new Font("Roboto Condensed", Font.BOLD, 38);
+
+	/**
+	 * <COMMON AESTHETICS>
+	 * SET LOOK AND FEEL - CALL THIS FIRST!!!
+	 */
+	public void setLookAndFeel(){
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+			UIManager.getDefaults().put("TabbedPane.contentBorderInsets", new Insets(0,0,0,0));
+			UIManager.getDefaults().put("TabbedPane.tabsOverlapBorder", true);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+
+		try {
+		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Bold.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-BoldItalic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Italic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Regular.ttf")));
+
+		    System.out.println("Loaded custom fonts!");
+		} catch (IOException|FontFormatException e) {
+		    System.out.println("HssVisualizer Error: Cannot load custom font.");
+		}
+	}
+
+	/**
+	 * <COMMON AESTHETICS>
+	 * STANDARD BUTTON, COMBOBOX, LABEL WRAPPERS
+	 */
+	public void stylizeButton(JButton b){
+		b.setFocusPainted(false);
+		b.setFont(font_14_bold);
+		b.setForeground(Color.WHITE);
+		b.setBackground(new Color(102, 0, 153)); // Purple
+	}
+
+	public void stylizeButton_Disabled(JButton b){
+		b.setFocusPainted(false);
+		b.setFont(font_14_bold);
+		b.setForeground(Color.GRAY);
+		b.setBackground(new Color(50, 0, 70));
+	}
+
+	public void stylizeToggleButton(JToggleButton b){
+		b.setFocusPainted(false);
+		b.setFont(font_14_bold);
+		b.setForeground(Color.WHITE);
+		b.setBackground(new Color(102, 0, 153)); // Purple
+	}
+
+	public void stylizeToggleButton_Disabled(JToggleButton b){
+		b.setFocusPainted(false);
+		b.setFont(font_14_bold);
+		b.setForeground(Color.GRAY);
+		b.setBackground(new Color(50, 0, 70));
+	}
+
+	public void stylizeComboBox(JComboBox c){
+		c.setFont(font_14_bold);
+		((JLabel)c.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
+		c.setForeground(Color.BLACK);
+		c.setBackground(Color.WHITE);
+	}
+
+	public void stylizeTextField(JTextField t){
+		t.setFont(font_14_bold);
+		t.setForeground(Color.BLACK);
+		t.setBackground(Color.WHITE);
+		t.setHorizontalAlignment(JTextField.CENTER);
+	}
+
+	public void stylizeScrollPane(JScrollPane s){
+		s.getViewport().setBackground(new Color(45, 45, 45));
+		Border b = BorderFactory.createEmptyBorder(0, 0, 0, 0);
+		s.setFont(font_16_bold);
+		s.setBorder(b);
+	}
+
+	public void stylizeTable(JTable t){
+		t.getTableHeader().setFont(font_14_bold);
+		t.getTableHeader().setBackground(new Color(20, 20, 20));
+		t.getTableHeader().setForeground(Color.WHITE);
+		t.getTableHeader().setReorderingAllowed(false);
+
+		t.setFont(font_14_bold);
+	}
+
+	public void stylizeTabbedPane(JTabbedPane t){
+		t.setFont(font_16_bold);
+		t.setBackground(Color.DARK_GRAY);
+		t.setForeground(Color.BLACK);
+	}
+
+	public void stylizeHeadingLabel(JLabel l){
+		l.setFont(font_20_bold);
+		l.setForeground(Color.WHITE);
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+	}
+
+	public void stylizeInfoLabel(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
+		l.setFont(font_16_bold);
+	}
+
+	public void stylizeInfoLabel_Bold(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.RIGHT);
+		l.setForeground(new Color(234, 201, 87));
+		l.setFont(font_16_bold);
+	}
+
+	public void stylizeInfoLabel_Small(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
+		l.setFont(font_14_bold);
+	}
+	/*-------------------------------------------------------------------*/
+
+
 	private Ctc ctc;
 
 	private JFrame frame;
@@ -115,9 +261,7 @@ public class CtcGui {
 	public CtcGui(Ctc ctc) {
 		this.ctc = ctc;
 		try {
-			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-		} catch (Throwable e) {
-			e.printStackTrace();
+			setLookAndFeel();
 		}
 		finally{
 			initialize();
@@ -136,29 +280,34 @@ public class CtcGui {
 		frame.setVisible(true);
 		frame.setTitle("CTC");
 		frame.setBounds(100, 100, GUI_WINDOW_WIDTH, GUI_WINDOW_HEIGHT);
+		frame.setBackground(Color.BLACK);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Container contentPane = frame.getContentPane();
+		contentPane.setBackground(new Color(35, 35, 35));
 		contentPane.setLayout(null);
 		
 		JSeparator horizontalBar = new JSeparator();
-		horizontalBar.setBackground(Color.BLACK);
+		horizontalBar.setBackground(new Color(50, 50, 50));
+		horizontalBar.setForeground(new Color(50, 50, 50));
 		horizontalBar.setBounds(45, 128, 1300, 2);
 		frame.getContentPane().add(horizontalBar);
 		
 		JSeparator horizontalBar2 = new JSeparator();
-		horizontalBar2.setBackground(Color.BLACK);
-		horizontalBar2.setBounds(45, 625, 1300, 2);
+		horizontalBar2.setBackground(new Color(50, 50, 50));
+		horizontalBar2.setForeground(new Color(50, 50, 50));
 		frame.getContentPane().add(horizontalBar2);
 		
 		JSeparator leftVerticalBar = new JSeparator();
 		leftVerticalBar.setOrientation(SwingConstants.VERTICAL);
-		leftVerticalBar.setBackground(Color.BLACK);
+		leftVerticalBar.setBackground(new Color(50, 50, 50));
+		leftVerticalBar.setForeground(new Color(50, 50, 50));
 		leftVerticalBar.setBounds(450, 148, 2, 440);
 		frame.getContentPane().add(leftVerticalBar);
 		
 		JSeparator rightVerticalBar = new JSeparator();
 		rightVerticalBar.setOrientation(SwingConstants.VERTICAL);
-		rightVerticalBar.setBackground(Color.BLACK);
+		rightVerticalBar.setBackground(new Color(50, 50, 50));
+		rightVerticalBar.setForeground(new Color(50, 50, 50));
 		rightVerticalBar.setBounds(920, 148, 2, 440);
 		frame.getContentPane().add(rightVerticalBar);
 		
@@ -166,43 +315,50 @@ public class CtcGui {
 		 * TOP BAR
 		 */
 		
+		stylizeHeadingLabel(clockLabel);
 		clockLabel.setFont(new Font("Courier New",Font.BOLD,28));
 		clockLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		clockLabel.setBounds(592, -1, 200, 44);
 		contentPane.add(clockLabel);
 		
-		JLabel lblThroughput = new JLabel("Throughput: ");
-		lblThroughput.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		JLabel lblThroughput = new JLabel("THROUGHPUT: ");
+		stylizeInfoLabel_Small(lblThroughput);
 		lblThroughput.setBounds(631, 95, 98, 33);
 		contentPane.add(lblThroughput);
 		
 		lblThroughputAmt = new JLabel("###");
+		stylizeInfoLabel_Bold(lblThroughputAmt);
+		lblThroughputAmt.setHorizontalAlignment(SwingConstants.LEFT);
 		lblThroughputAmt.setBounds(724, 97, 89, 33);
 		contentPane.add(lblThroughputAmt);
 		
-		btnPlay = new JButton("<html><center>Play</center></html>");
+		btnPlay = new JButton("<html><center>PLAY</center></html>");
 		btnPlay.setEnabled(true);
 		btnPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnPause.setEnabled(true);
+				stylizeButton(btnPause);
 				btnPlay.setEnabled(false);
+				stylizeButton_Disabled(btnPlay);
 				ctc.play();
 			}
 		});
-		btnPlay.setFont(new Font("Dialog", Font.PLAIN, 16));
+		stylizeButton(btnPlay);
 		btnPlay.setBounds(612, 35, 82, 32);
 		frame.getContentPane().add(btnPlay);
 		
-		btnPause = new JButton("<html><center>Pause</center></html>");
+		btnPause = new JButton("<html><center>PAUSE</center></html>");
 		btnPause.setEnabled(false);
+		stylizeButton_Disabled(btnPause);
 		btnPause.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnPause.setEnabled(false);
+				stylizeButton_Disabled(btnPause);
 				btnPlay.setEnabled(true);
+				stylizeButton(btnPlay);
 				ctc.pause();
 			}
 		});
-		btnPause.setFont(new Font("Dialog", Font.PLAIN, 16));
 		btnPause.setBounds(690, 35, 82, 32);
 		frame.getContentPane().add(btnPause);
 		
@@ -214,7 +370,7 @@ public class CtcGui {
 				ctc.setSpeedup(availableSpeedups[currentSpeedupIndex]);
 			}
 		});
-		btnIncSpeed.setFont(new Font("Dialog", Font.PLAIN, 16));
+		stylizeButton(btnIncSpeed);
 		btnIncSpeed.setBounds(712, 68, 60, 32);
 		frame.getContentPane().add(btnIncSpeed);
 		
@@ -226,11 +382,12 @@ public class CtcGui {
 				ctc.setSpeedup(availableSpeedups[currentSpeedupIndex]);
 			}
 		});
-		btnDecSpeed.setFont(new Font("Dialog", Font.PLAIN, 16));
+		stylizeButton(btnDecSpeed);
 		btnDecSpeed.setBounds(612, 68, 60, 32);
 		frame.getContentPane().add(btnDecSpeed);
 		
 		lblSpeedup = new JLabel("1X");
+		stylizeInfoLabel_Bold(lblSpeedup);
 		lblSpeedup.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSpeedup.setBounds(673, 67, 39, 33);
 		frame.getContentPane().add(lblSpeedup);
@@ -239,7 +396,7 @@ public class CtcGui {
 		 * LEFT FRAME
 		 */
 		
-		JButton btnimportschedule = new JButton("<html><center>Import<br>Schedule</center></html>");
+		JButton btnimportschedule = new JButton("<html><center>IMPORT<br>SCHEDULE</center></html>");
 		btnimportschedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser fc = new JFileChooser();
@@ -250,36 +407,36 @@ public class CtcGui {
 				//TODO import CSV file and add schedule to queue
 			}
 		});
-		btnimportschedule.setFont(new Font("Dialog", Font.PLAIN, 16));
+		stylizeButton(btnimportschedule);
 		btnimportschedule.setBounds(144, 221, 163, 64);
 		frame.getContentPane().add(btnimportschedule);
 		
-		JLabel lblSelectedTrainsSchedule = new JLabel("Selected Train's Schedule");
+		JLabel lblSelectedTrainsSchedule = new JLabel("SELECTED TRAIN'S SCHEDULE");
+		stylizeInfoLabel(lblSelectedTrainsSchedule);
 		lblSelectedTrainsSchedule.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSelectedTrainsSchedule.setFont(new Font("SansSerif", Font.PLAIN, 18));
 		lblSelectedTrainsSchedule.setBounds(464, 367, 456, 33);
 		frame.getContentPane().add(lblSelectedTrainsSchedule);
 		
-		JLabel lblName = new JLabel("Name");
-		lblName.setFont(new Font("SansSerif", Font.ITALIC, 14));
-		lblName.setBounds(25, 344, 45, 33);
+		JLabel lblName = new JLabel("NAME");
+		stylizeInfoLabel_Small(lblName);
+		lblName.setBounds(25, 336, 45, 33);
 		frame.getContentPane().add(lblName);
 		
-		JLabel lblAutomatic = new JLabel("Automatic");
+		JLabel lblAutomatic = new JLabel("AUTOMATIC");
+		stylizeInfoLabel(lblAutomatic);
 		lblAutomatic.setHorizontalAlignment(SwingConstants.CENTER);
-		lblAutomatic.setFont(new Font("SansSerif", Font.PLAIN, 18));
 		lblAutomatic.setBounds(-14, 187, 477, 33);
 		frame.getContentPane().add(lblAutomatic);
 		
-		JLabel lblManual = new JLabel("Manual");
+		JLabel lblManual = new JLabel("MANUAL");
+		stylizeInfoLabel(lblManual);
 		lblManual.setHorizontalAlignment(SwingConstants.CENTER);
-		lblManual.setFont(new Font("SansSerif", Font.PLAIN, 18));
 		lblManual.setBounds(-14, 297, 477, 33);
 		frame.getContentPane().add(lblManual);
 		
-		JLabel lblManualTrainCreation = new JLabel("<html><u>Train Creation</u></htm>");
+		JLabel lblManualTrainCreation = new JLabel("<html>TRAIN CREATION</htm>");
+		stylizeHeadingLabel(lblManualTrainCreation);
 		lblManualTrainCreation.setHorizontalAlignment(SwingConstants.CENTER);
-		lblManualTrainCreation.setFont(new Font("SansSerif", Font.BOLD, 20));
 		lblManualTrainCreation.setBounds(-14, 142, 468, 33);
 		contentPane.add(lblManualTrainCreation);
 		
@@ -294,13 +451,14 @@ public class CtcGui {
 				enableTrainCreationComponents();
 			}
 		});
-		trainCreationName.setColumns(10);
+		stylizeTextField(trainCreationName);
+		trainCreationName.setColumns(12);
 		trainCreationName.setBounds(18, 366, 52, 39);
 		frame.getContentPane().add(trainCreationName);
 		
-		JLabel lblLine = new JLabel("Line");
-		lblLine.setFont(new Font("SansSerif", Font.ITALIC, 14));
-		lblLine.setBounds(102, 344, 45, 33);
+		JLabel lblLine = new JLabel("LINE");
+		stylizeInfoLabel_Small(lblLine);
+		lblLine.setBounds(102, 336, 45, 33);
 		contentPane.add(lblLine);
 			
 		trainCreationLine = new JComboBox<Line>();
@@ -327,12 +485,13 @@ public class CtcGui {
 			}
 		});
 		trainCreationLine.setModel(new DefaultComboBoxModel<Line>(Line.values()));
+		stylizeComboBox(trainCreationLine);
 		trainCreationLine.setBounds(80, 366, 80, 39);
 		contentPane.add(trainCreationLine);
 		
-		JLabel lblDepartAt = new JLabel("Depart @");
-		lblDepartAt.setFont(new Font("SansSerif", Font.ITALIC, 14));
-		lblDepartAt.setBounds(178, 344, 110, 33);
+		JLabel lblDepartAt = new JLabel("DEPART @");
+		stylizeInfoLabel_Small(lblDepartAt);
+		lblDepartAt.setBounds(178, 336, 110, 33);
 		contentPane.add(lblDepartAt);
 		
 		trainCreationDepartTime = new JTextField();
@@ -347,13 +506,14 @@ public class CtcGui {
 				enableTrainCreationComponents();
 			}
 		});
+		stylizeTextField(trainCreationDepartTime);
 		trainCreationDepartTime.setBounds(173, 366, 66, 39);
 		contentPane.add(trainCreationDepartTime);
-		trainCreationDepartTime.setColumns(10);
+		trainCreationDepartTime.setColumns(12);
 		
-		addToDispatchToQueue = new JButton("<html><center>Add Schedule<br>To Queue \u2192</center></html>");
+		addToDispatchToQueue = new JButton("<html><center>ADD SCHEDULE<br>TO QUEUE \u2192</center></html>");
 		addToDispatchToQueue.setEnabled(false);
-		addToDispatchToQueue.setFont(new Font("Dialog", Font.PLAIN, 16));
+		stylizeButton_Disabled(addToDispatchToQueue);
 		addToDispatchToQueue.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Schedule schedule = trainCreationTable.schedule;
@@ -370,24 +530,27 @@ public class CtcGui {
 				
 				trainCreationTable.setEnabled(false);
 				addToDispatchToQueue.setEnabled(false);
+				stylizeButton_Disabled(addToDispatchToQueue);
 			}
 		});
+		stylizeButton(addToDispatchToQueue);
 		addToDispatchToQueue.setBounds(251, 475, 171, 67);
 		contentPane.add(addToDispatchToQueue);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
+		stylizeScrollPane(scrollPane_1);
 		scrollPane_1.setEnabled(false);
-		scrollPane_1.setBounds(18, 403, 221, 210);
+		scrollPane_1.setBounds(18, 415, 221, 210);
 		contentPane.add(scrollPane_1);
 		
 		trainCreationTable = new ScheduleJTable();
+		stylizeTable(trainCreationTable);
 		trainCreationTable.setEnabled(false);
 		trainCreationTable.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent arg0) {
 				enableTrainCreationComponents();
 			}
 		});
-		trainCreationTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
 		scrollPane_1.setViewportView(trainCreationTable);
 		trainCreationTable.setSchedule(new Schedule((Line)trainCreationLine.getSelectedItem()));
 		enableTrainCreationComponents();
@@ -396,9 +559,9 @@ public class CtcGui {
 		 * MID FRAME
 		 */	
 		
-		JLabel lblQueue = new JLabel("<html><u>Queue</u></html>");
+		JLabel lblQueue = new JLabel("<html>QUEUE</html>");
+		stylizeHeadingLabel(lblQueue);
 		lblQueue.setHorizontalAlignment(SwingConstants.CENTER);
-		lblQueue.setFont(new Font("SansSerif", Font.BOLD, 20));
 		lblQueue.setBounds(450, 142, 472, 33);
 		contentPane.add(lblQueue);
 		
@@ -410,7 +573,9 @@ public class CtcGui {
 					queueDepartTime.setText("");
 					
 					btnDeleteQueueSchedule.setEnabled(false);
+					stylizeButton_Disabled(btnDeleteQueueSchedule);
 					btnDispatchQueueSchedule.setEnabled(false);
+					stylizeButton_Disabled(btnDispatchQueueSchedule);
 					
 					for(Line line : Line.values()) {
 						line.queueTable.clearSelection();
@@ -418,16 +583,17 @@ public class CtcGui {
 				}
 			}
 		});
-		queueTabbedPane.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		stylizeTabbedPane(queueTabbedPane);
 		queueTabbedPane.setBounds(489, 174, 406, 187);
 		contentPane.add(queueTabbedPane);
 		
 		for(Line line : Line.values()) {
 			JScrollPane scrollPane = new JScrollPane();
+			stylizeScrollPane(scrollPane);
 			queueTabbedPane.addTab(line.toString(), null, scrollPane, null);
 			line.queueData = new DefaultTableModel(queueTrainInitialData,queueTrainColumnNames);
 			line.queueTable = new JTable(line.queueData);
-			line.queueTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
+			stylizeTable(line.queueTable);
 			line.queueTable.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -437,7 +603,9 @@ public class CtcGui {
 					queueSelectedTable.setSchedule(schedule);
 					queueDepartTime.setText(schedule.departureTime.toString());
 					btnDeleteQueueSchedule.setEnabled(true);
+					stylizeButton(btnDeleteQueueSchedule);
 					btnDispatchQueueSchedule.setEnabled(true);
+					stylizeButton(btnDispatchQueueSchedule);
 					queueDepartTime.setEnabled(true);
 				}
 			});
@@ -445,16 +613,17 @@ public class CtcGui {
 		}
 		
 		JScrollPane scrollPane_4 = new JScrollPane();
+		stylizeScrollPane(scrollPane_4);
 		scrollPane_4.setBounds(476, 403, 221, 210);
 		contentPane.add(scrollPane_4);
 		
 		queueSelectedTable = new ScheduleJTable();
-		queueSelectedTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		stylizeTable(queueSelectedTable);
 		scrollPane_4.setViewportView(queueSelectedTable);
 		
-		btnDeleteQueueSchedule = new JButton("Delete selected");
+		btnDeleteQueueSchedule = new JButton("DELETE SELECTED");
 		btnDeleteQueueSchedule.setEnabled(false);
-		btnDeleteQueueSchedule.setFont(new Font("Dialog", Font.PLAIN, 16));
+		stylizeButton_Disabled(btnDeleteQueueSchedule);
 		btnDeleteQueueSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Line line = getLineByName(queueTabbedPane.getTitleAt(queueTabbedPane.getSelectedIndex()));
@@ -468,7 +637,9 @@ public class CtcGui {
 				queueDepartTime.setText("");
 				
 				btnDeleteQueueSchedule.setEnabled(false);
+				stylizeButton_Disabled(btnDeleteQueueSchedule);
 				btnDispatchQueueSchedule.setEnabled(false);
+				stylizeButton_Disabled(btnDispatchQueueSchedule);
 			}
 		});
 		btnDeleteQueueSchedule.setBounds(713, 402, 171, 41);
@@ -487,24 +658,25 @@ public class CtcGui {
 				}
 			}
 		});
-		queueDepartTime.setColumns(10);
+		stylizeTextField(queueDepartTime);
+		queueDepartTime.setColumns(12);
 		queueDepartTime.setBounds(819, 467, 66, 39);
 		frame.getContentPane().add(queueDepartTime);
 		
-		JLabel lblAutoDepart = new JLabel("Auto Depart @");
-		lblAutoDepart.setFont(new Font("SansSerif", Font.ITALIC, 14));
+		JLabel lblAutoDepart = new JLabel("AUTO DEPART:");
+		stylizeInfoLabel_Small(lblAutoDepart);
 		lblAutoDepart.setBounds(716, 470, 136, 33);
 		frame.getContentPane().add(lblAutoDepart);
 		
-		JLabel lblOr = new JLabel("- or -");
+		JLabel lblOr = new JLabel("- OR -");
+		stylizeInfoLabel_Small(lblOr);
 		lblOr.setHorizontalAlignment(SwingConstants.CENTER);
-		lblOr.setFont(new Font("SansSerif", Font.ITALIC, 14));
-		lblOr.setBounds(714, 494, 171, 33);
+		lblOr.setBounds(714, 491, 171, 33);
 		frame.getContentPane().add(lblOr);
 		
-		btnDispatchQueueSchedule = new JButton("Dispatch Now \u2192");
+		btnDispatchQueueSchedule = new JButton("DISPATCH NOW \u2192");
 		btnDispatchQueueSchedule.setEnabled(false);
-		btnDispatchQueueSchedule.setFont(new Font("Dialog", Font.PLAIN, 16));
+		stylizeButton_Disabled(btnDispatchQueueSchedule);
 		btnDispatchQueueSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Line line = getLineByName(queueTabbedPane.getTitleAt(queueTabbedPane.getSelectedIndex()));
@@ -520,6 +692,7 @@ public class CtcGui {
 				updateDispatchedTable();
 				
 				btnDeleteQueueSchedule.setEnabled(false);	
+				stylizeButton_Disabled(btnDeleteQueueSchedule);
 			}
 		});
 		btnDispatchQueueSchedule.setBounds(714, 520, 171, 67);
@@ -529,9 +702,9 @@ public class CtcGui {
 		/**
 		 * RIGHT FRAME
 		 */
-		JLabel lblDispatchedTrains = new JLabel("<html><u>Dispatched Trains</u></html>");
+		JLabel lblDispatchedTrains = new JLabel("<html>DISPATCHED TRAINS</html>");
+		stylizeHeadingLabel(lblDispatchedTrains);
 		lblDispatchedTrains.setHorizontalAlignment(SwingConstants.CENTER);
-		lblDispatchedTrains.setFont(new Font("SansSerif", Font.BOLD, 20));
 		lblDispatchedTrains.setBounds(920, 142, 468, 33);
 		contentPane.add(lblDispatchedTrains);
 		
@@ -547,16 +720,17 @@ public class CtcGui {
 				}
 			}
 		});
-		dispatchedTabbedPane.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		stylizeTabbedPane(dispatchedTabbedPane);
 		dispatchedTabbedPane.setBounds(946, 174, 425, 187);
 		contentPane.add(dispatchedTabbedPane);
 		
 		for(Line line : Line.values()) {
 			JScrollPane scrollPane = new JScrollPane();
+			stylizeScrollPane(scrollPane);
 			
 			line.dispatchedData = new DefaultTableModel(dispatchedTrainsInitialData,dispatchedTrainsColumnNames);
 			line.dispatchedTable = new JTable(line.dispatchedData);
-			line.dispatchedTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
+			stylizeTable(line.dispatchedTable);
 			line.dispatchedTable.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -572,30 +746,32 @@ public class CtcGui {
 		}
 		
 		JScrollPane scrollPane = new JScrollPane();
+		stylizeScrollPane(scrollPane);
 		scrollPane.setBounds(942, 403, 221, 210);
 		contentPane.add(scrollPane);
 		
 		dispatchSelectedTable = new ScheduleJTable();
-		dispatchSelectedTable.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		stylizeTable(dispatchSelectedTable);
 		scrollPane.setViewportView(dispatchSelectedTable);
 		
-		JLabel lblSelectedTrainSchedule = new JLabel("Selected Train's Schedule");
-		lblSelectedTrainSchedule.setFont(new Font("SansSerif", Font.PLAIN, 18));
+		JLabel lblSelectedTrainSchedule = new JLabel("SELECTED TRAIN'S SCHEDULE");
+		stylizeInfoLabel(lblSelectedTrainSchedule);
 		lblSelectedTrainSchedule.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSelectedTrainSchedule.setBounds(920, 367, 456, 33);
 		contentPane.add(lblSelectedTrainSchedule);
 		
-		JLabel lblSuggestSpeed = new JLabel("<html>Suggest<br>speed (mph)</html>");
-		lblSuggestSpeed.setFont(new Font("SansSerif", Font.ITALIC, 14));
-		lblSuggestSpeed.setBounds(1175, 442, 89, 33);
+		JLabel lblSuggestSpeed = new JLabel("<html>SUGGEST<br>SPEED<br>(mph)</html>");
+		stylizeInfoLabel_Small(lblSuggestSpeed);
+		lblSuggestSpeed.setBounds(1175, 442, 89, 70);
 		frame.getContentPane().add(lblSuggestSpeed);
 		
 		suggestedSpeed = new JTextField();
-		suggestedSpeed.setColumns(10);
-		suggestedSpeed.setBounds(1260, 439, 52, 39);
+		stylizeTextField(suggestedSpeed);
+		suggestedSpeed.setColumns(12);
+		suggestedSpeed.setBounds(1250, 441, 52, 35);
 		frame.getContentPane().add(suggestedSpeed);
 		
-		btnSuggestSpeed = new JButton("Send");
+		btnSuggestSpeed = new JButton("SEND");
 		btnSuggestSpeed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String speed = suggestedSpeed.getText();
@@ -606,8 +782,8 @@ public class CtcGui {
 				}
 			}
 		});
-		btnSuggestSpeed.setFont(new Font("Dialog", Font.PLAIN, 16));
-		btnSuggestSpeed.setBounds(1319, 441, 66, 32);
+		stylizeButton_Disabled(btnSuggestSpeed);
+		btnSuggestSpeed.setBounds(1310, 441, 80, 32);
 		frame.getContentPane().add(btnSuggestSpeed);
 		
 		manualSpeedSetEnabled(false);
@@ -622,9 +798,9 @@ public class CtcGui {
 		logoPineapple.setBounds(1250,660,138,76);
 		contentPane.add(logoPineapple);
 		
-		JLabel lbltrackStatusAnd = new JLabel("<html><u>Track Status<br> and Maintenance</u></htm>");
+		JLabel lbltrackStatusAnd = new JLabel("<html>TRACK STATUS<br> AND MAINTENANCE</html>");
+		stylizeInfoLabel(lbltrackStatusAnd);
 		lbltrackStatusAnd.setHorizontalAlignment(SwingConstants.LEFT);
-		lbltrackStatusAnd.setFont(new Font("SansSerif", Font.BOLD, 20));
 		lbltrackStatusAnd.setBounds(251, 650, 163, 63);
 		frame.getContentPane().add(lbltrackStatusAnd);
 
@@ -633,17 +809,18 @@ public class CtcGui {
 		hazardIcon.setBounds(377, 656, 37, 32);
 		frame.getContentPane().add(hazardIcon);
 		
-		JLabel selectedBlockLine = new JLabel("Line");
-		selectedBlockLine.setFont(new Font("SansSerif", Font.ITALIC, 14));
+		JLabel selectedBlockLine = new JLabel("LINE");
+		stylizeInfoLabel_Small(selectedBlockLine);
 		selectedBlockLine.setBounds(443, 656, 37, 33);
 		frame.getContentPane().add(selectedBlockLine);
 		
-		JLabel selectedBlockNum = new JLabel("Block");
-		selectedBlockNum.setFont(new Font("SansSerif", Font.ITALIC, 14));
-		selectedBlockNum.setBounds(499, 656, 37, 33);
+		JLabel selectedBlockNum = new JLabel("BLOCK");
+		stylizeInfoLabel_Small(selectedBlockNum);
+		selectedBlockNum.setBounds(499, 656, 100, 33);
 		frame.getContentPane().add(selectedBlockNum);
 		
-		btnCloseTrack = new JButton("Close for Maintenance");
+		btnCloseTrack = new JButton("CLOSE FOR MAINTENANCE");
+		stylizeButton(btnCloseTrack);
 		btnCloseTrack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Block block = getSelectedBlock();
@@ -651,11 +828,11 @@ public class CtcGui {
 				updateSelectedBlock(true);
 			}
 		});
-		btnCloseTrack.setFont(new Font("Dialog", Font.PLAIN, 16));
-		btnCloseTrack.setBounds(683, 671, 200, 32);
+		btnCloseTrack.setBounds(683, 671, 230, 32);
 		frame.getContentPane().add(btnCloseTrack);
 		
-		btnRepairBlock = new JButton("Repair Block");
+		btnRepairBlock = new JButton("REPAIR BLOCK");
+		stylizeButton(btnRepairBlock);
 		btnRepairBlock.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Block block = getSelectedBlock();
@@ -663,30 +840,31 @@ public class CtcGui {
 				updateSelectedBlock(true);
 			}
 		});
-		btnRepairBlock.setFont(new Font("Dialog", Font.PLAIN, 16));
-		btnRepairBlock.setBounds(683, 704, 200, 32);
+		btnRepairBlock.setBounds(683, 704, 230, 32);
 		frame.getContentPane().add(btnRepairBlock);
 		
-		selectedBlockToggle = new JToggleButton("Toggle Switch");
+		selectedBlockToggle = new JToggleButton("TOGGLE SWITCH");
+		stylizeToggleButton_Disabled(selectedBlockToggle);
 		selectedBlockToggle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Block block = getSelectedBlock();
 				boolean success = ctc.setSwitchState((Line)blockLineComboBox.getSelectedItem(),block.getId(),selectedBlockToggle.isSelected());
 				if(!success) {
+					stylizeToggleButton(selectedBlockToggle);
 					selectedBlockToggle.setSelected(selectedBlockToggle.isSelected());
 				}
 				else {
+					stylizeToggleButton_Disabled(selectedBlockToggle);
 					updateSelectedBlock(true);
 				}
 			}
 		});
-		selectedBlockToggle.setFont(new Font("Dialog", Font.PLAIN, 16));
-		selectedBlockToggle.setBounds(683, 638, 200, 32);
+		selectedBlockToggle.setBounds(683, 638, 230, 32);
 		frame.getContentPane().add(selectedBlockToggle);
 		
-		JLabel lblOccupied = new JLabel("Occupied");
-		lblOccupied.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		lblOccupied.setBounds(593, 687, 70, 33);
+		JLabel lblOccupied = new JLabel("OCCUPIED");
+		stylizeInfoLabel_Small(lblOccupied);
+		lblOccupied.setBounds(590, 687, 70, 33);
 		frame.getContentPane().add(lblOccupied);
 		
 		selectedBlockOccupiedIndicator = new JLabel();
@@ -694,9 +872,9 @@ public class CtcGui {
 		setIndicator(selectedBlockOccupiedIndicator,"grey");
 		frame.getContentPane().add(selectedBlockOccupiedIndicator);
 		
-		JLabel lblStatus = new JLabel("Status");
-		lblStatus.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		lblStatus.setBounds(613, 654, 52, 33);
+		JLabel lblStatus = new JLabel("STATUS");
+		stylizeInfoLabel_Small(lblStatus);
+		lblStatus.setBounds(590, 654, 52, 33);
 		frame.getContentPane().add(lblStatus);
 		
 		selectedBlockStatusIndicator = new JLabel();
@@ -710,6 +888,7 @@ public class CtcGui {
 				setBlockSpinnerLimits();
 			}
 		});
+		stylizeComboBox(blockLineComboBox);
 		blockLineComboBox.setModel(new DefaultComboBoxModel<Line>(Line.values()));
 		blockLineComboBox.setBounds(426, 686, 71, 26);
 		frame.getContentPane().add(blockLineComboBox);
@@ -725,17 +904,17 @@ public class CtcGui {
 		frame.getContentPane().add(blockNumberSpinner);
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(SystemColor.inactiveCaption);
+		panel.setBackground(new Color(20, 20, 20));
 		panel.setBounds(577, 637, 325, 101);
 		frame.getContentPane().add(panel);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_1.setBackground(UIManager.getColor("Panel.background"));
+		panel_1.setBackground(new Color(20, 20, 20));
 		panel_1.setBounds(704, 455, 191, 145);
 		frame.getContentPane().add(panel_1);
 		
 		JButton btnJustDoIt = new JButton("JUST DO IT");
+		stylizeButton(btnJustDoIt);
 		btnJustDoIt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ctc.testDispatch();
@@ -744,12 +923,15 @@ public class CtcGui {
 		btnJustDoIt.setBounds(1214, 520, 136, 68);
 		frame.getContentPane().add(btnJustDoIt);
 		
-		JCheckBox chckbxManualOverride = new JCheckBox("Manual Override");
+		JCheckBox chckbxManualOverride = new JCheckBox("MANUAL OVERRIDE");
 		chckbxManualOverride.setEnabled(false);
-		chckbxManualOverride.setBounds(1270, 478, 115, 18);
+		chckbxManualOverride.setBackground(new Color(20,20,20));
+		chckbxManualOverride.setForeground(Color.WHITE);
+		chckbxManualOverride.setBounds(1250, 478, 135, 18);
 		frame.getContentPane().add(chckbxManualOverride);
 		
 		JButton btnR1 = new JButton("R1");
+		stylizeButton(btnR1);
 		btnR1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ctc.launchWaysideGui(2);
@@ -759,6 +941,7 @@ public class CtcGui {
 		frame.getContentPane().add(btnR1);
 		
 		JButton btnR2 = new JButton("R2");
+		stylizeButton(btnR2);
 		btnR2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ctc.launchWaysideGui(3);
@@ -768,6 +951,7 @@ public class CtcGui {
 		frame.getContentPane().add(btnR2);
 		
 		JButton btnG2 = new JButton("G2");
+		stylizeButton(btnG2);
 		btnG2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ctc.launchWaysideGui(1);
@@ -777,6 +961,7 @@ public class CtcGui {
 		frame.getContentPane().add(btnG2);
 		
 		JButton btnG1 = new JButton("G1");
+		stylizeButton(btnG1);
 		btnG1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ctc.launchWaysideGui(0);
@@ -785,10 +970,10 @@ public class CtcGui {
 		btnG1.setBounds(925, 700, 65, 32);
 		frame.getContentPane().add(btnG1);
 		
-		JLabel lblwaysideGuis = new JLabel("<html><center><b><u>Wayside GUIs</u></b></center></html>");
+		JLabel lblwaysideGuis = new JLabel("<html><center>WAYSIDE GUIs</center></html>");
+		stylizeInfoLabel(lblwaysideGuis);
 		lblwaysideGuis.setHorizontalAlignment(SwingConstants.CENTER);
-		lblwaysideGuis.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblwaysideGuis.setBounds(920, 621, 146, 57);
+		lblwaysideGuis.setBounds(920, 621, 200, 57);
 		frame.getContentPane().add(lblwaysideGuis);
 	}
 	
@@ -808,11 +993,13 @@ public class CtcGui {
 	
 			//If valid name and time, and schedule has one stop then allow schedule to be dispatched
 			addToDispatchToQueue.setEnabled(trainCreationTable.schedule.stops.size()>0 && trainCreationTable.checkDataValid());
+			stylizeButton(addToDispatchToQueue);
 		}
 		else {
 			//Else disable table and ability to add to queue
 			trainCreationTable.setEnabled(false);
 			addToDispatchToQueue.setEnabled(false);
+			stylizeButton_Disabled(addToDispatchToQueue);
 		}
 	}
 	
@@ -856,8 +1043,10 @@ public class CtcGui {
 			queueSelectedTable.clear();	
 			queueDepartTime.setText("");
 			btnDispatchQueueSchedule.setEnabled(false);
+			stylizeButton_Disabled(btnDispatchQueueSchedule);
 			queueDepartTime.setEnabled(false);
 			btnDeleteQueueSchedule.setEnabled(false);
+			stylizeButton_Disabled(btnDeleteQueueSchedule);
 		}
 		
 		//Update the queue and dispatch tables to reflect changes
@@ -905,6 +1094,7 @@ public class CtcGui {
 	
 	private void manualSpeedSetEnabled(Boolean b) {
 		btnSuggestSpeed.setEnabled(b);
+		stylizeButton(btnSuggestSpeed);
 		suggestedSpeed.setEnabled(b);
 	}
 
