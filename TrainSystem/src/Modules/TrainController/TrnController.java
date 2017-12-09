@@ -306,10 +306,10 @@ public class TrnController {
 			sBrakesOn();
 			return true;
 		}
-		else if (overallAuth == 0 && actualSpeed == 0) {
+		else if (overallAuth >= 0 && actualSpeed == 0) {
 			sBrakesOff();
 			eBrakesOff();
-			return true;
+			return false;
 		}
 		else {
 			return false;
