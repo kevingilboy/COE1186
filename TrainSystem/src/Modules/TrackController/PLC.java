@@ -108,7 +108,7 @@ public class PLC {
 				context.set("nnb_occupied", false);
 			}
 			//Compound evaluation expression
-			result &= (boolean) e.evaluate(context); 
+			result &= (boolean) e.evaluate(context);
 		}
 		return result;
 	}
