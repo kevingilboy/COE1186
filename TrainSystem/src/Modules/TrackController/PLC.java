@@ -86,53 +86,33 @@ public class PLC {
 		JexlContext context = new MapContext();
 		//Compute evaluation 3 times in order to assure vitality of signal
 		for(int iii = 0; iii < 3; iii++){ 
-			if(path.length >= 1) {
+			if(path.length>=2) {
 				if(path[0] < 0){
-					context.set("cb_occupied", tc.trackModel.getBlock(line, path[1]).getOccupied());
+					context.set("nb_occupied", tc.trackModel.getBlock(line, path[2]).getOccupied());
 				} else {
-					context.set("cb_occupied", tc.trackModel.getBlock(line, path[0]).getOccupied());
+					context.set("nb_occupied", tc.trackModel.getBlock(line, path[1]).getOccupied());
 				}
-				if(path.length>=2) {
+				if(path.length>=3) {
 					if(path[0] < 0){
-						context.set("nb_occupied", tc.trackModel.getBlock(line, path[2]).getOccupied());
+						context.set("nnb_occupied", tc.trackModel.getBlock(line, path[3]).getOccupied());
 					} else {
-						context.set("nb_occupied", tc.trackModel.getBlock(line, path[1]).getOccupied());
+						context.set("nnb_occupied", tc.trackModel.getBlock(line, path[2]).getOccupied());
 					}
-					if(path.length>=3) {
-						if(path[0] < 0){
-							context.set("nnb_occupied", tc.trackModel.getBlock(line, path[3]).getOccupied());
-						} else {
-							context.set("nnb_occupied", tc.trackModel.getBlock(line, path[2]).getOccupied());
-						}
-					}
+				} else {
+					//to remove warnings when approaching destination
+					context.set("nnb_occupied", false);
 				}
+			} else {
+				//to remove warnings when arrived at destination
+				context.set("nb_occupied", false);
+				context.set("nnb_occupied", false);
 			}
 			//Compound evaluation expression
-			result &= (boolean) e.evaluate(context); 
+			result &= (boolean) e.evaluate(context);
 		}
 		return result;
 	}
-	/*
-	public boolean canSwitchPath(int[] path){
-		return vitalCheckSwitchPath(canSwitchLogic, path);
-	}
-	
-	private boolean vitalCheckSwitchPath(String logic, int[] path){
-		boolean result = true;
-		Expression e = jexl.createExpression(logic);
-		JexlContext context = new MapContext();
-		int norm = tc.trackModel.getBlock(line, path[1]).getSwitch().getPortNormal();
-		int alt = tc.trackModel.getBlock(line, path[1]).getSwitch().getPortAlternate();
-		//Compute evaluation 3 times in order to assure vitality of signal
-		for(int iii = 0; iii < 3; iii++){
-			context.set("norm_occupied", tc.trackModel.getBlock(line, norm).getOccupied());
-			context.set("alt_occupied", tc.trackModel.getBlock(line, alt).getOccupied());
-			//Compound evaluation expression
-			result &= (boolean) e.evaluate(context); 
-		}
-		return result;
-	}
-	*/
+
 	public boolean switchStatePath(int[] path){
 		return vitalSwitchStatePath(switchingLogic, path);
 	}
