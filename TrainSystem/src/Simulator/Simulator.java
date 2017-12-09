@@ -34,7 +34,6 @@ public class Simulator {
 	
 	private Module[] modules;
 	private Ctc ctc;
-	private TrackController trackController;
 	private TrackModel trackModel;
 	private TrainModel trainModel;
 	private TrainController trainController;
@@ -62,9 +61,8 @@ public class Simulator {
 			}
 		}
 		
-		//Initialize all modules
+		//Initialize all modules (no need for trackController, that is in the CTC)
 		ctc = new Ctc();
-		//trackController = new TrackController();
 		trackModel = new TrackModel();
 		trainController = new TrainController();
 		trainModel = new TrainModel();
