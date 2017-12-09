@@ -9,6 +9,7 @@ import Modules.TrainModel.*;
 import Modules.TrainController.*;
 import Modules.Mbo.*;
 
+import java.awt.EventQueue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,6 +29,9 @@ public class Simulator {
 	public boolean simulationRunning = false;
 	private boolean timerTaskRunning = false;
 	
+	private SimulatorGui simulatorGui;
+	private boolean simulatorGuiReady = false;
+	
 	private Module[] modules;
 	private Ctc ctc;
 	private TrackController trackController;
@@ -36,7 +40,28 @@ public class Simulator {
 	private TrainController trainController;
 	private Mbo mbo;
 	
-	public Simulator() throws InterruptedException {		
+	public Simulator() throws InterruptedException {
+		//Launch Simulator GUI
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					simulatorGui = new SimulatorGui();
+					simulatorGuiReady = true;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		//Wait for the Simulator GUI to load
+		while(!simulatorGuiReady) {
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		//Initialize all modules
 		ctc = new Ctc();
 		//trackController = new TrackController();
@@ -79,6 +104,8 @@ public class Simulator {
 		//Wait for Ctc to press play...
 		//play();
 	}
+	
+	
 	
 	public void pause() {
 		//Cancel the timer
