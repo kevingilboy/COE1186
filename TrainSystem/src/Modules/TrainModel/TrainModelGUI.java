@@ -394,7 +394,7 @@ public class TrainModelGUI extends JFrame {
 		advertisementImageLabel.setBounds(0, 0, 1050, 200);
 		Image dimg = mouse.getScaledInstance(advertisementImageLabel.getWidth(), advertisementImageLabel.getHeight(),
 		        Image.SCALE_SMOOTH);
-		advertisementImageLabel.setIcon(new ImageIcon(dimg));
+		advertisementImageLabel.setIcon(new ImageIcon(spongebob1));
 		advertisePane.add(advertisementImageLabel);
 		
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);  // we want it to split the window verticaly
