@@ -37,6 +37,18 @@ import java.awt.ItemSelectable;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+/*--- REQUIRED LIBRARIES FOR HSS DARK THEME ----*/
+import java.awt.GraphicsEnvironment;
+import java.awt.EventQueue;
+import java.awt.event.*;
+import java.io.*;
+import javax.swing.border.*;
+import java.awt.FontFormatException;
+import javax.swing.JComboBox;
+import javax.swing.UIManager;
+import javax.swing.SwingConstants;
+/*----------------------------------------------*/
+
 import java.util.*;
 
 @SuppressWarnings("unchecked")
@@ -105,27 +117,23 @@ public class TrackModelGUI implements ActionListener{
 		initTracksOnStartup();
 	}
 
+	/*----------------------------------------------------------------------*/
+	/*-------------------- HSS GUI DARK THEME REDESIGN ---------------------*/
+	/*----------------------------------------------------------------------*/
+
 	/**
-	 * <COMMON AESTHETICS>
-	 * ALLOWABLE FONTS
+	 * Variations of Roboto Condensed Font
 	 */
-	
-	// PLAIN-style fonts
-	Font font_10_plain = new Font("Geneva", Font.PLAIN, 10);
-	Font font_14_plain = new Font("Geneva", Font.PLAIN, 14);
-	Font font_16_plain = new Font("Geneva", Font.PLAIN, 16);
-	Font font_20_plain = new Font("Geneva", Font.PLAIN, 20);
-
-	// BOLD-style fonts
-	Font font_10_bold = new Font("Geneva", Font.BOLD, 10);
-	Font font_14_bold = new Font("Geneva", Font.BOLD, 14);
-	Font font_16_bold = new Font("Geneva", Font.BOLD, 16);
-	Font font_20_bold = new Font("Geneva", Font.BOLD, 20);
-	Font font_24_bold = new Font("Geneva", Font.BOLD, 24);
+	Font font_14_bold = new Font("Roboto Condensed", Font.BOLD, 16);
+	Font font_16_bold = new Font("Roboto Condensed", Font.BOLD, 20);
+	Font font_20_bold = new Font("Roboto Condensed Bold", Font.BOLD, 30);
+	Font font_24_bold = new Font("Roboto Condensed", Font.BOLD, 38);
 
 	/**
-	 * <COMMON AESTHETICS>
-	 * SET LOOK AND FEEL
+	 * Set any UI configurations done by the UI manager and
+	 * register Roboto Condensed font into the system.
+	 *
+	 * NOTE: This method must be called first in the GUI instantiation!
 	 */
 	public void setLookAndFeel(){
 		try {
@@ -133,11 +141,22 @@ public class TrackModelGUI implements ActionListener{
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+
+		try {
+		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Bold.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-BoldItalic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Italic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Regular.ttf")));
+
+		    System.out.println("Loaded custom fonts!");
+		} catch (IOException|FontFormatException e) {
+		    System.out.println("HssVisualizer Error: Cannot load custom font.");
+		}
 	}
 
 	/**
-	 * <COMMON AESTHETICS>
-	 * STANDARD BUTTON, COMBOBOX, LABEL WRAPPERS
+	 * JComponent styling wrappers
 	 */
 	public void stylizeButton(JButton b){
 		b.setFocusPainted(false);
@@ -153,9 +172,16 @@ public class TrackModelGUI implements ActionListener{
 		c.setBackground(Color.WHITE);
 	}
 
+	public void stylizeTextField(JTextField t){
+		t.setFont(font_14_bold);
+		t.setForeground(Color.BLACK);
+		t.setBackground(Color.WHITE);
+		t.setHorizontalAlignment(JTextField.CENTER);
+	}
+
 	public void stylizeHeadingLabel(JLabel l){
 		l.setFont(font_20_bold);
-		l.setForeground(new Color(204, 204, 204));
+		l.setForeground(Color.WHITE);
 		l.setHorizontalAlignment(SwingConstants.CENTER);
 	}
 
@@ -167,7 +193,7 @@ public class TrackModelGUI implements ActionListener{
 
 	public void stylizeInfoLabel_Bold(JLabel l){
 		l.setHorizontalAlignment(SwingConstants.LEFT);
-		l.setForeground(Color.WHITE);
+		l.setForeground(new Color(234, 201, 87));
 		l.setFont(font_16_bold);
 	}
 
@@ -176,6 +202,10 @@ public class TrackModelGUI implements ActionListener{
 		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
 		l.setFont(font_14_bold);
 	}
+	
+	/*----------------------------------------------------------------------*/
+	/*-------------------- HSS GUI DARK THEME REDESIGN ---------------------*/
+	/*----------------------------------------------------------------------*/
 
 	/**
 	 * Initialize the contents of the frame.
@@ -184,7 +214,7 @@ public class TrackModelGUI implements ActionListener{
 		// OVERALL FRAME
 		frame_tmGUI = new JFrame();
 		frame_tmGUI.setTitle("Track Model View");
-		frame_tmGUI.getContentPane().setBackground(new Color(35, 35, 35));
+		frame_tmGUI.getContentPane().setBackground(new Color(26, 29, 35));
 		frame_tmGUI.setBounds(100, 100, 1080, 560);
 		frame_tmGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame_tmGUI.getContentPane().setLayout(null);
@@ -247,7 +277,7 @@ public class TrackModelGUI implements ActionListener{
 		
 		// SELECTED BLOCK ID
 		label_blockID = new JLabel("   ");
-		label_blockID.setForeground(new Color(255, 255, 0));
+		label_blockID.setForeground(new Color(234, 201, 87));
 		label_blockID.setFont(font_24_bold);
 		label_blockID.setHorizontalAlignment(SwingConstants.CENTER);
 		label_blockID.setBounds(462, 59, 97, 52);
@@ -436,7 +466,7 @@ public class TrackModelGUI implements ActionListener{
 		
 		label_switchHead = new JLabel("   ");
 		stylizeInfoLabel_Bold(label_switchHead);
-		label_switchHead.setBounds(714, 317, 62, 22);
+		label_switchHead.setBounds(742, 317, 62, 22);
 		frame_tmGUI.getContentPane().add(label_switchHead);
 		
 		label_switchPortNormal = new JLabel("   ");
@@ -526,7 +556,6 @@ public class TrackModelGUI implements ActionListener{
 		
 		JButton button_toggle = new JButton("TOGGLE");
 		stylizeButton(button_toggle);
-		button_toggle.setBackground(new Color(102, 0, 153));
 		button_toggle.setBounds(550, 441, 98, 52);
 
 		button_toggle.addActionListener(new ActionListener() { 
