@@ -24,6 +24,17 @@ import java.awt.event.KeyEvent;
 import java.awt.Font;
 import java.awt.Color;
 
+// UI STYLING
+import java.awt.GraphicsEnvironment;
+import java.awt.EventQueue;
+import java.awt.event.*;
+import java.io.*;
+import javax.swing.border.*;
+import java.awt.FontFormatException;
+import javax.swing.JComboBox;
+import javax.swing.UIManager;
+import javax.swing.SwingConstants;
+
 public class TrainControllerGUI {
 
 	private int yCount;
@@ -56,28 +67,32 @@ public class TrainControllerGUI {
 	 * ALLOWABLE FONTS
 	 */
 	
-	// PLAIN-style fonts
-	Font font_10_plain = new Font("Geneva", Font.PLAIN, 10);
-	Font font_14_plain = new Font("Geneva", Font.PLAIN, 14);
-	Font font_16_plain = new Font("Geneva", Font.PLAIN, 16);
-	Font font_20_plain = new Font("Geneva", Font.PLAIN, 20);
-
-	// BOLD-style fonts
-	Font font_10_bold = new Font("Geneva", Font.BOLD, 10);
-	Font font_14_bold = new Font("Geneva", Font.BOLD, 14);
-	Font font_16_bold = new Font("Geneva", Font.BOLD, 16);
-	Font font_20_bold = new Font("Geneva", Font.BOLD, 20);
-	Font font_24_bold = new Font("Geneva", Font.BOLD, 24);
+	Font font_14_bold = new Font("Roboto Condensed", Font.BOLD, 16);
+	Font font_16_bold = new Font("Roboto Condensed", Font.BOLD, 20);
+	Font font_20_bold = new Font("Roboto Condensed Bold", Font.BOLD, 30);
+	Font font_24_bold = new Font("Roboto Condensed", Font.BOLD, 38);
 
 	/**
 	 * <COMMON AESTHETICS>
-	 * SET LOOK AND FEEL
+	 * SET LOOK AND FEEL - CALL THIS FIRST!!!
 	 */
 	public void setLookAndFeel(){
 		try {
 			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
+		}
+
+		try {
+		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Bold.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-BoldItalic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Italic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Regular.ttf")));
+
+		    System.out.println("Loaded custom fonts!");
+		} catch (IOException|FontFormatException e) {
+		    System.out.println("HssVisualizer Error: Cannot load custom font.");
 		}
 	}
 
@@ -99,9 +114,16 @@ public class TrainControllerGUI {
 		c.setBackground(Color.WHITE);
 	}
 
+	public void stylizeTextField(JTextField t){
+		t.setFont(font_14_bold);
+		t.setForeground(Color.BLACK);
+		t.setBackground(Color.WHITE);
+		t.setHorizontalAlignment(JTextField.CENTER);
+	}
+
 	public void stylizeHeadingLabel(JLabel l){
 		l.setFont(font_20_bold);
-		l.setForeground(new Color(204, 204, 204));
+		l.setForeground(Color.WHITE);
 		l.setHorizontalAlignment(SwingConstants.CENTER);
 	}
 
@@ -113,7 +135,7 @@ public class TrainControllerGUI {
 
 	public void stylizeInfoLabel_Bold(JLabel l){
 		l.setHorizontalAlignment(SwingConstants.LEFT);
-		l.setForeground(Color.WHITE);
+		l.setForeground(new Color(234, 201, 87));
 		l.setFont(font_16_bold);
 	}
 
@@ -128,6 +150,8 @@ public class TrainControllerGUI {
 	 * Create the frame.
 	 */
 	public TrainControllerGUI() {
+		setLookAndFeel();
+
 		p = 6000;
 		i = 7.2641;
 		ready = true;
@@ -137,13 +161,12 @@ public class TrainControllerGUI {
 		height = 360;
 		logoHeight = 240;
 		
-		Font standardFont = new Font("Lucida Grande", Font.PLAIN, 16);
-		
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setBounds(100, 500, 450, height);
 		frame.setTitle("Train Controller");
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(35, 35, 35));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frame.setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -151,6 +174,7 @@ public class TrainControllerGUI {
 		Border blackline = BorderFactory.createLineBorder(Color.black);
 		
 		panel = new JPanel();
+		panel.setBackground(new Color(20, 20, 20));
 		panel.setBounds(259, 15, 162, 196);
 		contentPane.add(panel);
 		panel.setLayout(null);
@@ -161,22 +185,23 @@ public class TrainControllerGUI {
 		titleLabel.setBounds(95, 15, 253, 42);
 		contentPane.add(titleLabel);*/
 		
-		JLabel activeLabel = new JLabel("Active Trains");
-		activeLabel.setFont(standardFont);
-		activeLabel.setBounds(51, 15, 117, 32);
+		JLabel activeLabel = new JLabel("ACTIVE TRAINS");
+		stylizeHeadingLabel(activeLabel);
+		activeLabel.setBounds(30, 15, 200, 32);
 		contentPane.add(activeLabel);
 		
-		JLabel controllerLabel = new JLabel("PI Controller\n");
-		controllerLabel.setBounds(27, 6, 104, 20);
+		JLabel controllerLabel = new JLabel("PI CONTROLLER\n");
+		stylizeInfoLabel_Bold(controllerLabel);
+		controllerLabel.setBounds(20, 6, 140, 20);
 		panel.add(controllerLabel);
-		controllerLabel.setFont(standardFont);
 		
 		JLabel dispatchLabel = new JLabel("Dispatch Values");
-		dispatchLabel.setFont(standardFont);
-		dispatchLabel.setBounds(16, 35, 125, 16);
+		stylizeInfoLabel_Small(dispatchLabel);
+		dispatchLabel.setBounds(30, 35, 140, 16);
 		panel.add(dispatchLabel);
 		
 		pField = new JTextField();			//p
+		stylizeTextField(pField);
 		pField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -184,13 +209,13 @@ public class TrainControllerGUI {
 				confirmButton.setEnabled(true);
 			}
 		});
-		pField.setBounds(18, 66, 138, 29);
-		pField.setFont(standardFont);
+		pField.setBounds(40, 66, 80, 29);
 		panel.add(pField);
 		pField.setColumns(10);
 		pField.setText(p + "");
 		
 		iField = new JTextField();			//i
+		stylizeTextField(iField);
 		iField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -198,23 +223,23 @@ public class TrainControllerGUI {
 				confirmButton.setEnabled(true);
 			}
 		});
-		iField.setBounds(18, 107, 138, 29);
-		iField.setFont(standardFont);
+		iField.setBounds(40, 107, 80, 29);
 		panel.add(iField);
 		iField.setColumns(10);
 		iField.setText(i + "");
 		
 		JLabel pLabel = new JLabel("P");
-		pLabel.setBounds(6, 73, 16, 16);
-		pLabel.setFont(standardFont);
+		stylizeInfoLabel(pLabel);
+		pLabel.setBounds(12, 73, 16, 16);
 		panel.add(pLabel);
 		
 		JLabel iLabel = new JLabel("I");
-		iLabel.setBounds(8, 114, 16, 16);
-		iLabel.setFont(standardFont);
+		stylizeInfoLabel(iLabel);
+		iLabel.setBounds(14, 114, 16, 16);
 		panel.add(iLabel);
 		
 		confirmButton = new JButton("Confirm");
+		stylizeButton(confirmButton);
 		confirmButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -237,7 +262,6 @@ public class TrainControllerGUI {
 			}
 		});
 		confirmButton.setBounds(16, 150, 130, 35);
-		confirmButton.setFont(standardFont);
 		confirmButton.setEnabled(false);
 		panel.add(confirmButton);
 		
@@ -256,11 +280,12 @@ public class TrainControllerGUI {
 		guiList.add(g);
 		
 		JLabel L = new JLabel(g.getId());
-		L.setBounds(19, yCount + 8, 61, 18);
-		L.setFont(standardFont);
+		stylizeInfoLabel_Bold(L);
+		L.setBounds(30, yCount + 8, 61, 24);
 		contentPane.add(L);
 		
 		JButton B = new JButton("View");
+		stylizeButton(B);
 		buttonList.add(B);
 		B.addMouseListener(new MouseAdapter() {
 			@Override
@@ -270,8 +295,7 @@ public class TrainControllerGUI {
 				I.setVisible(true);
 			}
 		});
-		B.setBounds(93, yCount, 130, 37);
-		B.setFont(standardFont);
+		B.setBounds(120, yCount, 80, 37);
 		B.setVisible(true);
 		B.setEnabled(true);
 		contentPane.add(B);

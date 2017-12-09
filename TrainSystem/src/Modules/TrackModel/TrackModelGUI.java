@@ -118,18 +118,10 @@ public class TrackModelGUI implements ActionListener{
 	 * ALLOWABLE FONTS
 	 */
 	
-	// PLAIN-style fonts
-	Font font_10_plain = new Font("Lucida Grande", Font.PLAIN, 10);
-	Font font_14_plain = new Font("Lucida Grande", Font.PLAIN, 14);
-	Font font_16_plain = new Font("Lucida Grande", Font.PLAIN, 16);
-	Font font_20_plain = new Font("Lucida Grande", Font.PLAIN, 20);
-
-	// BOLD-style fonts
-	Font font_10_bold = new Font("Lucida Grande", Font.BOLD, 10);
-	Font font_14_bold = new Font("Lucida Grande", Font.BOLD, 14);
-	Font font_16_bold = new Font("Lucida Grande", Font.BOLD, 16);
-	Font font_20_bold = new Font("Roboto Condensed", Font.BOLD, 24);
-	Font font_24_bold = new Font("Lucida Grande", Font.BOLD, 24);
+	Font font_14_bold = new Font("Roboto Condensed", Font.BOLD, 16);
+	Font font_16_bold = new Font("Roboto Condensed", Font.BOLD, 20);
+	Font font_20_bold = new Font("Roboto Condensed Bold", Font.BOLD, 30);
+	Font font_24_bold = new Font("Roboto Condensed", Font.BOLD, 38);
 
 	/**
 	 * <COMMON AESTHETICS>
@@ -144,23 +136,10 @@ public class TrackModelGUI implements ActionListener{
 
 		try {
 		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-Black.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-Bold.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-BoldItalic.ttf")));
 		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Bold.ttf")));
 		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-BoldItalic.ttf")));
 		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Italic.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Light.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-LightItalic.ttf")));
 		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Regular.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-Italic.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-Light.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-LightItalic.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-Medium.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-MediumItalic.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-Regular.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-Thin.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/Roboto-ThinItalic.ttf")));
 
 		    System.out.println("Loaded custom fonts!");
 		} catch (IOException|FontFormatException e) {
@@ -186,9 +165,16 @@ public class TrackModelGUI implements ActionListener{
 		c.setBackground(Color.WHITE);
 	}
 
+	public void stylizeTextField(JTextField t){
+		t.setFont(font_14_bold);
+		t.setForeground(Color.BLACK);
+		t.setBackground(Color.WHITE);
+		t.setHorizontalAlignment(JTextField.CENTER);
+	}
+
 	public void stylizeHeadingLabel(JLabel l){
 		l.setFont(font_20_bold);
-		l.setForeground(new Color(204, 204, 204));
+		l.setForeground(Color.WHITE);
 		l.setHorizontalAlignment(SwingConstants.CENTER);
 	}
 
@@ -200,7 +186,7 @@ public class TrackModelGUI implements ActionListener{
 
 	public void stylizeInfoLabel_Bold(JLabel l){
 		l.setHorizontalAlignment(SwingConstants.LEFT);
-		l.setForeground(Color.WHITE);
+		l.setForeground(new Color(234, 201, 87));
 		l.setFont(font_16_bold);
 	}
 
@@ -281,7 +267,7 @@ public class TrackModelGUI implements ActionListener{
 		
 		// SELECTED BLOCK ID
 		label_blockID = new JLabel("   ");
-		label_blockID.setForeground(new Color(255, 255, 0));
+		label_blockID.setForeground(new Color(234, 201, 87));
 		label_blockID.setFont(font_24_bold);
 		label_blockID.setHorizontalAlignment(SwingConstants.CENTER);
 		label_blockID.setBounds(462, 59, 97, 52);
@@ -470,7 +456,7 @@ public class TrackModelGUI implements ActionListener{
 		
 		label_switchHead = new JLabel("   ");
 		stylizeInfoLabel_Bold(label_switchHead);
-		label_switchHead.setBounds(714, 317, 62, 22);
+		label_switchHead.setBounds(742, 317, 62, 22);
 		frame_tmGUI.getContentPane().add(label_switchHead);
 		
 		label_switchPortNormal = new JLabel("   ");
@@ -560,7 +546,6 @@ public class TrackModelGUI implements ActionListener{
 		
 		JButton button_toggle = new JButton("TOGGLE");
 		stylizeButton(button_toggle);
-		button_toggle.setBackground(new Color(102, 0, 153));
 		button_toggle.setBounds(550, 441, 98, 52);
 
 		button_toggle.addActionListener(new ActionListener() { 

@@ -72,9 +72,9 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         String line = blocks.get(0).getLine();
 
         if (line.equals("green")){
-            lineColor = Color.green;
+            lineColor = new Color(76, 195, 85);
         } else if (line.equals("red")){
-            lineColor = Color.red;
+            lineColor = new Color(211, 54, 76);
         } else {
             System.out.println("No track line color found!");
         }
@@ -139,7 +139,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         }
 
         // Draw station outlines
-        g2d.setColor(lineColor);
+        g2d.setColor(Color.GRAY);
         for (int i = 0; i < blocks.size(); i++){
             if ((blocks.get(i).getStation()) != null){
                 double[] x_coords = blocks.get(i).getXCoordinates();
@@ -193,7 +193,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         }
 
         // Highlight the current block selected in the main GUI
-        g2d.setColor(Color.YELLOW);
+        g2d.setColor(new Color(254, 208, 36));
         double[] x_coords = blocks.get(blockSelected.getId()).getXCoordinates();
         double[] y_coords = blocks.get(blockSelected.getId()).getYCoordinates();
         for (int i = 0; i < x_coords.length-2; i++){
@@ -220,9 +220,9 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
 
                     if (blocks.get(i).getId() == port){
                         double[] x_coords = blocks.get(i).getXCoordinates();
-                         double[] y_coords = blocks.get(i).getYCoordinates();
+                        double[] y_coords = blocks.get(i).getYCoordinates();
 
-                        g2d.setColor(new Color(150, 0, 255));
+                        g2d.setColor(lineColor);
                         for (int j = 0; j < x_coords.length-2; j++){
                             g2d.drawRect((int)x_coords[j]-1, (int)y_coords[j]-1, 4, 4);
                         }
@@ -238,11 +238,16 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                     double[] x_coords = blocks.get(i).getXCoordinates();
                     double[] y_coords = blocks.get(i).getYCoordinates();
 
-                    g2d.setColor(new Color(150, 0, 255));
+                    g2d.setColor(lineColor);
                     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                                         RenderingHints.VALUE_ANTIALIAS_ON);
                     for (int j = 0; j < x_coords.length-2; j++){
                         g2d.drawRect((int)x_coords[j]-1, (int)y_coords[j]-1, 4, 4);
+                    }
+
+                    g2d.setColor(Color.black);
+                    for (int j = 0; j < x_coords.length-2; j++){
+                        g2d.drawRect((int)x_coords[j], (int)y_coords[j], 2, 2);
                     }
                 }
             }
