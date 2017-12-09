@@ -383,8 +383,8 @@ public class TrainModelGUI extends JFrame {
 		setBounds(150, 150, 1050, 850);
 		setResizable(false);
 		contentPane = new JPanel();
-		this.setBackground(new Color(50, 50, 50));
-		contentPane.setBackground(new Color(35, 35, 35));
+		this.setBackground(new Color(36, 39, 45));
+		contentPane.setBackground(new Color(26, 29, 35));
 		setContentPane(splitPane);
 		//setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -693,7 +693,7 @@ public class TrainModelGUI extends JFrame {
 		
 		Image pineapple = new ImageIcon(this.getClass().getResource("pineapple_icon.png")).getImage();
 		JLabel pineappleImageLabel = new JLabel();
-		pineappleImageLabel.setBounds(40, 523, 138, 76);
+		pineappleImageLabel.setBounds(8, 559, 138, 76);
 		pineappleImageLabel.setIcon(new ImageIcon(pineapple));
 		contentPane.add(pineappleImageLabel);
 		

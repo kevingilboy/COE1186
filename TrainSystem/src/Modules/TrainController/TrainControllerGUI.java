@@ -160,7 +160,6 @@ public class TrainControllerGUI {
 		buttonList = new ArrayList<JButton>();
 		yCount = 60;
 		height = 380;
-		logoHeight = 240;
 		
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -168,7 +167,7 @@ public class TrainControllerGUI {
 		frame.setBounds(100, 500, 444, height);
 		frame.setTitle("Train Controller");
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(35, 35, 35));
+		contentPane.setBackground(new Color(26, 29, 35));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frame.setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -197,7 +196,7 @@ public class TrainControllerGUI {
 		controllerLabel.setBounds(20, 6, 140, 20);
 		panel.add(controllerLabel);
 		
-		JLabel dispatchLabel = new JLabel("Dispatch Values");
+		JLabel dispatchLabel = new JLabel("DISPATCH VALUES");
 		stylizeInfoLabel_Small(dispatchLabel);
 		dispatchLabel.setBounds(30, 35, 140, 16);
 		panel.add(dispatchLabel);
@@ -240,7 +239,7 @@ public class TrainControllerGUI {
 		iLabel.setBounds(14, 114, 16, 16);
 		panel.add(iLabel);
 		
-		confirmButton = new JButton("Confirm");
+		confirmButton = new JButton("CONFIRM");
 		stylizeButton(confirmButton);
 		confirmButton.addMouseListener(new MouseAdapter() {
 			@Override
@@ -268,16 +267,14 @@ public class TrainControllerGUI {
 		panel.add(confirmButton);
 		
 		icon_logo = new JLabel("");
-		icon_logo.setIcon(new ImageIcon("Modules\\TrackModel\\Images\\HSS_TrainSim_Logo.png"));
-		icon_logo.setBounds(330, logoHeight, 100, 100);
+		icon_logo.setIcon(new ImageIcon("Modules/TrackModel/Images/HSS_TrainSim_Logo.png"));
+		icon_logo.setBounds(332, 248, 100, 100);
 		contentPane.add(icon_logo);
 		
 		frame.setVisible(true);
 	}
 	
 	public void add(TrnControllerGUI g) {
-		Font standardFont = new Font("Lucida Grande", Font.PLAIN, 16);
-		
 		//System.out.println("add");
 		guiList.add(g);
 		
@@ -286,7 +283,7 @@ public class TrainControllerGUI {
 		L.setBounds(30, yCount + 8, 100, 24);
 		contentPane.add(L);
 		
-		JButton B = new JButton("View");
+		JButton B = new JButton("VIEW");
 		stylizeButton(B);
 		buttonList.add(B);
 		B.addMouseListener(new MouseAdapter() {

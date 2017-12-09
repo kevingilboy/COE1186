@@ -56,7 +56,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         int windowPadding = 0;
         setBounds(windowPadding, windowPadding, width, height);
         setLayout(null);
-        setBackground(new Color(40, 40, 40));
+        setBackground(new Color(36, 39, 45));
         setVisible(true);
     }
 

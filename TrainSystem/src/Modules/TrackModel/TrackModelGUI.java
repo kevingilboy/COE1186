@@ -204,7 +204,7 @@ public class TrackModelGUI implements ActionListener{
 		// OVERALL FRAME
 		frame_tmGUI = new JFrame();
 		frame_tmGUI.setTitle("Track Model View");
-		frame_tmGUI.getContentPane().setBackground(new Color(35, 35, 35));
+		frame_tmGUI.getContentPane().setBackground(new Color(26, 29, 35));
 		frame_tmGUI.setBounds(100, 100, 1080, 560);
 		frame_tmGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame_tmGUI.getContentPane().setLayout(null);

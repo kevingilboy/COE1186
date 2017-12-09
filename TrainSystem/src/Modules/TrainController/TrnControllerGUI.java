@@ -188,9 +188,9 @@ public class TrnControllerGUI {
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.setBounds(600, 500, 600, 480);
 		frame.setTitle(trainID);
+		frame.setBackground(new Color(26, 29, 35));
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(35, 35, 35));
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBackground(new Color(26, 29, 25));
 		frame.setContentPane(contentPane);
 		contentPane.setLayout(null);
 		

@@ -77,6 +77,7 @@ public class CtcGui {
 			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 			UIManager.getDefaults().put("TabbedPane.contentBorderInsets", new Insets(0,0,0,0));
 			UIManager.getDefaults().put("TabbedPane.tabsOverlapBorder", true);
+			UIManager.put("TabbedPane.selected", Color.GRAY);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -141,7 +142,7 @@ public class CtcGui {
 	}
 
 	public void stylizeScrollPane(JScrollPane s){
-		s.getViewport().setBackground(new Color(45, 45, 45));
+		s.getViewport().setBackground(new Color(36, 39, 45));
 		Border b = BorderFactory.createEmptyBorder(0, 0, 0, 0);
 		s.setFont(font_16_bold);
 		s.setBorder(b);
@@ -283,31 +284,31 @@ public class CtcGui {
 		frame.setBackground(Color.BLACK);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Container contentPane = frame.getContentPane();
-		contentPane.setBackground(new Color(35, 35, 35));
+		contentPane.setBackground(new Color(26, 29, 35));
 		contentPane.setLayout(null);
 		
 		JSeparator horizontalBar = new JSeparator();
-		horizontalBar.setBackground(new Color(50, 50, 50));
-		horizontalBar.setForeground(new Color(50, 50, 50));
+		horizontalBar.setBackground(new Color(36, 39, 45));
+		horizontalBar.setForeground(new Color(36, 39, 45));
 		horizontalBar.setBounds(45, 128, 1300, 2);
 		frame.getContentPane().add(horizontalBar);
 		
 		JSeparator horizontalBar2 = new JSeparator();
-		horizontalBar2.setBackground(new Color(50, 50, 50));
-		horizontalBar2.setForeground(new Color(50, 50, 50));
+		horizontalBar2.setBackground(new Color(36, 39, 45));
+		horizontalBar2.setForeground(new Color(36, 39, 45));
 		frame.getContentPane().add(horizontalBar2);
 		
 		JSeparator leftVerticalBar = new JSeparator();
 		leftVerticalBar.setOrientation(SwingConstants.VERTICAL);
-		leftVerticalBar.setBackground(new Color(50, 50, 50));
-		leftVerticalBar.setForeground(new Color(50, 50, 50));
+		leftVerticalBar.setBackground(new Color(36, 39, 45));
+		leftVerticalBar.setForeground(new Color(36, 39, 45));
 		leftVerticalBar.setBounds(450, 148, 2, 440);
 		frame.getContentPane().add(leftVerticalBar);
 		
 		JSeparator rightVerticalBar = new JSeparator();
 		rightVerticalBar.setOrientation(SwingConstants.VERTICAL);
-		rightVerticalBar.setBackground(new Color(50, 50, 50));
-		rightVerticalBar.setForeground(new Color(50, 50, 50));
+		rightVerticalBar.setBackground(new Color(36, 39, 45));
+		rightVerticalBar.setForeground(new Color(36, 39, 45));
 		rightVerticalBar.setBounds(920, 148, 2, 440);
 		frame.getContentPane().add(rightVerticalBar);
 		
@@ -583,7 +584,6 @@ public class CtcGui {
 				}
 			}
 		});
-		stylizeTabbedPane(queueTabbedPane);
 		queueTabbedPane.setBounds(489, 174, 406, 187);
 		contentPane.add(queueTabbedPane);
 		
@@ -611,6 +611,7 @@ public class CtcGui {
 			});
 			scrollPane.setViewportView(line.queueTable);
 		}
+		stylizeTabbedPane(queueTabbedPane);
 		
 		JScrollPane scrollPane_4 = new JScrollPane();
 		stylizeScrollPane(scrollPane_4);
@@ -720,7 +721,6 @@ public class CtcGui {
 				}
 			}
 		});
-		stylizeTabbedPane(dispatchedTabbedPane);
 		dispatchedTabbedPane.setBounds(946, 174, 425, 187);
 		contentPane.add(dispatchedTabbedPane);
 		
@@ -744,7 +744,8 @@ public class CtcGui {
 			scrollPane.setViewportView(line.dispatchedTable);
 			dispatchedTabbedPane.addTab(line.toString(), null, scrollPane, null);
 		}
-		
+		stylizeTabbedPane(dispatchedTabbedPane);
+
 		JScrollPane scrollPane = new JScrollPane();
 		stylizeScrollPane(scrollPane);
 		scrollPane.setBounds(942, 403, 221, 210);
@@ -795,7 +796,7 @@ public class CtcGui {
 		JLabel logoPineapple = new JLabel();
 		Image img = new ImageIcon(this.getClass().getResource("pineapple_icon.png")).getImage();
 		logoPineapple.setIcon(new ImageIcon(img));
-		logoPineapple.setBounds(1250,660,138,76);
+		logoPineapple.setBounds(1288,682,138,76);
 		contentPane.add(logoPineapple);
 		
 		JLabel lbltrackStatusAnd = new JLabel("<html>TRACK STATUS<br> AND MAINTENANCE</html>");
@@ -864,21 +865,21 @@ public class CtcGui {
 		
 		JLabel lblOccupied = new JLabel("OCCUPIED");
 		stylizeInfoLabel_Small(lblOccupied);
-		lblOccupied.setBounds(590, 687, 70, 33);
+		lblOccupied.setBounds(584, 687, 70, 33);
 		frame.getContentPane().add(lblOccupied);
 		
 		selectedBlockOccupiedIndicator = new JLabel();
-		selectedBlockOccupiedIndicator.setBounds(659, 687, 45, 32);
+		selectedBlockOccupiedIndicator.setBounds(654, 687, 45, 32);
 		setIndicator(selectedBlockOccupiedIndicator,"grey");
 		frame.getContentPane().add(selectedBlockOccupiedIndicator);
 		
 		JLabel lblStatus = new JLabel("STATUS");
 		stylizeInfoLabel_Small(lblStatus);
-		lblStatus.setBounds(590, 654, 52, 33);
+		lblStatus.setBounds(584, 654, 52, 33);
 		frame.getContentPane().add(lblStatus);
 		
 		selectedBlockStatusIndicator = new JLabel();
-		selectedBlockStatusIndicator.setBounds(659, 654, 45, 32);
+		selectedBlockStatusIndicator.setBounds(654, 654, 45, 32);
 		setIndicator(selectedBlockStatusIndicator,"grey");
 		frame.getContentPane().add(selectedBlockStatusIndicator);
 		
@@ -1094,8 +1095,8 @@ public class CtcGui {
 	
 	private void manualSpeedSetEnabled(Boolean b) {
 		btnSuggestSpeed.setEnabled(b);
-		stylizeButton(btnSuggestSpeed);
 		suggestedSpeed.setEnabled(b);
+		stylizeButton(btnSuggestSpeed);
 	}
 
 	/*
@@ -1149,7 +1150,7 @@ public class CtcGui {
 	}
 
 	private void setIndicator(JLabel label, String color) {
-		Image imgStatus = new ImageIcon(this.getClass().getResource(color+"StatusIcon.png")).getImage();
+		Image imgStatus = new ImageIcon(this.getClass().getResource("statusIcon_" + color + ".png")).getImage();
 		label.setIcon(new ImageIcon(imgStatus));
 	}
 
