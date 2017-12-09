@@ -192,7 +192,7 @@ public class Train {
         this.leftDoorIsOpen = false;
         this.rightDoorIsOpen = false;
         this.lightsAreOn  =false;
-        this.temperature = 0;
+        this.temperature = 65;
         this.serviceBrake = false;
         this.emerBrake = false;
         
