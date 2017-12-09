@@ -50,7 +50,7 @@ public class TrackController implements Module{
 	
 	@Override
 	public boolean communicationEstablished() {
-		// TODO Auto-generated method stub
+		System.out.println("Track Controller Communication Established!");
 		return true;
 	}
 	

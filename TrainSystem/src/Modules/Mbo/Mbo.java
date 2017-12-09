@@ -332,6 +332,7 @@ public class Mbo implements Module {
 	@Override
 	public boolean communicationEstablished() {
 		// TODO Auto-generated method stub
+		System.out.println("MBO Communication Established!");
 		return true;
 	}
 

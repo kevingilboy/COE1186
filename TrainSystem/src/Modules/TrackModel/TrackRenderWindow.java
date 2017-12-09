@@ -131,6 +131,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
 
         drawTrack(g2d);
         drawSwitches(g2d);
+        drawSelectedBlock(g2d);
         drawTrains(g2d);
     }
 
@@ -207,15 +208,6 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                 }
             }
         }
-
-        // Highlight the current block selected in the main GUI
-        g2d.setColor(new Color(254, 208, 36));
-        double[] x_coords = blocks.get(blockSelected.getId()).getXCoordinates();
-        double[] y_coords = blocks.get(blockSelected.getId()).getYCoordinates();
-        for (int i = 0; i < x_coords.length-2; i++){
-            g2d.drawRect((int)x_coords[i], (int)y_coords[i],
-                        2, 2);
-        }
     }
 
     // Render the switches
@@ -243,12 +235,10 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                             g2d.drawRect((int)x_coords[j]-1, (int)y_coords[j]-1, 4, 4);
                         }
 
-                        /*
-                        g2d.setColor(Color.black);
+                        g2d.setColor(new Color(26, 29, 35));
                         for (int j = 0; j < x_coords.length-2; j++){
                             g2d.drawRect((int)x_coords[j], (int)y_coords[j], 2, 2);
                         }
-                        */
                     }
                 }
 
@@ -263,15 +253,24 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                         g2d.drawRect((int)x_coords[j]-1, (int)y_coords[j]-1, 4, 4);
                     }
 
-                    /*
-                    g2d.setColor(Color.black);
+                    g2d.setColor(new Color(26, 29, 35));
                     for (int j = 0; j < x_coords.length-2; j++){
                         g2d.drawRect((int)x_coords[j], (int)y_coords[j], 2, 2);
                     }
-                    */
                 }
             }
         }  
+    }
+
+    // Highlight the block selected in the main GUI
+    public void drawSelectedBlock(Graphics2D g2d){
+        g2d.setColor(new Color(254, 208, 36));
+        double[] x_coords = blocks.get(blockSelected.getId()).getXCoordinates();
+        double[] y_coords = blocks.get(blockSelected.getId()).getYCoordinates();
+        for (int i = 0; i < x_coords.length-2; i++){
+            g2d.drawRect((int)x_coords[i], (int)y_coords[i],
+                        2, 2);
+        }
     }
 
     // Render each active train
