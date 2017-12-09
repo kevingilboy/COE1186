@@ -236,9 +236,6 @@ public class SimulatorGui {
 			case CTC:
 				//...
 				break;
-			case TRACKCONTROLLER:
-				//...
-				break;
 			case TRACKMODEL:
 				//...
 				break;
