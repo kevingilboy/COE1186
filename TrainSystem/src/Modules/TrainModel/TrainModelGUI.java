@@ -26,6 +26,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Line2D;
+import java.util.ArrayList;
 import java.util.Timer;
 
 import javax.swing.JButton;
@@ -33,6 +34,8 @@ import javax.swing.JMenu;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JSpinner;
+import javax.swing.JSplitPane;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JToggleButton;
@@ -49,7 +52,9 @@ import javax.swing.JCheckBox;
  */
 public class TrainModelGUI extends JFrame {
 
+	private JSplitPane splitPane;
 	private JPanel contentPane;
+	private JPanel advertisePane;
 	private Line2D horizontalLine1;
 	private Line2D verticalLine1;
 	private Line2D verticalLine2;
@@ -153,6 +158,13 @@ public class TrainModelGUI extends JFrame {
 	private final JMenuItem mntmExit = new JMenuItem("Exit All");
 	private Image ledImage = new ImageIcon(this.getClass().getResource("greyStatusIcon.png")).getImage();
 	private Image ledImageRed = new ImageIcon(this.getClass().getResource("redStatusIcon.png")).getImage();
+	private Image ad1 = new ImageIcon(this.getClass().getResource("ad1.jpg")).getImage();
+	private Image spongebob1 = new ImageIcon(this.getClass().getResource("spongebob1.jpg")).getImage();
+	private Image aerotech = new ImageIcon(this.getClass().getResource("aerotech.jpg")).getImage();
+	private Image safety = new ImageIcon(this.getClass().getResource("safety.jpg")).getImage();
+	private Image mouse = new ImageIcon(this.getClass().getResource("mouse.jpg")).getImage();
+	private ArrayList<Image> imgArray = new ArrayList<>();
+	private int i = 0;
 	private final JLabel ledImageLabel = new JLabel();
 	private final JLabel ledImageLabel2 = new JLabel();
 	private final JLabel ledImageLabel3 = new JLabel();
@@ -168,14 +180,14 @@ public class TrainModelGUI extends JFrame {
 	}*/
 	
 	public void paint(Graphics g) {
-		 	Dimension d = this.getSize();
+		 	Dimension d = contentPane.getSize();
 	        super.paint(g);  // fixes the immediate problem.
 	        Graphics2D g2 = (Graphics2D) g;
 	        horizontalLine1 = new Line2D.Float(45, d.height-290, d.width - 45, d.height-290);
 	        verticalLine1 = new Line2D.Float(d.width/3 - 10, 100 , d.width/3 - 10, d.height - 325);
 	        verticalLine2 = new Line2D.Float((2*d.width)/3-10, 100 , (2*d.width)/3-10, d.height - 325);
-	        verticalLine3 = new Line2D.Float(d.width/3 - 10, 390 , d.width/3 - 10, d.height - 45);
-	        verticalLine4 = new Line2D.Float((2*d.width)/3-10, 390 , (2*d.width)/3-10, d.height - 45);
+	        verticalLine3 = new Line2D.Float(d.width/3 - 10, 390 , d.width/3 - 10, d.height - 25);
+	        verticalLine4 = new Line2D.Float((2*d.width)/3-10, 390 , (2*d.width)/3-10, d.height - 25);
 
 	        //g2.setColor(Color.DARK_GRAY);
 	        g2.draw(horizontalLine1);
@@ -241,6 +253,14 @@ public class TrainModelGUI extends JFrame {
 	public boolean brakeFailStatus() {
 		return brakeFail;
 	}
+	
+	private Image getImage() {
+		if(i == imgArray.size()-1) {
+			i = 0;
+		}
+		i++;
+		return imgArray.get(i);
+	}
 
 	
 	/**
@@ -262,14 +282,38 @@ public class TrainModelGUI extends JFrame {
 	}
 		
 	private void initComponents() {
+		splitPane = new JSplitPane();
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(150, 150, 1050, 655);
+		setBounds(150, 150, 1050, 850);
 		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.LIGHT_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
+		setContentPane(splitPane);
+		//setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		advertisePane = new JPanel();
+		advertisePane.setBackground(Color.LIGHT_GRAY);
+		advertisePane.setLayout(new BorderLayout());
+		advertisePane.setBorder(new EmptyBorder(5,5,5,5));
+		//contentPane.add(advertisePane);
+		
+		imgArray.add(spongebob1);
+		imgArray.add(aerotech);
+		imgArray.add(mouse);
+		imgArray.add(safety);
+		JLabel advertisementImageLabel = new JLabel();
+		advertisementImageLabel.setBounds(0, 0, 1050, 200);
+		Image dimg = mouse.getScaledInstance(advertisementImageLabel.getWidth(), advertisementImageLabel.getHeight(),
+		        Image.SCALE_SMOOTH);
+		advertisementImageLabel.setIcon(new ImageIcon(dimg));
+		advertisePane.add(advertisementImageLabel);
+		
+		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);  // we want it to split the window verticaly
+        splitPane.setDividerLocation(650);                    // the initial position of the divider is 200 (our window is 400 pixels high)
+        splitPane.setTopComponent(contentPane);                  // at the top we want our "topPanel"
+        splitPane.setBottomComponent(advertisePane);            // and at the bottom we want our "bottomPanel"
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBounds(0, 0, 1044, 31);

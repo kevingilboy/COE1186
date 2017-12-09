@@ -30,6 +30,8 @@ public class TrainController implements Module {
 	public final int ARRIVED = 1;
 	public final int DEPARTING = 2;
 	public final int ENROUTE = 3;
+	
+	public final double SPEEDCONVERSION = 3.6;			//1 m/s = 3.6 kph
 
 	public TrainController() {
 		controlList = new HashMap<String, TrnController>();
@@ -101,12 +103,12 @@ public class TrainController implements Module {
 		trainModel.setArrivalStatus(trainID, status, stationName);
 	}
 	
-	public double receiveTrainActualSpeed(String trainID) {
+	public double receiveTrainActualSpeed(String trainID) {						//train model calculates actual speed in m/s
 		return trainModel.getVelocity(trainID);
 	}
 	
 	public double receiveSetpointSpeed(String trainID) {
-		return trainModel.getSetpointSpeed(trainID);
+		return (trainModel.getSetpointSpeed(trainID) / SPEEDCONVERSION);		//train model passes along setpoint from ctc, which is in kph
 	}
 	
 	public double receiveCtcAuthority(String trainID) {
@@ -149,10 +151,10 @@ public class TrainController implements Module {
 		for (Block B : redBlocks) {
 			S = B.getStation();
 			if(S==null) {
-				redInfo.add(new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), "", false, false, B.getDirection()));
+				redInfo.add(new BlockInfo((double)B.getSpeedLimit(), B.getUndergroundStatus(), "", false, false, B.getDirection()));
 			}
 			else {
-				redInfo.add(new BlockInfo(B.getSpeedLimit(), B.getUndergroundStatus(), S.getId(), S.getDoorSideDirectionPositive(), S.getDoorSideDirectionNegative(), B.getDirection()));
+				redInfo.add(new BlockInfo((double)B.getSpeedLimit(), B.getUndergroundStatus(), S.getId(), S.getDoorSideDirectionPositive(), S.getDoorSideDirectionNegative(), B.getDirection()));
 			}
 		}
 		for (Block B : greenBlocks) {

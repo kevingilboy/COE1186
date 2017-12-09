@@ -108,6 +108,30 @@ public class MboTest {
 		assertEquals(5.0, receivedAuthority, 0.001);
 	}
 
+	@Test
+	public void testDistanceCalcuationWithinBlock() {
+		double[] pos1 = {158.004286,15.287825};
+		double[] pos2 = {158.925919,15.656423};
+		int dist = mbo.calculateDistanceBetweenPositions(pos1, pos2);
+		assertEquals(6, dist);
+	}
+
+	@Test
+	public void testDistanceCalcuationSeparateBlocks() {
+		double[] pos1 = {164.936980,18.897864};
+		double[] pos2 = {183.261509,47.259840};
+		int dist = mbo.calculateDistanceBetweenPositions(pos1, pos2);
+		assertEquals(205, dist);
+	}
+
+	@Test
+	public void testDistanceCalcuationWrapAround() {
+		double[] pos1 = {172.226199,26.988987};
+		double[] pos2 = {172.135224,26.850775};
+		int dist = mbo.calculateDistanceBetweenPositions(pos1, pos2);
+		assertEquals(14446, dist);
+	}
+
 	@Test 
 	public void testAlwaysPasses() {
 		assertEquals(1,1);

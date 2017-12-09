@@ -206,6 +206,10 @@ public class Ctc implements Module,TimeControl {
 		return success;
 	}
 	
+	public void launchWaysideGui(int i) {
+		trackControllers[i].tcgui.showTrackControllerGUI();
+	}
+	
 	
 	/*
 	 * ------------------------------
@@ -235,7 +239,9 @@ public class Ctc implements Module,TimeControl {
 	 * Creates a sample train to dispatch
 	 */
 	public void testDispatch() {
-		play();
+		if(!simulator.simulationRunning) {
+			play();
+		}
 		String testName = "TestTrain"+testTrainNum++;
 		Schedule schedule = new Schedule(Line.GREEN);
 		schedule.departureTime = new SimTime("11:11:11");
@@ -409,11 +415,11 @@ public class Ctc implements Module,TimeControl {
 		//-------------------
 		// Return the found path as the authority
 		//-------------------
-		for(int j=1; j<path.size(); j++) {
+		/*for(int j=1; j<path.size(); j++) {
 			int i = path.get(j);
 			System.out.print(train.line.blocks[i].getSection()+Integer.toString(i+1)+", ");
 		}
-		System.out.println("");
+		System.out.println("");*/
 		return path;
 	}
 	
