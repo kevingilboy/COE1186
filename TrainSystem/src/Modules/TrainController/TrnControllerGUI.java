@@ -475,19 +475,19 @@ public class TrnControllerGUI {
 		return true;
 	}
 	
-	public void setSpeed(double s) {
+	public void setSpeed(double s) {			//input is in m/s
 		speed = (s * SPEEDCONVERSION);
 	}
 	
-	public void setSpeedLimit(double s) {	//input is in m/s
+	public void setSpeedLimit(double s) {		//input is in m/s
 		speedLimit = (s * SPEEDCONVERSION);
 	}
 	
-	public void setSetpoint(double s) {
+	public void setSetpoint(double s) {			//input is in m/s
 		setpoint = (s * SPEEDCONVERSION);
 	}
 	
-	public void setAuth(double a) {
+	public void setAuth(double a) {				//input is in m
 		authority = (a * DISTANCECONVERSION);
 	}
 	
