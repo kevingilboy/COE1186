@@ -17,7 +17,158 @@ import javax.swing.border.*;
 import Shared.Module;
 import Shared.SimTime;
 
+// UI STYLING
+import java.awt.GraphicsEnvironment;
+import java.awt.EventQueue;
+import java.awt.event.*;
+import java.io.*;
+import javax.swing.border.*;
+import java.awt.FontFormatException;
+import javax.swing.JComboBox;
+import javax.swing.UIManager;
+import javax.swing.SwingConstants;
+import java.awt.Color;
+import javax.swing.JTextField;
+import java.awt.Insets;
+
 public class MboGui extends JFrame implements ActionListener {
+
+	/*-------------------------------------------------------------------*/
+	/**
+	 * <COMMON AESTHETICS>
+	 * ALLOWABLE FONTS
+	 */
+	
+	Font font_14_bold = new Font("Roboto Condensed", Font.BOLD, 16);
+	Font font_16_bold = new Font("Roboto Condensed", Font.BOLD, 20);
+	Font font_20_bold = new Font("Roboto Condensed Bold", Font.BOLD, 30);
+	Font font_24_bold = new Font("Roboto Condensed", Font.BOLD, 38);
+
+	/**
+	 * <COMMON AESTHETICS>
+	 * SET LOOK AND FEEL - CALL THIS FIRST!!!
+	 */
+	public void setLookAndFeel(){
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+			UIManager.getDefaults().put("TabbedPane.contentBorderInsets", new Insets(0,0,0,0));
+			UIManager.getDefaults().put("TabbedPane.tabsOverlapBorder", true);
+			UIManager.put("TabbedPane.selected", Color.GRAY);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+
+		try {
+		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Bold.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-BoldItalic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Italic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Regular.ttf")));
+
+		    System.out.println("Loaded custom fonts!");
+		} catch (IOException|FontFormatException e) {
+		    System.out.println("HssVisualizer Error: Cannot load custom font.");
+		}
+	}
+
+	/**
+	 * <COMMON AESTHETICS>
+	 * STANDARD BUTTON, COMBOBOX, LABEL WRAPPERS
+	 */
+	public void stylizeButton(JButton b){
+		b.setFocusPainted(false);
+		b.setFont(font_14_bold);
+		b.setForeground(Color.WHITE);
+		b.setBackground(new Color(102, 0, 153)); // Purple
+	}
+
+	public void stylizeButton_Disabled(JButton b){
+		b.setFocusPainted(false);
+		b.setFont(font_14_bold);
+		b.setForeground(Color.GRAY);
+		b.setBackground(new Color(50, 0, 70));
+	}
+
+	public void stylizeToggleButton(JToggleButton b){
+		b.setFocusPainted(false);
+		b.setFont(font_14_bold);
+		b.setForeground(Color.WHITE);
+		b.setBackground(new Color(102, 0, 153)); // Purple
+	}
+
+	public void stylizeToggleButton_Disabled(JToggleButton b){
+		b.setFocusPainted(false);
+		b.setFont(font_14_bold);
+		b.setForeground(Color.GRAY);
+		b.setBackground(new Color(50, 0, 70));
+	}
+
+	public void stylizeComboBox(JComboBox c){
+		c.setFont(font_14_bold);
+		((JLabel)c.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
+		c.setForeground(Color.BLACK);
+		c.setBackground(Color.WHITE);
+	}
+
+	public void stylizeTextField(JTextField t){
+		t.setFont(font_14_bold);
+		t.setForeground(Color.BLACK);
+		t.setBackground(Color.WHITE);
+		t.setHorizontalAlignment(JTextField.CENTER);
+	}
+
+	public void stylizeScrollPane(JScrollPane s){
+		s.getViewport().setBackground(new Color(36, 39, 45));
+		Border b = BorderFactory.createEmptyBorder(0, 0, 0, 0);
+		s.setFont(font_16_bold);
+		s.setBorder(b);
+	}
+
+	public void stylizePanel(JPanel p){
+		Border b = BorderFactory.createEmptyBorder(0, 0, 0, 0);	
+		p.setBackground(new Color(26, 29, 35));
+		p.setBorder(b);
+	}
+
+	public void stylizeTable(JTable t){
+		t.getTableHeader().setFont(font_14_bold);
+		t.getTableHeader().setBackground(new Color(20, 20, 20));
+		t.getTableHeader().setForeground(Color.WHITE);
+		t.getTableHeader().setReorderingAllowed(false);
+
+		t.setFont(font_14_bold);
+	}
+
+	public void stylizeTabbedPane(JTabbedPane t){
+		t.setFont(font_16_bold);
+		t.setBackground(Color.DARK_GRAY);
+		t.setForeground(Color.BLACK);
+	}
+
+	public void stylizeHeadingLabel(JLabel l){
+		l.setFont(font_20_bold);
+		l.setForeground(Color.WHITE);
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+	}
+
+	public void stylizeInfoLabel(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
+		l.setFont(font_16_bold);
+	}
+
+	public void stylizeInfoLabel_Bold(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.RIGHT);
+		l.setForeground(new Color(234, 201, 87));
+		l.setFont(font_16_bold);
+	}
+
+	public void stylizeInfoLabel_Small(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
+		l.setFont(font_14_bold);
+	}
+	/*-------------------------------------------------------------------*/
    
     private JLabel timeBox;
     private Font font;
@@ -45,24 +196,30 @@ public class MboGui extends JFrame implements ActionListener {
 		// initialize the jframe
         setTitle("Moving Block Overlay");
 		setSize(900, 600);
+		getContentPane().setBackground(new Color(20, 20, 20));
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		// set the icon
 		pineapple = new JLabel(new ImageIcon("pineapple_icon.png"));
 		pineapple2 = new JLabel(new ImageIcon("pineapple_icon.png"));
-		setIconImage((new ImageIcon("..\\..\\Shared\\static\\pineapple2.png")).getImage());
+		setIconImage((new ImageIcon("Shared/static/pineapple2.png")).getImage());
 
 		// create the infopanel
         JPanel infoPanel = new JPanel();
+        stylizePanel(infoPanel);
+
 		JPanel schedulerPanel = new JPanel();
+		stylizePanel(schedulerPanel);
+
         initInfoPanel(infoPanel);
 		initSchedulerPanel(schedulerPanel);
 
 		// create the tabbed pane
 		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Train Information", null, infoPanel, "Displays information about the trains in the system");
-		tabbedPane.addTab("Scheduler", null, schedulerPanel, "Allows the user to create a train schedule for use by the CTC office");
+		stylizeTabbedPane(tabbedPane);
+		tabbedPane.addTab("TRAIN INFORMATION", null, infoPanel, "Displays information about the trains in the system");
+		tabbedPane.addTab("SCHEDULER", null, schedulerPanel, "Allows the user to create a train schedule for use by the CTC office");
 
 		add(tabbedPane);
 	}
@@ -70,13 +227,12 @@ public class MboGui extends JFrame implements ActionListener {
 	private void initInfoPanel(JPanel infoPanel) {
 		
 		// create a search bar
-		JTextField searchBox = new JTextField(" Search for a particular train...");
-		searchBox.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+		JTextField searchBox = new JTextField(" SEARCH FOR A PARTICULAR TRAIN...");
+		stylizeTextField(searchBox);
 
 		// create a clock
-		this.timeBox = new JLabel(LocalDateTime.now().toString());
-		//this.timeBox.setForeground(Color.WHITE);
-		this.timeBox.setFont(this.font);
+		this.timeBox = new JLabel("07:00:00");
+		stylizeHeadingLabel(this.timeBox);
 
 		//searchBar.getDocument().addDocumentListener(new SearchListener());
 
@@ -87,7 +243,7 @@ public class MboGui extends JFrame implements ActionListener {
 							"<html><center>Calculated<br>Location</center></html>",
 							"<html><center>Calculated<br>Velocity<br>(mi/s)</center></html>",
 							"<html><center>Transmitted<br>Authority<br>(mi)</center></html>",
-							"<html><center>Transmitted Safe Braking Distance<br>(mi)</center></html>"};
+							"<html><center>Transmitted<br>Safe Braking<br>Distance (mi)</center></html>"};
 		//trainInfoColumns.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
 		//System.out.println("About to try with " + mbo);
 		this.trainData = mbo.getTrainData();
@@ -98,9 +254,11 @@ public class MboGui extends JFrame implements ActionListener {
   		};
   		//trainInfoTable = new JTable(this.trainData, this.trainInfoColumns);
 		trainInfoTable = new JTable(trainInfoTableModel);
+		stylizeTable(trainInfoTable);
 		trainInfoTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
-		trainInfoTable.setFillsViewportHeight(true);
+
 	    JScrollPane scrollPane = new JScrollPane(trainInfoTable);
+	    stylizeScrollPane(scrollPane);
 
 		// create the train map
 		ImageIcon mapIcon = new ImageIcon("..\\..\\Shared\\static\\dummy_map.png");
@@ -146,11 +304,12 @@ public class MboGui extends JFrame implements ActionListener {
 	private void initSchedulerPanel(JPanel schedulerPanel) {
 
 		// create the basic components
-		JLabel trainTitle = new JLabel("Train Schedules");
-		trainTitle.setFont(this.font);
-		//trainTitle.setForeground(Color.WHITE);
-		JLabel operatorTitle = new JLabel("Operator Schedules");
-		operatorTitle.setFont(this.font);
+		JLabel trainTitle = new JLabel("TRAIN SCHEDULES");
+		stylizeHeadingLabel(trainTitle);
+
+		JLabel operatorTitle = new JLabel("OPERATOR SCHEDULES");
+		stylizeHeadingLabel(operatorTitle);
+
 		GroupLayout layout = new GroupLayout(schedulerPanel);
 
         // train schedule table
@@ -167,9 +326,10 @@ public class MboGui extends JFrame implements ActionListener {
   		};
 		JTable trainTable = new JTable(trainScheduleTableModel);
 		trainTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
-		trainTable.setFillsViewportHeight(true);
-		trainTable.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+		stylizeTable(trainTable);
+
 		JScrollPane trainScrollPane = new JScrollPane(trainTable);
+		stylizeScrollPane(trainScrollPane);
 
 		// operator schedule table
 		String[] operatorTableHeaders = {"Operator Name", "Start Time", "Stop Time"};
@@ -180,25 +340,32 @@ public class MboGui extends JFrame implements ActionListener {
 		                                {new String(), new String(), new String()}};
 		JTable operatorTable = new JTable(operatorTableData, operatorTableHeaders);
 		operatorTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
-		operatorTable.setFillsViewportHeight(true);
+		stylizeTable(operatorTable);
+
 		JScrollPane operatorScrollPane = new JScrollPane(operatorTable);
+		stylizeScrollPane(operatorScrollPane);
 
         // final parameter input
-		JLabel datePromptLabel = new JLabel("Date");
-		JLabel throughputPromptLabel = new JLabel("Desired Throughput");
+		JLabel datePromptLabel = new JLabel("DATE");
+		stylizeInfoLabel(datePromptLabel);
+
+		JLabel throughputPromptLabel = new JLabel("DESIRED THROUGHPUT");
+		stylizeInfoLabel(throughputPromptLabel);
+
 		JTextField datePrompt = new JTextField(20);
+		stylizeTextField(datePrompt);
+
 		JTextField throughputPrompt = new JTextField(20);
-		generateButton = new JButton("Generate Schedule");
-		Border thickBorder = new LineBorder(Color.WHITE, 3);
-    	generateButton.setBorder(thickBorder);
-    	generateButton.setPreferredSize(new Dimension(15, 90));
-		generateButton.setContentAreaFilled(false);
-		generateButton.setOpaque(true);
-		generateButton.setBackground(Color.BLACK);
-		generateButton.setForeground(Color.WHITE);
+		stylizeTextField(throughputPrompt);
+
+		generateButton = new JButton("GENERATE SCHEDULE");
+		stylizeButton(generateButton);
+
 		generateButton.addActionListener(this);
 
 		JPanel finalInputPanel = new JPanel();
+		stylizePanel(finalInputPanel);
+
 		GroupLayout finalInputLayout = new GroupLayout(finalInputPanel);
 		finalInputLayout.setAutoCreateContainerGaps(true);
 		finalInputLayout.setAutoCreateGaps(true);
