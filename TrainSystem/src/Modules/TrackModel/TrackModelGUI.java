@@ -37,12 +37,17 @@ import java.awt.ItemSelectable;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+/*--- REQUIRED LIBRARIES FOR HSS DARK THEME ----*/
 import java.awt.GraphicsEnvironment;
 import java.awt.EventQueue;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.border.*;
 import java.awt.FontFormatException;
+import javax.swing.JComboBox;
+import javax.swing.UIManager;
+import javax.swing.SwingConstants;
+/*----------------------------------------------*/
 
 import java.util.*;
 
@@ -112,20 +117,23 @@ public class TrackModelGUI implements ActionListener{
 		initTracksOnStartup();
 	}
 
-	/*-------------------------------------------------------------------*/
+	/*----------------------------------------------------------------------*/
+	/*-------------------- HSS GUI DARK THEME REDESIGN ---------------------*/
+	/*----------------------------------------------------------------------*/
+
 	/**
-	 * <COMMON AESTHETICS>
-	 * ALLOWABLE FONTS
+	 * Variations of Roboto Condensed Font
 	 */
-	
 	Font font_14_bold = new Font("Roboto Condensed", Font.BOLD, 16);
 	Font font_16_bold = new Font("Roboto Condensed", Font.BOLD, 20);
 	Font font_20_bold = new Font("Roboto Condensed Bold", Font.BOLD, 30);
 	Font font_24_bold = new Font("Roboto Condensed", Font.BOLD, 38);
 
 	/**
-	 * <COMMON AESTHETICS>
-	 * SET LOOK AND FEEL - CALL THIS FIRST!!!
+	 * Set any UI configurations done by the UI manager and
+	 * register Roboto Condensed font into the system.
+	 *
+	 * NOTE: This method must be called first in the GUI instantiation!
 	 */
 	public void setLookAndFeel(){
 		try {
@@ -148,8 +156,7 @@ public class TrackModelGUI implements ActionListener{
 	}
 
 	/**
-	 * <COMMON AESTHETICS>
-	 * STANDARD BUTTON, COMBOBOX, LABEL WRAPPERS
+	 * JComponent styling wrappers
 	 */
 	public void stylizeButton(JButton b){
 		b.setFocusPainted(false);
@@ -195,7 +202,10 @@ public class TrackModelGUI implements ActionListener{
 		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
 		l.setFont(font_14_bold);
 	}
-	/*-------------------------------------------------------------------*/
+	
+	/*----------------------------------------------------------------------*/
+	/*-------------------- HSS GUI DARK THEME REDESIGN ---------------------*/
+	/*----------------------------------------------------------------------*/
 
 	/**
 	 * Initialize the contents of the frame.

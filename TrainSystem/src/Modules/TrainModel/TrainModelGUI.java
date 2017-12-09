@@ -65,20 +65,23 @@ import javax.swing.JTextField;
  */
 public class TrainModelGUI extends JFrame {
 
-	/*-------------------------------------------------------------------*/
-	/**
-	 * <COMMON AESTHETICS>
-	 * ALLOWABLE FONTS
-	 */
+	/*----------------------------------------------------------------------*/
+	/*-------------------- HSS GUI DARK THEME REDESIGN ---------------------*/
+	/*----------------------------------------------------------------------*/
 	
+	/**
+	 * Variations of Roboto Condensed Font
+	 */
 	Font font_14_bold = new Font("Roboto Condensed", Font.BOLD, 16);
 	Font font_16_bold = new Font("Roboto Condensed", Font.BOLD, 20);
 	Font font_20_bold = new Font("Roboto Condensed Bold", Font.BOLD, 24);
 	Font font_24_bold = new Font("Roboto Condensed", Font.BOLD, 38);
 
 	/**
-	 * <COMMON AESTHETICS>
-	 * SET LOOK AND FEEL - CALL THIS FIRST!!!
+	 * Set any UI configurations done by the UI manager and
+	 * register Roboto Condensed font into the system.
+	 *
+	 * NOTE: This method must be called first in the GUI instantiation!
 	 */
 	public void setLookAndFeel(){
 		try {
@@ -101,8 +104,7 @@ public class TrainModelGUI extends JFrame {
 	}
 
 	/**
-	 * <COMMON AESTHETICS>
-	 * STANDARD BUTTON, COMBOBOX, LABEL WRAPPERS
+	 * JComponent styling wrappers
 	 */
 	public void stylizeButton(JButton b){
 		b.setFocusPainted(false);
@@ -155,7 +157,10 @@ public class TrainModelGUI extends JFrame {
 		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
 		l.setFont(font_14_bold);
 	}
-	/*-------------------------------------------------------------------*/
+
+	/*----------------------------------------------------------------------*/
+	/*-------------------- HSS GUI DARK THEME REDESIGN ---------------------*/
+	/*----------------------------------------------------------------------*/
 
 	private JSplitPane splitPane;
 	private JPanel contentPane;
