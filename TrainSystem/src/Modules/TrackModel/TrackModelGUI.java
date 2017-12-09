@@ -52,7 +52,7 @@ import javax.swing.SwingConstants;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
-public class TrackModelGUI implements ActionListener{
+public class TrackModelGUI{
 	
 	/**
 	 * CONVERSION FACTORS FOR DISPLAY
@@ -70,8 +70,6 @@ public class TrackModelGUI implements ActionListener{
 	/**
 	 * GUI COMPONENTS
 	 */
-	Timer infoRefreshTimer;
-
 	private JFrame frame_tmGUI;
 	private JPanel panel_dynamicRender;
 	JComboBox comboBox_selectTrack;
@@ -255,6 +253,8 @@ public class TrackModelGUI implements ActionListener{
 
 					currentDisplay = redLineDisplay;
 				}
+
+				refresh();
 			}
 	    };
 
@@ -299,6 +299,7 @@ public class TrackModelGUI implements ActionListener{
 					}
 					currentDisplay.dynamicTrackView.blockSelected = blockSelected;
 					showBlockInfo(trackSelected.get(blockSelected.getId()));
+					refresh();
 				}
 			} 
 		});
@@ -321,6 +322,7 @@ public class TrackModelGUI implements ActionListener{
 					}
 					currentDisplay.dynamicTrackView.blockSelected = blockSelected;
 					showBlockInfo(blockSelected);
+					refresh();
 				}
 			} 
 		});
@@ -571,6 +573,7 @@ public class TrackModelGUI implements ActionListener{
 						// ... 
 					}
 				}
+				refresh();
 			} 
 		});
 
@@ -755,7 +758,6 @@ public class TrackModelGUI implements ActionListener{
 					comboBox_selectTrack.setSelectedItem("RED LINE");
 				}
 				showBlockInfo(blockSelected);
-				startTimer();
 			}
 			*/
 	    }
@@ -785,16 +787,12 @@ public class TrackModelGUI implements ActionListener{
 			comboBox_sectionId.addItem(trackSelected.get(i).getSection() + (i+1));
 		}
 
-		startTimer();
+		refresh();
 	}
 
-	public void startTimer(){
-		infoRefreshTimer = new Timer(20, this);
-	    infoRefreshTimer.start();
-	}
-
-	// Refresh the screen info
-	public void actionPerformed(ActionEvent e) {
-    	showBlockInfo(blockSelected);
+	// Refresh the GUI
+	public void refresh(){
+		showBlockInfo(blockSelected);
+		currentDisplay.dynamicTrackView.refresh();
 	}
 }

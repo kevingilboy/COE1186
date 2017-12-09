@@ -111,6 +111,7 @@ public class TrackModel implements Module{
 	public boolean updateTime(SimTime time){
 		checkOccupiedBeaconBlocks(redLineBlocks);
 		checkOccupiedBeaconBlocks(greenLineBlocks);
+		trackModelGUI.refresh();
 		return true;
 	}
 
