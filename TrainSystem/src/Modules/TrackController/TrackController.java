@@ -129,10 +129,11 @@ public class TrackController implements Module{
 	// transmit as int[] authority = currentBlock, nextBlocks[]
 	public void transmitCtcAuthority(String trainName, int[] authority){
 		double distAuthority = 0;
-		if (authority.length > 2){
-			boolean canProceed = tcplc.canProceedPath(authority);
-			if(canProceed){
-				//can proceed and authority >2
+		boolean canProceed = tcplc.canProceedPath(authority);
+		if(canProceed){
+			//can proceed
+			if (authority.length > 2){
+				//can proceed and authority >2 (ie [cb,nb,...])
 				if ((authority[0] >= 0) && (trackModel.getBlock(associatedLine, authority[0]).getSwitch() != null) && (trackModel.getBlock(associatedLine, authority[1]).getSwitch() != null)){
 					//can proceed and currently on a switch so dont do switchStateCalc
 					distAuthority = calcAuthDist(authority);
@@ -167,16 +168,24 @@ public class TrackController implements Module{
 						}
 					}
 				} else {
-					//can proceed and doesnt have switch
+					//authority is >2 and can proceed and doesnt have switch
 					distAuthority = calcAuthDist(authority);
 					trackModel.transmitCtcAuthority(trainName, distAuthority);
 				}
 			} else {
-				//cannot proceed
-				trackModel.transmitCtcAuthority(trainName, distAuthority);
+				//authority is <2 and can proceed
+				if (authority.length > 1){
+					//authority is >1 (ie 2) and can proceed
+					distAuthority = calcAuthDist(authority);
+					trackModel.transmitCtcAuthority(trainName, distAuthority);
+				} else {
+					//authority is <1 and can proceed
+					// -- this is when the train is approaching its destination block
+					trackModel.transmitCtcAuthority(trainName, distAuthority);
+				}
 			}
 		} else {
-			//authority is <2
+			//cannot proceed
 			trackModel.transmitCtcAuthority(trainName, distAuthority);
 		}
 	} 
@@ -221,8 +230,10 @@ public class TrackController implements Module{
 	//Helper Functions
 	private double calcAuthDist(int[] authority){
 		double distAuth = 0;
-		for(int i=1; i<authority.length; i++){
-			distAuth += trackModel.getBlock(line, authority[i]).getLength();
+		for(int i=0; i<authority.length; i++){
+			if(authority[i] >= 0){
+				distAuth += trackModel.getBlock(line, authority[i]).getLength();
+			}
 		}
 		return distAuth;
 	}
