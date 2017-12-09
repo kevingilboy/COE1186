@@ -63,8 +63,8 @@ public class TrnController {
 		controller = C;
 		pi = new PIController(p, i);
 		driveMode = 0;
-		//blockMode = b;
-		blockMode = 1;
+		blockMode = b;
+		//blockMode = 1;
 		beacon = 0;
 		ctcAuth = 0;
 		mboAuth = 0;
@@ -296,14 +296,19 @@ public class TrnController {
 			eBrakesOn();
 			return true;
 		}
-		else if (overallAuth <= (safeBrakingDistance * 3/4) && actualSpeed > 0) {
+		/*else if (overallAuth == 0 && actualSpeed > 0) {
 			engineOff();
 			eBrakesOn();
 			return true;
-		}
+		}*/
 		else if ((overallAuth <= safeBrakingDistance && actualSpeed > 0) || (distToStation <= safeBrakingDistance && actualSpeed > 0)) {
 			engineOff();
 			sBrakesOn();
+			return true;
+		}
+		else if (overallAuth == 0 && actualSpeed == 0) {
+			sBrakesOff();
+			eBrakesOff();
 			return true;
 		}
 		else if (overallAuth >= 0 && actualSpeed == 0) {
