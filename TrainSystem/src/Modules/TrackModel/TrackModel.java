@@ -111,7 +111,6 @@ public class TrackModel implements Module{
 	public boolean updateTime(SimTime time){
 		checkOccupiedBeaconBlocks(redLineBlocks);
 		checkOccupiedBeaconBlocks(greenLineBlocks);
-		trackModelGUI.refresh();
 		return true;
 	}
 
@@ -147,7 +146,6 @@ public class TrackModel implements Module{
 	}
 
 	public void updateDynamicDisplay(SimTime currentTime) {
-		// TODO METHOD MADE BY ONE KEV FOR ANOTHER KEV
-		// ... ;)
+		trackModelGUI.refresh();
 	}
 }
