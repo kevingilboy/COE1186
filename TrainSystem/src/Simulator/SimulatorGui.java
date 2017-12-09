@@ -3,6 +3,11 @@ package Simulator;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+
+import Modules.Ctc.Line;
+
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
@@ -12,7 +17,12 @@ public class SimulatorGui {
 	private enum Waysides{
 		R1,R2,G1,G2;
 	};
+	
+	protected Simulator simulator;
+	
 	private JFrame frame;
+	private JComboBox<String> cbTrainModelTrains;
+	private JComboBox<String> cbTrainControllerTrains;
 
 	/**
 	 * Launch the application.
@@ -21,7 +31,7 @@ public class SimulatorGui {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SimulatorGui window = new SimulatorGui();
+					SimulatorGui window = new SimulatorGui(null);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -33,7 +43,9 @@ public class SimulatorGui {
 	/**
 	 * Create the application.
 	 */
-	public SimulatorGui() {
+	public SimulatorGui(Simulator sim) {
+		simulator = sim;
+		
 		initialize();
 		frame.setVisible(true);
 	}
@@ -120,7 +132,7 @@ public class SimulatorGui {
 		 *  TRAIN MODEL
 		 * ------------------------------
 		 */
-		JComboBox<String> cbTrainModelTrains = new JComboBox<String>();
+		cbTrainModelTrains = new JComboBox<String>();
 		cbTrainModelTrains.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String trainName = (String)cbTrainModelTrains.getSelectedItem();
@@ -144,7 +156,7 @@ public class SimulatorGui {
 		btnTraincontroller.setBounds(26, 332, 171, 41);
 		frame.getContentPane().add(btnTraincontroller);
 		
-		JComboBox<String> cbTrainControllerTrains = new JComboBox<String>();
+		cbTrainControllerTrains = new JComboBox<String>();
 		cbTrainControllerTrains.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String trainName = (String)cbTrainControllerTrains.getSelectedItem();
@@ -255,6 +267,25 @@ public class SimulatorGui {
 			case TRAINCONTROLLER:
 				//...
 				break;	
+		}
+	}
+	
+	protected void repaint() {
+		DefaultComboBoxModel<String> currentTrains = (DefaultComboBoxModel<String>)cbTrainControllerTrains.getModel();
+		DefaultComboBoxModel<String> newTrains = new DefaultComboBoxModel<String>();
+		
+		Boolean changed = false;
+		
+		for(String key : simulator.ctc.trains.keySet()) {
+			if(currentTrains.getIndexOf(key)==-1) {
+				changed = true;
+			}
+			newTrains.addElement(key);
+		}
+		
+		if(changed) {
+			cbTrainControllerTrains.setModel(newTrains);
+			cbTrainModelTrains.setModel(newTrains);			
 		}
 	}
 }

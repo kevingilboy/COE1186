@@ -41,11 +41,14 @@ public class Simulator {
 	protected Mbo mbo;
 	
 	public Simulator() throws InterruptedException {
+		//Self declaration needed to pass simulator into new thread
+		Simulator simulator = this;
+		
 		//Launch Simulator GUI
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					simulatorGui = new SimulatorGui();
+					simulatorGui = new SimulatorGui(simulator);
 					simulatorGuiReady = true;
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -187,6 +190,7 @@ public class Simulator {
 				while(!module.updateTime(currentTime)) {};
 			}
 			trackModel.updateDynamicDisplay(currentTime);
+			simulatorGui.repaint();
 			
 			//Increment time
 			currentTime.incrementTime(ticksPerSecond);
