@@ -311,7 +311,7 @@ public class TrnController {
 			eBrakesOff();
 			return true;
 		}
-		else if (overallAuth >= 0 && actualSpeed == 0) {
+		else if (overallAuth > 0 && actualSpeed == 0) {
 			sBrakesOff();
 			eBrakesOff();
 			return false;
