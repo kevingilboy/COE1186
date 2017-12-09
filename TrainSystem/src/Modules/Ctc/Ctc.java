@@ -46,6 +46,13 @@ public class Ctc implements Module,TimeControl {
 	public TrainController trainController = null;
 	
 	int testTrainNum = 0;
+
+	/**
+	 * Called by the SimulatorGUI class to show the GUI when this module is selected
+	 */
+	public void showGUI(){
+		gui.showGUI();
+	}
 	
 	public Ctc() {
 		ctc = this;

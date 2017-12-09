@@ -35,6 +35,13 @@ public class TrackModel implements Module{
 	// GUI references
 	private TrackModelGUI trackModelGUI;
 
+	/**
+	 * Called by the SimulatorGUI class to show the GUI when this module is selected
+	 */
+	public void showGUI(){
+		trackModelGUI.showGUI();
+	}
+
 	// Constructor
 	public TrackModel(){	
 

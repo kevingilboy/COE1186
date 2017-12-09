@@ -261,6 +261,12 @@ public class CtcGui {
 	private JLabel clockLabel = new JLabel("00:00:00");
 	private JTextField suggestedSpeed;
 
+	/**
+	 * Called by the SimulatorGUI class to show the GUI when this module is selected
+	 */
+	public void showGUI(){
+		frame.setVisible(true);
+	}
 
 	/**
 	 * Create the application.
@@ -284,11 +290,11 @@ public class CtcGui {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setResizable(false);
-		frame.setVisible(true);
+		frame.setVisible(false);
 		frame.setTitle("CTC");
 		frame.setBounds(100, 100, GUI_WINDOW_WIDTH, GUI_WINDOW_HEIGHT);
 		frame.setBackground(Color.BLACK);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Container contentPane = frame.getContentPane();
 		contentPane.setBackground(new Color(26, 29, 35));
 		contentPane.setLayout(null);

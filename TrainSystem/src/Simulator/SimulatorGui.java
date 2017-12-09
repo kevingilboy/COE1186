@@ -15,7 +15,7 @@ import java.awt.event.ActionEvent;
 
 public class SimulatorGui {
 	private enum Waysides{
-		R1,R2,G1,G2;
+		G1, G2, R1, R2;
 	};
 	
 	protected Simulator simulator;
@@ -67,6 +67,7 @@ public class SimulatorGui {
 		JButton btnCtc = new JButton("CTC");
 		btnCtc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				openGui(ModuleType.CTC);
 			}
 		});
 		btnCtc.setBounds(26, 52, 171, 41);
@@ -234,16 +235,16 @@ public class SimulatorGui {
 		//We can use this to open a respective Module's GUI
 		switch (module) {
 			case CTC:
-				//...
+				simulator.ctc.showGUI();
 				break;
 			case TRACKMODEL:
-				//...
+				simulator.trackModel.showGUI();
 				break;
 			case TRAINCONTROLLER:
-				//...
+				simulator.trainController.showGUI();
 				break;
 			case MBO:
-				//...
+				simulator.mbo.showGUI();
 				break;		
 		}
 	}
@@ -251,7 +252,7 @@ public class SimulatorGui {
 		//We can use this to open a respective Module's GUI
 		switch (module) {
 			case TRACKCONTROLLER:
-				//...
+				simulator.ctc.launchWaysideGui(wayside.ordinal()); 
 				break;
 		}
 	}
@@ -259,10 +260,11 @@ public class SimulatorGui {
 		//We can use this to open a respective Module's GUI
 		switch (module) {
 			case TRAINMODEL:
-				//...
+				simulator.trainModel.getTrain(trainName).showTrainGUI();
 				break;
 			case TRAINCONTROLLER:
-				//...
+				// THIS STILL HAS BUGS
+				simulator.trainController.getController(trainName).showGUI();
 				break;	
 		}
 	}
