@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JSeparator;
 
 public class SimulatorGui {
 	private enum Waysides{
@@ -55,7 +56,7 @@ public class SimulatorGui {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 800, 800);
+		frame.setBounds(100, 100, 800, 950);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		frame.getContentPane().setLayout(null);
 		
@@ -70,7 +71,7 @@ public class SimulatorGui {
 				openGui(ModuleType.CTC);
 			}
 		});
-		btnCtc.setBounds(26, 52, 171, 41);
+		btnCtc.setBounds(537, 226, 171, 41);
 		frame.getContentPane().add(btnCtc);
 		
 		/*
@@ -84,7 +85,7 @@ public class SimulatorGui {
 				openGui(ModuleType.TRACKCONTROLLER,Waysides.R1);
 			}
 		});
-		btnWaysideR1.setBounds(26, 121, 65, 41);
+		btnWaysideR1.setBounds(568, 362, 65, 41);
 		frame.getContentPane().add(btnWaysideR1);
 		
 		JButton btnWaysideR2 = new JButton("R2");
@@ -93,7 +94,7 @@ public class SimulatorGui {
 				openGui(ModuleType.TRACKCONTROLLER,Waysides.R2);
 			}
 		});
-		btnWaysideR2.setBounds(101, 121, 65, 41);
+		btnWaysideR2.setBounds(643, 362, 65, 41);
 		frame.getContentPane().add(btnWaysideR2);
 		
 		JButton btnWaysideG1 = new JButton("G1");
@@ -102,7 +103,7 @@ public class SimulatorGui {
 				openGui(ModuleType.TRACKCONTROLLER,Waysides.G1);
 			}
 		});
-		btnWaysideG1.setBounds(188, 121, 65, 41);
+		btnWaysideG1.setBounds(568, 312, 65, 41);
 		frame.getContentPane().add(btnWaysideG1);
 		
 		JButton btnWaysideG2 = new JButton("G2");
@@ -111,7 +112,7 @@ public class SimulatorGui {
 				openGui(ModuleType.TRACKCONTROLLER,Waysides.G2);
 			}
 		});
-		btnWaysideG2.setBounds(275, 121, 65, 41);
+		btnWaysideG2.setBounds(643, 312, 65, 41);
 		frame.getContentPane().add(btnWaysideG2);
 		
 		/*
@@ -125,7 +126,7 @@ public class SimulatorGui {
 				openGui(ModuleType.TRACKMODEL);
 			}
 		});
-		btnTrackModel.setBounds(26, 186, 171, 41);
+		btnTrackModel.setBounds(537, 465, 171, 41);
 		frame.getContentPane().add(btnTrackModel);
 		
 		/*
@@ -140,7 +141,7 @@ public class SimulatorGui {
 				openGui(ModuleType.TRAINMODEL,trainName);
 			}
 		});
-		cbTrainModelTrains.setBounds(26, 255, 52, 39);
+		cbTrainModelTrains.setBounds(656, 562, 52, 39);
 		frame.getContentPane().add(cbTrainModelTrains);
 		
 		/*
@@ -154,7 +155,7 @@ public class SimulatorGui {
 				openGui(ModuleType.TRAINCONTROLLER);
 			}
 		});
-		btnTraincontroller.setBounds(26, 332, 171, 41);
+		btnTraincontroller.setBounds(537, 652, 171, 41);
 		frame.getContentPane().add(btnTraincontroller);
 		
 		cbTrainControllerTrains = new JComboBox<String>();
@@ -164,7 +165,7 @@ public class SimulatorGui {
 				openGui(ModuleType.TRAINCONTROLLER,trainName);
 			}
 		});
-		cbTrainControllerTrains.setBounds(223, 333, 52, 39);
+		cbTrainControllerTrains.setBounds(469, 653, 52, 39);
 		frame.getContentPane().add(cbTrainControllerTrains);
 		
 		/*
@@ -178,8 +179,35 @@ public class SimulatorGui {
 				openGui(ModuleType.MBO);
 			}
 		});
-		btnMbo.setBounds(26, 391, 171, 41);
+		btnMbo.setBounds(537, 774, 171, 41);
 		frame.getContentPane().add(btnMbo);
+		
+		for(int i=0; i<6; i++) {
+			
+		}
+		JSeparator separator = new JSeparator();
+		separator.setBounds(100, 742, 587, 2);
+		frame.getContentPane().add(separator);
+		
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setBounds(100, 622, 587, 2);
+		frame.getContentPane().add(separator_1);
+		
+		JSeparator separator_2 = new JSeparator();
+		separator_2.setBounds(100, 534, 587, 2);
+		frame.getContentPane().add(separator_2);
+		
+		JSeparator separator_3 = new JSeparator();
+		separator_3.setBounds(100, 431, 587, 2);
+		frame.getContentPane().add(separator_3);
+		
+		JSeparator separator_4 = new JSeparator();
+		separator_4.setBounds(121, 292, 587, 2);
+		frame.getContentPane().add(separator_4);
+		
+		JSeparator separator_5 = new JSeparator();
+		separator_5.setBounds(0, 207, 768, 2);
+		frame.getContentPane().add(separator_5);
 		
 	}
 
