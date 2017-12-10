@@ -64,8 +64,8 @@ public class TrnController {
 		controller = C;
 		pi = new PIController(p, i);
 		driveMode = 0;
-		//blockMode = b;
-		blockMode = 1;
+		blockMode = b;
+		//blockMode = 1;
 		beacon = 0;
 		ctcAuth = 0;
 		mboAuth = 0;
