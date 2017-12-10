@@ -371,6 +371,12 @@ public class Ctc implements Module,TimeControl {
 			//-------------------
 			if(!isMovingBlockMode && train.line.blocks[currBlockId].getOccupied() && currBlockId != selfLocation) {
 				path.remove(path.size()-1);
+				/*
+				Switch swPrev = train.line.blocks[prevBlockId].getSwitch();
+				if(swPrev!=null) {
+					path.remove(path.size()-1);
+				}
+				*/
 				continue;
 			}
 			else if(isMovingBlockMode && !train.line.blocks[currBlockId].getStatus()) {
