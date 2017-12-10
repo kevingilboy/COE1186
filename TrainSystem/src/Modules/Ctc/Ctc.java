@@ -33,6 +33,7 @@ public class Ctc implements Module,TimeControl {
 	
 	public HashMap<String,Train> trains = new HashMap<>();
 	public HashMap<String,Schedule> schedules = new HashMap<>();
+	public Queue<Schedule> scheduleQueueToDispatch = new LinkedList<>();
 
 	public TrackCsvParser trackParser = new TrackCsvParser();
 	
@@ -281,12 +282,23 @@ public class Ctc implements Module,TimeControl {
 	public void dispatchTrain(String name) {
 		Schedule schedule = removeScheduleByName(name);
 		
+		//If the first block is occupied, add it to a queue to be subsequently dispatched
+		//Else dispatch the train
+		for(Train train : trains.values()) {
+			if(schedule.line == train.line && train.currLocation==schedule.line.yardOut) {
+				scheduleQueueToDispatch.add(schedule);
+				return;
+			}
+		}
+		dispatchTrain(schedule);
+	}
+	private void dispatchTrain(Schedule schedule) {
 		Train train = new Train(schedule);
 		schedule.train = train;
-		trains.put(name, train);
+		trains.put(schedule.name, train);
 		
-		trainModel.dispatchTrain(name, train.line.toString().toUpperCase());
-		trainController.dispatchTrain(name, train.line.toString().toUpperCase()); 
+		trainModel.dispatchTrain(schedule.name, train.line.toString().toUpperCase());
+		trainController.dispatchTrain(schedule.name, train.line.toString().toUpperCase()); 
 	}
 	
 	/**
@@ -554,6 +566,21 @@ public class Ctc implements Module,TimeControl {
 				String name = schedule.name;
 				dispatchTrain(name);
 				gui.autoDispatchFromQueue(name);
+			}
+		}
+		
+		//If a train was waiting for yard_out to be unoccupied, check yardout and dispatch if clear
+		Schedule scheduleToDispatch = scheduleQueueToDispatch.peek();
+		if(scheduleToDispatch!=null) {
+			boolean yardOutOccupied = false;
+			for(Train train : trains.values()) {
+				if(train.line == scheduleToDispatch.line && train.currLocation==train.line.yardOut) {
+					yardOutOccupied = true;
+					break;
+				}
+			}
+			if(!yardOutOccupied) {
+				dispatchTrain(scheduleQueueToDispatch.poll());
 			}
 		}
 		
