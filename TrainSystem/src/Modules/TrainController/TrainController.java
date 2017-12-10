@@ -24,7 +24,7 @@ public class TrainController implements Module {
 	private ArrayList<BlockInfo> greenInfo;
 	private SimTime time;
 	private String[] stationList;
-	private int blockMode;
+	private int blockMode = 0;
 	
 	public final int APPROACHING = 0;
 	public final int ARRIVED = 1;
@@ -190,6 +190,7 @@ public class TrainController implements Module {
 	@Override
 	public boolean communicationEstablished() {
 		receiveMap();
+		System.out.println("Train Controller Communication Established!");
 		return true;
 	}
 }

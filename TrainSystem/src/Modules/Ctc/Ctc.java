@@ -654,6 +654,7 @@ public class Ctc implements Module,TimeControl {
 		
 		gui.updateSelectedBlock(true);
 		
+		System.out.println("CTC Communication Established!");
 		return true;
 	}
 	
