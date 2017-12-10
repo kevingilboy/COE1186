@@ -514,14 +514,15 @@ public class Ctc implements Module,TimeControl {
 		//Else it is not on bidirectional but it has a reservation so retract the reservation
 		if(path.size()>=4 && train.line.blocks[path.get(3)].getDirection()==0 && bidirectionalReservation[0].equals("")) {
 			//Make a reservation
-			int startBlock = path.get(3);
-			int nb = Ctc.getNextBlockId(train.line, startBlock, path.get(2));
+			int prevIndex = 2;
+			int currIndex = 3;
+			int startBlock = path.get(currIndex);
+			int nb = Ctc.getNextBlockId(train.line, startBlock, path.get(prevIndex));
 			int endBlock;
-			int i=2,j=3;
 			do {
 				endBlock = nb;
 				try {
-					nb = Ctc.getNextBlockId(train.line, nb, path.get(i++));
+					nb = Ctc.getNextBlockId(train.line, nb, path.get(prevIndex++));
 				}
 				catch(IndexOutOfBoundsException e) {
 					break;
