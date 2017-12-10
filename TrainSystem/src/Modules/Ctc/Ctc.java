@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class Ctc implements Module,TimeControl {
@@ -47,6 +48,8 @@ public class Ctc implements Module,TimeControl {
 	public TrainController trainController = null;
 	
 	private boolean isMovingBlockMode = false;
+	
+	private String[] bidirectionalReservation = new String[] {"","-1","-1"};
 	
 	int testTrainNum = 0;
 	
@@ -394,18 +397,40 @@ public class Ctc implements Module,TimeControl {
 				continue;
 			}
 			
+			if(path.size()>=4 && !bidirectionalReservation[0].equals(train.name) && 
+					(Integer.parseInt(bidirectionalReservation[1])==currBlockId || Integer.parseInt(bidirectionalReservation[2])==currBlockId)){
+				int locationStart = path.indexOf(Integer.parseInt(bidirectionalReservation[1]));
+				int locationEnd = path.indexOf(Integer.parseInt(bidirectionalReservation[2]));
+				
+				if(locationStart==0) {
+					locationStart = 1+path.subList(1,path.size()).indexOf(Integer.parseInt(bidirectionalReservation[1]));
+				}
+				if(locationEnd==0) {
+					List<Integer> sub = path.subList(1,path.size());
+					locationEnd = 1+sub.indexOf(Integer.parseInt(bidirectionalReservation[2]));
+				}
+				if(locationStart==-1 && locationEnd!=-1) {
+					path = new ArrayList<Integer>(path.subList(0, locationEnd-3));
+				}
+				else if(locationEnd==-1 && locationStart!=-1) {
+					path = new ArrayList<Integer>(path.subList(0, locationStart-3));
+				}
+				else if(locationStart<locationEnd){
+					path = new ArrayList<Integer>(path.subList(0, locationStart-3));
+				}
+				else if(locationEnd<=locationStart) {
+					path = new ArrayList<Integer>(path.subList(0, locationEnd-3));
+				}
+				System.out.println("");
+				continue;
+			}
+			
 			//-------------------
 			// Fixed block: If block is occupied, ditch the path
 			// Moving block: If block is broken, ditch the path
 			//-------------------
 			if(!isMovingBlockMode && path.get(0)!=-1 && train.line.blocks[currBlockId].getOccupied() && currBlockId != selfLocation) {
 				path.remove(path.size()-1);
-				/*
-				Switch swPrev = train.line.blocks[prevBlockId].getSwitch();
-				if(swPrev!=null) {
-					path.remove(path.size()-1);
-				}
-				*/
 				continue;
 			}
 			else if(isMovingBlockMode && !train.line.blocks[currBlockId].getStatus()) {
@@ -485,8 +510,27 @@ public class Ctc implements Module,TimeControl {
 			}
 		} //while q not empty
 		
+		//If about to enter bidirectional and there is no existing reservation...
+		//Else it is not on bidirectional but it has a reservation so retract the reservation
+		if(path.size()>=4 && train.line.blocks[path.get(3)].getDirection()==0 && bidirectionalReservation[0].equals("")) {
+			//Make a reservation
+			int startBlock = path.get(3);
+			int nb = Ctc.getNextBlockId(train.line, startBlock, path.get(2));
+			int endBlock;
+			int i=2,j=3;
+			do {
+				endBlock = nb;
+				nb = Ctc.getNextBlockId(train.line, nb, path.get(i++));
+			}while(train.line.blocks[nb].getDirection()==0);
+			bidirectionalReservation = new String[] {train.name,Integer.toString(startBlock),Integer.toString(endBlock)};
+		}
+		else if(bidirectionalReservation[0].equals(train.name) && path.size()>=4 && train.line.blocks[path.get(3)].getDirection()!=0){
+			//Retract a reservation
+			bidirectionalReservation = new String[] {"","-1","-1"};
+		}
+		
 		//Remove the first only if not coming from the yard
-		if(path.get(0)!=-1) {
+		if(path.size()>0 && path.get(0)!=-1) {
 			path.remove(0);
 		}
 
