@@ -385,9 +385,11 @@ public class Ctc implements Module,TimeControl {
 					
 					//Follow both paths if valid
 					if(train.line.blocks[normId].getDirection() == train.line.blocks[altId].getDirection()) {
-						int indexToFollow = (currBlockId+1==normId) ? normId : altId;
-						ArrayList<Integer> newPath = cloneAndAppendAL(path,indexToFollow);
-						q.add(newPath);
+						//int indexToFollow = (currBlockId+1==normId) ? normId : altId;
+						ArrayList<Integer> normPath = cloneAndAppendAL(path,normId);
+						q.add(normPath);
+						ArrayList<Integer> altPath = cloneAndAppendAL(path,altId);
+						q.add(altPath);
 					}
 					else {
 						if(train.line.blocks[normId].getDirection()>=train.line.blocks[currBlockId].getDirection()) {
@@ -684,7 +686,6 @@ public class Ctc implements Module,TimeControl {
 		
 		enableMovingBlockMode(false);
 		
-		System.out.println("CTC Communication Established!");
 		return true;
 	}
 	

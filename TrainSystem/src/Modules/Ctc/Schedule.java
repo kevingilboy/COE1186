@@ -108,6 +108,12 @@ public class Schedule {
 		int prevBlockId = -1;
 		
 		for(Stop stop : stops) {
+			//Sending the train to the yard is auto generated so no need for travel time
+			if(stop.blockId==line.yardIn) {
+				stop.timeToDest = new SimTime(0,0,0);
+				return;
+			}
+			
 			q.add(new ArrayList<Integer>(Arrays.asList(prevBlockId,currBlockId)));
 			path = new ArrayList<Integer>();
 			
@@ -118,6 +124,10 @@ public class Schedule {
 				path = q.remove();
 				currBlockId = path.get(path.size()-1);
 				prevBlockId = path.get(path.size()-2);
+				
+				//TODO below is a temporary fix for the switch issue
+				if(currBlockId>line.yardOut ||currBlockId<0) continue;
+				
 				
 				//-------------------
 				// If approaching the yard, ditch the path
@@ -153,9 +163,11 @@ public class Schedule {
 						
 						//Follow both paths if valid
 						if(line.blocks[normId].getDirection() == line.blocks[altId].getDirection()) {
-							int indexToFollow = (currBlockId+1==normId) ? normId : altId;
-							ArrayList<Integer> newPath = cloneAndAppendAL(path,indexToFollow);
-							q.add(newPath);
+							//int indexToFollow = (currBlockId+1==normId) ? normId : altId;
+							ArrayList<Integer> normPath = cloneAndAppendAL(path,normId);
+							q.add(normPath);
+							ArrayList<Integer> altPath = cloneAndAppendAL(path,altId);
+							q.add(altPath);
 						}
 						else {
 							if(line.blocks[normId].getDirection()>=line.blocks[currBlockId].getDirection()) {
