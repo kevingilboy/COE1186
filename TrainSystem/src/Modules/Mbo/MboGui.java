@@ -57,18 +57,6 @@ public class MboGui extends JFrame implements ActionListener {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-
-		try {
-		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Bold.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-BoldItalic.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Italic.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Regular.ttf")));
-
-		    System.out.println("Loaded custom fonts!");
-		} catch (IOException|FontFormatException e) {
-		    System.out.println("HssVisualizer Error: Cannot load custom font.");
-		}
 	}
 
 	/**

@@ -72,8 +72,7 @@ public class CtcGui {
 	Font font_24_bold = new Font("Roboto Condensed", Font.BOLD, 38);
 
 	/**
-	 * Set any UI configurations done by the UI manager and
-	 * register Roboto Condensed font into the system.
+	 * Set any UI configurations done by the UI manager
 	 *
 	 * NOTE: This method must be called first in the GUI instantiation!
 	 */
@@ -85,18 +84,6 @@ public class CtcGui {
 			UIManager.put("TabbedPane.selected", Color.GRAY);
 		} catch (Throwable e) {
 			e.printStackTrace();
-		}
-
-		try {
-		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Bold.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-BoldItalic.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Italic.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Regular.ttf")));
-
-		    System.out.println("Loaded custom fonts!");
-		} catch (IOException|FontFormatException e) {
-		    System.out.println("HssVisualizer Error: Cannot load custom font.");
 		}
 	}
 
