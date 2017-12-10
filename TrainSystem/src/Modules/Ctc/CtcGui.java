@@ -207,7 +207,7 @@ public class CtcGui {
 	private Object[] dispatchedTrainsColumnNames = {"Train","Location","Sug. Speed","Authority","Passengers"};
 	private Object[][] dispatchedTrainsInitialData = new Object[0][dispatchedTrainsColumnNames.length];
 
-	private ScheduleJTable dispatchSelectedTable;
+	protected ScheduleJTable dispatchSelectedTable;
 	private JButton btnSuggestSpeed;
 		
 	/*
@@ -242,8 +242,8 @@ public class CtcGui {
 	private JLabel selectedBlockStatusIndicator;
 	
 	private JLabel lblSpeedup;
-	private JButton btnPause;
-	private JButton btnPlay;
+	protected JButton btnPause;
+	protected JButton btnPlay;
 	private int currentSpeedupIndex = 0;
 	private int[] availableSpeedups = {1,2,5,10};
 	private JButton btnDecSpeed;
@@ -1077,7 +1077,7 @@ public class CtcGui {
 			//Object[] row; //build the row here, but for now we fake the functionality below
 			Object[] row = {train.name,
 					train.line.blocks[train.currLocation],
-					String.format("%.2f",train.suggestedSpeed*0.621371)+" mph",
+					(train.dwelling) ? "Dwelling" : String.format("%.2f",train.suggestedSpeed*0.621371)+" mph",
 					String.format("%.3f",train.authority* 0.000621371192237)+" mi",
 					train.passengers};
 			train.line.dispatchedData.addRow(row);
