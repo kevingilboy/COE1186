@@ -190,7 +190,6 @@ public class TrainController implements Module {
 	@Override
 	public boolean communicationEstablished() {
 		receiveMap();
-		System.out.println("Train Controller Communication Established!");
 		return true;
 	}
 }

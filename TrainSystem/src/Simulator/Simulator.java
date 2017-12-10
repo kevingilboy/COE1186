@@ -225,6 +225,11 @@ public class Simulator {
 		}
 	}
 	
+	public void transmitEnableMovingBlockMode(Boolean isMovingBlockMode) {
+		trainController.enableMovingBlockMode(isMovingBlockMode);
+		mbo.enableMovingBlockMode(isMovingBlockMode);
+	}
+	
 	public static void main(String[] args) throws InterruptedException {
 		new Simulator();		
 	}

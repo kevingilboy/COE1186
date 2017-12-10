@@ -177,6 +177,13 @@ public class CtcGui {
 		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
 		l.setFont(font_14_bold);
 	}
+	
+	public void stylizeRadioButton(JRadioButton b) {
+		b.setFont(font_14_bold);
+		b.setForeground(Color.WHITE);
+		b.setBackground(Color.DARK_GRAY);
+		b.setHorizontalAlignment(SwingConstants.LEFT);
+	}
 	/*----------------------------------------------------------------------*/
 	/*-------------------- HSS GUI DARK THEME REDESIGN ---------------------*/
 	/*----------------------------------------------------------------------*/
@@ -194,8 +201,9 @@ public class CtcGui {
 	private Object[] dispatchedTrainsColumnNames = {"Train","Location","Sug. Speed","Authority","Passengers"};
 	private Object[][] dispatchedTrainsInitialData = new Object[0][dispatchedTrainsColumnNames.length];
 
-	private ScheduleJTable dispatchSelectedTable;
+	protected ScheduleJTable dispatchSelectedTable;
 	private JButton btnSuggestSpeed;
+	private JCheckBox chckbxManualOverride;
 		
 	/*
 	 * Creator tables
@@ -205,6 +213,8 @@ public class CtcGui {
 	private JTextField trainCreationDepartTime;
 	private JComboBox<Line> trainCreationLine;
 	private JTextField trainCreationName;
+	protected JRadioButton rdbtnFixedBlockMode;
+	protected JRadioButton rdbtnMovingBlockMode;
 	
 	/*
 	 * Queue tables
@@ -229,8 +239,8 @@ public class CtcGui {
 	private JLabel selectedBlockStatusIndicator;
 	
 	private JLabel lblSpeedup;
-	private JButton btnPause;
-	private JButton btnPlay;
+	protected JButton btnPause;
+	protected JButton btnPlay;
 	private int currentSpeedupIndex = 0;
 	private int[] availableSpeedups = {1,2,5,10};
 	private JButton btnDecSpeed;
@@ -399,12 +409,76 @@ public class CtcGui {
 		JButton btnimportschedule = new JButton("<html><center>IMPORT<br>SCHEDULE</center></html>");
 		btnimportschedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser fc = new JFileChooser();
-				FileFilter filter = new FileNameExtensionFilter("CSV file", new String[] {"csv"});
-				fc.setFileFilter(filter);
-				fc.showSaveDialog(frame);
-				//File file = fc.getSelectedFile();
-				//TODO import CSV file and add schedule to queue
+				Schedule schedule;
+				BufferedReader br = null;
+				String currentLine = "";
+				String delimeter = ",";
+
+				try {
+					//Let user select a file
+					JFileChooser fc = new JFileChooser();
+					FileFilter filter = new FileNameExtensionFilter("CSV file", new String[] {"csv"});
+					fc.setFileFilter(filter);
+					fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+					fc.showSaveDialog(frame);					
+					File f = fc.getSelectedFile();
+					
+					String filename[] = f.getName().replace(".csv","").split("_");
+					
+					//Set the line
+					Line line = null;
+					if(filename[0].equals("GREEN")) {
+						line = Line.GREEN;
+					}
+					else if(filename[0].equals("RED")) {
+						line = Line.RED;
+					}
+					else {
+						throw new IOException();
+					}
+					schedule = new Schedule(line);
+							
+					//Set the name
+					schedule.name = filename[1];
+					
+					//Set the departure time
+					String time = filename[2].replace("-",":");
+					schedule.departureTime = new SimTime(time);
+					
+					//Read the file
+					FileReader fr = new FileReader(f);
+					br = new BufferedReader(fr);
+					br.readLine(); //Skip first line
+					
+					int stopNum = 0;
+					while ((currentLine = br.readLine()) != null){
+						String [] csvline = currentLine.split(delimeter);
+						schedule.addStop(stopNum++,Integer.parseInt(csvline[0]), new SimTime(csvline[1]));
+					}
+					
+					//Update the GUI to reflect changes
+					trainCreationTable.clear();
+					trainCreationTable.schedule = schedule;
+					trainCreationTable.fireScheduleChanged();
+					trainCreationDepartTime.setText(schedule.departureTime.toString());
+					trainCreationName.setText(schedule.name);
+					trainCreationLine.setSelectedItem(schedule.line.toString());
+
+					//Enable "add to queue" buttons
+					enableTrainCreationComponents();					
+				} catch (FileNotFoundException e) {
+		        	e.printStackTrace();
+		    	} catch (IOException e) {
+		        	e.printStackTrace();
+		    	} finally {
+		        	if (br != null) {
+		            	try {
+		                	br.close();
+		            	} catch (IOException e) {
+		                	e.printStackTrace();
+		            	}
+		        	}
+		    	}
 			}
 		});
 		stylizeButton(btnimportschedule);
@@ -534,7 +608,7 @@ public class CtcGui {
 			}
 		});
 		stylizeButton(addToDispatchToQueue);
-		addToDispatchToQueue.setBounds(251, 475, 171, 67);
+		addToDispatchToQueue.setBounds(251, 457, 171, 67);
 		contentPane.add(addToDispatchToQueue);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
@@ -640,6 +714,7 @@ public class CtcGui {
 				stylizeButton_Disabled(btnDeleteQueueSchedule);
 				btnDispatchQueueSchedule.setEnabled(false);
 				stylizeButton_Disabled(btnDispatchQueueSchedule);
+				//manualSpeedSetEnabled(false);
 			}
 		});
 		btnDeleteQueueSchedule.setBounds(713, 402, 171, 41);
@@ -713,7 +788,7 @@ public class CtcGui {
 			public void stateChanged(ChangeEvent arg0) {
 				if(dispatchSelectedTable!=null) {
 					dispatchSelectedTable.clear();
-					manualSpeedSetEnabled(false);
+					enableManualSpeedComponents();
 					for(Line line : Line.values()) {
 						line.dispatchedTable.clearSelection();
 					}
@@ -735,9 +810,9 @@ public class CtcGui {
 				public void mouseClicked(MouseEvent e) {
 					int row = line.dispatchedTable.rowAtPoint(e.getPoint());
 					String trainName = (String) line.dispatchedData.getValueAt(row, 0);
-					Schedule schedule = ctc.getTrainByName(trainName).schedule;
-					dispatchSelectedTable.setSchedule(schedule);
-					manualSpeedSetEnabled(true);
+					Train train = ctc.getTrainByName(trainName);
+					dispatchSelectedTable.setSchedule(train.schedule);
+					enableManualSpeedComponents();
 				}
 			});
 			scrollPane.setViewportView(line.dispatchedTable);
@@ -775,10 +850,9 @@ public class CtcGui {
 		btnSuggestSpeed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String speed = suggestedSpeed.getText();
-				if(speed.contains("[0-9]+")) {
+				if(speed.matches(".*\\d+.*")) {
 					Train train = ctc.getTrainByName(dispatchSelectedTable.schedule.name);
-					train.overrideSuggestedSpeed = true;
-					train.suggestedSpeed = Integer.parseInt(speed);
+					train.manualSpeed = Integer.parseInt(speed) * 1.60934;
 				}
 			}
 		});
@@ -786,7 +860,25 @@ public class CtcGui {
 		btnSuggestSpeed.setBounds(1310, 441, 80, 32);
 		frame.getContentPane().add(btnSuggestSpeed);
 		
-		manualSpeedSetEnabled(false);
+		chckbxManualOverride = new JCheckBox("MANUAL OVERRIDE");
+		chckbxManualOverride.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Train train = ctc.getTrainByName(dispatchSelectedTable.schedule.name);
+				
+				//Switch into manual mode with -1 speed so that the suggestion is ignored
+				train.manualSpeedMode = chckbxManualOverride.isSelected();
+				train.manualSpeed = -1;
+				
+				//Enable the input textbox and send button
+				enableManualSpeedComponents();
+			}
+		});
+		chckbxManualOverride.setBackground(new Color(20,20,20));
+		chckbxManualOverride.setForeground(Color.WHITE);
+		chckbxManualOverride.setBounds(1250, 478, 135, 18);
+		frame.getContentPane().add(chckbxManualOverride);
+		
+		enableManualSpeedComponents();
 		
 		/**
 		 * BOTTOM FRAME
@@ -923,13 +1015,6 @@ public class CtcGui {
 		btnJustDoIt.setBounds(1214, 520, 136, 68);
 		frame.getContentPane().add(btnJustDoIt);
 		
-		JCheckBox chckbxManualOverride = new JCheckBox("MANUAL OVERRIDE");
-		chckbxManualOverride.setEnabled(false);
-		chckbxManualOverride.setBackground(new Color(20,20,20));
-		chckbxManualOverride.setForeground(Color.WHITE);
-		chckbxManualOverride.setBounds(1250, 478, 135, 18);
-		frame.getContentPane().add(chckbxManualOverride);
-		
 		JButton btnR1 = new JButton("R1");
 		stylizeButton(btnR1);
 		btnR1.addActionListener(new ActionListener() {
@@ -975,6 +1060,29 @@ public class CtcGui {
 		lblwaysideGuis.setHorizontalAlignment(SwingConstants.CENTER);
 		lblwaysideGuis.setBounds(920, 621, 200, 57);
 		frame.getContentPane().add(lblwaysideGuis);
+		
+		rdbtnFixedBlockMode = new JRadioButton("Fixed Block Mode");
+		stylizeRadioButton(rdbtnFixedBlockMode);
+		rdbtnFixedBlockMode.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				rdbtnMovingBlockMode.setSelected(false);
+				ctc.enableMovingBlockMode(false);
+			}
+		});
+		rdbtnFixedBlockMode.setSelected(true);
+		rdbtnFixedBlockMode.setBounds(261, 548, 153, 18);
+		frame.getContentPane().add(rdbtnFixedBlockMode);
+		
+		rdbtnMovingBlockMode = new JRadioButton("Moving Block Mode");
+		stylizeRadioButton(rdbtnMovingBlockMode);
+		rdbtnMovingBlockMode.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				rdbtnFixedBlockMode.setSelected(false);
+				ctc.enableMovingBlockMode(true);
+			}
+		});
+		rdbtnMovingBlockMode.setBounds(261, 566, 153, 18);
+		frame.getContentPane().add(rdbtnMovingBlockMode);
 	}
 	
 	/*
@@ -992,8 +1100,14 @@ public class CtcGui {
 			trainCreationTable.setEnabled(true);
 	
 			//If valid name and time, and schedule has one stop then allow schedule to be dispatched
-			addToDispatchToQueue.setEnabled(trainCreationTable.schedule.stops.size()>0 && trainCreationTable.checkDataValid());
-			stylizeButton(addToDispatchToQueue);
+			if(trainCreationTable.schedule.stops.size()>0 && trainCreationTable.checkDataValid()) {
+				addToDispatchToQueue.setEnabled(true);
+				stylizeButton(addToDispatchToQueue);
+			}
+			else {
+				addToDispatchToQueue.setEnabled(false);
+				stylizeButton_Disabled(addToDispatchToQueue);
+			}		
 		}
 		else {
 			//Else disable table and ability to add to queue
@@ -1057,7 +1171,7 @@ public class CtcGui {
 	/*
 	 * DISPATCH TABLE
 	 */
-	private void updateDispatchedTable(){
+	private boolean updateDispatchedTable(){
 		//Clear the red and green tables
 		for(Line line : Line.values()) {
 			line.dispatchedData.setDataVector(dispatchedTrainsInitialData, dispatchedTrainsColumnNames);
@@ -1070,7 +1184,7 @@ public class CtcGui {
 			//Object[] row; //build the row here, but for now we fake the functionality below
 			Object[] row = {train.name,
 					train.line.blocks[train.currLocation],
-					String.format("%.2f",train.suggestedSpeed*0.621371)+" mph",
+					(train.dwelling) ? "Dwelling" : String.format("%.2f",train.suggestedSpeed*0.621371)+" mph",
 					String.format("%.3f",train.authority* 0.000621371192237)+" mi",
 					train.passengers};
 			train.line.dispatchedData.addRow(row);
@@ -1090,11 +1204,37 @@ public class CtcGui {
 				}
 			}
 		}
+		
+		return true;
 	}
 	
-	private void manualSpeedSetEnabled(Boolean b) {
-		btnSuggestSpeed.setEnabled(b);
-		suggestedSpeed.setEnabled(b);
+	private void enableManualSpeedComponents() {
+		if(dispatchSelectedTable.schedule == null) {
+			btnSuggestSpeed.setEnabled(false);
+			suggestedSpeed.setEnabled(false);
+			suggestedSpeed.setText("");
+			chckbxManualOverride.setSelected(false);
+			chckbxManualOverride.setEnabled(false);
+			return;
+		}
+		
+		Train train = ctc.getTrainByName(dispatchSelectedTable.schedule.name);
+		
+		if(train.manualSpeedMode) {
+			btnSuggestSpeed.setEnabled(true);
+			suggestedSpeed.setEnabled(true);
+			suggestedSpeed.setText(train.manualSpeed>=0 ? String.format("%.2f",train.manualSpeed*0.621371192237) : "");
+			chckbxManualOverride.setSelected(true);
+			chckbxManualOverride.setEnabled(true);
+		}
+		else {
+			btnSuggestSpeed.setEnabled(false);
+			suggestedSpeed.setEnabled(false);
+			suggestedSpeed.setText("");
+			chckbxManualOverride.setSelected(false);
+			chckbxManualOverride.setEnabled(true);
+		}
+
 		stylizeButton(btnSuggestSpeed);
 	}
 
@@ -1168,7 +1308,7 @@ public class CtcGui {
 	}	
 	
 	
-	public void repaint() {
+	public boolean repaint() {
 		//Update Throughput Label
 		lblThroughputAmt.setText(Integer.toString((int)ctc.throughput) + " passengers/hr");
 		
@@ -1179,6 +1319,8 @@ public class CtcGui {
 		updateSelectedBlock(false);
 		
 		//Update the locations of trains
-		updateDispatchedTable();
+		while(!updateDispatchedTable());
+		
+		return true;
 	}
 }

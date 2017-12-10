@@ -19,10 +19,29 @@ public class Schedule {
 	
 	private final SimTime DEFAULT_DWELL = new SimTime("00:02:00");
 	
+	public Train train;
+	
 	public Schedule(Line line) {
 		this.line = line;
 		nextStopIndex = 0;
 		stops = new ArrayList<Stop>();
+		train = null;
+	}
+	
+	/**
+	 * Add a stop with a dwell time 
+	 */
+	public void addStop(int index, int blockId, SimTime dwell) {
+		//If stop does not exist, then add it. Else update the current stop
+		if(index>=stops.size()) {
+			stops.add(index,new Stop(blockId,dwell));
+		}
+		else {
+			stops.set(index,new Stop(blockId,dwell));
+		}
+		
+		//We can still calculate time between stops
+		calculateTimeToDestinations();
 	}
 	
 	/**
@@ -86,12 +105,25 @@ public class Schedule {
 	 * This function calculates time between stops
 	 */
 	private void calculateTimeToDestinations() {
+		//If a schedule, then start from yard_out, else start from the train position
+		if(train==null) {
+			calculateTimeToDestinations(line.yardOut,-1);
+		}
+		else {
+			calculateTimeToDestinations(train.currLocation,train.prevLocation);
+		}
+	}
+	private void calculateTimeToDestinations(int currBlockId, int prevBlockId) {
 		Queue<ArrayList<Integer>> q = new LinkedList<ArrayList<Integer>>();
 		ArrayList<Integer> path;
-		int currBlockId = line.yardOut;
-		int prevBlockId = -1;
 		
 		for(Stop stop : stops) {
+			//Sending the train to the yard is auto generated so no need for travel time
+			if(stop.blockId==line.yardIn) {
+				//stop.timeToDest = new SimTime(0,0,0);
+				//return;
+			}
+			
 			q.add(new ArrayList<Integer>(Arrays.asList(prevBlockId,currBlockId)));
 			path = new ArrayList<Integer>();
 			
@@ -105,6 +137,7 @@ public class Schedule {
 				
 				//TODO below is a temporary fix for the switch issue
 				if(currBlockId>line.yardOut ||currBlockId<0) continue;
+				
 				
 				//-------------------
 				// If approaching the yard, ditch the path
@@ -139,13 +172,24 @@ public class Schedule {
 						int altId = swCurr.getPortAlternate();
 						
 						//Follow both paths if valid
-						if(line.blocks[normId].getDirection()>=line.blocks[currBlockId].getDirection()) {
-							ArrayList<Integer> newPath = cloneAndAppendAL(path,normId);
-							q.add(newPath);
+						if(line.blocks[normId].getDirection() == line.blocks[altId].getDirection()) {
+							int indexToFollow = (currBlockId+1==normId) ? normId : altId;
+							ArrayList<Integer> normPath = cloneAndAppendAL(path,indexToFollow);
+							q.add(normPath);
+							if(altId==line.yardIn) {
+								ArrayList<Integer> altPath = cloneAndAppendAL(path,altId);
+								q.add(altPath);
+							}
 						}
-						if(line.blocks[altId].getDirection()>=line.blocks[currBlockId].getDirection()) {
-							ArrayList<Integer> newPath = cloneAndAppendAL(path,altId);
-							q.add(newPath);
+						else {
+							if(line.blocks[normId].getDirection()>=line.blocks[currBlockId].getDirection()) {
+								ArrayList<Integer> newPath = cloneAndAppendAL(path,normId);
+								q.add(newPath);
+							}
+							if(line.blocks[altId].getDirection()>=line.blocks[currBlockId].getDirection()) {
+								ArrayList<Integer> newPath = cloneAndAppendAL(path,altId);
+								q.add(newPath);
+							}
 						}
 					}
 					// CASE: Entering a tail from a non-switch, pursue the normal port 
@@ -157,12 +201,13 @@ public class Schedule {
 				}
 				// CASE : Not a switch or about to leave a switch so just use a vanilla TrackIterator to pursue the next block
 				else {
-					int nextBlockId = (new TrackIterator(line.blocksAL, currBlockId, prevBlockId)).nextBlock();
+					int nextBlockId = Ctc.getNextBlockId(line, currBlockId, prevBlockId);
 					ArrayList<Integer> newPath = cloneAndAppendAL(path,nextBlockId);
 					q.add(newPath);
 				}
 			} //while q not empty
 			
+			//Remove the first
 			path.remove(0);
 			
 			//-------------------
@@ -170,7 +215,7 @@ public class Schedule {
 			//-------------------
 			double runningTime = 0;
 			for(int blockId : path) {
-				runningTime += line.blocks[blockId].getSpeedLimit()/1000.0 * line.blocks[blockId].getLength();
+				runningTime += line.blocks[blockId].getLength() / (line.blocks[blockId].getSpeedLimit() * (1/3600.0) * 1000);
 			}
 			int hr = (int)runningTime/3600;
 			int min = (int)(runningTime%3600)/60;
