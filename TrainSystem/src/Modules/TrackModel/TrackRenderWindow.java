@@ -225,6 +225,19 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                 }
             }
         }
+
+        g2d.setColor(new Color(0, 100, 100));
+        for (int i = 0; i < blocks.size(); i++){
+            if (blocks.get(i).getCrossing() != null){
+                double[] x_coords = blocks.get(i).getXCoordinates();
+                double[] y_coords = blocks.get(i).getYCoordinates();
+
+                for (int j = 0; j < x_coords.length-2; j++){
+                    g2d.fillRect((int)x_coords[j]-1, (int)y_coords[j]-1, 
+                                6, 2);
+                }
+            }
+        }
     }
 
     // Render the switches
