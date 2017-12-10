@@ -43,7 +43,7 @@ public class PLC {
 				if(logic[0].equals("proceed")) {
 					canProceedLogic = logic[1];
 				}
-				else if(logic[0].equals("light")) {
+				else if(logic[0].equals("lights")) {
 					lightLogic = logic[1];
 				}
 				else if(logic[0].equals("switch")) {
