@@ -297,12 +297,16 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
     public void drawLights(Graphics2D g2d){
         for (int i = 0; i < blocks.size(); i++){
             if (blocks.get(i).getLight() != null){
+                if (blocks.get(i).getSwitch() == null){
+                    System.out.println("LIGHT WITH NO SWITCH");
+                }
                 int x_coord = blocks.get(i).getLight().getXCoordinate();
                 int y_coord = blocks.get(i).getLight().getYCoordinate();
 
-                g2d.setColor(Color.WHITE);
+                g2d.setColor(Color.BLACK);
                 int radius = 3;
-                Shape circleOutline = new Ellipse2D.Double(x_coord, y_coord, 2.0*(radius+1), 2.0*(radius+1));
+                Shape circleOutline = new Ellipse2D.Double(x_coord - 1, y_coord - 1, 2.0*(radius+1), 2.0*(radius+1));
+                g2d.fill(circleOutline);
 
                 if (blocks.get(i).getLight().getState() == true){
                     g2d.setColor(Color.GREEN);
