@@ -34,7 +34,7 @@ public class TrackCsvParser{
 			while ((currentLine = br.readLine()) != null){
 				String [] blockData = currentLine.split(delimeter);
 
-				/* Parse cells 0-8 */
+				/* Parse cells 0-12 */
 				String line 			= blockData[0];
 				String section 			= blockData[1]; 
 				int id 					= Integer.parseInt(blockData[2]); // Subtract 1 for indexing
@@ -44,15 +44,17 @@ public class TrackCsvParser{
 				double cumElevation 	= Double.parseDouble(blockData[6]);
 				int speedLimit 			= Integer.parseInt(blockData[7]);
 				int direction 			= Integer.parseInt(blockData[8]);
+				int[] forwardBlock		= {Integer.parseInt(blockData[9]), Integer.parseInt(blockData[10])};
+				int[] backwardBlock		= {Integer.parseInt(blockData[11]), Integer.parseInt(blockData[12])};
 
-				/* Parse cell 15 */
+				/* Parse cell 13 */
 				Double[] x_coordinates = new Double[(int)length];
 				Double[] y_coordinates = new Double[(int)length];
 
 				String coordDelimiter = ";";
 				String xyDelimiter = "_";
 
-				String[] coords = (blockData[15]).split(coordDelimiter);
+				String[] coords = (blockData[13]).split(coordDelimiter);
 
 				for (int i = 0; i < coords.length; i++){
 					x_coordinates[i] = Double.parseDouble((coords[i].split(xyDelimiter))[0]);
@@ -70,7 +72,9 @@ public class TrackCsvParser{
 												speedLimit,
 												direction,
 												x_coordinates,
-												y_coordinates);
+												y_coordinates,
+												forwardBlock,
+												backwardBlock);
 
 				/* Add block to list of blocks */
 				blocks.add(currentBlock);
