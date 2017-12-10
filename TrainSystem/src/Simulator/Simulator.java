@@ -49,6 +49,8 @@ public class Simulator {
 	protected Mbo mbo;
 	
 	public Simulator() throws InterruptedException {
+		initializeSystemFonts();
+		
 		//Self declaration needed to pass simulator into new thread
 		Simulator simulator = this;
 		
@@ -85,10 +87,6 @@ public class Simulator {
 	 * ------------------------------
 	 */
 	private void initializeModules() {
-		//Initialize all modules (no need for trackController, that is in the CTC)
-	public Simulator() throws InterruptedException {	
-
-		initializeSystemFonts();
 
 		//Initialize all modules
 		ctc = new Ctc();
