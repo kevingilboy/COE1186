@@ -183,7 +183,7 @@ public class MboGui extends JFrame implements ActionListener {
 
 		// initialize the jframe
         setTitle("Moving Block Overlay");
-		setSize(900, 600);
+		setSize(1350, 600);
 		getContentPane().setBackground(new Color(20, 20, 20));
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -229,7 +229,7 @@ public class MboGui extends JFrame implements ActionListener {
 			                "<html><center>Time Most<br>Recent Signal<br>Received</center></html>",
 						    "<html><center>Coordinates<br>Received<br>(mi, mi)</center></html>",
 							"<html><center>Calculated<br>Location</center></html>",
-							"<html><center>Calculated<br>Velocity<br>(mi/s)</center></html>",
+							"<html><center>Calculated<br>Velocity<br>(mi/h)</center></html>",
 							"<html><center>Transmitted<br>Authority<br>(mi)</center></html>",
 							"<html><center>Transmitted<br>Safe Braking<br>Distance (mi)</center></html>"};
 		//trainInfoColumns.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
