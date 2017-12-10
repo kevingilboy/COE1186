@@ -251,21 +251,33 @@ public class Ctc implements Module,TimeControl {
 	/**
 	 * Creates a sample train to dispatch
 	 */
-	public void testDispatch() {
+	public void testDispatch(Line line) {
 		if(!simulator.simulationRunning) {
 			play();
 			gui.btnPlay.setEnabled(false);
 			gui.btnPause.setEnabled(true);
 		}
 		String testName = "TestTrain"+testTrainNum++;
-		Schedule schedule = new Schedule(Line.GREEN);
-		schedule.departureTime = new SimTime("11:11:11");
-		schedule.name = testName;
-		schedule.addStop(0, 104, new SimTime("00:00:30"));
-		schedule.addStop(1, 113, new SimTime("00:02:00"));
-		schedule.addStop(2, 1, new SimTime("00:02:00"));
-		addSchedule(testName,schedule);
-		dispatchTrain(testName);
+		if(line==Line.GREEN) {
+			Schedule schedule = new Schedule(Line.GREEN);
+			schedule.departureTime = new SimTime("11:11:11");
+			schedule.name = testName;
+			schedule.addStop(0, 104, new SimTime("00:00:30"));
+			schedule.addStop(1, 113, new SimTime("00:02:00"));
+			schedule.addStop(2, 1, new SimTime("00:02:00"));
+			addSchedule(testName,schedule);
+			dispatchTrain(testName);
+		}
+		else if(line==Line.RED) {
+			Schedule schedule = new Schedule(Line.RED);
+			schedule.departureTime = new SimTime("11:11:11");
+			schedule.name = testName;
+			schedule.addStop(0, 75, new SimTime("00:00:30"));
+			schedule.addStop(1, 44, new SimTime("00:02:00"));
+			schedule.addStop(2, 59, new SimTime("00:02:00"));
+			addSchedule(testName,schedule);
+			dispatchTrain(testName);
+		}
 	}
 	
 	/**
@@ -359,6 +371,12 @@ public class Ctc implements Module,TimeControl {
 			//-------------------
 			if(!isMovingBlockMode && train.line.blocks[currBlockId].getOccupied() && currBlockId != selfLocation) {
 				path.remove(path.size()-1);
+				/*
+				Switch swPrev = train.line.blocks[prevBlockId].getSwitch();
+				if(swPrev!=null) {
+					path.remove(path.size()-1);
+				}
+				*/
 				continue;
 			}
 			else if(isMovingBlockMode && !train.line.blocks[currBlockId].getStatus()) {
@@ -379,6 +397,7 @@ public class Ctc implements Module,TimeControl {
 			int nbId = getNextBlockId(train.line, currBlockId, prevBlockId);
 			if(!isMovingBlockMode && (nbId<=train.line.yardIn && nbId>=0) && train.line.blocks[nbId].getDirection()==0) {
 				if(bidirectionalStretchOccupied(train.line,nbId,currBlockId,selfLocation)) {
+					path.remove(path.size()-1);
 					continue;
 				}
 			}
@@ -406,7 +425,7 @@ public class Ctc implements Module,TimeControl {
 						int indexToFollow = (currBlockId+1==normId) ? normId : altId;
 						ArrayList<Integer> normPath = cloneAndAppendAL(path,indexToFollow);
 						q.add(normPath);
-						if(altId==train.line.yardIn) {
+						if(altId==train.line.yardIn || train.line.blocks[normId].getDirection() == 0) {
 							ArrayList<Integer> altPath = cloneAndAppendAL(path,altId);
 							q.add(altPath);
 						}
@@ -484,6 +503,7 @@ public class Ctc implements Module,TimeControl {
 		
 		do {
 			if(visited[currBlockId] == true) break;
+			if(currBlockId>line.yardOut || currBlockId<0) break;
 			//If block is occupied, treat the bidirectional stretch as occupied
 			Boolean currOccupied = getTrackCircuit(line, currBlockId);
 			if(currOccupied && currBlockId != selfLocation) {
@@ -496,7 +516,7 @@ public class Ctc implements Module,TimeControl {
 			int nextBlockId = getNextBlockId(line, currBlockId, prevBlockId);
 			prevBlockId = currBlockId;
 			currBlockId = nextBlockId;
-		} while(line.blocks[currBlockId].getDirection()==0);
+		} while(currBlockId<=line.yardOut && currBlockId>-0 && line.blocks[currBlockId].getDirection()==0);
 		
 		//The bidirectional stretch must not be occupied
 		return false;
