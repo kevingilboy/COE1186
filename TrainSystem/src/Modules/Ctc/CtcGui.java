@@ -196,6 +196,7 @@ public class CtcGui {
 
 	protected ScheduleJTable dispatchSelectedTable;
 	private JButton btnSuggestSpeed;
+	private JCheckBox chckbxManualOverride;
 		
 	/*
 	 * Creator tables
@@ -698,6 +699,7 @@ public class CtcGui {
 				stylizeButton_Disabled(btnDeleteQueueSchedule);
 				btnDispatchQueueSchedule.setEnabled(false);
 				stylizeButton_Disabled(btnDispatchQueueSchedule);
+				//manualSpeedSetEnabled(false);
 			}
 		});
 		btnDeleteQueueSchedule.setBounds(713, 402, 171, 41);
@@ -771,7 +773,7 @@ public class CtcGui {
 			public void stateChanged(ChangeEvent arg0) {
 				if(dispatchSelectedTable!=null) {
 					dispatchSelectedTable.clear();
-					manualSpeedSetEnabled(false);
+					enableManualSpeedComponents();
 					for(Line line : Line.values()) {
 						line.dispatchedTable.clearSelection();
 					}
@@ -793,9 +795,9 @@ public class CtcGui {
 				public void mouseClicked(MouseEvent e) {
 					int row = line.dispatchedTable.rowAtPoint(e.getPoint());
 					String trainName = (String) line.dispatchedData.getValueAt(row, 0);
-					Schedule schedule = ctc.getTrainByName(trainName).schedule;
-					dispatchSelectedTable.setSchedule(schedule);
-					manualSpeedSetEnabled(true);
+					Train train = ctc.getTrainByName(trainName);
+					dispatchSelectedTable.setSchedule(train.schedule);
+					enableManualSpeedComponents();
 				}
 			});
 			scrollPane.setViewportView(line.dispatchedTable);
@@ -833,10 +835,9 @@ public class CtcGui {
 		btnSuggestSpeed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String speed = suggestedSpeed.getText();
-				if(speed.contains("[0-9]+")) {
+				if(speed.matches(".*\\d+.*")) {
 					Train train = ctc.getTrainByName(dispatchSelectedTable.schedule.name);
-					train.overrideSuggestedSpeed = true;
-					train.suggestedSpeed = Integer.parseInt(speed);
+					train.manualSpeed = Integer.parseInt(speed) * 1.60934;
 				}
 			}
 		});
@@ -844,7 +845,25 @@ public class CtcGui {
 		btnSuggestSpeed.setBounds(1310, 441, 80, 32);
 		frame.getContentPane().add(btnSuggestSpeed);
 		
-		manualSpeedSetEnabled(false);
+		chckbxManualOverride = new JCheckBox("MANUAL OVERRIDE");
+		chckbxManualOverride.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Train train = ctc.getTrainByName(dispatchSelectedTable.schedule.name);
+				
+				//Switch into manual mode with -1 speed so that the suggestion is ignored
+				train.manualSpeedMode = chckbxManualOverride.isSelected();
+				train.manualSpeed = -1;
+				
+				//Enable the input textbox and send button
+				enableManualSpeedComponents();
+			}
+		});
+		chckbxManualOverride.setBackground(new Color(20,20,20));
+		chckbxManualOverride.setForeground(Color.WHITE);
+		chckbxManualOverride.setBounds(1250, 478, 135, 18);
+		frame.getContentPane().add(chckbxManualOverride);
+		
+		enableManualSpeedComponents();
 		
 		/**
 		 * BOTTOM FRAME
@@ -980,13 +999,6 @@ public class CtcGui {
 		});
 		btnJustDoIt.setBounds(1214, 520, 136, 68);
 		frame.getContentPane().add(btnJustDoIt);
-		
-		JCheckBox chckbxManualOverride = new JCheckBox("MANUAL OVERRIDE");
-		chckbxManualOverride.setEnabled(false);
-		chckbxManualOverride.setBackground(new Color(20,20,20));
-		chckbxManualOverride.setForeground(Color.WHITE);
-		chckbxManualOverride.setBounds(1250, 478, 135, 18);
-		frame.getContentPane().add(chckbxManualOverride);
 		
 		JButton btnR1 = new JButton("R1");
 		stylizeButton(btnR1);
@@ -1152,9 +1164,33 @@ public class CtcGui {
 		return true;
 	}
 	
-	private void manualSpeedSetEnabled(Boolean b) {
-		btnSuggestSpeed.setEnabled(b);
-		suggestedSpeed.setEnabled(b);
+	private void enableManualSpeedComponents() {
+		if(dispatchSelectedTable.schedule == null) {
+			btnSuggestSpeed.setEnabled(false);
+			suggestedSpeed.setEnabled(false);
+			suggestedSpeed.setText("");
+			chckbxManualOverride.setSelected(false);
+			chckbxManualOverride.setEnabled(false);
+			return;
+		}
+		
+		Train train = ctc.getTrainByName(dispatchSelectedTable.schedule.name);
+		
+		if(train.manualSpeedMode) {
+			btnSuggestSpeed.setEnabled(true);
+			suggestedSpeed.setEnabled(true);
+			suggestedSpeed.setText(train.manualSpeed>=0 ? String.format("%.2f",train.manualSpeed*0.621371192237) : "");
+			chckbxManualOverride.setSelected(true);
+			chckbxManualOverride.setEnabled(true);
+		}
+		else {
+			btnSuggestSpeed.setEnabled(false);
+			suggestedSpeed.setEnabled(false);
+			suggestedSpeed.setText("");
+			chckbxManualOverride.setSelected(false);
+			chckbxManualOverride.setEnabled(true);
+		}
+
 		stylizeButton(btnSuggestSpeed);
 	}
 

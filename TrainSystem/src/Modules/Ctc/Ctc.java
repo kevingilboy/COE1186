@@ -429,7 +429,15 @@ public class Ctc implements Module,TimeControl {
 	
 	public void calculateSuggestedSpeed(Train train) {
 		//Send speed limit if not dwelling, else send 0
-		train.suggestedSpeed = train.dwelling==false ? train.line.blocks[train.currLocation].getSpeedLimit() : 0;
+		if(train.dwelling) {
+			train.suggestedSpeed = 0;
+		}
+		else if(train.manualSpeedMode && train.manualSpeed>=0) {
+			train.suggestedSpeed = train.manualSpeed;
+		}
+		else {
+			train.suggestedSpeed = train.line.blocks[train.currLocation].getSpeedLimit();
+		}
 	}
 	
 	private boolean bidirectionalStretchOccupied(Line line, int currBlockId, int prevBlockId, int selfLocation) {
