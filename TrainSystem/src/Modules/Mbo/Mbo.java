@@ -188,10 +188,16 @@ public class Mbo implements Module {
 		for (String other : trains.keySet()) {
 			if (trainID.equals(other)) continue;
 			double[] otherPos = trains.get(other).getPosition();
-			double dispX = pos[0] - otherPos[0];
-			double dispY = pos[1] - otherPos[1];
-			double newDist = Math.pow((Math.pow(dispX, 2) + Math.pow(dispY, 2)), 0.5);
-			if (newDist < minDistance) minDistance = newDist;
+			//double dispX = pos[0] - otherPos[0];
+			//double dispY = pos[1] - otherPos[1];
+			MboBlock otherBlock = getBlockFromCoordinates(otherPos);
+		//	System.out.printf("other block %s", otherBlock.getID());
+			if (!otherBlock.isYardLine()) {
+				double newDist = calculateDistanceBetweenPositions(pos, otherPos, trains.get(trainID).getDirection());
+				if (newDist < minDistance) minDistance = newDist;
+		//		System.out.printf("%f to %f\n", newDist, minDistance);
+			}
+			//double newDist = Math.pow((Math.pow(dispX, 2) + Math.pow(dispY, 2)), 0.5);
 		}
 		//System.out.printf("Authority for %s: %f\n", trainID, minDistance);
 		return minDistance;
@@ -238,6 +244,7 @@ public class Mbo implements Module {
 			direction = nextBlock[1];
 			//index1 = (index1 + 1) % line.size();
 			//System.out.printf("Index: %d %d\n", index1, index2);
+		//	System.out.printf("from %d to %d\n", index1, index2);
 		}
 
 		// if on seperate blocks, added entire length of block2. remove.
@@ -252,7 +259,7 @@ public class Mbo implements Module {
 
 		//TODO figure this shit out a better way
 		// problem is as the train comes off the track
-		if (distance > lineLength / 2) distance = lineLength - distance;
+		//if (distance > lineLength / 2) distance = lineLength - distance;
 
 		return (int) Math.round(distance);
 	}
@@ -277,16 +284,16 @@ public class Mbo implements Module {
 		// get displacement into block
 		// the ith coordinate is i meters in
 		//System.out.printf("%f, %f\n", train.getPosition()[0], train.getPosition()[1]);
-		double xval = train.getPosition()[0];
-		int blockDisplacement = Arrays.asList(block.getXCoordinates()).indexOf(xval);
+		//double xval = train.getPosition()[0];
+		int blockDisplacement = block.getOffset(train.getPosition());
 		//System.out.printf("%s is %d meters in at %f.\n", trainID, blockDisplacement, xval);
 		
 		double potentialSpeed = train.getSpeed();
-		double speed = potentialSpeed;
+		//double speed = potentialSpeed;
 		int distance = 0;
 		while (potentialSpeed > 0) {
 		//	System.out.printf("speed %f potential %f\n", speed, potentialSpeed);
-			MboBlock potentialBlock = getBlockAfterMoving(line, blockIndex, blockDisplacement, distance);
+			MboBlock potentialBlock = getBlockAfterMoving(line, blockIndex, blockDisplacement, distance, train.getDirection());
 		//	System.out.printf("block index %s\n", potentialBlock);
 			potentialSpeed = calculateSpeedAfterMeter(potentialSpeed, potentialBlock);
 		//	System.out.printf("speed %f\n", potentialSpeed);
@@ -304,6 +311,17 @@ public class Mbo implements Module {
     		if (index >= line.size()) index = 0;
     		distance -= line.get(index).getLength();
     		//System.out.printf("index %d\n", index);
+    	}
+    	return line.get(index);
+    }
+
+    private MboBlock getBlockAfterMoving(ArrayList<MboBlock> line, int index, int displacement, int distance, int direction) {
+    	distance -= (direction == 1) ? line.get(index).getLength() - displacement : displacement;
+    	while (distance > 0) {
+    		int[] nextBlockInfo = line.get(index).getNextBlockInfo(direction);
+    		index = nextBlockInfo[0];
+    		direction = nextBlockInfo[1];
+    		distance -= line.get(index).getLength();
     	}
     	return line.get(index);
     }

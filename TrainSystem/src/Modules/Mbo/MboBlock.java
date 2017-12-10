@@ -93,4 +93,8 @@ public class MboBlock {
 	public int[] getNextBlockInfo(int direction) {
 		return (direction == 1) ? forwardBlock : backwardBlock;
 	}
+
+	public boolean isYardLine() {
+		return section.contains("YARD");
+	}
 }
