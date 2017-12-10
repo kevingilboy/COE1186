@@ -184,8 +184,9 @@ public class Ctc implements Module,TimeControl {
 	 */
 	protected void repairBlock(Line line, int blockNum) {
 		TrackController wayside = getWaysideOfBlock(line, blockNum);
-		Block block = wayside.receiveBlockInfoForCtc(line.toString(), blockNum);
-		block.setMaintenance(false);
+		wayside.transmitBlockMaintenance(line.toString(), blockNum, false);
+		//Block block = wayside.receiveBlockInfoForCtc(line.toString(), blockNum);
+		//block.setMaintenance(false);
 	}
 
 	/**
@@ -193,8 +194,9 @@ public class Ctc implements Module,TimeControl {
 	 */
 	protected void setBlockMaintenance(Line line, int blockNum) {
 		TrackController wayside = getWaysideOfBlock(line, blockNum);
-		Block block = wayside.receiveBlockInfoForCtc(line.toString(), blockNum);
-		block.setMaintenance(true);
+		wayside.transmitBlockMaintenance(line.toString(), blockNum, true);
+		//Block block = wayside.receiveBlockInfoForCtc(line.toString(), blockNum);
+		//block.setMaintenance(true);
 	}
 	
 	/**
