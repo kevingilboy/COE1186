@@ -406,12 +406,76 @@ public class CtcGui {
 		JButton btnimportschedule = new JButton("<html><center>IMPORT<br>SCHEDULE</center></html>");
 		btnimportschedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser fc = new JFileChooser();
-				FileFilter filter = new FileNameExtensionFilter("CSV file", new String[] {"csv"});
-				fc.setFileFilter(filter);
-				fc.showSaveDialog(frame);
-				//File file = fc.getSelectedFile();
-				//TODO import CSV file and add schedule to queue
+				Schedule schedule;
+				BufferedReader br = null;
+				String currentLine = "";
+				String delimeter = ",";
+
+				try {
+					//Let user select a file
+					JFileChooser fc = new JFileChooser();
+					FileFilter filter = new FileNameExtensionFilter("CSV file", new String[] {"csv"});
+					fc.setFileFilter(filter);
+					fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+					fc.showSaveDialog(frame);					
+					File f = fc.getSelectedFile();
+					
+					String filename[] = f.getName().replace(".csv","").split("_");
+					
+					//Set the line
+					Line line = null;
+					if(filename[0].equals("GREEN")) {
+						line = Line.GREEN;
+					}
+					else if(filename[0].equals("RED")) {
+						line = Line.RED;
+					}
+					else {
+						throw new IOException();
+					}
+					schedule = new Schedule(line);
+							
+					//Set the name
+					schedule.name = filename[1];
+					
+					//Set the departure time
+					String time = filename[2].replace("-",":");
+					schedule.departureTime = new SimTime(time);
+					
+					//Read the file
+					FileReader fr = new FileReader(f);
+					br = new BufferedReader(fr);
+					br.readLine(); //Skip first line
+					
+					int stopNum = 0;
+					while ((currentLine = br.readLine()) != null){
+						String [] csvline = currentLine.split(delimeter);
+						schedule.addStop(stopNum++,Integer.parseInt(csvline[0]), new SimTime(csvline[1]));
+					}
+					
+					//Update the GUI to reflect changes
+					trainCreationTable.clear();
+					trainCreationTable.schedule = schedule;
+					trainCreationTable.fireScheduleChanged();
+					trainCreationDepartTime.setText(schedule.departureTime.toString());
+					trainCreationName.setText(schedule.name);
+					trainCreationLine.setSelectedItem(schedule.line.toString());
+
+					//Enable "add to queue" buttons
+					enableTrainCreationComponents();					
+				} catch (FileNotFoundException e) {
+		        	e.printStackTrace();
+		    	} catch (IOException e) {
+		        	e.printStackTrace();
+		    	} finally {
+		        	if (br != null) {
+		            	try {
+		                	br.close();
+		            	} catch (IOException e) {
+		                	e.printStackTrace();
+		            	}
+		        	}
+		    	}
 			}
 		});
 		stylizeButton(btnimportschedule);

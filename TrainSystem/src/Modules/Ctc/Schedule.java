@@ -26,6 +26,22 @@ public class Schedule {
 	}
 	
 	/**
+	 * Add a stop with a dwell time 
+	 */
+	public void addStop(int index, int blockId, SimTime dwell) {
+		//If stop does not exist, then add it. Else update the current stop
+		if(index>=stops.size()) {
+			stops.add(index,new Stop(blockId,dwell));
+		}
+		else {
+			stops.set(index,new Stop(blockId,dwell));
+		}
+		
+		//We can still calculate time between stops
+		calculateTimeToDestinations();
+	}
+	
+	/**
 	 * Add a stop without a dwell time (yet...)
 	 */
 	public void addStop(int index, int blockId) {
