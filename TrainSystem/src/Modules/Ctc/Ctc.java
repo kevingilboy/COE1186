@@ -314,6 +314,35 @@ public class Ctc implements Module,TimeControl {
 	}
 	
 	/**
+	 * Check if the yardOut is occupied
+	 */
+	protected boolean checkDispatchability(Schedule schedule) {
+		boolean yardOutOccupied = false;
+		if(schedule.line.blocks[schedule.line.yardOut].getOccupied()) {
+			yardOutOccupied = true;
+		}
+		else{
+			for(Train train : trains.values()) {
+				if(train.line == schedule.line && train.currLocation==train.line.yardOut) {
+					yardOutOccupied = true;
+					break;
+				}
+			}
+		}
+		TrackController wayside = getWaysideOfBlock(schedule.line, schedule.line.yardOut);
+		int pb = -1;
+		int cb = schedule.line.yardOut;
+		int nb = getNextBlockId(schedule.line,cb,pb);
+		int nnb = getNextBlockId(schedule.line,nb,cb);
+		
+		if(wayside.tcplc.canProceedPath(new int[] {pb,cb,nb,nnb}) && !yardOutOccupied) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * TrainModel uses this method to add passengers to the train
 	 */
 	public void addPassengers(String trainName, int number) {
@@ -558,33 +587,7 @@ public class Ctc implements Module,TimeControl {
 	protected void transmitCtcAuthority(String name, TrackController wayside, int[] auth) {
 		wayside.transmitCtcAuthority(name,auth);
 	}
-	
-	protected boolean checkDispatchability(Schedule schedule) {
-		boolean yardOutOccupied = false;
-		if(schedule.line.blocks[schedule.line.yardOut].getOccupied()) {
-			yardOutOccupied = true;
-		}
-		else{
-			for(Train train : trains.values()) {
-				if(train.line == schedule.line && train.currLocation==train.line.yardOut) {
-					yardOutOccupied = true;
-					break;
-				}
-			}
-		}
-		TrackController wayside = getWaysideOfBlock(schedule.line, schedule.line.yardOut);
-		int pb = -1;
-		int cb = schedule.line.yardOut;
-		int nb = getNextBlockId(schedule.line,cb,pb);
-		int nnb = getNextBlockId(schedule.line,nb,cb);
 		
-		if(wayside.tcplc.canProceedPath(new int[] {pb,cb,nb,nnb}) && !yardOutOccupied) {
-			return true;
-		}
-		
-		return false;
-	}
-	
 	/*
 	 * ------------------------------
 	 *  MODULE REQUIREMENTS
