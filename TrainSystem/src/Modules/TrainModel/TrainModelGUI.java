@@ -28,6 +28,7 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JMenu;
@@ -42,6 +43,19 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.JCheckBox;
 
+// UI STYLING
+import java.awt.GraphicsEnvironment;
+import java.awt.EventQueue;
+import java.awt.event.*;
+import java.io.*;
+import javax.swing.border.*;
+import java.awt.FontFormatException;
+import javax.swing.JComboBox;
+import javax.swing.UIManager;
+import javax.swing.SwingConstants;
+import java.awt.Color;
+import javax.swing.JTextField;
+
 /**
  * Class for the individual GUIs of each existing train model. Every train model will have an existing
  * GUI upon dispatch, but on simulation start up, the first train in the train list will appear and every
@@ -51,6 +65,114 @@ import javax.swing.JCheckBox;
  *
  */
 public class TrainModelGUI extends JFrame {
+
+	/*----------------------------------------------------------------------*/
+	/*-------------------- HSS GUI DARK THEME REDESIGN ---------------------*/
+	/*----------------------------------------------------------------------*/
+	
+	/**
+	 * Variations of Roboto Condensed Font
+	 */
+	Font font_14_bold = new Font("Roboto Condensed", Font.BOLD, 16);
+	Font font_16_bold = new Font("Roboto Condensed", Font.BOLD, 20);
+	Font font_20_bold = new Font("Roboto Condensed Bold", Font.BOLD, 24);
+	Font font_24_bold = new Font("Roboto Condensed", Font.BOLD, 38);
+
+	/**
+	 * Set any UI configurations done by the UI manager
+	 *
+	 * NOTE: This method must be called first in the GUI instantiation!
+	 */
+	public void setLookAndFeel(){
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * JComponent styling wrappers
+	 */
+	public void stylizeButton(JButton b){
+		b.setFocusPainted(false);
+		b.setFont(font_14_bold);
+		b.setForeground(Color.WHITE);
+		b.setBackground(new Color(102, 0, 153)); // Purple
+	}
+
+	public void stylizeButton_Disabled(JButton b){
+		b.setFocusPainted(false);
+		b.setFont(font_14_bold);
+		b.setForeground(Color.GRAY);
+		b.setBackground(new Color(50, 0, 70));
+	}
+
+	public void stylizeComboBox(JComboBox c){
+		c.setFont(font_14_bold);
+		((JLabel)c.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
+		c.setForeground(Color.BLACK);
+		c.setBackground(Color.WHITE);
+	}
+
+	public void stylizeTextField(JTextField t){
+		t.setFont(font_14_bold);
+		t.setForeground(Color.BLACK);
+		t.setBackground(Color.WHITE);
+		t.setHorizontalAlignment(JTextField.CENTER);
+	}
+
+	public void stylizeHeadingLabel(JLabel l){
+		l.setFont(font_20_bold);
+		l.setForeground(Color.WHITE);
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+	}
+
+	public void stylizeInfoLabel(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
+		l.setFont(font_16_bold);
+	}
+
+	public void stylizeInfoLabel_Bold(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.RIGHT);
+		l.setForeground(new Color(234, 201, 87));
+		l.setFont(font_16_bold);
+	}
+
+	public void stylizeInfoLabel_Small(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
+		l.setFont(font_14_bold);
+	}
+
+	/*----------------------------------------------------------------------*/
+	/*-------------------- HSS GUI DARK THEME REDESIGN ---------------------*/
+	/*----------------------------------------------------------------------*/
+
+	/*-----------ADVERTISEMENT AND AD TIMER-------------*/
+	Timer adTimer;
+	JLabel advertisementImageLabel;
+	int currentAd = 0;
+
+	public void initializeAdvertisementTimer(){
+ 		adTimer = new Timer();
+
+ 		TimerTask updateAd = new updateAdvertisement();
+	    adTimer.schedule(updateAd, 0, 5000);// Toggle advertisement every 5 seconds
+	}
+
+	private class updateAdvertisement extends TimerTask{
+		public void run(){
+			currentAd++;
+			if (currentAd >= imgArray.size()){
+				currentAd = 0;
+			}
+			advertisementImageLabel.setIcon(new ImageIcon(imgArray.get(currentAd)));
+		}
+	}
+
+	/*-------------------------------------------------*/
 
 	private JSplitPane splitPane;
 	private JPanel contentPane;
@@ -66,41 +188,41 @@ public class TrainModelGUI extends JFrame {
 	private boolean emerBrake = false;
 	private int numCars = 1;
 
-	private JLabel lblSpecifications = new JLabel("Train Specifications");
-	private JLabel lblFailureModeActivation = new JLabel("Failure Mode Activation");
-	private JLabel lblOnboardTemperature = new JLabel("Train Operations");
-	private JLabel lblSpeedauthority = new JLabel("Speed/Authority");
-	private JLabel lblStationControl = new JLabel("Station Control");
+	private JLabel lblSpecifications = new JLabel("TRAIN SPECIFICATIONS");
+	private JLabel lblFailureModeActivation = new JLabel("FAILURE MODE ACTIVATION");
+	private JLabel lblOnboardTemperature = new JLabel("TRAIN OPERATIONS");
+	private JLabel lblSpeedauthority = new JLabel("SPEED/AUTHORITY");
+	private JLabel lblStationControl = new JLabel("STATION CONTROL");
 
-	private JLabel lblHeight = new JLabel("Height:");
-	private JLabel lblWeight = new JLabel("Weight:");
-	private JLabel lblLength = new JLabel("Length:");
-	private JLabel lblWidth = new JLabel("Width:");
-	private JLabel lblOfCars = new JLabel("# of Cars:");
-	private JLabel lblCapacity = new JLabel("Capacity:");
+	private JLabel lblHeight = new JLabel("HEIGHT:");
+	private JLabel lblWeight = new JLabel("WEIGHT:");
+	private JLabel lblLength = new JLabel("LENGTH:");
+	private JLabel lblWidth = new JLabel("WIDTH:");
+	private JLabel lblOfCars = new JLabel("# OF CARS:");
+	private JLabel lblCapacity = new JLabel("CAPACITY:");
 	//private JLabel lblSpeedLimit = new JLabel("Speed Limit:");
-	private JLabel lblGpsAntenna = new JLabel("GPS Antenna:");
-	private JLabel lblMboAntenna = new JLabel("MBO Antenna:");
-	private JLabel lblNextStation = new JLabel("Next Station:");
-	private JLabel lblTimeOfArrival = new JLabel("Time:");
-	private JLabel lblStatus = new JLabel("Status:");
-	private JLabel passengersEnRoute = new JLabel("Passengers:");
-	private JLabel lblCurrentSpeed = new JLabel("Current Speed:");
-	private JLabel lblCtcSpeed = new JLabel("CTC Speed:");
-	private JLabel lblCtcAuthority = new JLabel("CTC Authority:");
-	private JLabel lblPowerInput = new JLabel("Power:");
-	private JLabel leftDoorLabel = new JLabel("Left Door:");
-	private JLabel rightDoorLabel = new JLabel("Right Door:");
-	private JLabel lblLight = new JLabel("Light:");
-	private JLabel labelTemperature = new JLabel("Cabin Temperature");
-	private JLabel lblEngineFailureMode = new JLabel("Engine Failure");
-	private JLabel lblSignalFailure = new JLabel("Signal Failure");
-	private JLabel lblBrakeFailure = new JLabel("Brake Failure");
+	private JLabel lblGpsAntenna = new JLabel("GPS ANTENNA:");
+	private JLabel lblMboAntenna = new JLabel("MBO ANTENNA:");
+	private JLabel lblNextStation = new JLabel("NEXT STATION:");
+	private JLabel lblTimeOfArrival = new JLabel("TIME:");
+	private JLabel lblStatus = new JLabel("STATUS:");
+	private JLabel passengersEnRoute = new JLabel("PASSENGERS:");
+	private JLabel lblCurrentSpeed = new JLabel("CURRENT SPEED:");
+	private JLabel lblCtcSpeed = new JLabel("CTC SPEED:");
+	private JLabel lblCtcAuthority = new JLabel("CTC AUTHORITY:");
+	private JLabel lblPowerInput = new JLabel("POWER:");
+	private JLabel leftDoorLabel = new JLabel("LEFT DOOR:");
+	private JLabel rightDoorLabel = new JLabel("RIGHT DOOR:");
+	private JLabel lblLight = new JLabel("LIGHT:");
+	private JLabel labelTemperature = new JLabel("CABIN TEMPERATURE");
+	private JLabel lblEngineFailureMode = new JLabel("ENGINE FAILURE");
+	private JLabel lblSignalFailure = new JLabel("SIGNAL FAILURE");
+	private JLabel lblBrakeFailure = new JLabel("BRAKE FAILURE");
 	private JLabel authorityUnits = new JLabel("mi");
-	private JLabel setpointSpeedUnits = new JLabel("mph");
-	private JLabel ctcSpeedUnitsLabel = new JLabel("mph");
-	private JLabel lblServiceBrake = new JLabel("Service Brake:");
-	private JLabel lblEmergencyBrake = new JLabel("Emergency Brake:");
+	private JLabel setpointSpeedUnits = new JLabel("mi/h");
+	private JLabel ctcSpeedUnitsLabel = new JLabel("mi/h");
+	private JLabel lblServiceBrake = new JLabel("SERVICE BRAKE:");
+	private JLabel lblEmergencyBrake = new JLabel("EMERGENCY BRAKE:");
 	
 	public JPanel engineFailPanel = new JPanel();
 	public JPanel signalFailPanel = new JPanel();
@@ -108,8 +230,8 @@ public class TrainModelGUI extends JFrame {
 	private boolean engineFail;
 	private boolean sigFail;
 	private boolean brakeFail;
-	public JMenu mnFile = new JMenu("File");
-	public JMenu mnSelectTrain = new JMenu("Select Train");
+	public JMenu mnFile = new JMenu("FILE");
+	public JMenu mnSelectTrain = new JMenu("SELECT TRAIN");
 	public JMenuItem menuTrainlist = new JMenuItem(new AbstractAction("") {
 		public void actionPerformed(ActionEvent e) {
 	        // Button pressed logic goes here
@@ -138,12 +260,12 @@ public class TrainModelGUI extends JFrame {
 	public JLabel widthVal = new JLabel();
 	public JLabel capacityVal = new JLabel();
 	public JLabel numCarsSpinner = new JLabel();
-	private JLabel lblCrew = new JLabel("Crew:");
+	private JLabel lblCrew = new JLabel("CREW:");
 	JLabel crewCountLabel = new JLabel();
 	public JLabel arrivalStatusLabel = new JLabel();
 	public JLabel currentSpeedLabel = new JLabel();
 	
-	public JButton btnEmergencyBrake = new JButton("Emergency Brake");
+	public JButton btnEmergencyBrake = new JButton("EMERGENCY BRAKE");
 	public JLabel tempLabel = new JLabel();
 	
 	public JLabel powerVal = new JLabel();
@@ -156,8 +278,8 @@ public class TrainModelGUI extends JFrame {
 	//private final JMenuItem mntmSimulateEngineFailure = new JMenuItem("Simulate Engine Failure");
 	//private final JMenuItem mntmSimulateSignalFailure = new JMenuItem("Simulate Signal Failure");
 	private final JMenuItem mntmExit = new JMenuItem("Exit All");
-	private Image ledImage = new ImageIcon(this.getClass().getResource("greyStatusIcon.png")).getImage();
-	private Image ledImageRed = new ImageIcon(this.getClass().getResource("redStatusIcon.png")).getImage();
+	private Image ledImage = new ImageIcon(this.getClass().getResource("images/statusIcon_grey.png")).getImage();
+	private Image ledImageRed = new ImageIcon(this.getClass().getResource("images/statusIcon_red.png")).getImage();
 	private Image ad1 = new ImageIcon(this.getClass().getResource("ad1.jpg")).getImage();
 	private Image spongebob1 = new ImageIcon(this.getClass().getResource("spongebob1.jpg")).getImage();
 	private Image aerotech = new ImageIcon(this.getClass().getResource("aerotech.jpg")).getImage();
@@ -169,11 +291,11 @@ public class TrainModelGUI extends JFrame {
 	private final JLabel ledImageLabel2 = new JLabel();
 	private final JLabel ledImageLabel3 = new JLabel();
 	//private final JMenuItem mntmEndFailures = new JMenuItem("End Failure(s)");
-	JButton btnCauseFailure = new JButton("Cause");
+	JButton btnCauseFailure = new JButton("CAUSE");
 	JCheckBox engineFailCheckBox = new JCheckBox("");
 	JCheckBox signalFailCheckBox = new JCheckBox("");
 	JCheckBox brakeFailCheckBox = new JCheckBox("");
-	private final JButton btnEndFailure = new JButton("End");
+	private final JButton btnEndFailure = new JButton("END");
 	
 	/*public TrainModelNewGUI() {
 		
@@ -183,6 +305,8 @@ public class TrainModelGUI extends JFrame {
 		 	Dimension d = contentPane.getSize();
 	        super.paint(g);  // fixes the immediate problem.
 	        Graphics2D g2 = (Graphics2D) g;
+
+	        g2.setColor(new Color(50, 50, 50));
 	        horizontalLine1 = new Line2D.Float(45, d.height-290, d.width - 45, d.height-290);
 	        verticalLine1 = new Line2D.Float(d.width/3 - 10, 100 , d.width/3 - 10, d.height - 325);
 	        verticalLine2 = new Line2D.Float((2*d.width)/3-10, 100 , (2*d.width)/3-10, d.height - 325);
@@ -195,17 +319,6 @@ public class TrainModelGUI extends JFrame {
 	        g2.draw(verticalLine2);
 	        g2.draw(verticalLine3);
 	        g2.draw(verticalLine4);
-	}
-	
-	/**
-	 * Initialize the look and feel
-	 */
-	public void setLookAndFeel(){
-		try {
-			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
 	}
 	
 	/**
@@ -269,6 +382,7 @@ public class TrainModelGUI extends JFrame {
 	public TrainModelGUI() {
 		setLookAndFeel();
 		initComponents();
+		initializeAdvertisementTimer();
 	}
 	
 	/**
@@ -277,8 +391,8 @@ public class TrainModelGUI extends JFrame {
 	public TrainModelGUI(Train newTrain) {
 		setLookAndFeel();
 		initComponents();
+		initializeAdvertisementTimer();
 		this.train = newTrain;
-		
 	}
 		
 	private void initComponents() {
@@ -287,27 +401,26 @@ public class TrainModelGUI extends JFrame {
 		setBounds(150, 150, 1050, 850);
 		setResizable(false);
 		contentPane = new JPanel();
-		contentPane.setBackground(Color.LIGHT_GRAY);
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		this.setBackground(new Color(36, 39, 45));
+		contentPane.setBackground(new Color(26, 29, 35));
 		setContentPane(splitPane);
 		//setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		advertisePane = new JPanel();
-		advertisePane.setBackground(Color.LIGHT_GRAY);
+		advertisePane.setBackground(new Color(20, 20, 20));
 		advertisePane.setLayout(new BorderLayout());
-		advertisePane.setBorder(new EmptyBorder(5,5,5,5));
 		//contentPane.add(advertisePane);
 		
 		imgArray.add(spongebob1);
 		imgArray.add(aerotech);
 		imgArray.add(mouse);
 		imgArray.add(safety);
-		JLabel advertisementImageLabel = new JLabel();
+		advertisementImageLabel = new JLabel();
 		advertisementImageLabel.setBounds(0, 0, 1050, 200);
 		Image dimg = mouse.getScaledInstance(advertisementImageLabel.getWidth(), advertisementImageLabel.getHeight(),
 		        Image.SCALE_SMOOTH);
-		advertisementImageLabel.setIcon(new ImageIcon(dimg));
+		advertisementImageLabel.setIcon(new ImageIcon(spongebob1));
 		advertisePane.add(advertisementImageLabel);
 		
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);  // we want it to split the window verticaly
@@ -316,14 +429,14 @@ public class TrainModelGUI extends JFrame {
         splitPane.setBottomComponent(advertisePane);            // and at the bottom we want our "bottomPanel"
 		
 		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBorderPainted(false);
 		menuBar.setBounds(0, 0, 1044, 31);
+		menuBar.setBackground(new Color(20, 20, 20));
 		contentPane.add(menuBar);
 		
+		mnFile.setForeground(Color.WHITE);
 		menuBar.add(mnFile);
-		btnEndFailure.setBackground(Color.WHITE);
-		btnEndFailure.setForeground(Color.BLACK);
-		
-		btnEndFailure.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeButton(btnEndFailure);
 		
 		//mnFile.add(mntmEndFailures);
 		btnEndFailure.addActionListener(new ActionListener()
@@ -346,10 +459,9 @@ public class TrainModelGUI extends JFrame {
 			  repaint();
 		  }
 		});
-		btnCauseFailure.setBackground(Color.WHITE);
-		btnCauseFailure.setForeground(Color.BLACK);
 		
-		btnCauseFailure.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeButton(btnCauseFailure);
+
 		btnCauseFailure.setBounds(723, 268, 94, 29);
 		contentPane.add(btnCauseFailure);
 		btnCauseFailure.addActionListener(new ActionListener() {
@@ -373,8 +485,8 @@ public class TrainModelGUI extends JFrame {
 				repaint();
 			}
 		});
-		engineFailCheckBox.setBackground(Color.LIGHT_GRAY);
-		
+
+		engineFailCheckBox.setBackground(new Color(20, 20, 20));
 		engineFailCheckBox.setBounds(910, 99, 52, 29);
 		contentPane.add(engineFailCheckBox);
 		engineFailCheckBox.addActionListener(new ActionListener() {
@@ -382,8 +494,8 @@ public class TrainModelGUI extends JFrame {
 				engineFail = true;
 			}
 		});
-		signalFailCheckBox.setBackground(Color.LIGHT_GRAY);
-		
+
+		signalFailCheckBox.setBackground(new Color(20, 20, 20));
 		signalFailCheckBox.setBounds(910, 155, 52, 29);
 		contentPane.add(signalFailCheckBox);
 		signalFailCheckBox.addActionListener(new ActionListener() {
@@ -391,8 +503,8 @@ public class TrainModelGUI extends JFrame {
 				sigFail = true;
 			}
 		});
-		brakeFailCheckBox.setBackground(Color.LIGHT_GRAY);
-		
+
+		brakeFailCheckBox.setBackground(new Color(20, 20, 20));
 		brakeFailCheckBox.setBounds(910, 214, 52, 29);
 		contentPane.add(brakeFailCheckBox);
 		brakeFailCheckBox.addActionListener(new ActionListener() {
@@ -412,113 +524,113 @@ public class TrainModelGUI extends JFrame {
 		  }
 		});
 		
+		mnSelectTrain.setForeground(Color.WHITE);
 		menuBar.add(mnSelectTrain);
-		
 		mnSelectTrain.add(menuTrainlist);
 		
 		
-		lblSpecifications.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblSpecifications.setBounds(60, 60, 243, 20);
+		stylizeHeadingLabel(lblSpecifications);
+		lblSpecifications.setBounds(60, 60, 300, 20);
 		contentPane.add(lblSpecifications);
 		
 		
-		lblFailureModeActivation.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblFailureModeActivation.setBounds(723, 60, 243, 20);
+		stylizeHeadingLabel(lblFailureModeActivation);
+		lblFailureModeActivation.setBounds(723, 60, 290, 20);
 		contentPane.add(lblFailureModeActivation);
 		
 		
-		lblOnboardTemperature.setFont(new Font("Tahoma", Font.BOLD, 20));
+		stylizeHeadingLabel(lblOnboardTemperature);
 		lblOnboardTemperature.setBounds(371, 355, 201, 20);
 		contentPane.add(lblOnboardTemperature);
 		
-		lblSpeedauthority.setFont(new Font("Tahoma", Font.BOLD, 20));
+		stylizeHeadingLabel(lblSpeedauthority);
 		lblSpeedauthority.setBounds(371, 60, 585, 20);
 		contentPane.add(lblSpeedauthority);
 		
-		lblStationControl.setFont(new Font("Tahoma", Font.BOLD, 20));
+		stylizeHeadingLabel(lblStationControl);
 		lblStationControl.setBounds(60, 355, 190, 20);
 		contentPane.add(lblStationControl);
-		lblHeight.setFont(new Font("Dialog", Font.PLAIN, 18));
-		
+
+		stylizeInfoLabel(lblHeight);
 		lblHeight.setBounds(60, 100, 69, 20);
 		contentPane.add(lblHeight);
-		lblWeight.setFont(new Font("Dialog", Font.PLAIN, 18));
-		
+
+		stylizeInfoLabel(lblWeight);
 		lblWeight.setBounds(60, 125, 69, 20);
 		contentPane.add(lblWeight);
-		lblLength.setFont(new Font("Dialog", Font.PLAIN, 18));
-		
-		lblLength.setBounds(60, 150, 69, 20);
+
+		stylizeInfoLabel(lblLength);
+		lblLength.setBounds(60, 150,100, 20);
 		contentPane.add(lblLength);
-		lblWidth.setFont(new Font("Dialog", Font.PLAIN, 18));
-		
+
+		stylizeInfoLabel(lblWidth);
 		lblWidth.setBounds(60, 175, 69, 20);
 		contentPane.add(lblWidth);
 		
-		lblOfCars.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(lblOfCars);
 		lblOfCars.setBounds(60, 211, 104, 20);
 		contentPane.add(lblOfCars);
 		
-		lblCapacity.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(lblCapacity);
 		lblCapacity.setBounds(60, 245, 104, 20);
 		contentPane.add(lblCapacity);
 		
 		
-		lblLine.setFont(new Font("Dialog", Font.BOLD, 18));
+		stylizeInfoLabel(lblLine);
 		lblLine.setBounds(371, 391, 129, 20);
 		contentPane.add(lblLine);
 
-		lblGpsAntenna.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(lblGpsAntenna);
 		lblGpsAntenna.setBounds(371, 501, 129, 20);
 		contentPane.add(lblGpsAntenna);
-		lblMboAntenna.setFont(new Font("Dialog", Font.PLAIN, 18));
-		
+
+		stylizeInfoLabel(lblMboAntenna);
 		lblMboAntenna.setBounds(371, 525, 129, 20);
 		contentPane.add(lblMboAntenna);
-		lblNextStation.setFont(new Font("Dialog", Font.PLAIN, 18));
-		
+
+		stylizeInfoLabel(lblNextStation);
 		lblNextStation.setBounds(60, 391, 129, 20);
 		contentPane.add(lblNextStation);
-		lblTimeOfArrival.setFont(new Font("Dialog", Font.PLAIN, 18));
-		
+
+		stylizeInfoLabel(lblTimeOfArrival);
 		lblTimeOfArrival.setBounds(60, 420, 85, 20);
 		contentPane.add(lblTimeOfArrival);
 		
-		lblStatus.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(lblStatus);
 		lblStatus.setBounds(60, 447, 69, 20);
 		contentPane.add(lblStatus);
+
 		arrivalStatusLabel.setHorizontalAlignment(SwingConstants.TRAILING);
-		
-		arrivalStatusLabel.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel_Bold(arrivalStatusLabel);
 		arrivalStatusLabel.setBounds(144, 447, 159, 20);
 		contentPane.add(arrivalStatusLabel);
 		
-		passengersEnRoute.setFont(new Font("Dialog", Font.PLAIN, 18));
-		passengersEnRoute.setBounds(60, 472, 104, 20);
+		stylizeInfoLabel(passengersEnRoute);
+		passengersEnRoute.setBounds(60, 472, 150, 20);
 		contentPane.add(passengersEnRoute);
 		
-		lblCurrentSpeed.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(lblCurrentSpeed);
 		lblCurrentSpeed.setBounds(371, 105, 142, 20);
 		contentPane.add(lblCurrentSpeed);
 		
-		lblCtcSpeed.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(lblCtcSpeed);
 		lblCtcSpeed.setBounds(371, 139, 129, 20);
 		contentPane.add(lblCtcSpeed);
 		
 		currentSpeedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		currentSpeedLabel.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel_Bold(currentSpeedLabel);
 		currentSpeedLabel.setBounds(514, 108, 69, 20);
 		contentPane.add(currentSpeedLabel);
 		
-		lblCtcAuthority.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(lblCtcAuthority);
 		lblCtcAuthority.setBounds(371, 175, 142, 20);
 		contentPane.add(lblCtcAuthority);
 		
-		lblPowerInput.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(lblPowerInput);
 		lblPowerInput.setBounds(371, 209, 85, 20);
 		contentPane.add(lblPowerInput);
-		powerVal.setHorizontalAlignment(SwingConstants.RIGHT);
-		powerVal.setFont(new Font("Dialog", Font.PLAIN, 18));
+
+		stylizeInfoLabel_Bold(powerVal);
 		powerVal.setBounds(503, 205, 80, 26);
 		contentPane.add(powerVal);
 		
@@ -532,33 +644,34 @@ public class TrainModelGUI extends JFrame {
 		  }
 		});*/
 		
-		leftDoorLabel.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(leftDoorLabel);
 		leftDoorLabel.setBounds(371, 420, 129, 20);
 		contentPane.add(leftDoorLabel);
 		
-		rightDoorLabel.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(rightDoorLabel);
 		rightDoorLabel.setBounds(371, 449, 129, 20);
 		contentPane.add(rightDoorLabel);
 		
-		lblLight.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(lblLight);
 		lblLight.setBounds(371, 474, 129, 20);
 		contentPane.add(lblLight);
+
 		labelTemperature.setHorizontalAlignment(SwingConstants.CENTER);
-		
-		labelTemperature.setFont(new Font("Tahoma", Font.BOLD, 20));
+		stylizeInfoLabel(labelTemperature);
 		labelTemperature.setBounds(745, 502, 233, 20);
 		contentPane.add(labelTemperature);
+
 		tempLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		tempLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
-		
+		stylizeInfoLabel_Bold(tempLabel);
 		tempLabel.setBounds(821, 540, 75, 26);
 		//tempLabel.setValue(70);
 		contentPane.add(tempLabel);
 		
-		btnEmergencyBrake.setFont(new Font("Dialog", Font.PLAIN, 18));
-		btnEmergencyBrake.setBackground(Color.WHITE);
-		btnEmergencyBrake.setForeground(Color.BLACK);
-		btnEmergencyBrake.setBounds(745, 371, 220, 100);
+		stylizeButton(btnEmergencyBrake);
+		btnEmergencyBrake.setBackground(Color.RED);
+		btnEmergencyBrake.setForeground(Color.WHITE);
+		btnEmergencyBrake.setFont(font_20_bold);
+		btnEmergencyBrake.setBounds(720, 371, 250, 100);
 		//stylizeButton(btnEmergencyBrake);
 		contentPane.add(btnEmergencyBrake);
 		btnEmergencyBrake.addActionListener(new ActionListener()
@@ -571,16 +684,16 @@ public class TrainModelGUI extends JFrame {
 		});
 		
 		
-		lblEngineFailureMode.setFont(new Font("Dialog", Font.PLAIN, 18));
-		lblEngineFailureMode.setBounds(765, 103, 129, 20);
+		stylizeInfoLabel(lblEngineFailureMode);
+		lblEngineFailureMode.setBounds(765, 103, 150, 20);
 		contentPane.add(lblEngineFailureMode);
 		
-		lblSignalFailure.setFont(new Font("Dialog", Font.PLAIN, 18));
-		lblSignalFailure.setBounds(765, 160, 129, 20);
+		stylizeInfoLabel(lblSignalFailure);
+		lblSignalFailure.setBounds(765, 160, 150, 20);
 		contentPane.add(lblSignalFailure);
 		
-		lblBrakeFailure.setFont(new Font("Dialog", Font.PLAIN, 18));
-		lblBrakeFailure.setBounds(765, 216, 129, 20);
+		stylizeInfoLabel(lblBrakeFailure);
+		lblBrakeFailure.setBounds(765, 216, 150, 20);
 		contentPane.add(lblBrakeFailure);
 
 		ledImageLabel.setBounds(729, 99, 34, 31);
@@ -598,155 +711,146 @@ public class TrainModelGUI extends JFrame {
 		
 		Image pineapple = new ImageIcon(this.getClass().getResource("pineapple_icon.png")).getImage();
 		JLabel pineappleImageLabel = new JLabel();
-		pineappleImageLabel.setBounds(40, 523, 138, 76);
+		pineappleImageLabel.setBounds(8, 559, 138, 76);
 		pineappleImageLabel.setIcon(new ImageIcon(pineapple));
 		contentPane.add(pineappleImageLabel);
 		
 		authorityVal.setHorizontalAlignment(SwingConstants.RIGHT);
 		
 		JLabel labelFt = new JLabel("ft.");
-		labelFt.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(labelFt);
 		labelFt.setBounds(238, 100, 44, 20);
 		contentPane.add(labelFt);
 		
 		JLabel labelft2 = new JLabel("ft.");
-		labelft2.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(labelft2);
 		labelft2.setBounds(238, 150, 52, 20);
 		contentPane.add(labelft2);
 		
 		JLabel labelft3 = new JLabel("ft.");
-		labelft3.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(labelft3);
 		labelft3.setBounds(238, 175, 69, 20);
 		contentPane.add(labelft3);
 		
 		JLabel lblTons = new JLabel("lbs");
-		lblTons.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(lblTons);
 		lblTons.setBounds(238, 125, 52, 20);
 		contentPane.add(lblTons);
 		
 		JLabel lblKw = new JLabel("kW");
-		lblKw.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(lblKw);
 		lblKw.setBounds(598, 211, 34, 20);
 		contentPane.add(lblKw);
-		heightVal.setFont(new Font("Dialog", Font.PLAIN, 18));
-		
-		
+
+		stylizeInfoLabel_Bold(heightVal);
 		heightVal.setBounds(144, 100, 79, 20);
 		contentPane.add(heightVal);
-		weightVal.setFont(new Font("Dialog", Font.PLAIN, 18));
 		
-		
+		stylizeInfoLabel_Bold(weightVal);
 		weightVal.setBounds(129, 125, 94, 20);
 		contentPane.add(weightVal);
-		lengthVal.setFont(new Font("Dialog", Font.PLAIN, 18));
-		
+
+		stylizeInfoLabel_Bold(lengthVal);
 		lengthVal.setBounds(144, 150, 79, 20);
 		contentPane.add(lengthVal);
-		widthVal.setFont(new Font("Dialog", Font.PLAIN, 18));
-		
+
+		stylizeInfoLabel_Bold(widthVal);
 		widthVal.setBounds(139, 175, 84, 20);
 		contentPane.add(widthVal);
-		capacityVal.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		
+
+		stylizeInfoLabel_Bold(capacityVal);
 		capacityVal.setBounds(154, 245, 69, 20);
 		contentPane.add(capacityVal);
 		
-		gpsAntennaStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		stylizeInfoLabel_Bold(gpsAntennaStatusLabel);
 		gpsAntennaStatusLabel.setBounds(528, 501, 69, 20);
 		contentPane.add(gpsAntennaStatusLabel);
 		
-		mboAntennaStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		stylizeInfoLabel_Bold(mboAntennaStatusLabel);
 		mboAntennaStatusLabel.setBounds(528, 525, 69, 20);
 		contentPane.add(mboAntennaStatusLabel);
+
 		stationVal.setHorizontalAlignment(SwingConstants.TRAILING);
-		
-		stationVal.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel_Bold(stationVal);
 		stationVal.setBounds(178, 391, 125, 20);
 		contentPane.add(stationVal);
+
 		timeVal.setHorizontalAlignment(SwingConstants.TRAILING);
-		
-		timeVal.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel_Bold(timeVal);
 		timeVal.setBounds(178, 420, 125, 20);
 		contentPane.add(timeVal);
 		
-		leftDoorStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		stylizeInfoLabel_Bold(leftDoorStatusLabel);
 		leftDoorStatusLabel.setBounds(528, 420, 69, 20);
 		contentPane.add(leftDoorStatusLabel);
 		
-		rightDoorStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		stylizeInfoLabel_Bold(rightDoorStatusLabel);
 		rightDoorStatusLabel.setBounds(528, 449, 69, 20);
 		contentPane.add(rightDoorStatusLabel);
 		
 		
-		lightStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		stylizeInfoLabel_Bold(lightStatusLabel);
 		lightStatusLabel.setBounds(528, 474, 69, 20);
 		contentPane.add(lightStatusLabel);
+		
 		numPassengers.setHorizontalAlignment(SwingConstants.TRAILING);
-		
-		
-		numPassengers.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel_Bold(numPassengers);
 		numPassengers.setBounds(200, 472, 103, 20);
 		contentPane.add(numPassengers);
 		
-		authorityVal.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel_Bold(authorityVal);
 		authorityVal.setBounds(514, 175, 69, 20);
 		contentPane.add(authorityVal);
 		
-		authorityUnits.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(authorityUnits);
 		authorityUnits.setBounds(598, 177, 34, 20);
 		contentPane.add(authorityUnits);
 		
-		setpointSpeedUnits.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(setpointSpeedUnits);
 		setpointSpeedUnits.setBounds(598, 107, 52, 20);
 		contentPane.add(setpointSpeedUnits);
 		
-		ctcSpeedUnitsLabel.setFont(new Font("Dialog", Font.PLAIN, 18));
-		ctcSpeedUnitsLabel.setBounds(598, 141, 34, 20);
+		stylizeInfoLabel(ctcSpeedUnitsLabel);
+		ctcSpeedUnitsLabel.setBounds(598, 141, 52, 20);
 		contentPane.add(ctcSpeedUnitsLabel);
 		
-		ctcSpeedLabel.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel_Bold(ctcSpeedLabel);
 		ctcSpeedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		ctcSpeedLabel.setBounds(499, 141, 84, 20);
 		contentPane.add(ctcSpeedLabel);
 		
-		lblServiceBrake.setFont(new Font("Dialog", Font.PLAIN, 18));
-		lblServiceBrake.setBounds(371, 245, 129, 20);
+		stylizeInfoLabel(lblServiceBrake);
+		lblServiceBrake.setBounds(371, 245, 170, 20);
 		contentPane.add(lblServiceBrake);
 		
-		lblEmergencyBrake.setFont(new Font("Dialog", Font.PLAIN, 18));
-		lblEmergencyBrake.setBounds(371, 277, 154, 20);
+		stylizeInfoLabel(lblEmergencyBrake);
+		lblEmergencyBrake.setBounds(371, 277, 170, 20);
 		contentPane.add(lblEmergencyBrake);
 		
-		emergencyLabel.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel_Bold(emergencyLabel);
 		emergencyLabel.setBounds(529, 277, 69, 20);
 		contentPane.add(emergencyLabel);
 		
-		serviceLabel.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel_Bold(serviceLabel);
 		serviceLabel.setBounds(529, 245, 69, 20);
 		contentPane.add(serviceLabel);
+
+		stylizeButton(btnEndFailure);
 		btnEndFailure.setBounds(855, 268, 94, 29);
-		
 		contentPane.add(btnEndFailure);
-		numCarsSpinner.setFont(new Font("Dialog", Font.PLAIN, 18));
-		
+
+		stylizeInfoLabel_Bold(numCarsSpinner);
 		numCarsSpinner.setBounds(164, 213, 59, 20);
 		contentPane.add(numCarsSpinner);
 		
-		lblCrew.setFont(new Font("Dialog", Font.PLAIN, 18));
+		stylizeInfoLabel(lblCrew);
 		lblCrew.setBounds(60, 277, 69, 20);
 		contentPane.add(lblCrew);
 		
+		stylizeInfoLabel_Bold(crewCountLabel);
 		crewCountLabel.setBounds(154, 277, 69, 20);
 		contentPane.add(crewCountLabel);
 		
-	}
-	
-	/**
-	 * Created by Kevin Le to stylize buttons to all look the same
-	 * @param b
-	 */
-	public void stylizeButton(JButton b){
-		Border thickBorder = new LineBorder(Color.WHITE, 3);
 	}
 	
 	/**

@@ -137,6 +137,7 @@ public class Train {
     private double distTravelled;
     private double metersIn;
     private boolean setExit;
+    public boolean embarkingPassengersSet;
     
     public Train(String line, String trainID, TrainModel tm, TrackModel tkmdl) {
     	this.trkMdl = tkmdl;
@@ -192,7 +193,7 @@ public class Train {
         this.leftDoorIsOpen = false;
         this.rightDoorIsOpen = false;
         this.lightsAreOn  =false;
-        this.temperature = 0;
+        this.temperature = 65;
         this.serviceBrake = false;
         this.emerBrake = false;
         
@@ -311,6 +312,7 @@ public class Train {
      		this.trainModelGUI.arrivalStatusLabel.setText("APPROACHING");
      	} else {
      		this.trainModelGUI.arrivalStatusLabel.setText("DEPARTING");
+            embarkingPassengersSet = false;
      	}
 
      	this.trainModelGUI.currentSpeedLabel.setText(Double.toString(truncateTo((this.currentSpeed*MS_TO_MPH), 2)));
@@ -696,7 +698,15 @@ public class Train {
     }
     
     public void setNumEmbarking(int num) {
-    	this.numPassengers += num;
+        this.numPassengers += num;
+        trkMdl.passengersBoarded(trainID, num);
+        trkMdl.sendTicketSalesToCtc(num);
+        embarkingPassengersSet = true;
+    }
+
+    // Return whether the train is stopped
+    public boolean isStopped(){
+        return (currentSpeed == 0);
     }
     
     /**
@@ -707,13 +717,16 @@ public class Train {
      * @return
      */
     public void setNumDeparting() {
-    	Random rand = new Random();
-    	int  n = rand.nextInt(this.numPassengers+1);
-    	if (this.numPassengers - n <= 0) {
-    		this.numPassengers = 0;
-    		//return this.numPassengers;
-    	} else {
-            this.numPassengers = this.numPassengers - n;
+        if (isStopped() && !embarkingPassengersSet){
+        	Random rand = new Random();
+        	int  n = rand.nextInt(this.numPassengers+1);
+        	if (this.numPassengers - n <= 0) {
+        		this.numPassengers = 0;
+                n = this.numPassengers;
+        	} else {
+                this.numPassengers = this.numPassengers - n;
+            }
+            trkMdl.passengersUnboarded(trainID, n);
         }
     	//return 0;
     }

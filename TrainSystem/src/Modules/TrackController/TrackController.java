@@ -2,62 +2,61 @@ package Modules.TrackController;
 
 import Shared.Module;
 import Shared.SimTime;
-
 import Modules.TrackModel.TrackModel;
 import Modules.TrackModel.Block;
 
+/**
+ * COE 1186
+ * TrackController.java
+ * Purpose: A single Wayside Object.
+ *
+ * @author Nick Petro
+ * @version 1.0 12/14/2017
+ */
 public class TrackController implements Module{
-	//Set externally
+	//Externally accessed
 	public TrackModel trackModel;
+	public TrackControllerGUI tcgui;
+	public PLC tcplc;
 	public String controllerName;
 	public String associatedLine;
 	public String[] associatedBlocks;
-	//Subclass variables
+	//Internal variables
 	private TrackController tc;
-	public TrackControllerGUI tcgui;
-	private PLC tcplc;
 	private String initialPLCPath = "Modules/TrackController/init.plc";
-	//Set internally per block
-	private String line;
-	//private String section; //might not need this
-	private int blockId;
-	private boolean hasLight;
-	private boolean lightState;
-	private boolean hasSwitch;
-	private boolean switchState;
-	private boolean hasCrossing;
-	private boolean crossingState;
-	//private boolean status; //might not need this
-	private boolean occupancy;
 
-	//Constructor
+	/**
+	 * Constructor.
+	 * @param associatedLine A String
+	 * @param associatedBlocks An array of Strings 
+	 * @param controllerName A String 
+	 */
 	public TrackController(String associatedLine, String[] associatedBlocks, String controllerName){
 		this.associatedLine = associatedLine;
 		this.associatedBlocks = associatedBlocks;
 		this.controllerName = controllerName;
-
 		this.tcgui = new TrackControllerGUI(this, this.controllerName);
 		this.tcplc = new PLC(this, initialPLCPath);
 		this.tc = this;
 	}
 	
-	//Functions from Module
+	/**
+	 * External function called for by Module.
+	 * @param time The SimTime from the Simulator
+	 * @return A boolean indicating that all the functions done per second have completed.
+	 */
 	@Override
 	public boolean updateTime(SimTime time) {
 		updateStates();
 		return true;
 	}
 	
-	@Override
-	public boolean communicationEstablished() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-	
-	//Internal Functions
+	/**
+	 * Internal function to cycle through all controlled blocks and update all lights and crossings.
+	 *     It will update the GUI for the current block selected by the GUI.
+	 */
 	private void updateStates(){
 		for(int i=0; i<associatedBlocks.length; i++){
-			receiveBlockInfo(associatedLine, Integer.parseInt(associatedBlocks[i]));
 			lightsAndCrossings(Integer.parseInt(associatedBlocks[i]));
 			if(Integer.parseInt(associatedBlocks[i]) == tcgui.getSelectedBlockId()){
 				guiUpdate(tc);
@@ -65,74 +64,61 @@ public class TrackController implements Module{
 		}
 	}
 	
-	public void receiveBlockInfo(String line, int blockId){
-		this.line = line;
-		this.blockId = blockId;
-		//status = trackModel.getBlock(line, blockId).getStatus();
-		occupancy = trackModel.getBlock(line, blockId).getOccupied();
-		if (trackModel.getBlock(line, blockId).getLight() != null){
-			hasLight = true;
-			lightState = trackModel.getBlock(line, blockId).getLight().getState();
-		} else {
-			hasLight = false;
-			lightState = false;
-		}
-		if (trackModel.getBlock(line, blockId).getSwitch() != null){
-			hasSwitch = true;
-			switchState = trackModel.getBlock(line, blockId).getSwitch().getState();
-		} else {
-			hasSwitch = false;
-			switchState = false;
-		}
-		if (trackModel.getBlock(line, blockId).getCrossing() != null){
-			hasCrossing = true;
-			crossingState = trackModel.getBlock(line, blockId).getCrossing().getState();
-		} else {
-			hasCrossing = false;
-			crossingState = false;
-		}
-	}
-	
-	private void lightsAndCrossings(int blockNum){
-		boolean holdLightState, holdCrossingState;
-		if(hasLight){
-			holdLightState = tcplc.canLightBlock(blockNum);
-			if(holdLightState != lightState){
-				transmitLightState(line, blockId, holdLightState);
+	/**
+	 * Internal function to update the states of the lights and crossings on a given block.
+	 * @param blockId An integer indicating the block
+	 */
+	private void lightsAndCrossings(int blockId){
+		if(trackModel.getBlock(associatedLine, blockId).getLight() != null){
+			//has light
+			boolean lightState = trackModel.getBlock(associatedLine, blockId).getLight().getState();
+			boolean newLightState = tcplc.canLightBlock(blockId);
+			if(newLightState != lightState){
+				//new state doesn't equal current state so update
+				transmitLightState(blockId, newLightState);
 			}
 		}
-		if(hasCrossing){
-			holdCrossingState = tcplc.canCrossingBlock(blockNum);
-			if(holdCrossingState != crossingState){
-				transmitCrossingState(line, blockId, holdCrossingState);
+		if(trackModel.getBlock(associatedLine, blockId).getCrossing() != null){
+			//has crossing
+			boolean crossingState = trackModel.getBlock(associatedLine, blockId).getCrossing().getState();
+			boolean newCrossingState = tcplc.canCrossingBlock(blockId);
+			if(newCrossingState != crossingState){
+				//new state doesn't equal current state so update
+				transmitCrossingState(blockId, newCrossingState);
 			}
 		}
 	}
 	
+	/**
+	 * Internal function to update the GUI if needed.
+	 * @param tc The TrackController that has the GUI
+	 */
 	private void guiUpdate(TrackController tc){
 		tcgui.displayInfo(tc);
 	}
 	
-	//Getters and Setters
-	public PLC getTcplc() {
-		return tcplc;
-	}
-	
-	public String[] getAssociatedBlocks(){
-		return associatedBlocks;
-	}
-	
-	//CTC Functions
+	/**
+	 * External function to transmit the suggested setpoint speed to the track model after making it vital.
+	 * @param trainName A String indicating the train for the given authority
+	 * @param speed A double of the suggested setpoint speed from the CTC
+	 */
+	//TODO make this signal vital (ie check the speed limit)
 	public void transmitSuggestedTrainSetpointSpeed(String trainName, double speed){
 		trackModel.transmitSuggestedTrainSetpointSpeed(trainName, speed);
 	}
-	// transmit as int[] authority = currentBlock, nextBlocks[]
+	
+	/**
+	 * External function to transmit the authority to the track model after making it vital.
+	 * @param trainName A String indicating the train for the given authority
+	 * @param authority An array of integers corresponding to blockId's starting with the current blockId
+	 */
 	public void transmitCtcAuthority(String trainName, int[] authority){
 		double distAuthority = 0;
-		if (authority.length > 2){
-			boolean canProceed = tcplc.canProceedPath(authority);
-			if(canProceed){
-				//can proceed and authority >2
+		boolean canProceed = tcplc.canProceedPath(authority);
+		if(canProceed){
+			//can proceed
+			if (authority.length > 2){
+				//can proceed and authority >2 (ie [cb,nb,...])
 				if ((authority[0] >= 0) && (trackModel.getBlock(associatedLine, authority[0]).getSwitch() != null) && (trackModel.getBlock(associatedLine, authority[1]).getSwitch() != null)){
 					//can proceed and currently on a switch so dont do switchStateCalc
 					distAuthority = calcAuthDist(authority);
@@ -144,12 +130,12 @@ public class TrackController implements Module{
 						boolean switchStateCalc = tcplc.switchStatePath(authority);
 						if (switchStateCalc) {
 							//correct state
-							transmitSwitchState(associatedLine, authority[1], trackModel.getBlock(associatedLine, authority[1]).getSwitch().getState());
+							transmitSwitchState(authority[1], trackModel.getBlock(associatedLine, authority[1]).getSwitch().getState());
 							distAuthority = calcAuthDist(authority);
 							trackModel.transmitCtcAuthority(trainName, distAuthority);
 						} else {
 							//not correct state so switch it
-							transmitSwitchState(associatedLine, authority[1], !trackModel.getBlock(associatedLine, authority[1]).getSwitch().getState());
+							transmitSwitchState(authority[1], !trackModel.getBlock(associatedLine, authority[1]).getSwitch().getState());
 							distAuthority = calcAuthDist(authority);
 							trackModel.transmitCtcAuthority(trainName, distAuthority);
 						}
@@ -167,63 +153,121 @@ public class TrackController implements Module{
 						}
 					}
 				} else {
-					//can proceed and doesnt have switch
+					//authority is >2 and can proceed and doesnt have switch
 					distAuthority = calcAuthDist(authority);
 					trackModel.transmitCtcAuthority(trainName, distAuthority);
 				}
 			} else {
-				//cannot proceed
-				trackModel.transmitCtcAuthority(trainName, distAuthority);
+				//authority is <2 and can proceed
+				if (authority.length > 1){
+					//authority is >1 (ie [cb,nb]) and can proceed
+					distAuthority = calcAuthDist(authority);
+					trackModel.transmitCtcAuthority(trainName, distAuthority);
+				} else {
+					//authority is <=1 (ie [cb]) and can proceed
+					// -- this is when the train is approaching its destination block
+					trackModel.transmitCtcAuthority(trainName, distAuthority);
+				}
 			}
 		} else {
-			//authority is <2
+			//cannot proceed
 			trackModel.transmitCtcAuthority(trainName, distAuthority);
 		}
 	} 
 	
-	public Block receiveBlockInfoForCtc(String line, int blockId){
-		return trackModel.getBlock(line, blockId);
+	/**
+	 * External function to receive a Block for the CTC.
+	 * @param blockId An integer indicating the block
+	 * @return The Block from the track model.
+	 */
+	public Block receiveBlockInfoForCtc(int blockId){
+		return trackModel.getBlock(associatedLine, blockId);
 	}
 	
-	public void transmitBlockMaintenance(String line, int blockId, boolean maintenance){
+	/**
+	 * External function to transmit the switch state to the track model.
+	 * @param blockId An integer indicating the block
+	 * @param maintenance A boolean specifying if the block should go under maintenance or not
+	 * @return A boolean indicating the success of the maintenance.
+	 */
+	public boolean transmitBlockMaintenance(int blockId, boolean maintenance){
 		boolean canMaintenance = tcplc.canMaintenanceBlock(blockId);
 		if(canMaintenance){
-			trackModel.getBlock(line, blockId).setMaintenance(maintenance);
-		}
-	}
-	
-	public boolean transmitCtcSwitchState(String line, int blockId, boolean state){
-		boolean canSwitch = tcplc.canSwitchBlock(blockId);
-		if(canSwitch){
-			transmitSwitchState(line, blockId, state);
+			trackModel.getBlock(associatedLine, blockId).setMaintenance(maintenance);
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
-	//Hardware Control
-	private void transmitSwitchState(String line, int blockId, boolean state){
+	/**
+	 * External function to transmit the switch state to the track model.
+	 * @param blockId An integer indicating the block
+	 * @param state A boolean specifying the desired state
+	 * @return A boolean indicating the success of the switch.
+	 */
+	public boolean transmitCtcSwitchState(int blockId, boolean state){
+		boolean canSwitch = tcplc.canSwitchBlock(blockId);
+		if(canSwitch){
+			transmitSwitchState(blockId, state);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Internal function to transmit the switch state to the track model.
+	 * @param blockId An integer indicating the block
+	 * @param state A boolean specifying the desired state
+	 */
+	private void transmitSwitchState(int blockId, boolean state){
 		//false == alt, true == norm
-		trackModel.getBlock(line, blockId).getSwitch().setState(state);
+		trackModel.getBlock(associatedLine, blockId).getSwitch().setState(state);
 	}
 	
-	private void transmitLightState(String line, int blockId, boolean state){
+	/**
+	 * Internal function to transmit the light state to the track model.
+	 * @param blockId An integer indicating the block
+	 * @param state A boolean specifying the desired state
+	 */
+	private void transmitLightState(int blockId, boolean state){
 		//false == red, true == green
-		trackModel.getBlock(line, blockId).getLight().setState(state);
+		trackModel.getBlock(associatedLine, blockId).getLight().setState(state);
 	}
 	
-	private void transmitCrossingState(String line, int blockId, boolean state){
+	/**
+	 * Internal function to transmit the crossing state to the track model.
+	 * @param blockId An integer indicating the block
+	 * @param state A boolean specifying the desired state
+	 */
+	private void transmitCrossingState(int blockId, boolean state){
 		//false == on, true == off
-		trackModel.getBlock(line, blockId).getCrossing().setState(state);
+		trackModel.getBlock(associatedLine, blockId).getCrossing().setState(state);
 	}
 	
-	//Helper Functions
+	/**
+	 * Internal function to translate the authority from an array of blocks to a distance in meters.
+	 * @param authority An array of integers corresponding to blockId's
+	 * @return A double indicating the authority as a distance.
+	 */
 	private double calcAuthDist(int[] authority){
 		double distAuth = 0;
-		for(int i=1; i<authority.length; i++){
-			distAuth += trackModel.getBlock(line, authority[i]).getLength();
+		for(int i=0; i<authority.length; i++){
+			if(authority[i] >= 0){
+				distAuth += trackModel.getBlock(associatedLine, authority[i]).getLength();
+			}
 		}
 		return distAuth;
+	}
+	
+	/**
+	 * External function called for by Module.
+	 * @return A boolean indicating that the module is initalized.
+	 */
+	@Override
+	public boolean communicationEstablished() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 }

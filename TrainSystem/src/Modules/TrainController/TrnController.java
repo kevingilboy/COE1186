@@ -19,9 +19,9 @@ public class TrnController {
 	private int blockMode;					//0 is moving, 1 is fixed
 	private int temperature;				//F
 	private int beacon;						//32 bit integer
-	private int stationTimeCounter;
 	private int currentBlock;
 	private int trainDirection;
+	private int storedBeacon;
 	private double ctcAuth;					//meters
 	private double mboAuth;					//meters
 	private double distToStation;			//meters
@@ -39,11 +39,7 @@ public class TrnController {
 	private boolean passEBrakes;
 	private boolean inStation;
 	private boolean ready;
-	private boolean approachSignaled;
-	private boolean arrivedSignaled;
-	private boolean departSignaled;
-	private boolean enRouteSignaled;
-	//private boolean passed;
+	private boolean passed;
 	private ArrayList<BlockInfo> mapInfo;
 	private BlockInfo currentBlockInfo;
 	private String[] stationList;
@@ -67,8 +63,8 @@ public class TrnController {
 		controller = C;
 		pi = new PIController(p, i);
 		driveMode = 0;
-		//blockMode = b;
-		blockMode = 1; //fixed for now
+		blockMode = b;
+		//blockMode = 1;
 		beacon = 0;
 		ctcAuth = 0;
 		mboAuth = 0;
@@ -91,12 +87,8 @@ public class TrnController {
 		mainGUI = g;
 		controlGUI = new TrnControllerGUI(this, trainID);
 		g.add(controlGUI);
-		approachSignaled = false;
-		arrivedSignaled = false;
-		departSignaled = false;
-		enRouteSignaled = true;
 		inStation = false;
-		stationTimeCounter = 0;
+		passed = true;
 	}
 	
 	public boolean updateTime() {
@@ -105,9 +97,6 @@ public class TrnController {
 		passEBrakes = controller.receivePassengerEmergencyBrake(trainID);
 		currentBlock = controller.receiveTrainPosition(trainID);
 		currentBlockInfo = mapInfo.get(currentBlock);
-		/*if (!currentBlockInfo.getStationName().equals("")) {
-			System.out.println("station");
-		}*/
 		speedLimit = (double)currentBlockInfo.getSpeedLimit();
 		controlGUI.setSpeedLimit(speedLimit);
 		beacon = controller.receiveBeaconValue(trainID);
@@ -115,10 +104,8 @@ public class TrnController {
 		if (driveMode == 0) {		//if auto
 			setpointSpeed = controller.receiveSetpointSpeed(trainID);
 			if (inStation) {
-				stationTimeCounter++;
-				if (stationTimeCounter >= 120)
+				if (overallAuth > 0)
 				{
-					stationTimeCounter = 0;
 					closeLeft();
 					closeRight();
 					inStation = false;
@@ -141,10 +128,8 @@ public class TrnController {
 		}
 		else {		//if manual
 			if (inStation) {
-				stationTimeCounter++;
 				calcPowerOutput();
 				if (actualSpeed > 0 && power > 0) {
-					stationTimeCounter = 0;
 					inStation = false;
 					announceDeparting(currentStation);
 				}
@@ -311,11 +296,11 @@ public class TrnController {
 			eBrakesOn();
 			return true;
 		}
-		else if (overallAuth <= (safeBrakingDistance * 3/4) && actualSpeed > 0) {
+		/*else if (overallAuth == 0 && actualSpeed > 0) {
 			engineOff();
 			eBrakesOn();
 			return true;
-		}
+		}*/
 		else if ((overallAuth <= safeBrakingDistance && actualSpeed > 0) || (distToStation <= safeBrakingDistance && actualSpeed > 0)) {
 			engineOff();
 			sBrakesOn();
@@ -325,6 +310,11 @@ public class TrnController {
 			sBrakesOff();
 			eBrakesOff();
 			return true;
+		}
+		else if (overallAuth > 0 && actualSpeed == 0) {
+			sBrakesOff();
+			eBrakesOff();
+			return false;
 		}
 		else {
 			return false;
@@ -410,26 +400,19 @@ public class TrnController {
 	
 	private void decodeBeacon() {
 		if (!inStation) {
-			if (beacon == 0 && currentBlockInfo.getStationName().equals("")) {
-				announceEnRoute();
-				currentStation = null;
-			}
-			else if (beacon != 0 && enRouteSignaled) {
+			if (storedBeacon == 0 && passed && beacon != 0) {
 				currentStation = stationList[beacon];
 				announceApproach(currentStation);
+				storedBeacon = beacon;
+				passed = false;
 			}
-			else if (approachSignaled/* && !currentBlockInfo.getStationName().equals("")*/) {
-				announceApproach(currentStation);
+			else if (beacon == storedBeacon && passed && beacon != 0) {
+				announceEnRoute();
+				storedBeacon = 0;
+				passed = false;
 			}
-			else if (departSignaled/* && !currentBlockInfo.getStationName().equals("")*/) {
-				announceDeparting(currentStation);
-			}
-			/*else if (beacon != 0 && departSignaled) {
-				announceDeparting(currentStation);
-			}*/
-			else {
-				//announceEnRoute();
-				//currentStation = null;
+			else if (beacon == 0) {
+				passed = true;
 			}
 		}
 	}
@@ -440,33 +423,17 @@ public class TrnController {
 	
 	private void announceApproach(String stationName) {
 		controller.transmitAnnouncement(trainID, APPROACHING, stationName);
-		approachSignaled = true;
-		arrivedSignaled = false;
-		departSignaled = false;
-		enRouteSignaled = false;
 	}
 	
 	private void announceArrived(String stationName) {
 		controller.transmitAnnouncement(trainID, ARRIVED, stationName);
-		approachSignaled = false;
-		arrivedSignaled = true;
-		departSignaled = false;
-		enRouteSignaled = false;
 	}
 	
 	private void announceDeparting(String stationName) {
 		controller.transmitAnnouncement(trainID, DEPARTING, stationName);
-		approachSignaled = false;
-		arrivedSignaled = false;
-		departSignaled = true;
-		enRouteSignaled = false;
 	}
 	
 	private void announceEnRoute() {
 		controller.transmitAnnouncement(trainID, ENROUTE, "");
-		approachSignaled = false;
-		arrivedSignaled = false;
-		departSignaled = false;
-		enRouteSignaled = true;
 	}
 }
