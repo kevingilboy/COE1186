@@ -9,11 +9,17 @@ public class Light{
 
 	private boolean state;
 	private boolean status;
-	
+
+	private int x_coordinate;
+	private int y_coordinate;
+
 	public Light(){
 		// Default state and status
 		state = STATE_LIGHTS_ON;
 		status = STATUS_WORKING;
+
+		x_coordinate = 0;
+		y_coordinate = 0;
 	}
 
 	public boolean getState(){
@@ -30,5 +36,21 @@ public class Light{
 
 	public void setStatus(boolean newStatus){
 		status = newStatus;
+	}
+
+	public int getXCoordinate(){
+		return x_coordinate;
+	}
+
+	public int getYCoordinate(){
+		return y_coordinate;
+	}
+
+	public void setXCoordinate(int x){
+		x_coordinate = x;
+	}
+
+	public void setYCoordinate(int y){
+		y_coordinate = y;
 	}
 }

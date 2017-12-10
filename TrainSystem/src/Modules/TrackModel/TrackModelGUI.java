@@ -36,6 +36,8 @@ import java.awt.event.MouseEvent;
 import java.awt.ItemSelectable;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /*--- REQUIRED LIBRARIES FOR HSS DARK THEME ----*/
 import java.awt.GraphicsEnvironment;
@@ -251,7 +253,7 @@ public class TrackModelGUI{
 		// DYANMIC RENDER PANEL
 		panel_dynamicRender = new JPanel();
 		panel_dynamicRender.setBackground(Color.DARK_GRAY);
-		panel_dynamicRender.setBounds(16, 58, 335, 448);
+		panel_dynamicRender.setBounds(16, 58, 335, 460);
 
 		frame_tmGUI.getContentPane().add(panel_dynamicRender);
 		
@@ -714,8 +716,12 @@ public class TrackModelGUI{
 	class OpenL implements ActionListener {
 	    public void actionPerformed(ActionEvent e) {
 
-	    	/*
 			JFileChooser c = new JFileChooser();
+
+			FileFilter filter = new FileNameExtensionFilter("CSV file", new String[] {"csv"});
+			c.setFileFilter(filter);
+			c.setCurrentDirectory(new File(System.getProperty("user.dir")));
+
 			int rVal = c.showOpenDialog(frame_tmGUI);
 
 			String trackFilename = c.getSelectedFile().getName();
@@ -746,12 +752,13 @@ public class TrackModelGUI{
 				}
 				showBlockInfo(blockSelected);
 			}
-			*/
 	    }
 	}
 	
 	public void initTracksOnStartup() {		
-		trackModel.setTrack("red", (new TrackCsvParser()).parse("Modules/TrackModel/Track Layout/RedLineFinal.csv"));
+		TrackCsvParser redParser = new TrackCsvParser();
+		trackModel.setTrack("red", redParser.parse("Modules/TrackModel/Track Layout/RedLineFinal.csv"));
+		//redParser.parseLightPositions("Modules/TrackModel/Track Layout/RedLightsCoordinates.csv", trackModel.getTrack("red"));
 		trackSelected = trackModel.getTrack("red");
 		blockSelected = trackSelected.get(0);
 
@@ -760,7 +767,9 @@ public class TrackModelGUI{
 
 		comboBox_selectTrack.addItem("RED LINE");
 
-		trackModel.setTrack("green", (new TrackCsvParser()).parse("Modules/TrackModel/Track Layout/GreenLineFinal.csv"));
+		TrackCsvParser greenParser = new TrackCsvParser();
+		trackModel.setTrack("green", greenParser.parse("Modules/TrackModel/Track Layout/GreenLineFinal.csv"));
+		greenParser.parseLightPositions("Modules/TrackModel/Track Layout/GreenLightsCoordinates.csv", trackModel.getTrack("green"));
 		trackSelected = trackModel.getTrack("green");
 		blockSelected = trackSelected.get(0);
 
