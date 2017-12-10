@@ -294,20 +294,20 @@ public class Ctc implements Module,TimeControl {
 	public void dispatchTrain(String name) {
 		Schedule schedule = removeScheduleByName(name);
 		
-		//If the first block is occupied, add it to a queue to be subsequently dispatched
-		//Else dispatch the train
-		for(Train train : trains.values()) {
-			if(schedule.line == train.line && train.currLocation==schedule.line.yardOut) {
-				scheduleQueueToDispatch.add(schedule);
-				return;
-			}
+		//If the first block is not occupied, dispatch
+		//Else add it to a queue to be subsequently dispatched
+		if(checkDispatchability(schedule)) {
+			dispatchTrain(schedule);
 		}
-		dispatchTrain(schedule);
+		else {
+			scheduleQueueToDispatch.add(schedule);
+		}
 	}
 	private void dispatchTrain(Schedule schedule) {
 		Train train = new Train(schedule);
 		schedule.train = train;
 		trains.put(schedule.name, train);
+		//train.line.blocks[train.line.yardOut].setOccupancy(true);
 		
 		trainModel.dispatchTrain(schedule.name, train.line.toString().toUpperCase());
 		trainController.dispatchTrain(schedule.name, train.line.toString().toUpperCase()); 
@@ -369,7 +369,7 @@ public class Ctc implements Module,TimeControl {
 			// Fixed block: If block is occupied, ditch the path
 			// Moving block: If block is broken, ditch the path
 			//-------------------
-			if(!isMovingBlockMode && train.line.blocks[currBlockId].getOccupied() && currBlockId != selfLocation) {
+			if(!isMovingBlockMode && path.get(0)!=-1 && train.line.blocks[currBlockId].getOccupied() && currBlockId != selfLocation) {
 				path.remove(path.size()-1);
 				/*
 				Switch swPrev = train.line.blocks[prevBlockId].getSwitch();
@@ -395,7 +395,7 @@ public class Ctc implements Module,TimeControl {
 			// Fixed block mode: If block is on bidirectional track which is occupied, ditch the path
 			//-------------------
 			int nbId = getNextBlockId(train.line, currBlockId, prevBlockId);
-			if(!isMovingBlockMode && (nbId<=train.line.yardIn && nbId>=0) && train.line.blocks[nbId].getDirection()==0) {
+			if((nbId<=train.line.yardIn && nbId>=0) && train.line.blocks[nbId].getDirection()==0) {
 				if(bidirectionalStretchOccupied(train.line,nbId,currBlockId,selfLocation)) {
 					path.remove(path.size()-1);
 					continue;
@@ -559,6 +559,32 @@ public class Ctc implements Module,TimeControl {
 		wayside.transmitCtcAuthority(name,auth);
 	}
 	
+	protected boolean checkDispatchability(Schedule schedule) {
+		boolean yardOutOccupied = false;
+		if(schedule.line.blocks[schedule.line.yardOut].getOccupied()) {
+			yardOutOccupied = true;
+		}
+		else{
+			for(Train train : trains.values()) {
+				if(train.line == schedule.line && train.currLocation==train.line.yardOut) {
+					yardOutOccupied = true;
+					break;
+				}
+			}
+		}
+		TrackController wayside = getWaysideOfBlock(schedule.line, schedule.line.yardOut);
+		int pb = -1;
+		int cb = schedule.line.yardOut;
+		int nb = getNextBlockId(schedule.line,cb,pb);
+		int nnb = getNextBlockId(schedule.line,nb,cb);
+		
+		if(wayside.tcplc.canProceedPath(new int[] {pb,cb,nb,nnb}) && !yardOutOccupied) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	/*
 	 * ------------------------------
 	 *  MODULE REQUIREMENTS
@@ -591,17 +617,8 @@ public class Ctc implements Module,TimeControl {
 		
 		//If a train was waiting for yard_out to be unoccupied, check yardout and dispatch if clear
 		Schedule scheduleToDispatch = scheduleQueueToDispatch.peek();
-		if(scheduleToDispatch!=null) {
-			boolean yardOutOccupied = false;
-			for(Train train : trains.values()) {
-				if(train.line == scheduleToDispatch.line && train.currLocation==train.line.yardOut) {
-					yardOutOccupied = true;
-					break;
-				}
-			}
-			if(!yardOutOccupied) {
-				dispatchTrain(scheduleQueueToDispatch.poll());
-			}
+		if(scheduleToDispatch!=null && checkDispatchability(scheduleToDispatch)) {
+			dispatchTrain(scheduleQueueToDispatch.poll());
 		}
 		
 		/*
