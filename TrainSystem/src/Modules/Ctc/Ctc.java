@@ -251,21 +251,33 @@ public class Ctc implements Module,TimeControl {
 	/**
 	 * Creates a sample train to dispatch
 	 */
-	public void testDispatch() {
+	public void testDispatch(Line line) {
 		if(!simulator.simulationRunning) {
 			play();
 			gui.btnPlay.setEnabled(false);
 			gui.btnPause.setEnabled(true);
 		}
 		String testName = "TestTrain"+testTrainNum++;
-		Schedule schedule = new Schedule(Line.GREEN);
-		schedule.departureTime = new SimTime("11:11:11");
-		schedule.name = testName;
-		schedule.addStop(0, 104, new SimTime("00:00:30"));
-		schedule.addStop(1, 113, new SimTime("00:02:00"));
-		schedule.addStop(2, 1, new SimTime("00:02:00"));
-		addSchedule(testName,schedule);
-		dispatchTrain(testName);
+		if(line==Line.GREEN) {
+			Schedule schedule = new Schedule(Line.GREEN);
+			schedule.departureTime = new SimTime("11:11:11");
+			schedule.name = testName;
+			schedule.addStop(0, 104, new SimTime("00:00:30"));
+			schedule.addStop(1, 113, new SimTime("00:02:00"));
+			schedule.addStop(2, 1, new SimTime("00:02:00"));
+			addSchedule(testName,schedule);
+			dispatchTrain(testName);
+		}
+		else if(line==Line.RED) {
+			Schedule schedule = new Schedule(Line.RED);
+			schedule.departureTime = new SimTime("11:11:11");
+			schedule.name = testName;
+			schedule.addStop(0, 75, new SimTime("00:00:30"));
+			schedule.addStop(1, 44, new SimTime("00:02:00"));
+			schedule.addStop(2, 59, new SimTime("00:02:00"));
+			addSchedule(testName,schedule);
+			dispatchTrain(testName);
+		}
 	}
 	
 	/**
@@ -379,6 +391,7 @@ public class Ctc implements Module,TimeControl {
 			int nbId = getNextBlockId(train.line, currBlockId, prevBlockId);
 			if(!isMovingBlockMode && (nbId<=train.line.yardIn && nbId>=0) && train.line.blocks[nbId].getDirection()==0) {
 				if(bidirectionalStretchOccupied(train.line,nbId,currBlockId,selfLocation)) {
+					path.remove(path.size()-1);
 					continue;
 				}
 			}
