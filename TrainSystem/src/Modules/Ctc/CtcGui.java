@@ -1064,7 +1064,7 @@ public class CtcGui {
 	/*
 	 * DISPATCH TABLE
 	 */
-	private void updateDispatchedTable(){
+	private boolean updateDispatchedTable(){
 		//Clear the red and green tables
 		for(Line line : Line.values()) {
 			line.dispatchedData.setDataVector(dispatchedTrainsInitialData, dispatchedTrainsColumnNames);
@@ -1097,6 +1097,8 @@ public class CtcGui {
 				}
 			}
 		}
+		
+		return true;
 	}
 	
 	private void manualSpeedSetEnabled(Boolean b) {
@@ -1175,7 +1177,7 @@ public class CtcGui {
 	}	
 	
 	
-	public void repaint() {
+	public boolean repaint() {
 		//Update Throughput Label
 		lblThroughputAmt.setText(Double.toString(ctc.throughput));
 		
@@ -1186,6 +1188,8 @@ public class CtcGui {
 		updateSelectedBlock(false);
 		
 		//Update the locations of trains
-		updateDispatchedTable();
+		while(!updateDispatchedTable());
+		
+		return true;
 	}
 }

@@ -637,7 +637,7 @@ public class Ctc implements Module,TimeControl {
 			while(!tc.updateTime(currentTime)) {};
 		}
 		
-		gui.repaint();
+		while(!gui.repaint()) {};
 		
 		return true;
 	}
