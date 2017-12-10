@@ -52,7 +52,7 @@ import javax.swing.SwingConstants;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
-public class TrackModelGUI implements ActionListener{
+public class TrackModelGUI{
 	
 	/**
 	 * CONVERSION FACTORS FOR DISPLAY
@@ -70,8 +70,6 @@ public class TrackModelGUI implements ActionListener{
 	/**
 	 * GUI COMPONENTS
 	 */
-	Timer infoRefreshTimer;
-
 	private JFrame frame_tmGUI;
 	private JPanel panel_dynamicRender;
 	JComboBox comboBox_selectTrack;
@@ -130,8 +128,7 @@ public class TrackModelGUI implements ActionListener{
 	Font font_24_bold = new Font("Roboto Condensed", Font.BOLD, 38);
 
 	/**
-	 * Set any UI configurations done by the UI manager and
-	 * register Roboto Condensed font into the system.
+	 * Set any UI configurations done by the UI manager
 	 *
 	 * NOTE: This method must be called first in the GUI instantiation!
 	 */
@@ -140,18 +137,6 @@ public class TrackModelGUI implements ActionListener{
 			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
-		}
-
-		try {
-		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Bold.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-BoldItalic.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Italic.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Regular.ttf")));
-
-		    System.out.println("Loaded custom fonts!");
-		} catch (IOException|FontFormatException e) {
-		    System.out.println("HssVisualizer Error: Cannot load custom font.");
 		}
 	}
 
@@ -255,6 +240,8 @@ public class TrackModelGUI implements ActionListener{
 
 					currentDisplay = redLineDisplay;
 				}
+
+				refresh();
 			}
 	    };
 
@@ -299,6 +286,7 @@ public class TrackModelGUI implements ActionListener{
 					}
 					currentDisplay.dynamicTrackView.blockSelected = blockSelected;
 					showBlockInfo(trackSelected.get(blockSelected.getId()));
+					refresh();
 				}
 			} 
 		});
@@ -321,6 +309,7 @@ public class TrackModelGUI implements ActionListener{
 					}
 					currentDisplay.dynamicTrackView.blockSelected = blockSelected;
 					showBlockInfo(blockSelected);
+					refresh();
 				}
 			} 
 		});
@@ -571,6 +560,7 @@ public class TrackModelGUI implements ActionListener{
 						// ... 
 					}
 				}
+				refresh();
 			} 
 		});
 
@@ -755,7 +745,6 @@ public class TrackModelGUI implements ActionListener{
 					comboBox_selectTrack.setSelectedItem("RED LINE");
 				}
 				showBlockInfo(blockSelected);
-				startTimer();
 			}
 			*/
 	    }
@@ -785,16 +774,12 @@ public class TrackModelGUI implements ActionListener{
 			comboBox_sectionId.addItem(trackSelected.get(i).getSection() + (i+1));
 		}
 
-		startTimer();
+		refresh();
 	}
 
-	public void startTimer(){
-		infoRefreshTimer = new Timer(20, this);
-	    infoRefreshTimer.start();
-	}
-
-	// Refresh the screen info
-	public void actionPerformed(ActionEvent e) {
-    	showBlockInfo(blockSelected);
+	// Refresh the GUI
+	public void refresh(){
+		showBlockInfo(blockSelected);
+		currentDisplay.dynamicTrackView.refresh();
 	}
 }

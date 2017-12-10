@@ -28,6 +28,7 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JMenu;
@@ -78,8 +79,7 @@ public class TrainModelGUI extends JFrame {
 	Font font_24_bold = new Font("Roboto Condensed", Font.BOLD, 38);
 
 	/**
-	 * Set any UI configurations done by the UI manager and
-	 * register Roboto Condensed font into the system.
+	 * Set any UI configurations done by the UI manager
 	 *
 	 * NOTE: This method must be called first in the GUI instantiation!
 	 */
@@ -88,18 +88,6 @@ public class TrainModelGUI extends JFrame {
 			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
-		}
-
-		try {
-		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Bold.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-BoldItalic.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Italic.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Regular.ttf")));
-
-		    System.out.println("Loaded custom fonts!");
-		} catch (IOException|FontFormatException e) {
-		    System.out.println("HssVisualizer Error: Cannot load custom font.");
 		}
 	}
 
@@ -161,6 +149,30 @@ public class TrainModelGUI extends JFrame {
 	/*----------------------------------------------------------------------*/
 	/*-------------------- HSS GUI DARK THEME REDESIGN ---------------------*/
 	/*----------------------------------------------------------------------*/
+
+	/*-----------ADVERTISEMENT AND AD TIMER-------------*/
+	Timer adTimer;
+	JLabel advertisementImageLabel;
+	int currentAd = 0;
+
+	public void initializeAdvertisementTimer(){
+ 		adTimer = new Timer();
+
+ 		TimerTask updateAd = new updateAdvertisement();
+	    adTimer.schedule(updateAd, 0, 5000);// Toggle advertisement every 5 seconds
+	}
+
+	private class updateAdvertisement extends TimerTask{
+		public void run(){
+			currentAd++;
+			if (currentAd >= imgArray.size()){
+				currentAd = 0;
+			}
+			advertisementImageLabel.setIcon(new ImageIcon(imgArray.get(currentAd)));
+		}
+	}
+
+	/*-------------------------------------------------*/
 
 	private JSplitPane splitPane;
 	private JPanel contentPane;
@@ -370,6 +382,7 @@ public class TrainModelGUI extends JFrame {
 	public TrainModelGUI() {
 		setLookAndFeel();
 		initComponents();
+		initializeAdvertisementTimer();
 	}
 	
 	/**
@@ -378,8 +391,8 @@ public class TrainModelGUI extends JFrame {
 	public TrainModelGUI(Train newTrain) {
 		setLookAndFeel();
 		initComponents();
+		initializeAdvertisementTimer();
 		this.train = newTrain;
-		
 	}
 		
 	private void initComponents() {
@@ -403,11 +416,11 @@ public class TrainModelGUI extends JFrame {
 		imgArray.add(aerotech);
 		imgArray.add(mouse);
 		imgArray.add(safety);
-		JLabel advertisementImageLabel = new JLabel();
+		advertisementImageLabel = new JLabel();
 		advertisementImageLabel.setBounds(0, 0, 1050, 200);
 		Image dimg = mouse.getScaledInstance(advertisementImageLabel.getWidth(), advertisementImageLabel.getHeight(),
 		        Image.SCALE_SMOOTH);
-		advertisementImageLabel.setIcon(new ImageIcon(dimg));
+		advertisementImageLabel.setIcon(new ImageIcon(spongebob1));
 		advertisePane.add(advertisementImageLabel);
 		
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);  // we want it to split the window verticaly
