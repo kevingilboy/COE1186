@@ -26,7 +26,7 @@ public class DynamicDisplay{
 	// Dimensions of the track layout view
 	public int VERTICAL_FRAME_PADDING = 0;
 	public int TRACK_LAYOUT_WIDTH = 334;
-	public int TRACK_LAYOUT_HEIGHT = 448;
+	public int TRACK_LAYOUT_HEIGHT = 500;
 
 	// Dimensions of the overall GUI, currently set to the
 	// dimensions of the track layout view
@@ -69,6 +69,14 @@ public class DynamicDisplay{
 
 		// Add the dynamic track view panel
 		f.add(dynamicTrackView);
+
+		dynamicTrackView.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				Point mouseDownCompCoords = e.getPoint();
+				System.out.println("Coordinates: " + mouseDownCompCoords.x + ", " + mouseDownCompCoords.y);
+			}
+		});
 	}
 
 	// Add trains

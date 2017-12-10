@@ -211,6 +211,45 @@ public class TrackCsvParser{
     	return blocks;
 	}
 
+	public void parseLightPositions(String csvFile, ArrayList<Block> track){
+		BufferedReader br = null;
+		String currentLine = "";
+		String delimeter = ",";
+
+		try {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(csvFile)));
+
+			while ((currentLine = br.readLine()) != null){
+				System.out.println("PARSING...");
+				String [] data = currentLine.split(delimeter);
+
+				String line 			= data[0];
+				int id 					= Integer.parseInt(data[1]); 
+				int x_coordinate 		= Integer.parseInt(data[2]);
+				int y_coordinate 		= Integer.parseInt(data[3]);
+
+				for (int i = 0; i < blocks.size(); i++){
+					if (track.get(id).getLight() != null){
+						track.get(id).getLight().setXCoordinate(x_coordinate);
+						track.get(id).getLight().setYCoordinate(y_coordinate);
+					}
+				}
+			} // end while(readline())
+		} catch (FileNotFoundException e) {
+        	e.printStackTrace();
+    	} catch (IOException e) {
+        	e.printStackTrace();
+    	} finally {
+        	if (br != null) {
+            	try {
+                	br.close();
+            	} catch (IOException e) {
+                	e.printStackTrace();
+            	}
+        	}
+    	}
+	}
+
 	public void showParsedTrack(){
 		if (blocks.size() > 0){
 			for (int i = 0; i < blocks.size(); i++){

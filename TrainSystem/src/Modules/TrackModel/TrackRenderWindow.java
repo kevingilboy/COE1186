@@ -138,6 +138,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
 
         drawTrack(g2d);
         drawSwitches(g2d);
+        drawLights(g2d);
         drawSelectedBlock(g2d);
         drawTrains(g2d);
     }
@@ -289,6 +290,28 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         for (int i = 0; i < x_coords.length-2; i++){
             g2d.drawRect((int)x_coords[i], (int)y_coords[i],
                         2, 2);
+        }
+    }
+
+    // Draw the lights
+    public void drawLights(Graphics2D g2d){
+        for (int i = 0; i < blocks.size(); i++){
+            if (blocks.get(i).getLight() != null){
+                int x_coord = blocks.get(i).getLight().getXCoordinate();
+                int y_coord = blocks.get(i).getLight().getYCoordinate();
+
+                g2d.setColor(Color.WHITE);
+                int radius = 3;
+                Shape circleOutline = new Ellipse2D.Double(x_coord, y_coord, 2.0*(radius+1), 2.0*(radius+1));
+
+                if (blocks.get(i).getLight().getState() == true){
+                    g2d.setColor(Color.GREEN);
+                } else {
+                    g2d.setColor(Color.RED);
+                }
+                Shape circle = new Ellipse2D.Double(x_coord, y_coord, 2.0*radius, 2.0*radius);
+                g2d.fill(circle);
+            }
         }
     }
 
