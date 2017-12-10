@@ -119,9 +119,6 @@ public class Schedule {
 				currBlockId = path.get(path.size()-1);
 				prevBlockId = path.get(path.size()-2);
 				
-				//TODO below is a temporary fix for the switch issue
-				if(currBlockId>line.yardOut ||currBlockId<0) continue;
-				
 				//-------------------
 				// If approaching the yard, ditch the path
 				//-------------------
@@ -155,13 +152,20 @@ public class Schedule {
 						int altId = swCurr.getPortAlternate();
 						
 						//Follow both paths if valid
-						if(line.blocks[normId].getDirection()>=line.blocks[currBlockId].getDirection()) {
-							ArrayList<Integer> newPath = cloneAndAppendAL(path,normId);
+						if(line.blocks[normId].getDirection() == line.blocks[altId].getDirection()) {
+							int indexToFollow = (currBlockId+1==normId) ? normId : altId;
+							ArrayList<Integer> newPath = cloneAndAppendAL(path,indexToFollow);
 							q.add(newPath);
 						}
-						if(line.blocks[altId].getDirection()>=line.blocks[currBlockId].getDirection()) {
-							ArrayList<Integer> newPath = cloneAndAppendAL(path,altId);
-							q.add(newPath);
+						else {
+							if(line.blocks[normId].getDirection()>=line.blocks[currBlockId].getDirection()) {
+								ArrayList<Integer> newPath = cloneAndAppendAL(path,normId);
+								q.add(newPath);
+							}
+							if(line.blocks[altId].getDirection()>=line.blocks[currBlockId].getDirection()) {
+								ArrayList<Integer> newPath = cloneAndAppendAL(path,altId);
+								q.add(newPath);
+							}
 						}
 					}
 					// CASE: Entering a tail from a non-switch, pursue the normal port 
@@ -173,12 +177,13 @@ public class Schedule {
 				}
 				// CASE : Not a switch or about to leave a switch so just use a vanilla TrackIterator to pursue the next block
 				else {
-					int nextBlockId = (new TrackIterator(line.blocksAL, currBlockId, prevBlockId)).nextBlock();
+					int nextBlockId = Ctc.getNextBlockId(line, currBlockId, prevBlockId);
 					ArrayList<Integer> newPath = cloneAndAppendAL(path,nextBlockId);
 					q.add(newPath);
 				}
 			} //while q not empty
 			
+			//Remove the first
 			path.remove(0);
 			
 			//-------------------
@@ -186,7 +191,7 @@ public class Schedule {
 			//-------------------
 			double runningTime = 0;
 			for(int blockId : path) {
-				runningTime += line.blocks[blockId].getSpeedLimit()/1000.0 * line.blocks[blockId].getLength();
+				runningTime += line.blocks[blockId].getLength() / (line.blocks[blockId].getSpeedLimit() * (1/3600.0) * 1000);
 			}
 			int hr = (int)runningTime/3600;
 			int min = (int)(runningTime%3600)/60;

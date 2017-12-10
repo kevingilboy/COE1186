@@ -109,7 +109,7 @@ public class Ctc implements Module,TimeControl {
 	/**
 	 * Gets the next block ID given a current and previous block
 	 */
-	public int getNextBlockId(Line line, int currBlock, int prevBlock) {
+	public static int getNextBlockId(Line line, int currBlock, int prevBlock) {
 		TrackIterator ti = new TrackIterator(line.blocksAL, currBlock, prevBlock);
 		return ti.nextBlock();
 	}
