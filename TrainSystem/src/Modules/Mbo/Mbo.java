@@ -33,6 +33,8 @@ public class Mbo implements Module {
 	final private static double TRAIN_MAX_ACCELERATION_SERVICE_BRAKE = -1.2;
 	final private static double FRICTION_COEFFICIENT = 0.16;
 	final private static double G = 9.8;
+	final private static double TRAIN_MASS = 37103.86; 	// kg
+	final private static double TRAIN_LENGTH = 32.2; 	// m
 
 	public Mbo(){
 		this.time = new SimTime(7,0,0);
@@ -200,7 +202,11 @@ public class Mbo implements Module {
 			//double newDist = Math.pow((Math.pow(dispX, 2) + Math.pow(dispY, 2)), 0.5);
 		}
 		//System.out.printf("Authority for %s: %f\n", trainID, minDistance);
-		return minDistance;
+
+		// train model's position signals have error +/-2m
+		double error = 4;
+
+		return Math.max(0, minDistance - error - TRAIN_LENGTH);
 	}
 
 	public double debug_getAuthority(String trainID) {
@@ -270,7 +276,6 @@ public class Mbo implements Module {
 		TrainInfo train = trains.get(trainID);
 		//MboBlock block = train.getBlock();
 		MboBlock block = getBlockFromCoordinates(train.getPosition());
-		if (block == null) return 1000; // HACK
 		//System.out.printf("Block is %s\n", block);
 		ArrayList<MboBlock> line;
 		if (block.getLine().equals("red")) {
@@ -329,7 +334,6 @@ public class Mbo implements Module {
     private double calculateSpeedAfterMeter(double speed, MboBlock block) {
     	
     	// TODO real mass!
-    	double trainMass = 75000;
 
     	// Calculate the slope of the train's current angle (Degrees = Tan-1 (Slope Percent/100))
     	double angle = Math.atan2(block.getGrade(),100);
@@ -338,15 +342,15 @@ public class Mbo implements Module {
     	// Step 3: Calculate the forces acting on the train using the coefficient of friction
     	// and the train's weight in lbs converted to kg divided over the wheels (where the force is technically
     	// being applied times gravity (G)
-    	double normalForce = (trainMass/12) * G * Math.sin(angle);	// divide by 12 for the number of wheels
-    	double downwardForce = (trainMass/12) * G * Math.cos(angle);	// divide by 12 for the number of wheels
+    	double normalForce = (TRAIN_MASS/12) * G * Math.sin(angle);	// divide by 12 for the number of wheels
+    	double downwardForce = (TRAIN_MASS/12) * G * Math.cos(angle);	// divide by 12 for the number of wheels
 
     	// compute friction forc
     	double friction = (FRICTION_COEFFICIENT * downwardForce) + normalForce;
 
     	// Calculate acceleration using the F = ma equation, where m = the mass of the body moving
     	// add acceleration due to brake
-    	double trainAcceleration = friction/trainMass + (TRAIN_MAX_ACCELERATION_SERVICE_BRAKE*1);
+    	double trainAcceleration = friction/TRAIN_MASS + (TRAIN_MAX_ACCELERATION_SERVICE_BRAKE*1);
     	
     	// calculate the speed after traveling 1m with that acceleration
     	double finalSpeed = Math.pow(Math.pow(speed, 2) + 2*trainAcceleration, 0.5);
