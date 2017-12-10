@@ -129,6 +129,9 @@ public class ScheduleJTable extends JTable{
 						if(row<schedule.stops.size()) {
 							schedule.removeStop(row);
 						}
+						if(schedule.train!=null && schedule.stops.size()==0) {
+							schedule.addStop(0, schedule.line.yardIn);
+						}
 						
 						//If no rows exist, add one for future stop additions
 						if(schedule.stops.size()==0) {
