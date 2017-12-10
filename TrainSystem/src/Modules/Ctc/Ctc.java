@@ -45,6 +45,8 @@ public class Ctc implements Module,TimeControl {
 	public TrainModel trainModel = null;
 	public TrainController trainController = null;
 	
+	private boolean isMovingBlockMode = false;
+	
 	int testTrainNum = 0;
 	
 	public Ctc() {
@@ -94,6 +96,14 @@ public class Ctc implements Module,TimeControl {
 			line.blocksAL = blocks;
 			line.blocks = blocks.toArray(new Block[blocks.size()]);
 		}
+	}
+	
+	/**
+	 * 
+	 */
+	protected void enableMovingBlockMode(Boolean isMovingBlockMode) {
+		this.isMovingBlockMode = isMovingBlockMode;
+		simulator.transmitEnableMovingBlockMode(isMovingBlockMode);
 	}
 	
 	/**
@@ -514,6 +524,8 @@ public class Ctc implements Module,TimeControl {
 	public boolean updateTime(SimTime time) {
 		if(startTime==null) {
 			startTime = new SimTime(time);
+			gui.rdbtnFixedBlockMode.setEnabled(false);
+			gui.rdbtnMovingBlockMode.setEnabled(false);
 		}
 		currentTime = new SimTime(time);
 		
@@ -663,6 +675,8 @@ public class Ctc implements Module,TimeControl {
 		}
 		
 		gui.updateSelectedBlock(true);
+		
+		enableMovingBlockMode(false);
 		
 		System.out.println("CTC Communication Established!");
 		return true;

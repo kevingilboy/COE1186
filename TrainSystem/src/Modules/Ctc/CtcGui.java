@@ -177,6 +177,13 @@ public class CtcGui {
 		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
 		l.setFont(font_14_bold);
 	}
+	
+	public void stylizeRadioButton(JRadioButton b) {
+		b.setFont(font_14_bold);
+		b.setForeground(Color.WHITE);
+		b.setBackground(Color.DARK_GRAY);
+		b.setHorizontalAlignment(SwingConstants.LEFT);
+	}
 	/*----------------------------------------------------------------------*/
 	/*-------------------- HSS GUI DARK THEME REDESIGN ---------------------*/
 	/*----------------------------------------------------------------------*/
@@ -206,6 +213,8 @@ public class CtcGui {
 	private JTextField trainCreationDepartTime;
 	private JComboBox<Line> trainCreationLine;
 	private JTextField trainCreationName;
+	protected JRadioButton rdbtnFixedBlockMode;
+	protected JRadioButton rdbtnMovingBlockMode;
 	
 	/*
 	 * Queue tables
@@ -593,7 +602,7 @@ public class CtcGui {
 			}
 		});
 		stylizeButton(addToDispatchToQueue);
-		addToDispatchToQueue.setBounds(251, 475, 171, 67);
+		addToDispatchToQueue.setBounds(251, 457, 171, 67);
 		contentPane.add(addToDispatchToQueue);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
@@ -1045,6 +1054,29 @@ public class CtcGui {
 		lblwaysideGuis.setHorizontalAlignment(SwingConstants.CENTER);
 		lblwaysideGuis.setBounds(920, 621, 200, 57);
 		frame.getContentPane().add(lblwaysideGuis);
+		
+		rdbtnFixedBlockMode = new JRadioButton("Fixed Block Mode");
+		stylizeRadioButton(rdbtnFixedBlockMode);
+		rdbtnFixedBlockMode.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				rdbtnMovingBlockMode.setSelected(false);
+				ctc.enableMovingBlockMode(false);
+			}
+		});
+		rdbtnFixedBlockMode.setSelected(true);
+		rdbtnFixedBlockMode.setBounds(261, 548, 153, 18);
+		frame.getContentPane().add(rdbtnFixedBlockMode);
+		
+		rdbtnMovingBlockMode = new JRadioButton("Moving Block Mode");
+		stylizeRadioButton(rdbtnMovingBlockMode);
+		rdbtnMovingBlockMode.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				rdbtnFixedBlockMode.setSelected(false);
+				ctc.enableMovingBlockMode(true);
+			}
+		});
+		rdbtnMovingBlockMode.setBounds(261, 566, 153, 18);
+		frame.getContentPane().add(rdbtnMovingBlockMode);
 	}
 	
 	/*
