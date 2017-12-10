@@ -520,7 +520,12 @@ public class Ctc implements Module,TimeControl {
 			int i=2,j=3;
 			do {
 				endBlock = nb;
-				nb = Ctc.getNextBlockId(train.line, nb, path.get(i++));
+				try {
+					nb = Ctc.getNextBlockId(train.line, nb, path.get(i++));
+				}
+				catch(IndexOutOfBoundsException e) {
+					break;
+				}
 			}while(train.line.blocks[nb].getDirection()==0);
 			bidirectionalReservation = new String[] {train.name,Integer.toString(startBlock),Integer.toString(endBlock)};
 		}
