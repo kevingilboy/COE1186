@@ -7,6 +7,12 @@ public class Stop {
 	public SimTime timeToDest;
 	public SimTime timeToDwell;
 	
+	public Stop(int blockId, SimTime timeToDwell) {
+		this.blockId = blockId;
+		this.timeToDest = null;
+		this.timeToDwell = timeToDwell;
+	}
+	
 	public Stop(int blockId) {
 		this.blockId = blockId;
 		this.timeToDest = null;

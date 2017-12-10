@@ -178,7 +178,6 @@ public class TrackModel implements Module{
 
 	@Override
 	public boolean communicationEstablished(){
-		System.out.println("Track Model Communication Established!");
 		return true;
 	}
 

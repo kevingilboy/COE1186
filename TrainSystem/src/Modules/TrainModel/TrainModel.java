@@ -419,7 +419,6 @@ public class TrainModel implements Module{
 
 	@Override
 	public boolean communicationEstablished() {
-		System.out.println("Train Model Communication Established!");
 		return true;
 	}
 	
