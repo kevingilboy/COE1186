@@ -410,8 +410,11 @@ public class TrainModel implements Module{
 		// call method to send the MBO an "incoming signal" status that passes a trainID
 	}
 	
-	public void setPassengersEmbarking(String trainID, int num) {
-		this.getTrain(trainID).setNumEmbarking(num);
+	public void setPassengersEmbarking(int blockId, String line, int numPassengers) {
+		Train t = this.getTrainAtBlock(blockId, line);
+		if (t.isStopped() && !t.embarkingPassengersSet){
+			this.getTrainAtBlock(blockId, line).setNumEmbarking(numPassengers);
+		}
 	}
 
 	@Override
