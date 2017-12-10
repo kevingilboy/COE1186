@@ -163,11 +163,13 @@ public class Schedule {
 						
 						//Follow both paths if valid
 						if(line.blocks[normId].getDirection() == line.blocks[altId].getDirection()) {
-							//int indexToFollow = (currBlockId+1==normId) ? normId : altId;
-							ArrayList<Integer> normPath = cloneAndAppendAL(path,normId);
+							int indexToFollow = (currBlockId+1==normId) ? normId : altId;
+							ArrayList<Integer> normPath = cloneAndAppendAL(path,indexToFollow);
 							q.add(normPath);
-							ArrayList<Integer> altPath = cloneAndAppendAL(path,altId);
-							q.add(altPath);
+							if(altId==line.yardIn) {
+								ArrayList<Integer> altPath = cloneAndAppendAL(path,altId);
+								q.add(altPath);
+							}
 						}
 						else {
 							if(line.blocks[normId].getDirection()>=line.blocks[currBlockId].getDirection()) {
