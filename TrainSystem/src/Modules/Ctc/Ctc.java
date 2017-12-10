@@ -171,7 +171,7 @@ public class Ctc implements Module,TimeControl {
 	 */
 	public Boolean getTrackCircuit(Line line, int blockNum) {
 		TrackController wayside = getWaysideOfBlock(line, blockNum);
-		Block block = wayside.receiveBlockInfoForCtc(line.toString(), blockNum);
+		Block block = wayside.receiveBlockInfoForCtc(blockNum);
 		Boolean occupied = block.getOccupied();
 		return occupied;
 	}
@@ -181,7 +181,7 @@ public class Ctc implements Module,TimeControl {
 	 */
 	public Boolean getSwitchState(Line line, int blockNum) {
 		TrackController wayside = getWaysideOfBlock(line, blockNum);
-		Block block = wayside.receiveBlockInfoForCtc(line.toString(), blockNum);
+		Block block = wayside.receiveBlockInfoForCtc(blockNum);
 		Switch sw = block.getSwitch();
 		if(sw!=null) {
 			return(sw.getState());
@@ -194,7 +194,7 @@ public class Ctc implements Module,TimeControl {
 	 */
 	protected void repairBlock(Line line, int blockNum) {
 		TrackController wayside = getWaysideOfBlock(line, blockNum);
-		wayside.transmitBlockMaintenance(line.toString(), blockNum, false);
+		wayside.transmitBlockMaintenance(blockNum, false);
 		//Block block = wayside.receiveBlockInfoForCtc(line.toString(), blockNum);
 		//block.setMaintenance(false);
 	}
@@ -204,7 +204,7 @@ public class Ctc implements Module,TimeControl {
 	 */
 	protected void setBlockMaintenance(Line line, int blockNum) {
 		TrackController wayside = getWaysideOfBlock(line, blockNum);
-		wayside.transmitBlockMaintenance(line.toString(), blockNum, true);
+		wayside.transmitBlockMaintenance(blockNum, true);
 		//Block block = wayside.receiveBlockInfoForCtc(line.toString(), blockNum);
 		//block.setMaintenance(true);
 	}
@@ -214,7 +214,7 @@ public class Ctc implements Module,TimeControl {
 	 */
 	protected boolean setSwitchState(Line line, int blockNum, Boolean state) {
 		TrackController wayside = getWaysideOfBlock(line, blockNum);
-		boolean success = wayside.transmitCtcSwitchState(line.toString(), blockNum, state);
+		boolean success = wayside.transmitCtcSwitchState(blockNum, state);
 		return success;
 	}
 	
@@ -260,7 +260,9 @@ public class Ctc implements Module,TimeControl {
 		Schedule schedule = new Schedule(Line.GREEN);
 		schedule.departureTime = new SimTime("11:11:11");
 		schedule.name = testName;
-		schedule.addStop(0, 104);
+		schedule.addStop(0, 104, new SimTime("00:00:30"));
+		schedule.addStop(1, 113, new SimTime("00:02:00"));
+		schedule.addStop(2, 1, new SimTime("00:02:00"));
 		addSchedule(testName,schedule);
 		dispatchTrain(testName);
 	}
@@ -553,6 +555,10 @@ public class Ctc implements Module,TimeControl {
 			if(train.dwelling && currentTime.equals(train.timeToFinishDwelling)) {
 				train.schedule.removeStop(0);
 				train.dwelling = false;
+				
+				if(train.schedule.stops.size()==0) {
+					train.schedule.addStop(0, train.schedule.line.yardIn);
+				}
 				
 				//Update selected table
 				if(gui.dispatchSelectedTable.schedule!=null && gui.dispatchSelectedTable.schedule.name.equals(train.name)) {
