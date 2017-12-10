@@ -23,6 +23,13 @@ import java.awt.*;
 import java.util.*;
 import java.lang.Thread;
 
+import java.awt.MouseInfo;
+import java.awt.GridLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
+
 public class TrackRenderWindow extends JPanel implements ActionListener{  
 
     // Reference to the main GUI's selected block
@@ -159,9 +166,18 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                 double[] x_coords = blocks.get(i).getXCoordinates();
                 double[] y_coords = blocks.get(i).getYCoordinates();
 
-                for (int j = 0; j < x_coords.length-2; j++){
-                    g2d.drawRect((int)x_coords[j]-3, (int)y_coords[j]-3, 
-                                8, 8);
+                if (blocks.get(i).getOccupied()){
+                    g2d.setColor(Color.BLUE);
+                    for (int j = 0; j < x_coords.length-2; j++){
+                        g2d.drawRect((int)x_coords[j]-4, (int)y_coords[j]-4, 
+                                10, 10);
+                    }
+                } else {
+                    g2d.setColor(Color.GRAY);
+                    for (int j = 0; j < x_coords.length-2; j++){
+                        g2d.drawRect((int)x_coords[j]-4, (int)y_coords[j]-4, 
+                                10, 10);
+                    }
                 }
             }
         }
@@ -233,7 +249,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                         double[] x_coords = blocks.get(i).getXCoordinates();
                         double[] y_coords = blocks.get(i).getYCoordinates();
 
-                        g2d.setColor(lineColor);
+                        g2d.setColor(new Color(152, 0, 203));
                         for (int j = 0; j < x_coords.length-2; j++){
                             g2d.drawRect((int)x_coords[j]-2, (int)y_coords[j]-2, 6, 6);
                         }
@@ -249,7 +265,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                     double[] x_coords = blocks.get(i).getXCoordinates();
                     double[] y_coords = blocks.get(i).getYCoordinates();
 
-                    g2d.setColor(lineColor);
+                    g2d.setColor(new Color(152, 0, 203));
                     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                                         RenderingHints.VALUE_ANTIALIAS_ON);
                     for (int j = 0; j < x_coords.length-2; j++){
@@ -285,6 +301,14 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
             int direction = positions.get(i).moveTrain( scaledMetersToMove );
             */
            
+            g2d.setColor(new Color(0, 100, 255));
+            double[] x_coords = blocks.get(positions.get(i).getCurrentBlock()).getXCoordinates();
+            double[] y_coords = blocks.get(positions.get(i).getCurrentBlock()).getYCoordinates();
+            for (int j = 0; j < x_coords.length-2; j++){
+                g2d.drawRect((int)x_coords[j], (int)y_coords[j],
+                            2, 2);
+            }
+           
             int direction = positions.get(i).getCurrentDirection();
 
             if (direction == 1){
@@ -303,6 +327,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
             }
             
             g2d.setColor(Color.white);
+
             // Draw the train
             g2d.fillRect(((xy_coords.get(i))[0]).intValue() - 1, ((xy_coords.get(i))[1]).intValue() - 1, 5, 5);
             g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 14)); 
