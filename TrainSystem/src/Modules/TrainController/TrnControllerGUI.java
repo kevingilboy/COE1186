@@ -335,7 +335,7 @@ public class TrnControllerGUI {
 			}
 		});
 		
-		JLabel sBrakesLabel = new JLabel("SERVICE BREAKS");
+		JLabel sBrakesLabel = new JLabel("SERVICE BRAKES");
 		stylizeInfoLabel(sBrakesLabel);
 		sBrakesLabel.setHorizontalAlignment(JLabel.CENTER);
 		sBrakesLabel.setBounds(374, 89, 184, 37);

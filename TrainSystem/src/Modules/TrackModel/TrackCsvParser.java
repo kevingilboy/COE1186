@@ -69,17 +69,17 @@ public class TrackCsvParser{
 						boolean dsPositive;
 						boolean dsNegative;
 
-						if (stationData[1] == "R"){
+						if (stationData[1].equals("R")){
 							dsPositive = station.DOOR_SIDE_RIGHT;
-						} else if (stationData[1] == "L") {
+						} else if (stationData[1].equals("L")) {
 							dsPositive = station.DOOR_SIDE_LEFT;
 						} else {
 							dsPositive = station.DOOR_SIDE_NONE;
 						}
 
-						if (stationData[2] == "R"){
+						if (stationData[2].equals("R")){
 							dsNegative = station.DOOR_SIDE_RIGHT;
-						} else if (stationData[2] == "L") {
+						} else if (stationData[2].equals("L")) {
 							dsNegative = station.DOOR_SIDE_LEFT;
 						} else {
 							dsNegative = station.DOOR_SIDE_NONE;
