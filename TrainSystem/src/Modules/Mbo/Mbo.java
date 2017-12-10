@@ -33,6 +33,8 @@ public class Mbo implements Module {
 	final private static double TRAIN_MAX_ACCELERATION_SERVICE_BRAKE = -1.2;
 	final private static double FRICTION_COEFFICIENT = 0.16;
 	final private static double G = 9.8;
+	final private static double TRAIN_MASS = 37103.86; 	// kg
+	final private static double TRAIN_LENGTH = 32.2; 	// m
 
 	public Mbo(){
 		this.time = new SimTime(7,0,0);
@@ -46,8 +48,8 @@ public class Mbo implements Module {
 	}
 
 	private void initTrack() {
-		redLine = new TrackCsvParser().parse("Modules/Mbo/RedLineFinal.csv");
-		greenLine = new TrackCsvParser().parse("Modules/Mbo/GreenLineFinal.csv");
+		redLine = new TrackCsvParser().parse("Modules/Mbo/MboRedLine.csv");
+		greenLine = new TrackCsvParser().parse("Modules/Mbo/MboGreenLine.csv");
 	}
 
 	private void startGui() {
@@ -188,22 +190,32 @@ public class Mbo implements Module {
 		for (String other : trains.keySet()) {
 			if (trainID.equals(other)) continue;
 			double[] otherPos = trains.get(other).getPosition();
-			double dispX = pos[0] - otherPos[0];
-			double dispY = pos[1] - otherPos[1];
-			double newDist = Math.pow((Math.pow(dispX, 2) + Math.pow(dispY, 2)), 0.5);
-			if (newDist < minDistance) minDistance = newDist;
+			//double dispX = pos[0] - otherPos[0];
+			//double dispY = pos[1] - otherPos[1];
+			MboBlock otherBlock = getBlockFromCoordinates(otherPos);
+		//	System.out.printf("other block %s", otherBlock.getID());
+			if (!otherBlock.isYardLine()) {
+				double newDist = calculateDistanceBetweenPositions(pos, otherPos, trains.get(trainID).getDirection());
+				if (newDist < minDistance) minDistance = newDist;
+		//		System.out.printf("%f to %f\n", newDist, minDistance);
+			}
+			//double newDist = Math.pow((Math.pow(dispX, 2) + Math.pow(dispY, 2)), 0.5);
 		}
 		//System.out.printf("Authority for %s: %f\n", trainID, minDistance);
-		return minDistance;
+
+		// train model's position signals have error +/-2m
+		double error = 4;
+
+		return Math.max(0, minDistance - error - TRAIN_LENGTH);
 	}
 
 	public double debug_getAuthority(String trainID) {
 		return trains.get(trainID).getAuthority();
 	}
 
-	public int calculateDistanceBetweenPositions(double[] pos1, double[] pos2) {
+	public int calculateDistanceBetweenPositions(double[] pos1, double[] pos2, int direction) {
 		
-		int distance = 0;
+		double distance = 0;
 
 		// get the blocks
 		MboBlock block1 = getBlockFromCoordinates(pos1);
@@ -223,18 +235,26 @@ public class Mbo implements Module {
 		// if the two are on different blocks, add the distance to the end of block1
 		int offset = block1.getOffset(pos1);
 		if (block1 != block2) {
-			distance += block1.getLength() - offset;
+			distance = (direction == 1) ? block1.getLength() - offset : offset;
 			offset = 0;
 		}
 
 		// add the lengths of all blocks between these
 		int index1 = line.indexOf(block1);
 		int index2 = line.indexOf(block2);
-		while ((index1 + 1) % line.size() < index2) {
+		while (index1 != index2) {
 			distance += line.get(index1).getLength();
-			index1 = (index1 + 1) % line.size();
+			int[] nextBlock = line.get(index1).getNextBlockInfo(direction);
+			index1 = nextBlock[0] - 1;
+			//System.out.printf("%d %d\n", index1, index2);
+			direction = nextBlock[1];
+			//index1 = (index1 + 1) % line.size();
 			//System.out.printf("Index: %d %d\n", index1, index2);
+		//	System.out.printf("from %d to %d\n", index1, index2);
 		}
+
+		// if on seperate blocks, added entire length of block2. remove.
+		if (block1 != block2) distance -= block2.getLength();
 
 		// add the displacement within the block
 		// if positions on different blocks, this is just offset of second position within block2
@@ -245,9 +265,9 @@ public class Mbo implements Module {
 
 		//TODO figure this shit out a better way
 		// problem is as the train comes off the track
-		if (distance > lineLength / 2) distance = lineLength - distance;
+		//if (distance > lineLength / 2) distance = lineLength - distance;
 
-		return distance;
+		return (int) Math.round(distance);
 	}
 
 	private double calculateSafeBrakingDistance(String trainID) {
@@ -256,7 +276,6 @@ public class Mbo implements Module {
 		TrainInfo train = trains.get(trainID);
 		//MboBlock block = train.getBlock();
 		MboBlock block = getBlockFromCoordinates(train.getPosition());
-		if (block == null) return 1000; // HACK
 		//System.out.printf("Block is %s\n", block);
 		ArrayList<MboBlock> line;
 		if (block.getLine().equals("red")) {
@@ -270,16 +289,16 @@ public class Mbo implements Module {
 		// get displacement into block
 		// the ith coordinate is i meters in
 		//System.out.printf("%f, %f\n", train.getPosition()[0], train.getPosition()[1]);
-		double xval = train.getPosition()[0];
-		int blockDisplacement = Arrays.asList(block.getXCoordinates()).indexOf(xval);
+		//double xval = train.getPosition()[0];
+		int blockDisplacement = block.getOffset(train.getPosition());
 		//System.out.printf("%s is %d meters in at %f.\n", trainID, blockDisplacement, xval);
 		
 		double potentialSpeed = train.getSpeed();
-		double speed = potentialSpeed;
+		//double speed = potentialSpeed;
 		int distance = 0;
 		while (potentialSpeed > 0) {
 		//	System.out.printf("speed %f potential %f\n", speed, potentialSpeed);
-			MboBlock potentialBlock = getBlockAfterMoving(line, blockIndex, blockDisplacement, distance);
+			MboBlock potentialBlock = getBlockAfterMoving(line, blockIndex, blockDisplacement, distance, train.getDirection());
 		//	System.out.printf("block index %s\n", potentialBlock);
 			potentialSpeed = calculateSpeedAfterMeter(potentialSpeed, potentialBlock);
 		//	System.out.printf("speed %f\n", potentialSpeed);
@@ -301,10 +320,20 @@ public class Mbo implements Module {
     	return line.get(index);
     }
 
+    private MboBlock getBlockAfterMoving(ArrayList<MboBlock> line, int index, int displacement, int distance, int direction) {
+    	distance -= (direction == 1) ? line.get(index).getLength() - displacement : displacement;
+    	while (distance > 0) {
+    		int[] nextBlockInfo = line.get(index).getNextBlockInfo(direction);
+    		index = nextBlockInfo[0];
+    		direction = nextBlockInfo[1];
+    		distance -= line.get(index).getLength();
+    	}
+    	return line.get(index);
+    }
+
     private double calculateSpeedAfterMeter(double speed, MboBlock block) {
     	
     	// TODO real mass!
-    	double trainMass = 75000;
 
     	// Calculate the slope of the train's current angle (Degrees = Tan-1 (Slope Percent/100))
     	double angle = Math.atan2(block.getGrade(),100);
@@ -313,15 +342,15 @@ public class Mbo implements Module {
     	// Step 3: Calculate the forces acting on the train using the coefficient of friction
     	// and the train's weight in lbs converted to kg divided over the wheels (where the force is technically
     	// being applied times gravity (G)
-    	double normalForce = (trainMass/12) * G * Math.sin(angle);	// divide by 12 for the number of wheels
-    	double downwardForce = (trainMass/12) * G * Math.cos(angle);	// divide by 12 for the number of wheels
+    	double normalForce = (TRAIN_MASS/12) * G * Math.sin(angle);	// divide by 12 for the number of wheels
+    	double downwardForce = (TRAIN_MASS/12) * G * Math.cos(angle);	// divide by 12 for the number of wheels
 
     	// compute friction forc
     	double friction = (FRICTION_COEFFICIENT * downwardForce) + normalForce;
 
     	// Calculate acceleration using the F = ma equation, where m = the mass of the body moving
     	// add acceleration due to brake
-    	double trainAcceleration = friction/trainMass + (TRAIN_MAX_ACCELERATION_SERVICE_BRAKE*1);
+    	double trainAcceleration = friction/TRAIN_MASS + (TRAIN_MAX_ACCELERATION_SERVICE_BRAKE*1);
     	
     	// calculate the speed after traveling 1m with that acceleration
     	double finalSpeed = Math.pow(Math.pow(speed, 2) + 2*trainAcceleration, 0.5);
