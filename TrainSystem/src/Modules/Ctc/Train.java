@@ -16,13 +16,15 @@ public class Train {
 	
 	public int currLocation;
 	public int prevLocation;
-	public int suggestedSpeed;
-	public boolean overrideSuggestedSpeed = false;
+	public double suggestedSpeed;
 	public double authority;
 	public int passengers;
 	
 	public boolean dwelling;
 	public SimTime timeToFinishDwelling;
+	
+	public boolean manualSpeedMode;
+	public double manualSpeed;
 	
 	public Train(Schedule schedule) {
 		this.schedule = schedule;
@@ -34,7 +36,12 @@ public class Train {
 		prevLocation = -1;
 		currLocation = line.yardOut;
 		
+		//Not dwelling
 		dwelling = false;
+		
+		//Not manual mode
+		manualSpeedMode = false;
+		manualSpeed = -1;
 	}
 	
 }
