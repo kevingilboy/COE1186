@@ -24,6 +24,7 @@ public class TrainInfo {
 	private double speed;
 	private double authority;
 	private double safeBrakingDistance;
+	private int direction;
 	private SimTime timeSignalTransmitted;
 	private Mbo mbo;
 
@@ -36,6 +37,7 @@ public class TrainInfo {
 		timePreviousSignalReceived = time;
 		this.previousPosition = position;
 		this.mbo = mbo;
+		this.direction = 1;
 	}
 
 	public Object[] toDataArray() {
@@ -46,7 +48,7 @@ public class TrainInfo {
 		//System.out.printf("%s on %s.\n", name, blockName);
 		output[3] = blockName;
 		output[4] = String.format("%.3f", speed * (SECONDS_PER_HOUR / METERS_PER_MILE));
-		output[5] = String.format("%.3f", authority / METERS_PER_MILE);
+		output[5] = (authority == Double.MAX_VALUE) ? String.format("%.3f", authority / METERS_PER_MILE) : "n/a";
 		output[6] = String.format("%.3f", safeBrakingDistance / METERS_PER_MILE);
 		//System.out.printf("Dist %f\n", safeBrakingDistance);
 		return output;

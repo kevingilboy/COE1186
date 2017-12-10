@@ -13,6 +13,8 @@ public class MboBlock {
 	private int direction;
 	private Double[] x_coordinates;
 	private Double[] y_coordinates;
+	private int[] forwardBlock;
+	private int[] backwardBlock;
 
 	public MboBlock(String line,
 	 				String section,
@@ -24,7 +26,9 @@ public class MboBlock {
 					int speedLimit,
 					int direction,
 					Double[] x_coordinates,
-					Double[] y_coordinates) {
+					Double[] y_coordinates,
+					int[] forwardBlock,
+					int[] backwardBlock) {
 			this.line = line;
 			this.section = section;
 			this.id = id;
@@ -36,6 +40,8 @@ public class MboBlock {
 			this.direction = direction;
 			this.x_coordinates = x_coordinates;
 			this.y_coordinates = y_coordinates;
+			this.forwardBlock = forwardBlock;
+			this.backwardBlock = backwardBlock;
 	}
 
 	public String getLine() {
@@ -82,5 +88,9 @@ public class MboBlock {
 
 	public String getID() {
 		return String.format("%s %s%d", line, section, id);
+	}
+
+	public int[] getNextBlockInfo(int direction) {
+		return (direction == 1) ? forwardBlock : backwardBlock;
 	}
 }

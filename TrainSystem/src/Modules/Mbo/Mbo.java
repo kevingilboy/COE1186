@@ -46,8 +46,8 @@ public class Mbo implements Module {
 	}
 
 	private void initTrack() {
-		redLine = new TrackCsvParser().parse("Modules\\Mbo\\RedLineFinal.csv");
-		greenLine = new TrackCsvParser().parse("Modules\\Mbo\\GreenLineFinal.csv");
+		redLine = new TrackCsvParser().parse("Modules/Mbo/MboRedLine.csv");
+		greenLine = new TrackCsvParser().parse("Modules/Mbo/MboGreenLine.csv");
 	}
 
 	private void startGui() {
@@ -201,9 +201,9 @@ public class Mbo implements Module {
 		return trains.get(trainID).getAuthority();
 	}
 
-	public int calculateDistanceBetweenPositions(double[] pos1, double[] pos2) {
+	public int calculateDistanceBetweenPositions(double[] pos1, double[] pos2, int direction) {
 		
-		int distance = 0;
+		double distance = 0;
 
 		// get the blocks
 		MboBlock block1 = getBlockFromCoordinates(pos1);
@@ -223,18 +223,25 @@ public class Mbo implements Module {
 		// if the two are on different blocks, add the distance to the end of block1
 		int offset = block1.getOffset(pos1);
 		if (block1 != block2) {
-			distance += block1.getLength() - offset;
+			distance = (direction == 1) ? block1.getLength() - offset : offset;
 			offset = 0;
 		}
 
 		// add the lengths of all blocks between these
 		int index1 = line.indexOf(block1);
 		int index2 = line.indexOf(block2);
-		while ((index1 + 1) % line.size() < index2) {
+		while (index1 != index2) {
 			distance += line.get(index1).getLength();
-			index1 = (index1 + 1) % line.size();
+			int[] nextBlock = line.get(index1).getNextBlockInfo(direction);
+			index1 = nextBlock[0] - 1;
+			//System.out.printf("%d %d\n", index1, index2);
+			direction = nextBlock[1];
+			//index1 = (index1 + 1) % line.size();
 			//System.out.printf("Index: %d %d\n", index1, index2);
 		}
+
+		// if on seperate blocks, added entire length of block2. remove.
+		if (block1 != block2) distance -= block2.getLength();
 
 		// add the displacement within the block
 		// if positions on different blocks, this is just offset of second position within block2
@@ -247,7 +254,7 @@ public class Mbo implements Module {
 		// problem is as the train comes off the track
 		if (distance > lineLength / 2) distance = lineLength - distance;
 
-		return distance;
+		return (int) Math.round(distance);
 	}
 
 	private double calculateSafeBrakingDistance(String trainID) {
