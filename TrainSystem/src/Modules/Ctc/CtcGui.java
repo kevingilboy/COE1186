@@ -72,8 +72,7 @@ public class CtcGui {
 	Font font_24_bold = new Font("Roboto Condensed", Font.BOLD, 38);
 
 	/**
-	 * Set any UI configurations done by the UI manager and
-	 * register Roboto Condensed font into the system.
+	 * Set any UI configurations done by the UI manager
 	 *
 	 * NOTE: This method must be called first in the GUI instantiation!
 	 */
@@ -85,18 +84,6 @@ public class CtcGui {
 			UIManager.put("TabbedPane.selected", Color.GRAY);
 		} catch (Throwable e) {
 			e.printStackTrace();
-		}
-
-		try {
-		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Bold.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-BoldItalic.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Italic.ttf")));
-		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Regular.ttf")));
-
-		    System.out.println("Loaded custom fonts!");
-		} catch (IOException|FontFormatException e) {
-		    System.out.println("HssVisualizer Error: Cannot load custom font.");
 		}
 	}
 
@@ -330,13 +317,13 @@ public class CtcGui {
 		
 		JLabel lblThroughput = new JLabel("THROUGHPUT: ");
 		stylizeInfoLabel_Small(lblThroughput);
-		lblThroughput.setBounds(631, 95, 98, 33);
+		lblThroughput.setBounds(616, 95, 130, 33);
 		contentPane.add(lblThroughput);
 		
 		lblThroughputAmt = new JLabel("###");
 		stylizeInfoLabel_Bold(lblThroughputAmt);
 		lblThroughputAmt.setHorizontalAlignment(SwingConstants.LEFT);
-		lblThroughputAmt.setBounds(724, 97, 89, 33);
+		lblThroughputAmt.setBounds(724, 97, 400, 33);
 		contentPane.add(lblThroughputAmt);
 		
 		btnPlay = new JButton("<html><center>PLAY</center></html>");
@@ -1177,7 +1164,7 @@ public class CtcGui {
 	
 	public void repaint() {
 		//Update Throughput Label
-		lblThroughputAmt.setText(Double.toString(ctc.throughput));
+		lblThroughputAmt.setText(Integer.toString((int)ctc.throughput) + " passengers/hr");
 		
 		//Update Time
 		clockLabel.setText(ctc.currentTime.toString());

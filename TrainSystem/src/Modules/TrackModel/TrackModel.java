@@ -111,6 +111,8 @@ public class TrackModel implements Module{
 	public boolean updateTime(SimTime time){
 		checkOccupiedBeaconBlocks(redLineBlocks);
 		checkOccupiedBeaconBlocks(greenLineBlocks);
+		checkOccupiedStationBlocks(redLineBlocks);
+		checkOccupiedStationBlocks(greenLineBlocks);
 		return true;
 	}
 
@@ -139,14 +141,48 @@ public class TrackModel implements Module{
 		}
 	}
 
+	// When a station block gets occupied, generate ticket sales
+	// as well as the number of people waiting at the station and
+	// send the respective information to the CTC and Train Model
+	public void checkOccupiedStationBlocks(ArrayList<Block> track){
+		// If the track has been initialized
+		if (track.size() > 0){
+			String line = track.get(0).getLine();
+			int blockID = 0;
+			int numTicketSales = 0;
+
+			for (int i = 0; i < track.size(); i++){
+				if ((track.get(i).getStation() != null) && (track.get(i).getOccupied())){
+					blockID = i;
+					numTicketSales = track.get(i).getStation().getTicketSales();
+					trainModel.setPassengersEmbarking(blockID, line, numTicketSales);
+				}
+			}
+		}
+	}
+
+	// Methods called by the Train Model when passengers board
+	// and leave the train. This information is sent to the CTC
+	// for calculation of throughput.
+	public void passengersBoarded(String trainName, int numPassengers){
+		ctc.addPassengers(trainName, numPassengers);
+	}
+
+	public void passengersUnboarded(String trainName, int numPassengers){
+		ctc.removePassengers(trainName, numPassengers);
+	}
+
+	public void sendTicketSalesToCtc(int numTicketSales){
+		ctc.addTicketSales(numTicketSales);
+	}
+
 	@Override
 	public boolean communicationEstablished(){
-		// ... 
+		System.out.println("Track Model Communication Established!");
 		return true;
 	}
 
 	public void updateDynamicDisplay(SimTime currentTime) {
-		// TODO METHOD MADE BY ONE KEV FOR ANOTHER KEV
-		// ... ;)
+		trackModelGUI.refresh();
 	}
 }

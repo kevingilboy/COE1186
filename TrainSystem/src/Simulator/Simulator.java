@@ -12,6 +12,14 @@ import Modules.Mbo.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/*--- REQUIRED LIBRARIES FOR HSS DARK THEME ----*/
+import java.awt.GraphicsEnvironment;
+import java.awt.FontFormatException;
+import javax.swing.UIManager;
+import java.awt.Font;
+import java.io.*;
+/*----------------------------------------------*/
+
 public class Simulator {
 	public int speedup = 1;
 	
@@ -36,7 +44,10 @@ public class Simulator {
 	private TrainController trainController;
 	private Mbo mbo;
 	
-	public Simulator() throws InterruptedException {		
+	public Simulator() throws InterruptedException {	
+
+		initializeSystemFonts();
+
 		//Initialize all modules
 		ctc = new Ctc();
 		//trackController = new TrackController();
@@ -129,6 +140,20 @@ public class Simulator {
 			
 			//Unlock the timer
 			timerTaskRunning = false;
+		}
+	}
+
+	public void initializeSystemFonts(){
+		try {
+		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Bold.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-BoldItalic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Italic.ttf")));
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Shared/fonts/RobotoCondensed-Regular.ttf")));
+
+		    System.out.println("Loaded custom fonts!");
+		} catch (IOException|FontFormatException e) {
+			System.out.println("HssVisualizer Error: Cannot load custom font.");
 		}
 	}
 	
