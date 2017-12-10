@@ -141,12 +141,11 @@ public class TrackModel implements Module{
 
 	@Override
 	public boolean communicationEstablished(){
-		// ... 
+		System.out.println("Track Model Communication Established!");
 		return true;
 	}
 
 	public void updateDynamicDisplay(SimTime currentTime) {
-		// TODO METHOD MADE BY ONE KEV FOR ANOTHER KEV
-		// ... ;)
+		trackModelGUI.refresh();
 	}
 }
