@@ -341,9 +341,14 @@ public class Ctc implements Module,TimeControl {
 			}
 			
 			//-------------------
-			// If block is occupied, ditch the path
+			// Fixed block: If block is occupied, ditch the path
+			// Moving block: If block is broken, ditch the path
 			//-------------------
-			if(train.line.blocks[currBlockId].getOccupied() && currBlockId != selfLocation) {
+			if(!isMovingBlockMode && train.line.blocks[currBlockId].getOccupied() && currBlockId != selfLocation) {
+				path.remove(path.size()-1);
+				continue;
+			}
+			else if(isMovingBlockMode && !train.line.blocks[currBlockId].getStatus()) {
 				path.remove(path.size()-1);
 				continue;
 			}
@@ -356,10 +361,10 @@ public class Ctc implements Module,TimeControl {
 			}
 			
 			//-------------------
-			// If block is on bidirectional track which is occupied, ditch the path
+			// Fixed block mode: If block is on bidirectional track which is occupied, ditch the path
 			//-------------------
 			int nbId = getNextBlockId(train.line, currBlockId, prevBlockId);
-			if((nbId<=train.line.yardIn && nbId>=0) && train.line.blocks[nbId].getDirection()==0) {
+			if(!isMovingBlockMode && (nbId<=train.line.yardIn && nbId>=0) && train.line.blocks[nbId].getDirection()==0) {
 				if(bidirectionalStretchOccupied(train.line,nbId,currBlockId,selfLocation)) {
 					continue;
 				}
