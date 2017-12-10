@@ -303,9 +303,29 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                 int x_coord = blocks.get(i).getLight().getXCoordinate();
                 int y_coord = blocks.get(i).getLight().getYCoordinate();
 
-                g2d.setColor(Color.BLACK);
                 int radius = 3;
-                Shape circleOutline = new Ellipse2D.Double(x_coord - 1, y_coord - 1, 2.0*(radius+1), 2.0*(radius+1));
+
+                if (blocks.get(i).getLight().getState() == true){
+                    g2d.setColor(new Color(0, 255, 0, 40));
+                } else {
+                    g2d.setColor(new Color(255, 0, 0, 40));
+                }
+                Shape circleGlow1 = new Ellipse2D.Double(x_coord - 4, y_coord - 4, 2.0*(radius+4), 2.0*(radius+4));
+                g2d.fill(circleGlow1);
+
+                if (blocks.get(i).getLight().getState() == true){
+                    g2d.setColor(new Color(0, 255, 0, 25));
+                } else {
+                    g2d.setColor(new Color(255, 0, 0, 25));
+                }
+                Shape circleGlow2 = new Ellipse2D.Double(x_coord - 8, y_coord - 8, 2.0*(radius+8), 2.0*(radius+8));
+                g2d.fill(circleGlow2);
+
+                g2d.setColor(new Color(16, 19, 35));
+                g2d.fillRect(x_coord - 2, y_coord + 2, 3, 12);
+
+                g2d.setColor(Color.BLACK);
+                Shape circleOutline = new Ellipse2D.Double(x_coord - 2, y_coord - 2, 2.0*(radius+2), 2.0*(radius+2));
                 g2d.fill(circleOutline);
 
                 if (blocks.get(i).getLight().getState() == true){
