@@ -19,10 +19,13 @@ public class Schedule {
 	
 	private final SimTime DEFAULT_DWELL = new SimTime("00:02:00");
 	
+	public Train train;
+	
 	public Schedule(Line line) {
 		this.line = line;
 		nextStopIndex = 0;
 		stops = new ArrayList<Stop>();
+		train = null;
 	}
 	
 	/**
@@ -102,16 +105,23 @@ public class Schedule {
 	 * This function calculates time between stops
 	 */
 	private void calculateTimeToDestinations() {
+		//If a schedule, then start from yard_out, else start from the train position
+		if(train==null) {
+			calculateTimeToDestinations(line.yardOut,-1);
+		}
+		else {
+			calculateTimeToDestinations(train.currLocation,train.prevLocation);
+		}
+	}
+	private void calculateTimeToDestinations(int currBlockId, int prevBlockId) {
 		Queue<ArrayList<Integer>> q = new LinkedList<ArrayList<Integer>>();
 		ArrayList<Integer> path;
-		int currBlockId = line.yardOut;
-		int prevBlockId = -1;
 		
 		for(Stop stop : stops) {
 			//Sending the train to the yard is auto generated so no need for travel time
 			if(stop.blockId==line.yardIn) {
-				stop.timeToDest = new SimTime(0,0,0);
-				return;
+				//stop.timeToDest = new SimTime(0,0,0);
+				//return;
 			}
 			
 			q.add(new ArrayList<Integer>(Arrays.asList(prevBlockId,currBlockId)));

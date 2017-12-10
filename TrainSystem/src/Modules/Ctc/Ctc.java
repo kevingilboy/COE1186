@@ -282,6 +282,7 @@ public class Ctc implements Module,TimeControl {
 		Schedule schedule = removeScheduleByName(name);
 		
 		Train train = new Train(schedule);
+		schedule.train = train;
 		trains.put(name, train);
 		
 		trainModel.dispatchTrain(name, train.line.toString().toUpperCase());
