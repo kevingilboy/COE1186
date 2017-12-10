@@ -241,6 +241,8 @@ public class Ctc implements Module,TimeControl {
 	public void testDispatch() {
 		if(!simulator.simulationRunning) {
 			play();
+			gui.btnPlay.setEnabled(false);
+			gui.btnPause.setEnabled(true);
 		}
 		String testName = "TestTrain"+testTrainNum++;
 		Schedule schedule = new Schedule(Line.GREEN);
@@ -529,6 +531,11 @@ public class Ctc implements Module,TimeControl {
 			if(train.dwelling && currentTime.equals(train.timeToFinishDwelling)) {
 				train.schedule.removeStop(0);
 				train.dwelling = false;
+				
+				//Update selected table
+				if(gui.dispatchSelectedTable.schedule!=null && gui.dispatchSelectedTable.schedule.name.equals(train.name)) {
+					gui.dispatchSelectedTable.fireScheduleChanged();
+				}
 			}
 			
 			//Check if train has moved
@@ -554,9 +561,9 @@ public class Ctc implements Module,TimeControl {
 						train.currLocation = norm;
 						
 						//Remove stop if we reach it
-						if(train.currLocation == train.schedule.getNextStop()) {
-							train.schedule.removeStop(0);
-						}
+						//if(train.currLocation == train.schedule.getNextStop()) {
+						//	train.schedule.removeStop(0);
+						//}
 					}
 					else if(!currOccupied && altOccupied) {
 						//Train has moved on
