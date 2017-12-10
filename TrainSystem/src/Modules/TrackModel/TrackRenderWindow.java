@@ -219,11 +219,14 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                     int headID = blocks.get(i).getSwitch().getPortNormal();
                     boolean state = blocks.get(headID).getSwitch().getState();
                     int port = 0;
+                    int portAlt = 0;
 
                     if (state == Switch.STATE_NORMAL){
                         port = blocks.get(headID).getSwitch().getPortNormal();
+                        portAlt = blocks.get(headID).getSwitch().getPortAlternate();
                     } else if (state == Switch.STATE_ALTERNATE){
                         port = blocks.get(headID).getSwitch().getPortAlternate();
+                        portAlt = blocks.get(headID).getSwitch().getPortNormal();
                     }
 
                     if (blocks.get(i).getId() == port){
@@ -232,12 +235,12 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
 
                         g2d.setColor(lineColor);
                         for (int j = 0; j < x_coords.length-2; j++){
-                            g2d.drawRect((int)x_coords[j]-1, (int)y_coords[j]-1, 4, 4);
+                            g2d.drawRect((int)x_coords[j]-2, (int)y_coords[j]-2, 6, 6);
                         }
 
                         g2d.setColor(new Color(26, 29, 35));
                         for (int j = 0; j < x_coords.length-2; j++){
-                            g2d.drawRect((int)x_coords[j], (int)y_coords[j], 2, 2);
+                            g2d.drawRect((int)x_coords[j]-1, (int)y_coords[j]-1, 4, 4);
                         }
                     }
                 }
@@ -250,12 +253,12 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                                         RenderingHints.VALUE_ANTIALIAS_ON);
                     for (int j = 0; j < x_coords.length-2; j++){
-                        g2d.drawRect((int)x_coords[j]-1, (int)y_coords[j]-1, 4, 4);
+                        g2d.drawRect((int)x_coords[j]-2, (int)y_coords[j]-2, 6, 6);
                     }
 
                     g2d.setColor(new Color(26, 29, 35));
                     for (int j = 0; j < x_coords.length-2; j++){
-                        g2d.drawRect((int)x_coords[j], (int)y_coords[j], 2, 2);
+                        g2d.drawRect((int)x_coords[j]-1, (int)y_coords[j]-1, 4, 4);
                     }
                 }
             }
