@@ -317,13 +317,13 @@ public class CtcGui {
 		
 		JLabel lblThroughput = new JLabel("THROUGHPUT: ");
 		stylizeInfoLabel_Small(lblThroughput);
-		lblThroughput.setBounds(631, 95, 98, 33);
+		lblThroughput.setBounds(616, 95, 130, 33);
 		contentPane.add(lblThroughput);
 		
 		lblThroughputAmt = new JLabel("###");
 		stylizeInfoLabel_Bold(lblThroughputAmt);
 		lblThroughputAmt.setHorizontalAlignment(SwingConstants.LEFT);
-		lblThroughputAmt.setBounds(724, 97, 89, 33);
+		lblThroughputAmt.setBounds(724, 97, 400, 33);
 		contentPane.add(lblThroughputAmt);
 		
 		btnPlay = new JButton("<html><center>PLAY</center></html>");
@@ -1164,7 +1164,7 @@ public class CtcGui {
 	
 	public void repaint() {
 		//Update Throughput Label
-		lblThroughputAmt.setText(Double.toString(ctc.throughput));
+		lblThroughputAmt.setText(Integer.toString((int)ctc.throughput) + " passengers/hr");
 		
 		//Update Time
 		clockLabel.setText(ctc.currentTime.toString());
