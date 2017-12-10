@@ -406,7 +406,7 @@ public class Ctc implements Module,TimeControl {
 						int indexToFollow = (currBlockId+1==normId) ? normId : altId;
 						ArrayList<Integer> normPath = cloneAndAppendAL(path,indexToFollow);
 						q.add(normPath);
-						if(altId==train.line.yardIn) {
+						if(altId==train.line.yardIn || train.line.blocks[normId].getDirection() == 0) {
 							ArrayList<Integer> altPath = cloneAndAppendAL(path,altId);
 							q.add(altPath);
 						}
@@ -484,6 +484,7 @@ public class Ctc implements Module,TimeControl {
 		
 		do {
 			if(visited[currBlockId] == true) break;
+			if(currBlockId>line.yardOut || currBlockId<0) break;
 			//If block is occupied, treat the bidirectional stretch as occupied
 			Boolean currOccupied = getTrackCircuit(line, currBlockId);
 			if(currOccupied && currBlockId != selfLocation) {
@@ -496,7 +497,7 @@ public class Ctc implements Module,TimeControl {
 			int nextBlockId = getNextBlockId(line, currBlockId, prevBlockId);
 			prevBlockId = currBlockId;
 			currBlockId = nextBlockId;
-		} while(line.blocks[currBlockId].getDirection()==0);
+		} while(currBlockId<=line.yardOut && currBlockId>-0 && line.blocks[currBlockId].getDirection()==0);
 		
 		//The bidirectional stretch must not be occupied
 		return false;

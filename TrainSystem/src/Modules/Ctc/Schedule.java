@@ -176,7 +176,7 @@ public class Schedule {
 							int indexToFollow = (currBlockId+1==normId) ? normId : altId;
 							ArrayList<Integer> normPath = cloneAndAppendAL(path,indexToFollow);
 							q.add(normPath);
-							if(altId==line.yardIn) {
+							if(altId==train.line.yardIn || train.line.blocks[normId].getDirection() == 0) {
 								ArrayList<Integer> altPath = cloneAndAppendAL(path,altId);
 								q.add(altPath);
 							}
