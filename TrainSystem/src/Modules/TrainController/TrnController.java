@@ -49,6 +49,10 @@ public class TrnController {
 	public final int ARRIVED = 1;
 	public final int DEPARTING = 2;
 	public final int ENROUTE = 3;
+
+	public void showGUI(){
+		controlGUI.setVisible(true);
+	}
 	
 	//creates an individual train controller object, assigning references and initial values
 	public TrnController(String id, String ln, TrainController C, ArrayList<BlockInfo> map, TrainControllerGUI g, String[] s, double p, double i, int b) {
@@ -105,16 +109,16 @@ public class TrnController {
 		controlGUI.setSpeedLimit(speedLimit);
 		beacon = controller.receiveBeaconValue(trainID);
 		calcAuth();
-		if (driveMode == 0) {		//if auto
+		if (driveMode == 0) {												//if auto
 			setpointSpeed = controller.receiveSetpointSpeed(trainID);		//in auto, the train uses the setpoint speed from the CTC
 			if (inStation) {
-				if (overallAuth > 0)	//train leaves a station in auto mode when the dwell time is over and the CTC sends a non-zero authority
+				if (overallAuth > 0)					//train leaves a station in auto mode when the dwell time is over and the CTC sends a non-zero authority
 				{
 					closeLeft();
 					closeRight();
 					inStation = false;
 					announceDeparting(currentStation);
-					calcPowerOutput();		//must immediately calculate new power, or the train will think it is in station again when stationCheck() is performed
+					calcPowerOutput();					//must immediately calculate new power, or the train will think it is in station again when stationCheck() is performed
 				}
 			}
 			else if (brakingCheck()) {
@@ -130,7 +134,7 @@ public class TrnController {
 				lightsOff();
 			}
 		}
-		else {		//if manual
+		else {											//if manual
 			if (inStation) {
 				calcPowerOutput();
 				if (actualSpeed > 0 && power > 0) {		//driver chooses when to leave station by setting a non-zero setpoint speed
@@ -142,7 +146,7 @@ public class TrnController {
 				//actions performed in function
 			}
 			else {
-				calcPowerOutput();		//setpoint comes from the driver (TrnControllerGUI)
+				calcPowerOutput();						//setpoint comes from the driver (TrnControllerGUI)
 			}
 		}
 		decodeBeacon();
@@ -443,8 +447,8 @@ public class TrnController {
 	
 	//calculates an estimated braking distance with known information (does not factor in friction)
 	private double estimateBrakingDist(double initVelocity){
-    	double stopDist = ((-1)*(initVelocity)*(initVelocity)) / (2*(-1.2));	//service break decel = -1.2 as given
-    	return stopDist;
+    	double stopDist = ((-1)*(initVelocity)*(initVelocity)) / (2*(-1.2));	//service brake decel = -1.2 as given
+    	return stopDist+10;
 	}
 	
 	/*public void signalReady() {

@@ -35,6 +35,13 @@ public class TrackModel implements Module{
 	// GUI references
 	private TrackModelGUI trackModelGUI;
 
+	/**
+	 * Called by the SimulatorGUI class to show the GUI when this module is selected
+	 */
+	public void showGUI(){
+		trackModelGUI.showGUI();
+	}
+
 	// Constructor
 	public TrackModel(){	
 
@@ -183,5 +190,14 @@ public class TrackModel implements Module{
 
 	public void updateDynamicDisplay(SimTime currentTime) {
 		trackModelGUI.refresh();
+	}
+
+	public void trainPoofByName(String line, String name) {
+		trackModelGUI.trainPoofByName(line, name);
+		if(line.equals("GREEN")) {
+			getBlock(line, greenLineBlocks.size()-2).setOccupancy(false);
+		} else if(line.equals("RED")) {
+			getBlock(line, redLineBlocks.size()-2).setOccupancy(false);
+		}		
 	}
 }

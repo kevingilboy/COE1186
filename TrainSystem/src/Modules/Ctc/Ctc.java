@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class Ctc implements Module,TimeControl {
@@ -32,6 +33,7 @@ public class Ctc implements Module,TimeControl {
 	public int speedup = 1;
 	
 	public HashMap<String,Train> trains = new HashMap<>();
+	public ArrayList<Train> trainsToRemove = new ArrayList<Train>();
 	public HashMap<String,Schedule> schedules = new HashMap<>();
 	public Queue<Schedule> scheduleQueueToDispatch = new LinkedList<>();
 
@@ -48,7 +50,17 @@ public class Ctc implements Module,TimeControl {
 	
 	private boolean isMovingBlockMode = false;
 	
+	private String[] bidirectionalReservation = new String[] {"","-1","-1"};
+	
+	boolean lockReservation = false;
 	int testTrainNum = 0;
+
+	/**
+	 * Called by the SimulatorGUI class to show the GUI when this module is selected
+	 */
+	public void showGUI(){
+		gui.showGUI();
+	}
 	
 	public Ctc() {
 		ctc = this;
@@ -104,6 +116,9 @@ public class Ctc implements Module,TimeControl {
 	 */
 	protected void enableMovingBlockMode(Boolean isMovingBlockMode) {
 		this.isMovingBlockMode = isMovingBlockMode;
+		for(TrackController wayside : trackControllers) {
+			wayside.isMovingBlockMode = isMovingBlockMode;
+		}
 		simulator.transmitEnableMovingBlockMode(isMovingBlockMode);
 	}
 	
@@ -149,7 +164,7 @@ public class Ctc implements Module,TimeControl {
 		if(trackModelOccupied) {
 			occupied = true;
 			broken = true; //assume broken until proven not broken
-			for(Train train : ctc.trains.values()) {
+			for(Train train : trains.values()) {
 				//If it is a train on the block, it is occupied and not broken
 				if(train.line == line && train.currLocation == blockNum) {
 					broken = false;
@@ -223,6 +238,22 @@ public class Ctc implements Module,TimeControl {
 		trackControllers[i].tcgui.showTrackControllerGUI();
 	}
 	
+	public Train getEarliestTrainAtBlock(Line line, int blockNum) {
+		Train earliestTrain = null;
+		for(Train train : trains.values()) {
+			if(train.currLocation==blockNum) {
+				if(earliestTrain==null) {
+					earliestTrain = train;
+					continue;
+				}
+				
+				if(SimTime.hoursBetween(earliestTrain.arrivalAtCurrLocation, train.arrivalAtCurrLocation)<0)
+					earliestTrain = train;
+			}
+		}
+		return earliestTrain;
+	}
+	
 	
 	/*
 	 * ------------------------------
@@ -294,23 +325,52 @@ public class Ctc implements Module,TimeControl {
 	public void dispatchTrain(String name) {
 		Schedule schedule = removeScheduleByName(name);
 		
-		//If the first block is occupied, add it to a queue to be subsequently dispatched
-		//Else dispatch the train
-		for(Train train : trains.values()) {
-			if(schedule.line == train.line && train.currLocation==schedule.line.yardOut) {
-				scheduleQueueToDispatch.add(schedule);
-				return;
-			}
+		//If the first block is not occupied, dispatch
+		//Else add it to a queue to be subsequently dispatched
+		if(checkDispatchability(schedule)) {
+			dispatchTrain(schedule);
 		}
-		dispatchTrain(schedule);
+		else {
+			scheduleQueueToDispatch.add(schedule);
+		}
 	}
 	private void dispatchTrain(Schedule schedule) {
 		Train train = new Train(schedule);
 		schedule.train = train;
 		trains.put(schedule.name, train);
+		//train.line.blocks[train.line.yardOut].setOccupancy(true);
 		
 		trainModel.dispatchTrain(schedule.name, train.line.toString().toUpperCase());
 		trainController.dispatchTrain(schedule.name, train.line.toString().toUpperCase()); 
+	}
+	
+	/**
+	 * Check if the yardOut is occupied
+	 */
+	protected boolean checkDispatchability(Schedule schedule) {
+		boolean yardOutOccupied = false;
+		if(schedule.line.blocks[schedule.line.yardOut].getOccupied()) {
+			yardOutOccupied = true;
+		}
+		else{
+			for(Train train : trains.values()) {
+				if(train.line == schedule.line && train.currLocation==train.line.yardOut) {
+					yardOutOccupied = true;
+					break;
+				}
+			}
+		}
+		TrackController wayside = getWaysideOfBlock(schedule.line, schedule.line.yardOut);
+		int pb = -1;
+		int cb = schedule.line.yardOut;
+		int nb = getNextBlockId(schedule.line,cb,pb);
+		int nnb = getNextBlockId(schedule.line,nb,cb);
+		
+		if(wayside.tcplc.canProceedPath(new int[] {pb,cb,nb,nnb}) && !yardOutOccupied) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -344,7 +404,7 @@ public class Ctc implements Module,TimeControl {
 		if(stopBlockId == -1) {
 			return path;
 		}
-		
+		System.out.println("    ");
 		q.add(new ArrayList<Integer>(Arrays.asList(prevBlockId,currBlockId)));
 		
 		while(!q.isEmpty()) {
@@ -354,7 +414,6 @@ public class Ctc implements Module,TimeControl {
 			path = q.remove();
 			currBlockId = path.get(path.size()-1);
 			prevBlockId = path.get(path.size()-2);
-				
 			//TODO below is a temporary fix for the switch issue
 			if(currBlockId>train.line.yardOut ||currBlockId<0) continue;
 			
@@ -365,18 +424,41 @@ public class Ctc implements Module,TimeControl {
 				continue;
 			}
 			
+			if(path.size()>=4 && !bidirectionalReservation[0].equals(train.name) && 
+					(Integer.parseInt(bidirectionalReservation[1])==currBlockId || Integer.parseInt(bidirectionalReservation[2])==currBlockId)){
+				int locationStart = path.indexOf(Integer.parseInt(bidirectionalReservation[1]));
+				int locationEnd = path.indexOf(Integer.parseInt(bidirectionalReservation[2]));
+				
+				if(locationStart==0) {
+					locationStart = 1+path.subList(1,path.size()).indexOf(Integer.parseInt(bidirectionalReservation[1]));
+				}
+				if(locationEnd==0) {
+					List<Integer> sub = path.subList(1,path.size());
+					locationEnd = 1+sub.indexOf(Integer.parseInt(bidirectionalReservation[2]));
+				}
+				if(locationStart==-1 && locationEnd!=-1) {
+					path = new ArrayList<Integer>(path.subList(0, locationEnd-2));
+				}
+				else if(locationEnd==-1 && locationStart!=-1) {
+					path = new ArrayList<Integer>(path.subList(0, locationStart-2));
+				}
+				else if(locationStart<locationEnd){
+					int modifier = locationStart>=2?2:locationStart;
+					path = new ArrayList<Integer>(path.subList(0, locationStart-modifier));
+				}
+				else if(locationEnd<=locationStart) {
+					int modifier = locationEnd>=2?2:locationEnd;
+					path = new ArrayList<Integer>(path.subList(0, locationEnd-modifier));
+				}
+				continue;
+			}
+			
 			//-------------------
 			// Fixed block: If block is occupied, ditch the path
 			// Moving block: If block is broken, ditch the path
 			//-------------------
-			if(!isMovingBlockMode && train.line.blocks[currBlockId].getOccupied() && currBlockId != selfLocation) {
+			if(!isMovingBlockMode && path.get(0)!=-1 && train.line.blocks[currBlockId].getOccupied() && currBlockId != selfLocation) {
 				path.remove(path.size()-1);
-				/*
-				Switch swPrev = train.line.blocks[prevBlockId].getSwitch();
-				if(swPrev!=null) {
-					path.remove(path.size()-1);
-				}
-				*/
 				continue;
 			}
 			else if(isMovingBlockMode && !train.line.blocks[currBlockId].getStatus()) {
@@ -395,7 +477,7 @@ public class Ctc implements Module,TimeControl {
 			// Fixed block mode: If block is on bidirectional track which is occupied, ditch the path
 			//-------------------
 			int nbId = getNextBlockId(train.line, currBlockId, prevBlockId);
-			if(!isMovingBlockMode && (nbId<=train.line.yardIn && nbId>=0) && train.line.blocks[nbId].getDirection()==0) {
+			if((nbId<=train.line.yardIn && nbId>=0) && train.line.blocks[nbId].getDirection()==0) {
 				if(bidirectionalStretchOccupied(train.line,nbId,currBlockId,selfLocation)) {
 					path.remove(path.size()-1);
 					continue;
@@ -456,8 +538,47 @@ public class Ctc implements Module,TimeControl {
 			}
 		} //while q not empty
 		
+		//If about to enter bidirectional and there is no existing reservation...
+		//Else it is not on bidirectional but it has a reservation so retract the reservation
+		if(path.size()>=4 && train.line.blocks[path.get(3)].getDirection()==0 && bidirectionalReservation[0].equals("")) {
+			boolean yieldToOtherTrainsAtLocation = false;
+			for(Train otherTrain : trains.values()) {
+				if(otherTrain==train) continue;
+				if(otherTrain.currLocation==train.currLocation && SimTime.hoursBetween(train.arrivalAtCurrLocation,otherTrain.arrivalAtCurrLocation)<0) {
+					yieldToOtherTrainsAtLocation = true;
+				}
+				
+				int nextBlock = Ctc.getNextBlockId(train.line, train.currLocation, train.prevLocation);
+				if(otherTrain.currLocation==nextBlock)
+					yieldToOtherTrainsAtLocation = true;
+			}
+			
+			if(!yieldToOtherTrainsAtLocation) {
+				//Make a reservation
+				int prevIndex = 2;
+				int currIndex = 3;
+				int startBlock = path.get(currIndex);
+				int nb = Ctc.getNextBlockId(train.line, startBlock, path.get(prevIndex));
+				int endBlock;
+				do {
+					endBlock = nb;
+					try {
+						nb = Ctc.getNextBlockId(train.line, nb, path.get(prevIndex++));
+					}
+					catch(IndexOutOfBoundsException e) {
+						break;
+					}
+				}while(train.line.blocks[nb].getDirection()==0);
+				bidirectionalReservation = new String[] {train.name,Integer.toString(startBlock),Integer.toString(endBlock)};
+			}
+		}
+		else if(bidirectionalReservation[0].equals(train.name) && path.size()>=4 && train.line.blocks[path.get(3)].getDirection()!=0){
+			//Retract a reservation
+			bidirectionalReservation = new String[] {"","-1","-1"};
+		}
+		
 		//Remove the first only if not coming from the yard
-		if(path.get(0)!=-1) {
+		if(path.size()>0 && path.get(0)!=-1) {
 			path.remove(0);
 		}
 
@@ -558,7 +679,7 @@ public class Ctc implements Module,TimeControl {
 	protected void transmitCtcAuthority(String name, TrackController wayside, int[] auth) {
 		wayside.transmitCtcAuthority(name,auth);
 	}
-	
+		
 	/*
 	 * ------------------------------
 	 *  MODULE REQUIREMENTS
@@ -591,17 +712,8 @@ public class Ctc implements Module,TimeControl {
 		
 		//If a train was waiting for yard_out to be unoccupied, check yardout and dispatch if clear
 		Schedule scheduleToDispatch = scheduleQueueToDispatch.peek();
-		if(scheduleToDispatch!=null) {
-			boolean yardOutOccupied = false;
-			for(Train train : trains.values()) {
-				if(train.line == scheduleToDispatch.line && train.currLocation==train.line.yardOut) {
-					yardOutOccupied = true;
-					break;
-				}
-			}
-			if(!yardOutOccupied) {
-				dispatchTrain(scheduleQueueToDispatch.poll());
-			}
+		if(scheduleToDispatch!=null && checkDispatchability(scheduleToDispatch)) {
+			dispatchTrain(scheduleQueueToDispatch.poll());
 		}
 		
 		/*
@@ -628,36 +740,47 @@ public class Ctc implements Module,TimeControl {
 			int nextLocation = getNextBlockId(train.line, train.currLocation, train.prevLocation);
 			Boolean currOccupied = getTrackCircuit(train.line, currentLocation);
 			Boolean nextOccupied = getTrackCircuit(train.line, nextLocation);
-			if(!currOccupied && nextOccupied) {
+			Train earliestTrain = train;
+			if(isMovingBlockMode) {
+				int trainsAtCurr = 0;
+				for(Train t : trains.values()) {
+					if(t.currLocation==currentLocation) trainsAtCurr++;
+					//if(t!=train && t.currLocation==nextLocation) nextOccupied=false;
+				}
+				if(trainsAtCurr>1) currOccupied = false;
+				
+				
+				earliestTrain = getEarliestTrainAtBlock(earliestTrain.line,currentLocation);
+			}
+			if(!currOccupied && nextOccupied) {				
 				//Train has moved on
-				train.prevLocation = currentLocation;
-				train.currLocation = nextLocation;
+				earliestTrain.prevLocation = currentLocation;
+				earliestTrain.currLocation = nextLocation;
+				earliestTrain.arrivalAtCurrLocation = new SimTime(currentTime);
 			}
 			else {
-				Switch currSwitch = train.line.blocks[currentLocation].getSwitch();
+				Switch currSwitch = earliestTrain.line.blocks[currentLocation].getSwitch();
 				if(currSwitch!=null && currSwitch.getEdge()==Switch.EDGE_TYPE_HEAD) {
 					int norm = currSwitch.getPortNormal();
 					int alt = currSwitch.getPortAlternate();
-					Boolean normOccupied = getTrackCircuit(train.line,norm);
-					Boolean altOccupied = getTrackCircuit(train.line,alt);
+					Boolean normOccupied = getTrackCircuit(earliestTrain.line,norm);
+					Boolean altOccupied = getTrackCircuit(earliestTrain.line,alt);
 					if(!currOccupied && normOccupied) {
 						//Train has moved on
-						train.prevLocation = currentLocation;
-						train.currLocation = norm;
+						earliestTrain.prevLocation = currentLocation;
+						earliestTrain.currLocation = norm;
+						earliestTrain.arrivalAtCurrLocation = new SimTime(currentTime);
 						
-						//Remove stop if we reach it
-						//if(train.currLocation == train.schedule.getNextStop()) {
-						//	train.schedule.removeStop(0);
-						//}
 					}
 					else if(!currOccupied && altOccupied) {
 						//Train has moved on
-						train.prevLocation = currentLocation;
-						train.currLocation = alt;
+						earliestTrain.prevLocation = currentLocation;
+						earliestTrain.currLocation = alt;
+						earliestTrain.arrivalAtCurrLocation = new SimTime(currentTime);
 						
 						//Remove stop if we reach it
-						if(train.currLocation == train.schedule.getNextStop()) {
-							train.schedule.removeStop(0);
+						if(earliestTrain.currLocation == earliestTrain.schedule.getNextStop()) {
+							earliestTrain.schedule.removeStop(0);
 						}
 					}
 				}
@@ -668,7 +791,20 @@ public class Ctc implements Module,TimeControl {
 			if(train.currLocation == train.schedule.getNextStop() && train.dwelling==false) {
 				train.dwelling = true;
 				train.timeToFinishDwelling = currentTime.add(train.schedule.stops.get(0).timeToDwell);
+				if(train.currLocation==train.line.yardIn) {
+					//Train is in the yard
+					trainsToRemove.add(train);
+					train.line.blocks[train.line.yardIn].setOccupancy(false);
+					simulator.trainPoofByName(train.line.toString(),train.name);
+				}
 			}
+		}
+		while(trainsToRemove.size()>0) {
+			Train t = trains.remove(trainsToRemove.remove(0).name);
+			if(gui.dispatchSelectedTable.schedule.name.equals(t.name)) {
+				gui.dispatchSelectedTable.clear();
+			}
+			t = null;
 		}
 		
 		/*

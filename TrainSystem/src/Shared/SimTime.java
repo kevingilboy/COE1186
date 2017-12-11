@@ -22,7 +22,7 @@ public class SimTime {
 		hr = time.hr;
 		min = time.min;
 		sec = time.sec;
-		ms = 0;
+		ms = time.ms;
 	}
 	
 	public SimTime(String time) {
