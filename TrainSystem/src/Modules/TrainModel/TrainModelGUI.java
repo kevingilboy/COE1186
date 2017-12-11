@@ -852,8 +852,8 @@ public class TrainModelGUI extends JFrame {
 	 * Given the train ID, poofs the train from existence, and removes it from the train list
 	 * @param train
 	 */
-	public void poofTrainfromGUIList(Train train) {
-		//mnSelectTrain.remove((train.getTrainID());
+	public void poofTrainfromGUIList() {
+		mnSelectTrain.removeAll();
 	}
 
 	/**
