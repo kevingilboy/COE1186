@@ -94,26 +94,29 @@ public class MboScheduler {
 		output.append(String.format("%s\r\n\r\n", title));
 		for (TrainSchedule train : trains) {
 			
+			// create the train's schedule and append it at the end
+			StringBuilder schedule = new StringBuilder();
+
 			// get the time the train needs to be on the track
 			SimTime start = new SimTime(train.startTime);
 			SimTime stop = new SimTime(train.stopTime);
 			int minutes = (stop.hr - start.hr)*60 + (stop.min - start.min);
-
-			// header info for each train
-			output.append(String.format("%s,%s,%s,%s\r\n", train.name, train.startTime, train.line, train.operator));
+			int stops = 0;
 
 			// stop for 2 minutes at every station
 			// loop around the track, allowing for 5 minutes between stations, until need to return
 			int elapsed = 0, index = 0;
 			int[] stations = train.line.equals("RED") ? redLineStations : greenLineStations;
 			while (minutes > elapsed) {
-				output.append(String.format("%d,00:02:00\r\n", stations[index]));
+				schedule.append(String.format("%d,00:02:00\r\n", stations[index]));
 				index = (index + 1) % stations.length;
 				elapsed += 7;
+				stops += 1;
 			}
 
-			// newline to seperate trains
-			output.append("\r\n");
+			// header info for each train
+			String header = String.format("%s,%s,%s,%d,%s\r\n", train.name, train.startTime, train.line, stops, train.operator);
+			output.append(String.format("%s%s\r\n", header, schedule.toString()));
 		}
 		output.append(String.format("%f\r\n", throughput));
 		
