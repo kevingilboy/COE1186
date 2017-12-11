@@ -577,6 +577,11 @@ public class Ctc implements Module,TimeControl {
 						break;
 					}
 				}while(train.line.blocks[nb].getDirection()==0);
+				
+				TrackController waysideStart = getWaysideOfBlock(train.line, startBlock);
+				waysideStart.transmitCtcReservation(startBlock, true);
+				TrackController waysideEnd = getWaysideOfBlock(train.line, startBlock);
+				waysideEnd.transmitCtcReservation(endBlock, true);
 				if(train.line==Line.GREEN) {
 					bidirectionalReservationGreen = new String[] {train.name,Integer.toString(startBlock),Integer.toString(endBlock)};
 				}
@@ -587,6 +592,14 @@ public class Ctc implements Module,TimeControl {
 		}
 		else if(bidirectionalReservation[0].equals(train.name) && path.size()>=4 && train.line.blocks[path.get(3)].getDirection()!=0){
 			//Retract a reservation
+			
+			int startBlock = Integer.parseInt(bidirectionalReservation[1]);
+			int endBlock = Integer.parseInt(bidirectionalReservation[2]);
+			TrackController waysideStart = getWaysideOfBlock(train.line, startBlock);
+			waysideStart.transmitCtcReservation(startBlock, false);
+			TrackController waysideEnd = getWaysideOfBlock(train.line, endBlock);
+			waysideEnd.transmitCtcReservation(endBlock, false);
+			
 			if(train.line==Line.GREEN) {
 				bidirectionalReservationGreen = new String[] {"","-1","-1"};
 			}
