@@ -153,16 +153,18 @@ public class TrackRenderWindow extends JPanel{
         super.paintComponent(g);
         Graphics2D g2d  = (Graphics2D) g;
 
+        // Render each of these components in
+        // this sequence for correct layering
         drawTrack(g2d);
         drawFailedBlocks(g2d);
         drawCrossing(g2d);
         drawSwitches(g2d);
         drawYard(g2d);
-        drawLights(g2d);
-        drawCrossingLight(g2d);
         drawSelectedBlock(g2d);
         drawBeacons(g2d);
         drawTrains(g2d);
+        drawCrossingLight(g2d);
+        drawLights(g2d);
 
         if (showArrows){
             drawDirections(g2d);
@@ -612,8 +614,8 @@ public class TrackRenderWindow extends JPanel{
                 double[] x_coords = blocks.get(i).getXCoordinates();
                 double[] y_coords = blocks.get(i).getYCoordinates();
 
-                int x_coord = (int)x_coords[x_coords.length / 2] - 15;
-                int y_coord = (int)y_coords[x_coords.length / 2] - 5;
+                int x_coord = (int)x_coords[x_coords.length / 2] - 12;
+                int y_coord = (int)y_coords[x_coords.length / 2] - 24;
 
                 int radius = 3;
 
@@ -905,7 +907,6 @@ public class TrackRenderWindow extends JPanel{
             }
         }
     }
-
 
 
     // Draw arrows (used for displaying block directions)

@@ -136,7 +136,7 @@ public class TrackModel implements Module{
 			int beaconInfo = 0;
 
 			for (int i = 0; i < track.size(); i++){
-				if ((track.get(i).getBeacon() != null) && (track.get(i).getOccupied())){
+				if ((track.get(i).getBeacon() != null) && (track.get(i).getOccupied()) && (track.get(i).getStatus())){
 					blockID = i;
 					beaconInfo = track.get(i).getBeacon().getInfo();
 					trainModel.setBeaconBlockOccupancy(line, blockID, beaconInfo);
@@ -160,7 +160,7 @@ public class TrackModel implements Module{
 			int numTicketSales = 0;
 
 			for (int i = 0; i < track.size(); i++){
-				if ((track.get(i).getStation() != null) && (track.get(i).getOccupied())){
+				if ((track.get(i).getStation() != null) && (track.get(i).getOccupied()) && (track.get(i).getStatus())){
 					blockID = i;
 					numTicketSales = track.get(i).getStation().getTicketSales();
 					trainModel.setPassengersEmbarking(blockID, line, numTicketSales);
