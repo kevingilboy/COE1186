@@ -853,7 +853,7 @@ public class TrainModelGUI extends JFrame {
 	 * @param train
 	 */
 	public void poofTrainfromGUIList(Train train) {
-		mnSelectTrain.remove((train.getTrainID());
+		//mnSelectTrain.remove((train.getTrainID());
 	}
 	
 	/**
