@@ -140,19 +140,21 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         Graphics2D g2d  = (Graphics2D) g;
 
         drawTrack(g2d);
-        drawYard(g2d);
         drawSwitches(g2d);
+        drawYard(g2d);
         drawLights(g2d);
+        drawCrossingLight(g2d);
         drawSelectedBlock(g2d);
         drawBeacons(g2d);
         drawTrains(g2d);
 
         if (showArrows){
             drawDirections(g2d);
+            showSwitchInfo(g2d);
         }
     }
 
-    void drawArrow(Graphics g1, int x1, int y1, int x2, int y2) {
+    public void drawArrow(Graphics g1, int x1, int y1, int x2, int y2) {
         Graphics2D g = (Graphics2D) g1.create();
 
         double dx = x2 - x1, dy = y2 - y1;
@@ -166,6 +168,25 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         g.drawLine(0, 0, len, 0);
         g.fillPolygon(new int[] {len+2, len-(ARR_SIZE*2+1), len-(ARR_SIZE*2+1), len+2},
                       new int[] {0, -(ARR_SIZE-1), ARR_SIZE-1, 0}, 4);
+    }
+
+    public void showSwitchInfo(Graphics2D g2d){
+
+        g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 16)); 
+        for (int i = 0; i < blocks.size(); i++){
+            double[] x_coords = blocks.get(i).getXCoordinates();
+            double[] y_coords = blocks.get(i).getYCoordinates();
+
+            if (blocks.get(i).getSwitch() != null){
+                if (blocks.get(i).getSwitch().getEdge() == Switch.EDGE_TYPE_HEAD){
+                    String section = blocks.get(i).getSection();
+                    String id = Integer.toString(i);
+
+                    g2d.setColor(Color.ORANGE);
+                    g2d.drawString(section + id, (int)x_coords[x_coords.length/2] - 10, (int)y_coords[y_coords.length/2] - 2);
+                }
+            }
+        }
     }
 
     public void drawDirections(Graphics2D g2d){
@@ -384,6 +405,70 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         for (int i = 0; i < x_coords.length-2; i++){
             g2d.drawRect((int)x_coords[i], (int)y_coords[i],
                         2, 2);
+        }
+    }
+
+    // Draw the crossing lights
+    public void drawCrossingLight(Graphics2D g2d){
+        for (int i = 0; i < blocks.size(); i++){
+            if (blocks.get(i).getCrossing() != null){
+
+                double[] x_coords = blocks.get(i).getXCoordinates();
+                double[] y_coords = blocks.get(i).getYCoordinates();
+
+                int x_coord = (int)x_coords[x_coords.length / 2] - 15;
+                int y_coord = (int)y_coords[x_coords.length / 2] - 5;
+
+                int radius = 2;
+
+                g2d.setColor(Color.BLACK);
+                Shape circleOutline = new Ellipse2D.Double(x_coord - 0, y_coord - 2, 2.0*(radius+2), 2.0*(radius+2));
+                g2d.fill(circleOutline);
+
+                // Draw the pole
+                g2d.setColor(Color.BLACK);
+                g2d.fillRect(x_coord - 2, y_coord - 10, 3, 24);
+
+                if (blocks.get(i).getCrossing().getState() == true){
+                    // Draw the gate
+
+                    g2d.setStroke(new BasicStroke(2));
+                    g2d.setColor(Color.BLACK);
+                    g2d.drawLine(x_coord - 24, y_coord+4, x_coord - 6, y_coord+4);
+
+                    g2d.setColor(Color.WHITE);
+                    g2d.drawLine(x_coord - 21, y_coord+2, x_coord - 6, y_coord+2);
+
+                    g2d.setColor(Color.RED);
+                    g2d.drawLine(x_coord - 21, y_coord+2, x_coord - 18, y_coord + 2);
+                    
+                    // Set the light color to Red
+                    g2d.setColor(Color.RED);
+                } else {
+                    g2d.setColor(Color.GRAY);
+                }
+                Shape circle = new Ellipse2D.Double(x_coord + 2, y_coord, 2.0*radius, 2.0*radius);
+                g2d.fill(circle);
+
+                // 2nd light
+                g2d.setColor(Color.BLACK);
+                circleOutline = new Ellipse2D.Double(x_coord - 8, y_coord - 2, 2.0*(radius+2), 2.0*(radius+2));
+                g2d.fill(circleOutline);
+
+                if (blocks.get(i).getCrossing().getState() == true){
+                    g2d.setColor(Color.RED);
+                } else {
+                    g2d.setColor(Color.GRAY);
+                }
+                circle = new Ellipse2D.Double(x_coord - 6, y_coord, 2.0*radius, 2.0*radius);
+                g2d.fill(circle);
+
+                //"X"
+                g2d.setColor(Color.WHITE);
+                g2d.setStroke(new BasicStroke(2));
+                g2d.drawLine(x_coord - 6, y_coord-12, x_coord + 4, y_coord - 4);
+                g2d.drawLine(x_coord + 4, y_coord-12, x_coord - 6, y_coord - 4);
+            }
         }
     }
 
