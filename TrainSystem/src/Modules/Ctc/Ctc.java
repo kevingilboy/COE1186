@@ -156,7 +156,7 @@ public class Ctc implements Module,TimeControl {
 		if(trackModelOccupied) {
 			occupied = true;
 			broken = true; //assume broken until proven not broken
-			for(Train train : ctc.trains.values()) {
+			for(Train train : trains.values()) {
 				//If it is a train on the block, it is occupied and not broken
 				if(train.line == line && train.currLocation == blockNum) {
 					broken = false;
@@ -523,6 +523,10 @@ public class Ctc implements Module,TimeControl {
 				if(otherTrain.currLocation==train.currLocation && SimTime.hoursBetween(train.arrivalAtCurrLocation,otherTrain.arrivalAtCurrLocation)<0) {
 					yieldToOtherTrainsAtLocation = true;
 				}
+				
+				int nextBlock = Ctc.getNextBlockId(train.line, train.currLocation, train.prevLocation);
+				if(otherTrain.currLocation==nextBlock)
+					yieldToOtherTrainsAtLocation = true;
 			}
 			
 			if(!yieldToOtherTrainsAtLocation) {
@@ -714,6 +718,14 @@ public class Ctc implements Module,TimeControl {
 			Boolean nextOccupied = getTrackCircuit(train.line, nextLocation);
 			Train earliestTrain = train;
 			if(isMovingBlockMode) {
+				int trainsAtCurr = 0;
+				for(Train t : trains.values()) {
+					if(t.currLocation==currentLocation) trainsAtCurr++;
+					//if(t!=train && t.currLocation==nextLocation) nextOccupied=false;
+				}
+				if(trainsAtCurr>1) currOccupied = false;
+				
+				
 				earliestTrain = getEarliestTrainAtBlock(earliestTrain.line,currentLocation);
 			}
 			if(!currOccupied && nextOccupied) {				
