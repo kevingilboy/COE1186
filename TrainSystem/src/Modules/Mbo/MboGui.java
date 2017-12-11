@@ -302,17 +302,12 @@ public class MboGui extends JFrame implements ActionListener {
 
         // train schedule table
 		String[] trainTableHeaders = {"Train Name", "Start Time", "Stop Time"};
-		Object[][] trainTableData = {{"Red 1", new String(), new String()}, 
-		                             {"Red 2", new String(), new String()}, 
-		                             {"Red 1", new String(), new String()}, 
-		                             {"Green 2", new String(), new String()}, 
-		                             {"Green 3", new String(), new String()}};
-		trainScheduleTableModel = new DefaultTableModel(trainTableData, trainTableHeaders) {
-    		public boolean isCellEditable(int row, int column) {
-      			return column != 0;
-    		}
-  		};
-		JTable trainTable = new JTable(trainScheduleTableModel);
+		Object[][] trainTableData = {{new String(), new String(), new String()}, 
+		                                {new String(), new String(), new String()}, 
+		                                {new String(), new String(), new String()}, 
+		                                {new String(), new String(), new String()}, 
+		                                {new String(), new String(), new String()}};
+		JTable trainTable = new JTable(trainTableData, trainTableHeaders);
 		trainTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		stylizeTable(trainTable);
 
