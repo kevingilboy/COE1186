@@ -187,6 +187,8 @@ public class PLC {
 		for(int iii = 0; iii < 3; iii++){
 			context.set("norm_occupied", tc.trackModel.getBlock(line, norm).getOccupied());
 			context.set("alt_occupied", tc.trackModel.getBlock(line, alt).getOccupied());
+			context.set("norm_reserved", tc.trackModel.getBlock(line, norm).getReserved());
+			context.set("alt_reserved", tc.trackModel.getBlock(line, alt).getReserved());
 			//Compound evaluation expression
 			result &= (boolean) e.evaluate(context); 
 		}
