@@ -448,7 +448,7 @@ public class TrnController {
 	//calculates an estimated braking distance with known information (does not factor in friction)
 	private double estimateBrakingDist(double initVelocity){
     	double stopDist = ((-1)*(initVelocity)*(initVelocity)) / (2*(-1.2));	//service brake decel = -1.2 as given
-    	return stopDist+10;
+    	return stopDist+15;
 	}
 	
 	/*public void signalReady() {
