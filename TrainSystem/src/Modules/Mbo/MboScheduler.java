@@ -3,6 +3,8 @@ package Modules.Mbo;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import Shared.SimTime;
+
 public class MboScheduler {
 	
 	private String date;
@@ -92,12 +94,23 @@ public class MboScheduler {
 		output.append(String.format("%s\r\n\r\n", title));
 		for (TrainSchedule train : trains) {
 			
+			// get the time the train needs to be on the track
+			SimTime start = new SimTime(train.startTime);
+			SimTime stop = new SimTime(train.stopTime);
+			int minutes = (stop.hr - start.hr)*60 + (stop.min - start.min);
+
 			// header info for each train
 			output.append(String.format("%s,%s,%s,%s\r\n", train.name, train.startTime, train.line, train.operator));
 
 			// stop for 2 minutes at every station
+			// loop around the track, allowing for 5 minutes between stations, until need to return
+			int elapsed = 0, index = 0;
 			int[] stations = train.line.equals("RED") ? redLineStations : greenLineStations;
-			for (int station : stations) output.append(String.format("%d,00:02:00\r\n", station));
+			while (minutes > elapsed) {
+				output.append(String.format("%d,00:02:00\r\n", stations[index]));
+				index = (index + 1) % stations.length;
+				elapsed += 7;
+			}
 
 			// newline to seperate trains
 			output.append("\r\n");
