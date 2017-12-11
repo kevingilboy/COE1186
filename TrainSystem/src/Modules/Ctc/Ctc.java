@@ -794,6 +794,9 @@ public class Ctc implements Module,TimeControl {
 		}
 		while(trainsToRemove.size()>0) {
 			Train t = trains.remove(trainsToRemove.remove(0).name);
+			if(gui.dispatchSelectedTable.schedule.name.equals(t.name)) {
+				gui.dispatchSelectedTable.clear();
+			}
 			t = null;
 		}
 		
