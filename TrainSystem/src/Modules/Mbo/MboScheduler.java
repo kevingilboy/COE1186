@@ -40,6 +40,7 @@ public class MboScheduler {
 	}
 
 	public boolean updateTrainSchedules(String[][] schedules) {
+		this.trains = new ArrayList<TrainSchedule>();
 		for (String[] schedule : schedules) {
 			if (schedule[0].equals("") && schedule[1].equals("") && schedule[2].equals("")) {
 				return false;
@@ -50,6 +51,7 @@ public class MboScheduler {
 	}
 
 	public boolean updateOperatorSchedules(String[][] schedules) {
+		this.operators = new ArrayList<OperatorSchedule>();
 		for (String[] schedule : schedules) {
 			if (schedule[0].equals("") && schedule[1].equals("") && schedule[2].equals("")) {
 				return false;
@@ -60,6 +62,14 @@ public class MboScheduler {
 	}
 
 	public String generateSchedule(String filename, double throughput) {
-		return filename + Double.toString(throughput);
+		StringBuilder output = new StringBuilder();
+		for (TrainSchedule train : trains) {
+			output.append(String.format("%s\t%s\t%s\r\n", train.name, train.startTime, train.stopTime));
+		}
+		for (OperatorSchedule operator : operators) {
+			output.append(String.format("%s\t%s\t%s\r\n", operator.name, operator.startTime, operator.stopTime));
+		}
+		output.append(String.format("%f\r\n", throughput));
+		return output.toString();
 	}
 }

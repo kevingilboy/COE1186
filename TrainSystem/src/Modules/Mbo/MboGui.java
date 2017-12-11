@@ -170,6 +170,7 @@ public class MboGui extends JFrame implements ActionListener {
     private DefaultTableModel trainInfoTableModel, trainScheduleTableModel;
     private JLabel pineapple, pineapple2;
     private JTextField datePrompt, throughputPrompt;
+    private JTable trainTable, operatorTable;
 
 	public MboGui(Mbo mbo) {
 		this.mbo = mbo;
@@ -310,7 +311,7 @@ public class MboGui extends JFrame implements ActionListener {
 		                                {new String(), new String(), new String()}, 
 		                                {new String(), new String(), new String()}, 
 		                                {new String(), new String(), new String()}};
-		JTable trainTable = new JTable(trainTableData, trainTableHeaders);
+		trainTable = new JTable(trainTableData, trainTableHeaders);
 		trainTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		stylizeTable(trainTable);
 
@@ -324,7 +325,7 @@ public class MboGui extends JFrame implements ActionListener {
 		                                {new String(), new String(), new String()}, 
 		                                {new String(), new String(), new String()}, 
 		                                {new String(), new String(), new String()}};
-		JTable operatorTable = new JTable(operatorTableData, operatorTableHeaders);
+		operatorTable = new JTable(operatorTableData, operatorTableHeaders);
 		operatorTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		stylizeTable(operatorTable);
 
@@ -439,16 +440,28 @@ public class MboGui extends JFrame implements ActionListener {
                 File file = fileChooser.getSelectedFile();
                 
                 // update the Scheduler's train schedules
-                // DEBUG
-                String[][] debugSched = {{"A", "B", "C"}, {"A", "B", "C"}};
-                scheduler.updateTrainSchedules(debugSched);
+                String[][] trains = new String[trainTable.getModel().getRowCount()][3];
+                //System.out.printf("Rows: %d\n", trainTable.getModel().getRowCount());
+                for (int i = 0; i < trainTable.getModel().getRowCount(); i++){
+ 					trains[i][0] = (String)trainTable.getModel().getValueAt(i,0);
+ 					trains[i][1] = (String)trainTable.getModel().getValueAt(i,1);
+ 					trains[i][2] = (String)trainTable.getModel().getValueAt(i,2);
+				}
+                //String[][] debugSched = {{"A", "B", "C"}, {"A", "B", "C"}};
+                scheduler.updateTrainSchedules(trains);
 
                 // update the Scheduler's operator schedules
-                scheduler.updateOperatorSchedules(debugSched);
+                String[][] operators = new String[operatorTable.getModel().getRowCount()][3];
+                for (int i = 0; i < trainTable.getModel().getRowCount(); i++){
+ 					operators[i][0] = (String)operatorTable.getModel().getValueAt(i,0);
+ 					operators[i][1] = (String)operatorTable.getModel().getValueAt(i,1);
+ 					operators[i][2] = (String)operatorTable.getModel().getValueAt(i,2);
+				}
+                scheduler.updateOperatorSchedules(operators);
 
                 // generate the schedule
                 String sched = scheduler.generateSchedule(file.getName(), Double.parseDouble(throughputPrompt.getText()));
-                sched = String.format("%s\n%s", datePrompt.getText(), sched);
+                //sched = String.format("%s\n%s", datePrompt.getText(), sched);
                 System.out.println(sched);
 
                 // save the schedule
