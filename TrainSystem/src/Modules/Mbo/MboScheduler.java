@@ -91,7 +91,7 @@ public class MboScheduler {
 
 		// output results
 		StringBuilder output = new StringBuilder();
-		output.append(String.format("%s\r\n\r\n", title));
+		output.append(String.format("%s,%.2f\r\n\r\n", title, throughput));
 		int totalMinutes = 0;
 		for (TrainSchedule train : trains) {
 			
@@ -120,7 +120,6 @@ public class MboScheduler {
 			String header = String.format("%s,%s,%s,%d,%s\r\n", train.name, train.startTime, train.line, stops, train.operator);
 			output.append(String.format("%s%s\r\n", header, schedule.toString()));
 		}
-		output.append(String.format("%f\r\n", throughput));
 		
 		// check if throughput requirement can be met
 		double possibleThroughput = (totalMinutes / 60.0) * 444;
