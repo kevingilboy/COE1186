@@ -92,6 +92,7 @@ public class MboScheduler {
 		// output results
 		StringBuilder output = new StringBuilder();
 		output.append(String.format("%s\r\n\r\n", title));
+		int totalMinutes = 0;
 		for (TrainSchedule train : trains) {
 			
 			// create the train's schedule and append it at the end
@@ -102,6 +103,7 @@ public class MboScheduler {
 			SimTime stop = new SimTime(train.stopTime);
 			int minutes = (stop.hr - start.hr)*60 + (stop.min - start.min);
 			int stops = 0;
+			totalMinutes += minutes;
 
 			// stop for 2 minutes at every station
 			// loop around the track, allowing for 5 minutes between stations, until need to return
@@ -120,6 +122,10 @@ public class MboScheduler {
 		}
 		output.append(String.format("%f\r\n", throughput));
 		
+		// check if throughput requirement can be met
+		double possibleThroughput = (totalMinutes / 60.0) * 444;
+		if (possibleThroughput < throughput) return String.format("Given schedule can only support throughput of %.2f passengers/hour.", possibleThroughput);
+
 		return output.toString();
 	}
 }
