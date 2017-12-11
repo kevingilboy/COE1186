@@ -21,6 +21,7 @@ public class TrackController implements Module{
 	public String controllerName;
 	public String associatedLine;
 	public String[] associatedBlocks;
+	public boolean isMovingBlockMode;
 	//Internal variables
 	private TrackController tc;
 	private String initialPLCPath = "Modules/TrackController/init.plc";
@@ -171,7 +172,13 @@ public class TrackController implements Module{
 			}
 		} else {
 			//cannot proceed
-			trackModel.transmitCtcAuthority(trainName, distAuthority);
+			if(isMovingBlockMode){
+				//MBO mode so allow the MBO to stop the trains from crashing
+				distAuthority = calcAuthDist(authority);
+				trackModel.transmitCtcAuthority(trainName, distAuthority);
+			} else {
+				trackModel.transmitCtcAuthority(trainName, distAuthority);
+			}
 		}
 	} 
 	
@@ -255,7 +262,13 @@ public class TrackController implements Module{
 		double distAuth = 0;
 		for(int i=0; i<authority.length; i++){
 			if(authority[i] >= 0){
-				distAuth += trackModel.getBlock(associatedLine, authority[i]).getLength();
+				if(i == (authority.length-1)){
+					//add half the length for the final block so that we ensure we stop within that block
+					distAuth += (trackModel.getBlock(associatedLine, authority[i]).getLength() /2);
+				} else {
+					distAuth += trackModel.getBlock(associatedLine, authority[i]).getLength();
+				}
+				
 			}
 		}
 		return distAuth;

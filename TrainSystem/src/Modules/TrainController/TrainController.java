@@ -68,11 +68,13 @@ public class TrainController implements Module {
 	
 	public void setMboAuthority(String trainID, double auth) {
 		TrnController C = controlList.get(trainID);
+		if(C==null) return;
 		C.setMboAuthority(auth);
 	}
 	
 	public void setSafeBrakingDistance(String trainID, double dist) {
 		TrnController C = controlList.get(trainID);
+		if(C==null) return;
 		C.setSafeBrakingDistance(dist);
 	}
 	
@@ -191,5 +193,11 @@ public class TrainController implements Module {
 	public boolean communicationEstablished() {
 		receiveMap();
 		return true;
+	}
+
+	public void trainPoofByName(String line, String name) {
+		TrnController tc = controlList.remove(name);
+		tc = null;
+		mainGUI.trainPoofByName(name);
 	}
 }

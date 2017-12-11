@@ -816,4 +816,12 @@ public class TrackModelGUI{
 		showBlockInfo(blockSelected);
 		currentDisplay.dynamicTrackView.refresh();
 	}
+
+	public void trainPoofByName(String line, String name) {
+		if(line.equals("GREEN")) {
+			greenLineDisplay.trainPoofByName(name);
+		} else if (line.equals("RED")){
+			redLineDisplay.trainPoofByName(name);
+		}
+	}
 }

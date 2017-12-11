@@ -179,6 +179,7 @@ public class TrainModel implements Module{
 	    // Figure out which train is occupying the block at 'id'
 	    // set that train's beacon information to 'beaconInfo'
 		Train beaconTrain = getTrainAtBlock(blockId, line);
+		if(beaconTrain==null) return;
 		// something like
 		setBeacon(beaconTrain.getTrainID(), beaconInfo);
 		
@@ -447,6 +448,12 @@ public class TrainModel implements Module{
 				t.getTrainGUI().dispose();
 			}
 		}
+	}
+
+	public void trainPoofByName(String line, String name) {
+		Train t = trainList.remove(name.hashCode());
+		t.position = null;
+		t = null;
 	}
 
 }
