@@ -242,7 +242,7 @@ public class CtcGui {
 	protected JButton btnPause;
 	protected JButton btnPlay;
 	private int currentSpeedupIndex = 0;
-	private int[] availableSpeedups = {1,2,5,10,25};
+	private int[] availableSpeedups = {1,2,5,10,25,50};
 	private JButton btnDecSpeed;
 	private JButton btnIncSpeed;
 	
@@ -409,7 +409,6 @@ public class CtcGui {
 		JButton btnimportschedule = new JButton("<html><center>IMPORT<br>SCHEDULE</center></html>");
 		btnimportschedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Schedule schedule;
 				BufferedReader br = null;
 				String currentLine = "";
 				String delimeter = ",";
@@ -423,49 +422,34 @@ public class CtcGui {
 					fc.showSaveDialog(frame);					
 					File f = fc.getSelectedFile();
 					
-					String filename[] = f.getName().replace(".csv","").split("_");
-					
-					//Set the line
-					Line line = null;
-					if(filename[0].equals("GREEN")) {
-						line = Line.GREEN;
-					}
-					else if(filename[0].equals("RED")) {
-						line = Line.RED;
-					}
-					else {
-						throw new IOException();
-					}
-					schedule = new Schedule(line);
-							
-					//Set the name
-					schedule.name = filename[1];
-					
-					//Set the departure time
-					String time = filename[2].replace("-",":");
-					schedule.departureTime = new SimTime(time);
-					
 					//Read the file
 					FileReader fr = new FileReader(f);
 					br = new BufferedReader(fr);
-					br.readLine(); //Skip first line
+					br.readLine();
 					
-					int stopNum = 0;
 					while ((currentLine = br.readLine()) != null){
+						currentLine = br.readLine();
+						if(currentLine.equals("") || currentLine==null) break;
+						
+						Schedule schedule;
 						String [] csvline = currentLine.split(delimeter);
-						schedule.addStop(stopNum++,Integer.parseInt(csvline[0]), new SimTime(csvline[1]));
+						
+						//Add the station metadata
+						schedule = csvline[2].toUpperCase().equals("GREEN") ? new Schedule(Line.GREEN) : new Schedule(Line.RED);
+						schedule.name = csvline[0];
+						schedule.departureTime = new SimTime(csvline[1]);
+						int numStops = Integer.parseInt(csvline[3]);
+						
+						//Add the stops
+						for(int i=0; i<numStops; i++) {
+							String [] stopLine = br.readLine().split(delimeter);
+							schedule.addStop(i,Integer.parseInt(stopLine[0]), new SimTime(stopLine[1]));
+						}
+						
+						//Add the schedule
+						ctc.addSchedule(schedule.name, schedule);
 					}
-					
-					//Update the GUI to reflect changes
-					trainCreationTable.clear();
-					trainCreationTable.schedule = schedule;
-					trainCreationTable.fireScheduleChanged();
-					trainCreationDepartTime.setText(schedule.departureTime.toString());
-					trainCreationName.setText(schedule.name);
-					trainCreationLine.setSelectedItem(schedule.line.toString());
-
-					//Enable "add to queue" buttons
-					enableTrainCreationComponents();					
+					updateQueueTable();
 				} catch (FileNotFoundException e) {
 		        	e.printStackTrace();
 		    	} catch (IOException e) {
@@ -1070,6 +1054,34 @@ public class CtcGui {
 		lblwaysideGuis.setHorizontalAlignment(SwingConstants.CENTER);
 		lblwaysideGuis.setBounds(920, 621, 200, 57);
 		frame.getContentPane().add(lblwaysideGuis);
+		
+		JCheckBox chckbxRmanual = new JCheckBox("R-MANUAL");
+		chckbxRmanual.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Boolean checkStatus = chckbxRmanual.isSelected();
+				
+				ctc.trackControllers[2].manualMode = checkStatus;
+				ctc.trackControllers[3].manualMode = checkStatus;	
+			}
+		});
+		chckbxRmanual.setForeground(Color.WHITE);
+		chckbxRmanual.setBackground(new Color(20, 20, 20));
+		chckbxRmanual.setBounds(1066, 674, 90, 18);
+		frame.getContentPane().add(chckbxRmanual);
+		
+		JCheckBox chckbxGmanual = new JCheckBox("G-MANUAL");
+		chckbxGmanual.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Boolean checkStatus = chckbxGmanual.isSelected();
+				
+				ctc.trackControllers[0].manualMode = checkStatus;
+				ctc.trackControllers[1].manualMode = checkStatus;							
+			}
+		});
+		chckbxGmanual.setForeground(Color.WHITE);
+		chckbxGmanual.setBackground(new Color(20, 20, 20));
+		chckbxGmanual.setBounds(1066, 704, 90, 18);
+		frame.getContentPane().add(chckbxGmanual);
 		
 		rdbtnFixedBlockMode = new JRadioButton("Fixed Block Mode");
 		stylizeRadioButton(rdbtnFixedBlockMode);
