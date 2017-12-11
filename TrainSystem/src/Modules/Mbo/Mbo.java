@@ -171,9 +171,30 @@ public class Mbo implements Module {
      		Double.toString(pos[1]);
 		crc.update(signal.getBytes());
 		//System.out.printf("Checksum %s: %x %x\n", train, crc.getValue(), checksum);
-		//if (checksum != crc.getValue()) return false;
+		if (checksum != crc.getValue()) return false;		
+		// add train if necessary
+		//String[] vals = segments[0].split(";");
+		//String train = vals[0];
+		if (trains.get(train) == null) {
+			trains.put(train, new TrainInfo(train, time, pos, this));
+		}
 		trains.get(train).setWeight(weight);
-		return receiveTrainPosition(train, pos, checksum);
+
+		// update train's position
+		//double x = Double.parseDouble(vals[1]);
+		//double y = Double.parseDouble(vals[2]);
+		String blockId;
+		MboBlock block = getBlockFromCoordinates(pos);
+		if (block == null) {
+			blockId = new String();
+		} else {
+			blockId = block.getID();
+		}
+		trains.get(train).updatePosition(pos, blockId, time);
+		//System.out.printf("Put %s on %s\n", train, trains.get(train).getBlockName());
+
+		//System.out.println("received train position...");
+		return true;
 	}	
 
 	public MboBlock getBlockFromCoordinates(double[] pos) {

@@ -27,7 +27,7 @@ public class TrainInfo {
 	private int direction;
 	private SimTime timeSignalTransmitted;
 	private Mbo mbo;
-	private double weight;
+	private double mass;
 
 	public TrainInfo(String name, SimTime time, double[] position, Mbo mbo) {
 		this.name = name;
@@ -176,7 +176,7 @@ public class TrainInfo {
 		return this.mass * 0.453592;
 	}
 
-	public void getMass() {
+	public double getMass() {
 		return this.mass;
 	}
 
