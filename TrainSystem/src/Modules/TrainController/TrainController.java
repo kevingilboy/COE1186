@@ -68,10 +68,10 @@ public class TrainController implements Module {
 	}
 	
 	//called by the Train Model, sets the passenger e-brake status of a particular train
-	public void setPassengerEmergencyBrake(String trainID, boolean status) {
+	/*public void setPassengerEmergencyBrake(String trainID, boolean status) {
 		TrnController C = controlList.get(trainID);
 		C.setPassengerEmergencyBrake(status);
-	}
+	}*/
 	
 	/////these functions called by a particular TrnController object to pass a value through this object to the Train Model////////
 	
