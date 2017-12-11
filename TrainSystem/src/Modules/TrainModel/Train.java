@@ -256,13 +256,13 @@ public class Train {
         this.trainModelGUI.powerVal.setText(Double.toString(truncateTo(this.powerIn/1000,2)));
         
         GPSAntenna = this.trainModelGUI.signalFailStatus();
-        if(GPSAntenna == true) {
+        if(!GPSAntenna) {
         	this.trainModelGUI.gpsAntennaStatusLabel.setText("ON");
         } else {
         	this.trainModelGUI.gpsAntennaStatusLabel.setText("OFF");
         }
         MBOAntenna = this.trainModelGUI.signalFailStatus();
-        if(MBOAntenna == true) {
+        if(!MBOAntenna) {
         	this.trainModelGUI.mboAntennaStatusLabel.setText("ON");
         } else {
         	this.trainModelGUI.mboAntennaStatusLabel.setText("OFF");
@@ -436,11 +436,11 @@ public class Train {
     	// TODO
     	this.signalFailureActive = trainModelGUI.signalFailStatus();
     	if(this.signalFailureActive) {
-        	this.setGPSAntenna(false);
-        	this.setMBOAntenna(false);
-    	} else {
-    		this.setGPSAntenna(true);
+        	this.setGPSAntenna(true);
         	this.setMBOAntenna(true);
+    	} else {
+    		this.setGPSAntenna(false);
+        	this.setMBOAntenna(false);
     	}
 
     	
@@ -557,10 +557,6 @@ public class Train {
      */
     public String getLine() {
     	return this.lineColor;
-    }
-    
-    public void setTime(SimTime time) {
-    	
     }
     
     /**
