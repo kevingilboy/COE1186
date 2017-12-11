@@ -26,6 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.UIManager; 
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.Border;
@@ -407,6 +408,8 @@ public class TrackControllerGUI extends JFrame{
 	class UploadPLC implements ActionListener {
 	    public void actionPerformed(ActionEvent e){
 			JFileChooser c = new JFileChooser();
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("plc", "PLC");
+			c.setFileFilter(filter);
 			int rVal = c.showOpenDialog(null);
 			if(rVal == JFileChooser.APPROVE_OPTION) {
 				String plcPath = c.getCurrentDirectory().toString() + "/" + c.getSelectedFile().getName();
