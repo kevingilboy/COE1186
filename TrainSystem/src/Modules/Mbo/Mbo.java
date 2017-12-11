@@ -343,7 +343,7 @@ public class Mbo implements Module {
 		//	System.out.printf("speed %f potential %f\n", speed, potentialSpeed);
 			MboBlock potentialBlock = getBlockAfterMoving(line, blockIndex, blockDisplacement, distance, train.getDirection());
 		//	System.out.printf("block index %s\n", potentialBlock);
-			potentialSpeed = calculateSpeedAfterMeter(potentialSpeed, potentialBlock);
+			potentialSpeed = calculateSpeedAfterMeter(potentialSpeed, potentialBlock, train.getMass());
 		//	System.out.printf("speed %f\n", potentialSpeed);
 			distance += 1;
 		}
@@ -374,7 +374,7 @@ public class Mbo implements Module {
     	return line.get(index);
     }
 
-    private double calculateSpeedAfterMeter(double speed, MboBlock block) {
+    private double calculateSpeedAfterMeter(double speed, MboBlock block, double mass) {
     	
     	// TODO real mass!
 
@@ -385,15 +385,15 @@ public class Mbo implements Module {
     	// Step 3: Calculate the forces acting on the train using the coefficient of friction
     	// and the train's weight in lbs converted to kg divided over the wheels (where the force is technically
     	// being applied times gravity (G)
-    	double normalForce = (TRAIN_MASS/12) * G * Math.sin(angle);	// divide by 12 for the number of wheels
-    	double downwardForce = (TRAIN_MASS/12) * G * Math.cos(angle);	// divide by 12 for the number of wheels
+    	double normalForce = (mass/12) * G * Math.sin(angle);	// divide by 12 for the number of wheels
+    	double downwardForce = (mass/12) * G * Math.cos(angle);	// divide by 12 for the number of wheels
 
     	// compute friction forc
     	double friction = (FRICTION_COEFFICIENT * downwardForce) + normalForce;
 
     	// Calculate acceleration using the F = ma equation, where m = the mass of the body moving
     	// add acceleration due to brake
-    	double trainAcceleration = friction/TRAIN_MASS + (TRAIN_MAX_ACCELERATION_SERVICE_BRAKE*1);
+    	double trainAcceleration = friction/mass + (TRAIN_MAX_ACCELERATION_SERVICE_BRAKE*1);
     	
     	// calculate the speed after traveling 1m with that acceleration
     	double finalSpeed = Math.pow(Math.pow(speed, 2) + 2*trainAcceleration, 0.5);
