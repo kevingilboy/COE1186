@@ -404,5 +404,16 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
             }
         }
     }
+
+	public void trainPoofByName(String name) {	    
+	    int indexToRemove = trainIDs.indexOf(name);
+	    trainIDs.remove(indexToRemove);
+	    positions.remove(indexToRemove);
+	    
+	    activeTrains--;
+	    if(activeTrains < 0) {
+	    	activeTrains = 0;
+	    }
+	}
 }
 

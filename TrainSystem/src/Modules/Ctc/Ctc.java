@@ -33,6 +33,7 @@ public class Ctc implements Module,TimeControl {
 	public int speedup = 1;
 	
 	public HashMap<String,Train> trains = new HashMap<>();
+	public ArrayList<Train> trainsToRemove = new ArrayList<Train>();
 	public HashMap<String,Schedule> schedules = new HashMap<>();
 	public Queue<Schedule> scheduleQueueToDispatch = new LinkedList<>();
 
@@ -228,6 +229,22 @@ public class Ctc implements Module,TimeControl {
 	
 	public void launchWaysideGui(int i) {
 		trackControllers[i].tcgui.showTrackControllerGUI();
+	}
+	
+	public Train getEarliestTrainAtBlock(Line line, int blockNum) {
+		Train earliestTrain = null;
+		for(Train train : trains.values()) {
+			if(train.currLocation==blockNum) {
+				if(earliestTrain==null) {
+					earliestTrain = train;
+					continue;
+				}
+				
+				if(SimTime.hoursBetween(earliestTrain.arrivalAtCurrLocation, train.arrivalAtCurrLocation)<0)
+					earliestTrain = train;
+			}
+		}
+		return earliestTrain;
 	}
 	
 	
@@ -767,7 +784,16 @@ public class Ctc implements Module,TimeControl {
 			if(train.currLocation == train.schedule.getNextStop() && train.dwelling==false) {
 				train.dwelling = true;
 				train.timeToFinishDwelling = currentTime.add(train.schedule.stops.get(0).timeToDwell);
+				if(train.currLocation==train.line.yardIn) {
+					//Train is in the yard
+					trainsToRemove.add(train);
+					simulator.trainPoofByName(train.line.toString(),train.name);
+				}
 			}
+		}
+		while(trainsToRemove.size()>0) {
+			Train t = trains.remove(trainsToRemove.remove(0).name);
+			t = null;
 		}
 		
 		/*
@@ -819,27 +845,9 @@ public class Ctc implements Module,TimeControl {
 			while(!tc.updateTime(currentTime)) {};
 		}
 		
-		lockReservation = false;
-		
 		while(!gui.repaint()) {};
 		
 		return true;
-	}
-	
-	public Train getEarliestTrainAtBlock(Line line, int blockNum) {
-		Train earliestTrain = null;
-		for(Train train : trains.values()) {
-			if(train.currLocation==blockNum) {
-				if(earliestTrain==null) {
-					earliestTrain = train;
-					continue;
-				}
-				
-				if(SimTime.hoursBetween(earliestTrain.arrivalAtCurrLocation, train.arrivalAtCurrLocation)<0)
-					earliestTrain = train;
-			}
-		}
-		return earliestTrain;
 	}
 	
 	@Override

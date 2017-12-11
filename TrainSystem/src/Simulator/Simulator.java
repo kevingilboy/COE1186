@@ -162,6 +162,13 @@ public class Simulator {
 		mbo.enableMovingBlockMode(isMovingBlockMode);
 	}
 	
+	public void trainPoofByName(String line, String name) {
+		line = line.toUpperCase();
+		trackModel.trainPoofByName(line, name);
+		trainModel.trainPoofByName(line, name);
+		trainController.trainPoofByName(line, name);
+	}
+	
 	public static void main(String[] args) throws InterruptedException {
 		new Simulator();		
 	}

@@ -184,4 +184,8 @@ public class TrackModel implements Module{
 	public void updateDynamicDisplay(SimTime currentTime) {
 		trackModelGUI.refresh();
 	}
+
+	public void trainPoofByName(String line, String name) {
+		trackModelGUI.trainPoofByName(line, name);
+	}
 }
