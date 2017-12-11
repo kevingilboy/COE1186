@@ -36,6 +36,8 @@ import java.awt.event.MouseEvent;
 import java.awt.ItemSelectable;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /*--- REQUIRED LIBRARIES FOR HSS DARK THEME ----*/
 import java.awt.GraphicsEnvironment;
@@ -83,6 +85,7 @@ public class TrackModelGUI{
 	JLabel icon_occupied;
 	JLabel icon_underground;
 	JLabel icon_railCrossing;
+	JLabel icon_beacon;
 	JLabel icon_trackHeated;
 	JLabel label_switchHead;
 	JLabel label_switchPortNormal;
@@ -251,7 +254,7 @@ public class TrackModelGUI{
 		// DYANMIC RENDER PANEL
 		panel_dynamicRender = new JPanel();
 		panel_dynamicRender.setBackground(Color.DARK_GRAY);
-		panel_dynamicRender.setBounds(16, 58, 335, 448);
+		panel_dynamicRender.setBounds(16, 58, 335, 460);
 
 		frame_tmGUI.getContentPane().add(panel_dynamicRender);
 		
@@ -324,7 +327,7 @@ public class TrackModelGUI{
 
 		comboBox_sectionId = new JComboBox();
 		stylizeComboBox(comboBox_sectionId);
-		comboBox_sectionId.setBounds(520, 116, 76, 30);
+		comboBox_sectionId.setBounds(516, 116, 100, 30);
 		frame_tmGUI.getContentPane().add(comboBox_sectionId);
 
 		ItemListener blockSelectionListener = new ItemListener() {
@@ -436,15 +439,26 @@ public class TrackModelGUI{
 		icon_railCrossing.setBounds(890, 128, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_railCrossing);
 		
+		// BEACON INFORMATION
+		JLabel label_beacon = new JLabel("BEACON");
+		stylizeInfoLabel(label_beacon);
+		label_beacon.setBounds(922, 157, 167, 23);
+		frame_tmGUI.getContentPane().add(label_beacon);
+
+		icon_beacon = new JLabel("");
+		icon_beacon.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_green.png"));
+		icon_beacon.setBounds(890, 157, 25, 23);
+		frame_tmGUI.getContentPane().add(icon_beacon);
+
 		// TRACK HEAT INFORMATION
 		JLabel label_trackHeated = new JLabel("TRACK HEATED");
 		stylizeInfoLabel(label_trackHeated);
-		label_trackHeated.setBounds(922, 157, 167, 22);
+		label_trackHeated.setBounds(922, 185, 167, 22);
 		frame_tmGUI.getContentPane().add(label_trackHeated);
 		
 		icon_trackHeated = new JLabel("");
 		icon_trackHeated.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_green.png"));
-		icon_trackHeated.setBounds(890, 157, 25, 23);
+		icon_trackHeated.setBounds(890, 185, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_trackHeated);
 
 		// SWITCH INFORMATION
@@ -625,6 +639,12 @@ public class TrackModelGUI{
 		/**
 		 * HANDLE TRACK HEATED .....
 		 */
+		
+		if (block.getBeacon() != null){
+			icon_beacon.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_green.png"));
+		} else {
+			icon_beacon.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+		}
 
 		if (block.getSwitch() != null){
 			icon_switch.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_green.png"));
@@ -714,8 +734,12 @@ public class TrackModelGUI{
 	class OpenL implements ActionListener {
 	    public void actionPerformed(ActionEvent e) {
 
-	    	/*
 			JFileChooser c = new JFileChooser();
+
+			FileFilter filter = new FileNameExtensionFilter("CSV file", new String[] {"csv"});
+			c.setFileFilter(filter);
+			c.setCurrentDirectory(new File(System.getProperty("user.dir")));
+
 			int rVal = c.showOpenDialog(frame_tmGUI);
 
 			String trackFilename = c.getSelectedFile().getName();
@@ -746,12 +770,13 @@ public class TrackModelGUI{
 				}
 				showBlockInfo(blockSelected);
 			}
-			*/
 	    }
 	}
 	
 	public void initTracksOnStartup() {		
-		trackModel.setTrack("red", (new TrackCsvParser()).parse("Modules/TrackModel/Track Layout/RedLineFinal.csv"));
+		TrackCsvParser redParser = new TrackCsvParser();
+		trackModel.setTrack("red", redParser.parse("Modules/TrackModel/Track Layout/RedLineFinal.csv"));
+		redParser.parseLightPositions("Modules/TrackModel/Track Layout/RedLightsCoordinates.csv", trackModel.getTrack("red"));
 		trackSelected = trackModel.getTrack("red");
 		blockSelected = trackSelected.get(0);
 
@@ -760,7 +785,9 @@ public class TrackModelGUI{
 
 		comboBox_selectTrack.addItem("RED LINE");
 
-		trackModel.setTrack("green", (new TrackCsvParser()).parse("Modules/TrackModel/Track Layout/GreenLineFinal.csv"));
+		TrackCsvParser greenParser = new TrackCsvParser();
+		trackModel.setTrack("green", greenParser.parse("Modules/TrackModel/Track Layout/GreenLineFinal.csv"));
+		greenParser.parseLightPositions("Modules/TrackModel/Track Layout/GreenLightsCoordinates.csv", trackModel.getTrack("green"));
 		trackSelected = trackModel.getTrack("green");
 		blockSelected = trackSelected.get(0);
 

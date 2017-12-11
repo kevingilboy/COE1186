@@ -259,15 +259,20 @@ public class Mbo implements Module {
 		// add the lengths of all blocks between these
 		int index1 = line.indexOf(block1);
 		int index2 = line.indexOf(block2);
+
 		while (index1 != index2) {
-			distance += line.get(index1).getLength();
-			int[] nextBlock = line.get(index1).getNextBlockInfo(direction);
-			index1 = nextBlock[0] - 1;
-			//System.out.printf("%d %d\n", index1, index2);
-			direction = nextBlock[1];
-			//index1 = (index1 + 1) % line.size();
-			//System.out.printf("Index: %d %d\n", index1, index2);
-		//	System.out.printf("from %d to %d\n", index1, index2);
+			if (index1 >= 1){
+				distance += line.get(index1).getLength();
+				int[] nextBlock = line.get(index1).getNextBlockInfo(direction);
+				index1 = nextBlock[0] - 1;
+				//System.out.printf("%d %d\n", index1, index2);
+				direction = nextBlock[1];
+				//index1 = (index1 + 1) % line.size();
+				//System.out.printf("Index: %d %d\n", index1, index2);
+				//	System.out.printf("from %d to %d\n", index1, index2);
+			} else {
+				index1 = index2;
+			}
 		}
 
 		// if on seperate blocks, added entire length of block2. remove.

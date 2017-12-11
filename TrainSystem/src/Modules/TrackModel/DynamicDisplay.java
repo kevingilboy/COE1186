@@ -69,6 +69,19 @@ public class DynamicDisplay{
 
 		// Add the dynamic track view panel
 		f.add(dynamicTrackView);
+
+		dynamicTrackView.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				dynamicTrackView.showArrows = true;
+				dynamicTrackView.refresh();
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				dynamicTrackView.showArrows = false;
+				dynamicTrackView.refresh();
+			}
+		});
 	}
 
 	// Add trains
