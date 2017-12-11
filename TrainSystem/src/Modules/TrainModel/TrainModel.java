@@ -410,7 +410,7 @@ public class TrainModel implements Module{
 	 * @param trainID
 	 */
 	public void setMBOSignal(String trainID) {
-		mbo.receiveTrainPosition(trainID, getCoordinates(trainID), this.getTrain(trainID).checkSum(), this.getTrain(trainID).getWeight());
+		mbo.receiveTrainPosition(trainID, getCoordinates(trainID), this.getTrain(trainID).getWeight(), this.getTrain(trainID).checkSum());
 		// call method to send the MBO an "incoming signal" status that passes a trainID
 	}
 	
