@@ -633,17 +633,7 @@ public class TrainModelGUI extends JFrame {
 		stylizeInfoLabel_Bold(powerVal);
 		powerVal.setBounds(503, 205, 80, 26);
 		contentPane.add(powerVal);
-		
-		/*btnSendPowerCommand.addActionListener(new ActionListener()
-		{
-		  public void actionPerformed(ActionEvent e)
-		  {
-			  // send the power command through when the button is pressed
 
-			  setPowerIn = Integer.parseInt(powerSpinner.getValue().toString());
-		  }
-		});*/
-		
 		stylizeInfoLabel(leftDoorLabel);
 		leftDoorLabel.setBounds(371, 420, 129, 20);
 		contentPane.add(leftDoorLabel);
@@ -664,7 +654,6 @@ public class TrainModelGUI extends JFrame {
 		tempLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		stylizeInfoLabel_Bold(tempLabel);
 		tempLabel.setBounds(821, 540, 75, 26);
-		//tempLabel.setValue(70);
 		contentPane.add(tempLabel);
 		
 		stylizeButton(btnEmergencyBrake);
@@ -672,7 +661,6 @@ public class TrainModelGUI extends JFrame {
 		btnEmergencyBrake.setForeground(Color.WHITE);
 		btnEmergencyBrake.setFont(font_20_bold);
 		btnEmergencyBrake.setBounds(720, 371, 250, 100);
-		//stylizeButton(btnEmergencyBrake);
 		contentPane.add(btnEmergencyBrake);
 		btnEmergencyBrake.addActionListener(new ActionListener()
 		{
@@ -682,7 +670,6 @@ public class TrainModelGUI extends JFrame {
 			  train.setEBrake(true);
 		  }
 		});
-		
 		
 		stylizeInfoLabel(lblEngineFailureMode);
 		lblEngineFailureMode.setBounds(765, 103, 150, 20);
@@ -707,7 +694,6 @@ public class TrainModelGUI extends JFrame {
 
 		ledImageLabel3.setIcon(new ImageIcon(ledImage));
 		contentPane.add(ledImageLabel3);
-		//contentPane.add(brakeFailPanel);
 		
 		Image pineapple = new ImageIcon(this.getClass().getResource("pineapple_icon.png")).getImage();
 		JLabel pineappleImageLabel = new JLabel();
@@ -862,13 +848,20 @@ public class TrainModelGUI extends JFrame {
 		Border thickBorder = new LineBorder(Color.WHITE, 3);
 	}
 	
+	/**
+	 * Given the train ID, poofs the train from existence, and removes it from the train list
+	 * @param train
+	 */
+	public void poofTrainfromGUIList(Train train) {
+		mnSelectTrain.remove((train.getTrainID());
+	}
+	
+	/**
+	 * Given the train ID, adds a train to the select train menu to be selected. When the menu item is selected,
+	 * will populate all active GUIs with that train's menu item
+	 * @param train
+	 */
 	public void addTraintoGUIList(Train train) {
-		/*public JMenuItem menuTrainlist = new JMenuItem(new AbstractAction("") {
-			public void actionPerformed(ActionEvent e) {
-		        // Button pressed logic goes here
-				
-		    }
-		});*/
 		mnSelectTrain.add(new JMenuItem(new AbstractAction(train.getTrainID()) {
 			public void actionPerformed(ActionEvent e) {
 		        // Button pressed logic goes here
