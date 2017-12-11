@@ -15,22 +15,23 @@ public class TrnController {
 	private TrainControllerGUI mainGUI;
 	private TrnControllerGUI controlGUI;
 	private TrainController controller;
-	private int driveMode;					//0 is auto, 1 is manual
-	private int blockMode;					//0 is moving, 1 is fixed
-	private int temperature;				//F
-	private int beacon;						//32 bit integer
+	private int driveMode;						//0 is auto, 1 is manual
+	private int blockMode;						//0 is moving, 1 is fixed
+	private int temperature;					//F
+	private int beacon;							//32 bit integer
 	private int currentBlock;
 	private int trainDirection;
 	private int storedBeacon;
-	private double ctcAuth;					//meters
-	private double mboAuth;					//meters
-	private double distToStation;			//meters
-	private double overallAuth;				//meters
-	private double actualSpeed;				//meters per second
-	private double setpointSpeed;			//meters per second
-	private double speedLimit;				//meters per second
-	private double power;					//watts
-	private double safeBrakingDistance;		//meters
+	private double ctcAuth;						//meters
+	private double mboAuth;						//meters
+	private double distToStation;				//meters
+	private double overallAuth;					//meters
+	private double actualSpeed;					//meters per second
+	private double setpointSpeed;				//meters per second
+	private double speedLimit;					//meters per second
+	private double power;						//watts
+	private double safeBrakingDistance;			//meters
+	private double estimatedBrakingDistance;	//meters
 	private boolean rightDoor;
 	private boolean leftDoor;
 	private boolean lightState;
@@ -84,7 +85,7 @@ public class TrnController {
 		sBrakes = false;
 		eBrakes = false;
 		passEBrakes = false;
-		temperature = 70;
+		temperature = 69;
 		mapInfo = map;
 		stationList = s;
 		trainDirection = 0;
@@ -97,6 +98,7 @@ public class TrnController {
 	
 	public boolean updateTime() {
 		actualSpeed = controller.receiveTrainActualSpeed(trainID);
+		estimatedBrakingDistance = estimateBrakingDist(actualSpeed);
 		ctcAuth = controller.receiveCtcAuthority(trainID);
 		passEBrakes = controller.receivePassengerEmergencyBrake(trainID);
 		currentBlock = controller.receiveTrainPosition(trainID);
@@ -305,7 +307,7 @@ public class TrnController {
 			eBrakesOn();
 			return true;
 		}*/
-		else if ((overallAuth <= safeBrakingDistance && actualSpeed > 0) || (distToStation <= safeBrakingDistance && actualSpeed > 0)) {
+		else if ((overallAuth <= safeBrakingDistance && actualSpeed > 0 && blockMode == 0) || (distToStation <= safeBrakingDistance && actualSpeed > 0 && blockMode == 0) || (overallAuth <= estimatedBrakingDistance && actualSpeed > 0 && blockMode == 1) || (distToStation <= estimatedBrakingDistance && actualSpeed > 0 && blockMode == 1)) {
 			engineOff();
 			sBrakesOn();
 			return true;
@@ -419,6 +421,12 @@ public class TrnController {
 				passed = true;
 			}
 		}
+	}
+	
+	private double estimateBrakingDist(double initVelocity){
+    	//Service Break Decel = -1.2 as given
+    	double stopDist = ((-1)*(initVelocity)*(initVelocity)) / (2*(-1.2));
+    	return stopDist;
 	}
 	
 	public void signalReady() {
