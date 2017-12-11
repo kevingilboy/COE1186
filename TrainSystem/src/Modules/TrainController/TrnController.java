@@ -422,7 +422,7 @@ public class TrnController {
 	private double estimateBrakingDist(double initVelocity){
     	//Service Break Decel = -1.2 as given
     	double stopDist = ((-1)*(initVelocity)*(initVelocity)) / (2*(-1.2));
-    	return stopDist;
+    	return stopDist+5;
 	}
 	
 	public void signalReady() {
