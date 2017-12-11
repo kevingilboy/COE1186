@@ -143,6 +143,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         drawSwitches(g2d);
         drawLights(g2d);
         drawSelectedBlock(g2d);
+        drawBeacons(g2d);
         drawTrains(g2d);
 
         if (showArrows){
@@ -162,13 +163,13 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
 
         // Draw horizontal arrow starting in (0, 0)
         g.drawLine(0, 0, len, 0);
-        g.fillPolygon(new int[] {len+2, len-ARR_SIZE*2, len-ARR_SIZE*2, len+2},
+        g.fillPolygon(new int[] {len+2, len-(ARR_SIZE*2+1), len-(ARR_SIZE*2+1), len+2},
                       new int[] {0, -(ARR_SIZE-1), ARR_SIZE-1, 0}, 4);
     }
 
     public void drawDirections(Graphics2D g2d){
-        g2d.setColor(new Color(0, 0, 0, 35));
-        g2d.fillRect(0, 0, 334, 448);
+        g2d.setColor(new Color(0, 0, 0, 80));
+        g2d.fillRect(0, 0, 335, 448);
 
         for (int i = 0; i < blocks.size(); i+=3){
             double[] x_coords = blocks.get(i).getXCoordinates();
@@ -176,13 +177,25 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
 
             if (blocks.get(i).getDirection() != 0){
 
+                g2d.setColor(Color.WHITE);
                 if (blocks.get(i).getDirection() == 1){
-                    g2d.setColor(Color.ORANGE);
                     drawArrow((Graphics)g2d, (int)x_coords[x_coords.length/2-15], (int)y_coords[x_coords.length/2-15], (int)x_coords[x_coords.length/2], (int)y_coords[x_coords.length/2]);
                 }  else {
-                    g2d.setColor(Color.ORANGE);
                     drawArrow((Graphics)g2d, (int)x_coords[x_coords.length/2], (int)y_coords[x_coords.length/2], (int)x_coords[x_coords.length/2-15], (int)y_coords[x_coords.length/2-15]);
                 }
+            }
+        }
+    }
+
+    public void drawBeacons(Graphics2D g2d){
+        g2d.setColor(new Color(0, 100, 255));
+
+        for (int i = 0; i < blocks.size(); i++){
+            double[] x_coords = blocks.get(i).getXCoordinates();
+            double[] y_coords = blocks.get(i).getYCoordinates();
+
+            if (blocks.get(i).getBeacon() != null){
+                g2d.fillOval((int)x_coords[x_coords.length/2]-1, (int)y_coords[x_coords.length/2]-1, 3, 3);
             }
         }
     }
