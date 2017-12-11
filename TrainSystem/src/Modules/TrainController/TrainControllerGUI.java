@@ -154,8 +154,8 @@ public class TrainControllerGUI {
 	public TrainControllerGUI() {
 		setLookAndFeel();
 
-		p = 60000;
-		i = 726.41;
+		p = 6000;
+		i = 7.2641;
 
 		ready = true;
 		guiList = new ArrayList<TrnControllerGUI>();
@@ -184,11 +184,6 @@ public class TrainControllerGUI {
 		panel.setLayout(null);
 		panel.setBorder(blackline);
 		
-		/*JLabel titleLabel = new JLabel("Train Controller Module");
-		titleLabel.setFont(new Font("Lucida Grande", Font.BOLD, 20));
-		titleLabel.setBounds(95, 15, 253, 42);
-		contentPane.add(titleLabel);*/
-		
 		JLabel activeLabel = new JLabel("ACTIVE TRAINS");
 		stylizeHeadingLabel(activeLabel);
 		activeLabel.setBounds(30, 15, 200, 32);
@@ -204,11 +199,11 @@ public class TrainControllerGUI {
 		dispatchLabel.setBounds(30, 35, 140, 16);
 		panel.add(dispatchLabel);
 		
-		pField = new JTextField();			//p
+		pField = new JTextField();
 		stylizeTextField(pField);
 		pField.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyPressed(KeyEvent e) {
+			public void keyPressed(KeyEvent e) {	//if the user is changing p, the TrainController will not dispatch a new train until they press confirm
 				ready = false;
 				confirmButton.setEnabled(true);
 			}
@@ -218,9 +213,9 @@ public class TrainControllerGUI {
 		pField.setColumns(10);
 		pField.setText(p + "");
 		
-		iField = new JTextField();			//i
+		iField = new JTextField();
 		stylizeTextField(iField);
-		iField.addKeyListener(new KeyAdapter() {
+		iField.addKeyListener(new KeyAdapter() {	////if the user is changing i, the TrainController will not dispatch a new train until they press confirm
 			@Override
 			public void keyPressed(KeyEvent e) {
 				ready = false;
@@ -246,7 +241,7 @@ public class TrainControllerGUI {
 		stylizeButton(confirmButton);
 		confirmButton.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e) {	//verify that the inputs are valid numbers and tell the TrainController it is ready to dispatch
 				try {
 					p = Double.parseDouble(pField.getText());
 					pField.setText(p + "");
@@ -277,8 +272,8 @@ public class TrainControllerGUI {
 		frame.setVisible(false);
 	}
 	
+	//adds a new TrnController object to the arraylist, and adds a new label and button to the gui
 	public void add(TrnControllerGUI g) {
-		//System.out.println("add");
 		guiList.add(g);
 		
 		JLabel L = new JLabel(g.getId());
@@ -292,7 +287,7 @@ public class TrainControllerGUI {
 		buttonList.add(B);
 		B.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e) {	//finds the index of the button and sets the same index controller gui to visible
 				int i = buttonList.indexOf(B);
 				TrnControllerGUI I = guiList.get(i);
 				I.setVisible(true);
@@ -304,7 +299,7 @@ public class TrainControllerGUI {
 		contentPane.add(B);
 		
 		yCount = yCount + 50;
-		if (yCount >= (height - 50)) {
+		if (yCount >= (height - 50)) {	//increases size of frame if the buttons need more space
 			height = height + 50;
 			logoHeight = logoHeight + 50;
 			frame.setBounds(100, 500, 450, height);
@@ -332,19 +327,19 @@ public class TrainControllerGUI {
 	}
 
 	public void trainPoofByName(String name) {
-		// TODO Auto-generated method stub
 		JButton B;
 		JLabel L;
 		Point P;
+		TrnController G;
 		int j, y;
 		int i = -1;
-		for (JLabel l : idList) {
+		for (JLabel l : idList) {		//finds the index of JLabel that has the same id as the id to delete
 			if (l.getText().equals(name)) {
 				i = idList.indexOf(l);
 				break;
 			}
 		}
-		if (i != -1) {
+		if (i != -1) {					//moves all the other buttons up on the gui
 			for (j = (i + 1); j < idList.size(); j++) {
 				B = buttonList.get(j);
 				P = B.getLocation();
@@ -353,12 +348,14 @@ public class TrainControllerGUI {
 				L = idList.get(j);
 				L.setBounds(30, y - 42, 100, 24);
 			}
-			B = buttonList.remove(i);
+			B = buttonList.remove(i);	//sets the label, button, and deleted controller object to null
 			B.setVisible(false);
 			B = null;
 			L = idList.remove(i);
 			L.setVisible(false);
 			L = null;
+			G = guiList.remove(i);
+			G = null;
 		}
 	}
 }
