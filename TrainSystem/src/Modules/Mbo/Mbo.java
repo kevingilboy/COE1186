@@ -171,7 +171,7 @@ public class Mbo implements Module {
      		Double.toString(pos[1]);
 		crc.update(signal.getBytes());
 		//System.out.printf("Checksum %s: %x %x\n", train, crc.getValue(), checksum);
-		if (checksum != crc.getValue()) return false;
+		//if (checksum != crc.getValue()) return false;
 
 		return receiveTrainPosition(train, pos, checksum);
 	}	
