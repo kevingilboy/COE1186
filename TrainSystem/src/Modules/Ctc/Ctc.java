@@ -718,9 +718,14 @@ public class Ctc implements Module,TimeControl {
 		/*
 		 * AUTO-DISPATCH
 		 */
+		ArrayList<String[]> schedulesToIterate = new ArrayList<String[]>();
 		for(Schedule schedule : schedules.values()) {
-			if(schedule.departureTime.equals(currentTime)) {
-				String name = schedule.name;
+			schedulesToIterate.add(new String[] {schedule.departureTime.toString(), schedule.name});
+		}
+		for(int i=0; i<schedulesToIterate.size(); i++) {
+			String [] currSchedule = schedulesToIterate.get(i);
+			if((new SimTime(currSchedule[0])).equals(currentTime)) {
+				String name = currSchedule[1];
 				dispatchTrain(name);
 				gui.autoDispatchFromQueue(name);
 			}

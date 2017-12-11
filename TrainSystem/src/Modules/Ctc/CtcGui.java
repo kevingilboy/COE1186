@@ -425,15 +425,19 @@ public class CtcGui {
 					//Read the file
 					FileReader fr = new FileReader(f);
 					br = new BufferedReader(fr);
+					br.readLine();
 					
 					while ((currentLine = br.readLine()) != null){
+						currentLine = br.readLine();
+						if(currentLine.equals("") || currentLine==null) break;
+						
 						Schedule schedule;
 						String [] csvline = currentLine.split(delimeter);
 						
 						//Add the station metadata
 						schedule = csvline[2].toUpperCase().equals("GREEN") ? new Schedule(Line.GREEN) : new Schedule(Line.RED);
-						schedule.name = csvline[1];
-						schedule.departureTime = new SimTime(csvline[2]);
+						schedule.name = csvline[0];
+						schedule.departureTime = new SimTime(csvline[1]);
 						int numStops = Integer.parseInt(csvline[3]);
 						
 						//Add the stops
