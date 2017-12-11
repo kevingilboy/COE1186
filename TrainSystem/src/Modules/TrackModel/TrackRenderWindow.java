@@ -54,6 +54,7 @@ public class TrackRenderWindow extends JPanel{
     ArrayList<Double[]> xy_coords = new ArrayList<Double[]>();
     ArrayList<Double[]> previous_xy_coords = new ArrayList<Double[]>();
     ArrayList<Boolean> trainsMoving = new ArrayList<Boolean>();
+    ArrayList<Integer[]> passengers = new ArrayList<Integer[]>(); // "passengers, passengersEntering, passengersLeaving"
 
     // Control variables for drawing shapes
     public final int ARR_SIZE = 4;
