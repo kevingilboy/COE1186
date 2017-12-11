@@ -50,7 +50,8 @@ public class Ctc implements Module,TimeControl {
 	
 	private boolean isMovingBlockMode = false;
 	
-	private String[] bidirectionalReservation = new String[] {"","-1","-1"};
+	private String[] bidirectionalReservationGreen = new String[] {"","-1","-1"};
+	private String[] bidirectionalReservationRed = new String[] {"","-1","-1"};
 	
 	boolean lockReservation = false;
 	int testTrainNum = 0;
@@ -400,6 +401,8 @@ public class Ctc implements Module,TimeControl {
 		int prevBlockId = train.prevLocation;
 		int stopBlockId = train.schedule.getNextStop();
 		
+		String[] bidirectionalReservation = train.line==Line.GREEN?bidirectionalReservationGreen:bidirectionalReservationRed;
+		
 		//If no stops, send blank authority
 		if(stopBlockId == -1) {
 			return path;
@@ -567,13 +570,27 @@ public class Ctc implements Module,TimeControl {
 					catch(IndexOutOfBoundsException e) {
 						break;
 					}
+					if(nb==-1) {
+						endBlock = train.line.yardIn;
+						break;
+					}
 				}while(train.line.blocks[nb].getDirection()==0);
-				bidirectionalReservation = new String[] {train.name,Integer.toString(startBlock),Integer.toString(endBlock)};
+				if(train.line==Line.GREEN) {
+					bidirectionalReservationGreen = new String[] {train.name,Integer.toString(startBlock),Integer.toString(endBlock)};
+				}
+				else if(train.line==Line.RED) {
+					bidirectionalReservationRed = new String[] {train.name,Integer.toString(startBlock),Integer.toString(endBlock)};
+				}
 			}
 		}
 		else if(bidirectionalReservation[0].equals(train.name) && path.size()>=4 && train.line.blocks[path.get(3)].getDirection()!=0){
 			//Retract a reservation
-			bidirectionalReservation = new String[] {"","-1","-1"};
+			if(train.line==Line.GREEN) {
+				bidirectionalReservationGreen = new String[] {"","-1","-1"};
+			}
+			else if(train.line==Line.RED) {
+				bidirectionalReservationRed = new String[] {"","-1","-1"};
+			}
 		}
 		
 		//Remove the first only if not coming from the yard
