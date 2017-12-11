@@ -740,6 +740,13 @@ public class Train {
     }
     
     /**
+     * Computes the current weight of the train
+     */
+    private double getWeight() {
+    	this.trainWeight;
+    }
+    
+    /**
      * Sets the current speed limit based on the current position of the train
      * 
      * @param speedLim
