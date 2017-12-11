@@ -81,7 +81,7 @@ public class TrnController {
 		sBrakes = false;
 		eBrakes = false;
 		passEBrakes = false;
-		temperature = 70;
+		temperature = 69;
 		mapInfo = map;
 		stationList = s;
 		trainDirection = 0;
