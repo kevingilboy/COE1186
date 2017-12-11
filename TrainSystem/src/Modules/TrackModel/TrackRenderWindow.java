@@ -727,7 +727,7 @@ public class TrackRenderWindow extends JPanel{
            
             // Highlight the currently occupied block
             // Outer stroke
-            g2d.setColor(new Color(0, 100, 255));
+            g2d.setColor(new Color(0, 100, 255,150));
             g2d.setStroke(new BasicStroke(10));
 
             double[] x_coords = blocks.get(positions.get(i).getCurrentBlock()).getXCoordinates();
@@ -800,7 +800,7 @@ public class TrackRenderWindow extends JPanel{
             // Draw the train's information on top of it
             // -----------------------> DISPLAY TRAIN NAME <---------------------------
             g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 16)); 
-            String trainInfo = trainIDs.get(i).substring(0, 4);
+            String trainInfo = trainIDs.get(i);
             int text_x = ((xy_coords.get(i))[0]).intValue() - 16;
             int text_y = ((xy_coords.get(i))[1]).intValue() - 6;
             
