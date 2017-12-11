@@ -255,7 +255,13 @@ public class TrackController implements Module{
 		double distAuth = 0;
 		for(int i=0; i<authority.length; i++){
 			if(authority[i] >= 0){
-				distAuth += trackModel.getBlock(associatedLine, authority[i]).getLength();
+				if(i == (authority.length-1)){
+					//add half the length for the final block so that we ensure we stop within that block
+					distAuth += (trackModel.getBlock(associatedLine, authority[i]).getLength() /2);
+				} else {
+					distAuth += trackModel.getBlock(associatedLine, authority[i]).getLength();
+				}
+				
 			}
 		}
 		return distAuth;
