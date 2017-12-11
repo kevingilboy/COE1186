@@ -72,7 +72,7 @@ public class TrackRenderWindow extends JPanel{
     public void initializeWindow(int width, int height){
         setBounds(0, 0, width, height);
         setLayout(null);
-        setBackground(new Color(36, 39, 45)); // Dark-navy
+        setBackground(new Color(46, 49, 55)); // Dark-navy
         setVisible(true);
     }
 
@@ -304,7 +304,7 @@ public class TrackRenderWindow extends JPanel{
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // Draw the track shadow
-        g2d.setColor(new Color(26, 29, 35));
+        g2d.setColor(new Color(36, 39, 45));
         g2d.setStroke(new BasicStroke(8));
         
         for (int i = 0; i < blocks.size(); i++){
@@ -315,7 +315,7 @@ public class TrackRenderWindow extends JPanel{
             for (int j = 3; j < x_coords.length-2; j+=3){
                 
                 int x0 = (int)x_coords[j-3];
-                int y0 = (int)y_coords[j-3] + 4;
+                int y0 = (int)y_coords[j-3] + 5;
                 int x1 = (int)x_coords[j];
                 int y1 = (int)y_coords[j];
 
