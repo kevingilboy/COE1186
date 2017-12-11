@@ -274,7 +274,7 @@ public class TrackController implements Module{
 	 * @param blockId An integer indicating the block
 	 * @param state A boolean specifying the desired state
 	 */
-	public boolean transmitCtcLightState(int blockId, boolean state){
+	public void transmitCtcLightState(int blockId, boolean state){
 		transmitLightState(blockId, state);
 	}
 	

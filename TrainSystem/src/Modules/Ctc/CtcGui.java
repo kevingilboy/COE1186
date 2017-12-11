@@ -1055,6 +1055,34 @@ public class CtcGui {
 		lblwaysideGuis.setBounds(920, 621, 200, 57);
 		frame.getContentPane().add(lblwaysideGuis);
 		
+		JCheckBox chckbxRmanual = new JCheckBox("R-MANUAL");
+		chckbxRmanual.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Boolean checkStatus = chckbxRmanual.isSelected();
+				
+				ctc.trackControllers[2].manualMode = checkStatus;
+				ctc.trackControllers[3].manualMode = checkStatus;	
+			}
+		});
+		chckbxRmanual.setForeground(Color.WHITE);
+		chckbxRmanual.setBackground(new Color(20, 20, 20));
+		chckbxRmanual.setBounds(1066, 674, 90, 18);
+		frame.getContentPane().add(chckbxRmanual);
+		
+		JCheckBox chckbxGmanual = new JCheckBox("G-MANUAL");
+		chckbxGmanual.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Boolean checkStatus = chckbxGmanual.isSelected();
+				
+				ctc.trackControllers[0].manualMode = checkStatus;
+				ctc.trackControllers[1].manualMode = checkStatus;							
+			}
+		});
+		chckbxGmanual.setForeground(Color.WHITE);
+		chckbxGmanual.setBackground(new Color(20, 20, 20));
+		chckbxGmanual.setBounds(1066, 704, 90, 18);
+		frame.getContentPane().add(chckbxGmanual);
+		
 		rdbtnFixedBlockMode = new JRadioButton("Fixed Block Mode");
 		stylizeRadioButton(rdbtnFixedBlockMode);
 		rdbtnFixedBlockMode.addActionListener(new ActionListener() {
