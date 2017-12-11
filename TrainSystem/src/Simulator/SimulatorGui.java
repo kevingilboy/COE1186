@@ -138,12 +138,18 @@ public class SimulatorGui {
 		 * ------------------------------
 		 */
 		cbTrainModelTrains = new JComboBox<String>();
+		cbTrainModelTrains.addItem("...");
 		cbTrainModelTrains.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String trainName = (String)cbTrainModelTrains.getSelectedItem();
+				if(trainName.equals("")) {
+					return;
+				}
+				
 				openGui(ModuleType.TRAINMODEL,trainName);
+				cbTrainModelTrains.setSelectedIndex(0);
 			}
-		});
+		});		
 		cbTrainModelTrains.setBounds(656, 562, 52, 39);
 		frame.getContentPane().add(cbTrainModelTrains);
 		
@@ -162,10 +168,16 @@ public class SimulatorGui {
 		frame.getContentPane().add(btnTraincontroller);
 		
 		cbTrainControllerTrains = new JComboBox<String>();
+		cbTrainControllerTrains.addItem("...");
 		cbTrainControllerTrains.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String trainName = (String)cbTrainControllerTrains.getSelectedItem();
+				if(trainName.equals("")) {
+					return;
+				}
+				
 				openGui(ModuleType.TRAINCONTROLLER,trainName);
+				cbTrainControllerTrains.setSelectedIndex(0);
 			}
 		});
 		cbTrainControllerTrains.setBounds(469, 653, 52, 39);
@@ -290,10 +302,12 @@ public class SimulatorGui {
 		
 		Boolean changed = false;
 		
+		newTrains.addElement("...");
 		for(String key : simulator.ctc.trains.keySet()) {
 			if(currentTrains.getIndexOf(key)==-1) {
 				changed = true;
 			}
+			
 			newTrains.addElement(key);
 		}
 		

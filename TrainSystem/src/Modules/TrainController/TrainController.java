@@ -47,7 +47,7 @@ public class TrainController implements Module {
 	}
 
 	public TrnController getController(String ID){
-		return controlList.get(ID.hashCode());
+		return controlList.get(ID);
 	}
 	
 	public void dispatchTrain(String trainID, String line) {
