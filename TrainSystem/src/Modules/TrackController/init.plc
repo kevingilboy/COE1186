@@ -1,5 +1,5 @@
 proceed: 		((!nb_occupied) && (!nnb_occupied))
-lights: 		((!norm_occupied) && (!alt_occupied))
+lights: 		((!norm_occupied || !norm_reserved) && (!alt_occupied || !alt_reserved))
 crossing: 		((pb_occupied) || (cb_occupied) || (nb_occupied))
 switch: 		((!norm_occupied) && (!alt_occupied))
 state:			((nb_state && (nb_port_norm == nnb)) || (!nb_state && (nb_port_alt == nnb)))

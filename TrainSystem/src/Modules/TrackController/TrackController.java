@@ -274,9 +274,9 @@ public class TrackController implements Module{
 	 * @param blockId An integer indicating the block
 	 * @param state A boolean specifying the desired state
 	 */
+	//TODO fix header and write function
 	public void transmitCtcReservation(int blockId, boolean reserved){
-		//TODO
-		//transmitLightState(blockId, state);
+		trackModel.getBlock(associatedLine, blockId).setReserved(reserved);
 	}
 	
 	/**
