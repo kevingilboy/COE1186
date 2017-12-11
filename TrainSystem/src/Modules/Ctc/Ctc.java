@@ -404,7 +404,7 @@ public class Ctc implements Module,TimeControl {
 		if(stopBlockId == -1) {
 			return path;
 		}
-		System.out.println("    ");
+		//System.out.println("    ");
 		q.add(new ArrayList<Integer>(Arrays.asList(prevBlockId,currBlockId)));
 		
 		while(!q.isEmpty()) {
