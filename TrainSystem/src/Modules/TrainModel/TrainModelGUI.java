@@ -569,7 +569,7 @@ public class TrainModelGUI extends JFrame {
 		contentPane.add(lblHeight);
 
 		stylizeInfoLabel(lblWeight);
-		lblWeight.setBounds(60, 125, 69, 20);
+		lblWeight.setBounds(60, 125, 75, 20);
 		contentPane.add(lblWeight);
 
 		stylizeInfoLabel(lblLength);
@@ -610,7 +610,7 @@ public class TrainModelGUI extends JFrame {
 		contentPane.add(lblTimeOfArrival);
 		
 		stylizeInfoLabel(lblStatus);
-		lblStatus.setBounds(60, 447, 69, 20);
+		lblStatus.setBounds(60, 447, 75, 20);
 		contentPane.add(lblStatus);
 
 		arrivalStatusLabel.setHorizontalAlignment(SwingConstants.TRAILING);

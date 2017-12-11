@@ -251,7 +251,7 @@ public class Train {
         this.trainModelGUI.heightVal.setText(Double.toString(truncateTo(this.trainHeight, 2)));
         this.trainModelGUI.widthVal.setText(Double.toString(truncateTo(this.trainWidth, 2)));
         this.trainModelGUI.lengthVal.setText(Double.toString(truncateTo(this.trainLength, 2)));
-        this.trainModelGUI.weightVal.setText(Double.toString(truncateTo(this.trainWeight, 2)));
+        this.trainModelGUI.weightVal.setText(Integer.toString(((int)this.trainWeight)));
         this.trainModelGUI.capacityVal.setText(Integer.toString(this.trainCapacity));
         this.trainModelGUI.powerVal.setText(Double.toString(truncateTo(this.powerIn/1000,2)));
         
