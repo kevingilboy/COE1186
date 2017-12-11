@@ -21,6 +21,7 @@ public class TrackController implements Module{
 	public String controllerName;
 	public String associatedLine;
 	public String[] associatedBlocks;
+	public boolean isMovingBlockMode;
 	//Internal variables
 	private TrackController tc;
 	private String initialPLCPath = "Modules/TrackController/init.plc";

@@ -107,6 +107,9 @@ public class Ctc implements Module,TimeControl {
 	 */
 	protected void enableMovingBlockMode(Boolean isMovingBlockMode) {
 		this.isMovingBlockMode = isMovingBlockMode;
+		for(TrackController wayside : trackControllers) {
+			wayside.isMovingBlockMode = isMovingBlockMode;
+		}
 		simulator.transmitEnableMovingBlockMode(isMovingBlockMode);
 	}
 	
