@@ -386,7 +386,6 @@ public class Ctc implements Module,TimeControl {
 			path = q.remove();
 			currBlockId = path.get(path.size()-1);
 			prevBlockId = path.get(path.size()-2);
-				
 			//TODO below is a temporary fix for the switch issue
 			if(currBlockId>train.line.yardOut ||currBlockId<0) continue;
 			
@@ -410,16 +409,16 @@ public class Ctc implements Module,TimeControl {
 					locationEnd = 1+sub.indexOf(Integer.parseInt(bidirectionalReservation[2]));
 				}
 				if(locationStart==-1 && locationEnd!=-1) {
-					path = new ArrayList<Integer>(path.subList(0, locationEnd-3));
+					path = new ArrayList<Integer>(path.subList(0, locationEnd-2));
 				}
 				else if(locationEnd==-1 && locationStart!=-1) {
-					path = new ArrayList<Integer>(path.subList(0, locationStart-3));
+					path = new ArrayList<Integer>(path.subList(0, locationStart-2));
 				}
 				else if(locationStart<locationEnd){
-					path = new ArrayList<Integer>(path.subList(0, locationStart-3));
+					path = new ArrayList<Integer>(path.subList(0, locationStart-2));
 				}
 				else if(locationEnd<=locationStart) {
-					path = new ArrayList<Integer>(path.subList(0, locationEnd-3));
+					path = new ArrayList<Integer>(path.subList(0, locationEnd-2));
 				}
 				System.out.println("");
 				continue;
