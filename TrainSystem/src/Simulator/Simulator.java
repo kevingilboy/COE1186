@@ -1,6 +1,7 @@
 package Simulator;
 
 import Shared.*;
+import Shared.Module;
 
 import Modules.Ctc.*;
 import Modules.TrackController.*;
@@ -9,6 +10,7 @@ import Modules.TrainModel.*;
 import Modules.TrainController.*;
 import Modules.Mbo.*;
 
+import java.awt.EventQueue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -29,68 +31,134 @@ public class Simulator {
 	public SimTime currentTime = new SimTime("07:00:00");
 	public SimTime endTime = new SimTime("21:00:00");
 	
-	public double temperature;
-	public String weather;
+	public double temperature = 69;
+	public String weather = "SUNNY";
 	
 	private Timer timer;
 	public boolean simulationRunning = false;
 	private boolean timerTaskRunning = false;
 	
-	private Module[] modules;
-	private Ctc ctc;
-	private TrackController trackController;
-	private TrackModel trackModel;
-	private TrainModel trainModel;
-	private TrainController trainController;
-	private Mbo mbo;
+	private SimulatorGui simulatorGui;
+	private boolean simulatorGuiReady = false;
 	
-	public Simulator() throws InterruptedException {	
-
+	private Module[] modules;
+	
+	protected Ctc ctc;
+	protected TrackModel trackModel;
+	protected TrainModel trainModel;
+	protected TrainController trainController;
+	protected Mbo mbo;
+	
+	public Simulator() throws InterruptedException {
 		initializeSystemFonts();
-
-		//Initialize all modules
-		ctc = new Ctc();
-		//trackController = new TrackController();
-		trackModel = new TrackModel();
-		trainController = new TrainController();
-		trainModel = new TrainModel();
-		mbo = new Mbo();
+		
+		//Self declaration needed to pass simulator into new thread
+		Simulator simulator = this;
+		
+		//Launch Simulator GUI
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					simulatorGui = new SimulatorGui(simulator);
+					simulatorGuiReady = true;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		//Wait for the Simulator GUI to load
+		while(!simulatorGuiReady) {
+			sleep(200);
+		}
+		
+		initializeModules();
 		
 		modules = new Module[]{ctc,mbo,trainController,trackModel,trainModel};
 		
+		initializeCommunication();
+		
+		//Wait for Ctc to press play...
+		//play();
+	}
+
+	/*
+	 * ------------------------------
+	 *  MODULE INITIALIZATION
+	 * ------------------------------
+	 */
+	private void initializeModules() {
+
+		//Initialize all modules
+		ctc = new Ctc();
+		simulatorGui.moduleObjectInitialized(ModuleType.CTC);
+		simulatorGui.moduleObjectInitialized(ModuleType.TRACKCONTROLLER);
+		
+		trackModel = new TrackModel();
+		simulatorGui.moduleObjectInitialized(ModuleType.TRACKMODEL);
+		
+		trainModel = new TrainModel();
+		simulatorGui.moduleObjectInitialized(ModuleType.TRAINMODEL);
+		
+		trainController = new TrainController();
+		simulatorGui.moduleObjectInitialized(ModuleType.TRAINCONTROLLER);
+		
+		mbo = new Mbo();
+		simulatorGui.moduleObjectInitialized(ModuleType.MBO);
+	}
+	
+	private void initializeCommunication() {
 		//Pass cross references
 		ctc.simulator = this;
 		ctc.trackModel = trackModel;
 		ctc.trainModel = trainModel;
 		ctc.trainController = trainController;
+		simulatorGui.moduleCommunicationInitialized(ModuleType.CTC);
+		simulatorGui.moduleCommunicationInitialized(ModuleType.TRACKCONTROLLER);
 
 		//trackController.trackModel = trackModel;
 
 		trackModel.simulator = this;
 		trackModel.trainModel = trainModel;
 		trackModel.ctc = ctc;
+		simulatorGui.moduleCommunicationInitialized(ModuleType.TRACKMODEL);
 
 		trainModel.trackModel = trackModel;
 		trainModel.mbo = mbo;
+		simulatorGui.moduleCommunicationInitialized(ModuleType.TRAINMODEL);
 
 		trainController.trackModel = trackModel;
 		trainController.trainModel = trainModel;
+		simulatorGui.moduleCommunicationInitialized(ModuleType.TRAINCONTROLLER);
 
 		mbo.trainController = trainController;
-		
-		temperature = 69;
-		weather = "SUNNY";
+		simulatorGui.moduleCommunicationInitialized(ModuleType.MBO);
 		
 		//Tell each module that communication has been established
 		for(Module module : modules) {
 			//Wait for module to finish before proceeding
 			while(!module.communicationEstablished()) {};
 		}
-		
-		//Wait for Ctc to press play...
-		//play();
+	}	
+	
+	/*
+	 * ------------------------------
+	 *  THREAD CONTROL
+	 * ------------------------------
+	 */
+	private void sleep(int time) {
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
+	/*
+	 * ------------------------------
+	 *  SIMULATION TIME CONTROL
+	 * ------------------------------
+	 */
 	public void pause() {
 		//Cancel the timer
 	    this.timer.cancel();
@@ -134,6 +202,7 @@ public class Simulator {
 				while(!module.updateTime(currentTime)) {};
 			}
 			trackModel.updateDynamicDisplay(currentTime);
+			simulatorGui.repaint();
 			
 			//Increment time
 			currentTime.incrementTime(ticksPerSecond);
@@ -160,6 +229,13 @@ public class Simulator {
 	public void transmitEnableMovingBlockMode(Boolean isMovingBlockMode) {
 		trainController.enableMovingBlockMode(isMovingBlockMode);
 		mbo.enableMovingBlockMode(isMovingBlockMode);
+	}
+	
+	public void trainPoofByName(String line, String name) {
+		line = line.toUpperCase();
+		trackModel.trainPoofByName(line, name);
+		trainModel.trainPoofByName(line, name);
+		trainController.trainPoofByName(line, name);
 	}
 	
 	public static void main(String[] args) throws InterruptedException {

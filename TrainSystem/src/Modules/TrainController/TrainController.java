@@ -33,10 +33,21 @@ public class TrainController implements Module {
 	
 	public final double SPEEDCONVERSION = 3.6;			//1 m/s = 3.6 kph
 
+	/**
+	 * Called by the SimulatorGUI class to show the GUI when this module is selected
+	 */
+	public void showGUI(){
+		mainGUI.showGUI();
+	}
+
 	public TrainController() {
 		controlList = new HashMap<String, TrnController>();
 		mainGUI = new TrainControllerGUI();
 		stationList = new String[]{"", "Pioneer", "Edgebrook", "Station", "Whited", "South Bank", "Central", "Inglewood", "Overbrook", "Glenbury", "Dormont", "Mt. Lebanon", "Poplar", "Castle Shannon", "Glenbury", "Overbrook", "Inglewood", "Central", "Shadyside", "Herron Avenue", "Swissville", "Penn Station", "Steel Plaza", "First Avenue", "Station Square", "South Hills Junction"};
+	}
+
+	public TrnController getController(String ID){
+		return controlList.get(ID);
 	}
 	
 	public void dispatchTrain(String trainID, String line) {
@@ -57,11 +68,13 @@ public class TrainController implements Module {
 	
 	public void setMboAuthority(String trainID, double auth) {
 		TrnController C = controlList.get(trainID);
+		if(C==null) return;
 		C.setMboAuthority(auth);
 	}
 	
 	public void setSafeBrakingDistance(String trainID, double dist) {
 		TrnController C = controlList.get(trainID);
+		if(C==null) return;
 		C.setSafeBrakingDistance(dist);
 	}
 	
@@ -180,5 +193,11 @@ public class TrainController implements Module {
 	public boolean communicationEstablished() {
 		receiveMap();
 		return true;
+	}
+
+	public void trainPoofByName(String line, String name) {
+		TrnController tc = controlList.remove(name);
+		tc = null;
+		mainGUI.trainPoofByName(name);
 	}
 }

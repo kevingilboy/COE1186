@@ -1,0 +1,5 @@
+package Simulator;
+
+public enum ModuleType {
+	CTC,TRACKCONTROLLER,TRACKMODEL,TRAINCONTROLLER,TRAINMODEL,MBO
+}

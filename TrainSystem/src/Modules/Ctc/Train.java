@@ -14,6 +14,7 @@ public class Train {
 	public Line line;
 	public Schedule schedule;
 	
+	public SimTime arrivalAtCurrLocation;
 	public int currLocation;
 	public int prevLocation;
 	public double suggestedSpeed;
@@ -42,6 +43,8 @@ public class Train {
 		//Not manual mode
 		manualSpeedMode = false;
 		manualSpeed = -1;
+		
+		arrivalAtCurrLocation = new SimTime(23,59,59);
 	}
 	
 }

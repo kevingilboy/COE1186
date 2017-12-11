@@ -113,9 +113,16 @@ public class TrackModelGUI{
 		this.trackModel = trackModel;
 		setLookAndFeel();
 		initialize();
-		frame_tmGUI.setVisible(true);
+		frame_tmGUI.setVisible(false);
 		frame_tmGUI.setResizable(false);
 		initTracksOnStartup();
+	}
+
+	/**
+	 * Called by the SimulatorGUI class to show the GUI when this module is selected
+	 */
+	public void showGUI(){
+		frame_tmGUI.setVisible(true);
 	}
 
 	/*----------------------------------------------------------------------*/
@@ -204,7 +211,7 @@ public class TrackModelGUI{
 		frame_tmGUI.setTitle("Track Model View");
 		frame_tmGUI.getContentPane().setBackground(new Color(26, 29, 35));
 		frame_tmGUI.setBounds(100, 100, 1080, 560);
-		frame_tmGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// frame_tmGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame_tmGUI.getContentPane().setLayout(null);
 		
 		// TRACK IMPORT BUTTON
@@ -808,5 +815,13 @@ public class TrackModelGUI{
 	public void refresh(){
 		showBlockInfo(blockSelected);
 		currentDisplay.dynamicTrackView.refresh();
+	}
+
+	public void trainPoofByName(String line, String name) {
+		if(line.equals("GREEN")) {
+			greenLineDisplay.trainPoofByName(name);
+		} else if (line.equals("RED")){
+			redLineDisplay.trainPoofByName(name);
+		}
 	}
 }

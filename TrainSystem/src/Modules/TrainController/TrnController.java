@@ -49,6 +49,10 @@ public class TrnController {
 	public final int ARRIVED = 1;
 	public final int DEPARTING = 2;
 	public final int ENROUTE = 3;
+
+	public void showGUI(){
+		controlGUI.setVisible(true);
+	}
 	
 	public TrnController(String id, String ln, TrainController C, ArrayList<BlockInfo> map, TrainControllerGUI g, String[] s, double p, double i, int b) {
 		trainID = id;
@@ -422,7 +426,7 @@ public class TrnController {
 	private double estimateBrakingDist(double initVelocity){
     	//Service Break Decel = -1.2 as given
     	double stopDist = ((-1)*(initVelocity)*(initVelocity)) / (2*(-1.2));
-    	return stopDist;
+    	return stopDist+10;
 	}
 	
 	public void signalReady() {
