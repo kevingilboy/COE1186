@@ -210,7 +210,7 @@ public class TrackControllerGUI extends JFrame{
 		
 		JPanel switchPanel = new JPanel();
 		switchPanel.setBorder(null);
-		switchPanel.setBounds(131, 220, 240, 66);
+		switchPanel.setBounds(236, 120, 240, 66);
 		switchPanel.setBackground(new Color(26, 29, 35));
 		trackInfoPanel.add(switchPanel);
 		switchPanel.setLayout(null);
@@ -219,7 +219,7 @@ public class TrackControllerGUI extends JFrame{
 		lightsPanel.setLayout(null);
 		lightsPanel.setBorder(null);
 		lightsPanel.setBackground(new Color(26, 29, 35));
-		lightsPanel.setBounds(131, 103, 240, 123);
+		lightsPanel.setBounds(10, 119, 240, 123);
 		trackInfoPanel.add(lightsPanel);
 		
 		//Separators
@@ -258,7 +258,7 @@ public class TrackControllerGUI extends JFrame{
 		//Block Selectors
 		JLabel labelBlock = new JLabel("BLOCK");
 		stylizeInfoLabel(labelBlock);
-		labelBlock.setBounds(320, 23, 70, 16);
+		labelBlock.setBounds(272, 23, 70, 16);
 		trackSelectorPanel.add(labelBlock);
 		
 		/*JLabel labelSection = new JLabel("Section");
@@ -267,10 +267,10 @@ public class TrackControllerGUI extends JFrame{
 		*/
 		JLabel labelLine = new JLabel("LINE");
 		stylizeInfoLabel(labelLine);
-		labelLine.setBounds(10, 23, 50, 16);
+		labelLine.setBounds(68, 23, 50, 16);
 		trackSelectorPanel.add(labelLine);
 		
-		comboBlock.setBounds(384, 19, 104, 27);
+		comboBlock.setBounds(336, 19, 104, 27);
 		stylizeComboBox(comboBlock);
 		comboBlock.setModel(new DefaultComboBoxModel<String>(blocks));
 		comboBlock.setSelectedIndex(0);
@@ -284,7 +284,7 @@ public class TrackControllerGUI extends JFrame{
 		*/
 		textLine = new JTextField();
 		stylizeTextField(textLine);
-		textLine.setBounds(60, 19, 104, 27);
+		textLine.setBounds(118, 19, 104, 27);
 		trackSelectorPanel.add(textLine);
 		textLine.setHorizontalAlignment(SwingConstants.CENTER);
 		textLine.setText(line.toUpperCase());
@@ -314,13 +314,13 @@ public class TrackControllerGUI extends JFrame{
 		//Block Occupancy
 		JLabel labelOccupancy = new JLabel("OCCUPANCY");
 		stylizeInfoLabel(labelOccupancy);
-		labelOccupancy.setBounds(112, 29, 100, 28);
+		labelOccupancy.setBounds(99, 28, 134, 28);
 		updatePanel.add(labelOccupancy);
 		labelOccupancy.setHorizontalAlignment(SwingConstants.TRAILING);
 		
 		textOccupancy = new JTextField();
 		stylizeTextField(textOccupancy);
-		textOccupancy.setBounds(220, 29, 134, 28);
+		textOccupancy.setBounds(241, 28, 134, 28);
 		updatePanel.add(textOccupancy);
 		textOccupancy.setHorizontalAlignment(SwingConstants.CENTER);
 		textOccupancy.setText("-");
@@ -384,14 +384,14 @@ public class TrackControllerGUI extends JFrame{
 		*/
 		JButton buttonImportPlc = new JButton("IMPORT PLC");
 		stylizeButton(buttonImportPlc);
-		buttonImportPlc.setBounds(180, 294, 117, 29);
+		buttonImportPlc.setBounds(64, 270, 117, 29);
 		buttonImportPlc.addActionListener(new UploadPLC());
 		trackInfoPanel.add(buttonImportPlc);
 		
 		//Pineapple logo
 		JLabel labelPineapple = new JLabel("");
 		labelPineapple.setIcon(new ImageIcon("Modules/TrackModel/Images/HSS_TrainSim_Logo.png"));
-		labelPineapple.setBounds(416, 253, 138, 76);
+		labelPineapple.setBounds(364, 237, 138, 76);
 		trackInfoPanel.add(labelPineapple);
 	}	
 	
