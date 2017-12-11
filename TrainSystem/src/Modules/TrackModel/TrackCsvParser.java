@@ -220,7 +220,6 @@ public class TrackCsvParser{
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(csvFile)));
 
 			while ((currentLine = br.readLine()) != null){
-				System.out.println("PARSING...");
 				String [] data = currentLine.split(delimeter);
 
 				String line 			= data[0];
