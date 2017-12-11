@@ -31,7 +31,11 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 
+import java.awt.FontMetrics;
+
 public class TrackRenderWindow extends JPanel{  
+    public static final boolean PASSENGERS_EMBARKING = true;
+    public static final boolean PASSENGERS_DISEMBARKING = false;
 
     // Reference to the main GUI's selected block
     Block blockSelected;
@@ -49,6 +53,7 @@ public class TrackRenderWindow extends JPanel{
     ArrayList<Position> positions = new ArrayList<Position>();
     ArrayList<Double[]> xy_coords = new ArrayList<Double[]>();
     ArrayList<Double[]> previous_xy_coords = new ArrayList<Double[]>();
+    ArrayList<Boolean> trainsMoving = new ArrayList<Boolean>();
 
     // Control variables for drawing shapes
     public final int ARR_SIZE = 4;
@@ -86,13 +91,46 @@ public class TrackRenderWindow extends JPanel{
     public void dispatchTrain(String trainID, Position pos){
         Double[] xy_coord = {(double)0.0, (double)0.0};
         Double[] previous_xy_coord = {(double)0.0, (double)0.0};
+        Integer[] passengersArr = {0, 0, 0}; // Initialize curr/on/off passengers to 0
+        Boolean moving = true;
 
         xy_coords.add(xy_coord);
         previous_xy_coords.add(previous_xy_coord);
 
         trainIDs.add(trainID);
         positions.add(pos);
+        trainsMoving.add(moving);
+        passengers.add(passengersArr);
+
         activeTrains++;
+    }
+
+    // Get the index of a train by its name
+    public int getTrainIndex(String trainID){
+        return trainIDs.indexOf(trainID);
+    }
+
+    // Update passengers boarding a train
+    public void updatePassengers(String trainID, int numPassengers, boolean embarking){
+
+        int trainIndex = 0; 
+        int currPassengers = (passengers.get(trainIndex))[0];
+        int embarkingPassengers = (passengers.get(trainIndex))[1]; 
+        int disembarkingPassengers = (passengers.get(trainIndex))[2];
+
+        trainIndex = getTrainIndex(trainID);
+        trainsMoving.set(trainIndex, false);
+
+        if (embarking == PASSENGERS_EMBARKING){
+            currPassengers = (passengers.get(trainIndex))[0] + numPassengers;
+            embarkingPassengers = numPassengers;
+        } else if (embarking == PASSENGERS_DISEMBARKING){
+            currPassengers = (passengers.get(trainIndex))[0] - numPassengers;
+            disembarkingPassengers = numPassengers;
+        }
+
+        Integer[] passengersArr = {currPassengers, embarkingPassengers, disembarkingPassengers};
+        passengers.set(trainIndex, passengersArr);
     }
 
     // Remove train sent to the yard 
@@ -136,7 +174,7 @@ public class TrackRenderWindow extends JPanel{
     // display)
     public void showSwitchInfo(Graphics2D g2d){
 
-        g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 16)); 
+        g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 21)); 
         g2d.setColor(Color.ORANGE);
         
         for (int i = 0; i < blocks.size(); i++){
@@ -229,8 +267,6 @@ public class TrackRenderWindow extends JPanel{
     // as small blue dots
     public void drawBeacons(Graphics2D g2d){
 
-        // Nice blue color :)
-        g2d.setColor(new Color(0, 100, 255));
         for (int i = 0; i < blocks.size(); i++){
             if (blocks.get(i).getBeacon() != null){
                 
@@ -242,6 +278,16 @@ public class TrackRenderWindow extends JPanel{
                 int w = 3;
                 int h = 3;
 
+                // Semi transparent glow layer 1
+                g2d.setColor(new Color(0, 100, 255, 50));
+                g2d.fillOval(x - 5, y - 5, w + 10, h + 10);
+
+                // Semi transparent glow layer 2
+                g2d.setColor(new Color(0, 100, 255, 30));
+                g2d.fillOval(x - 12, y - 12, w + 24, h + 24);
+
+                // Nice blue color :)
+                g2d.setColor(new Color(0, 100, 255));
                 g2d.fillOval(x, y, w, h);
             
             }
@@ -285,7 +331,7 @@ public class TrackRenderWindow extends JPanel{
                 double[] y_coords = blocks.get(i).getYCoordinates();
 
                 // Station outer stroke
-                g2d.setStroke(new BasicStroke(17));
+                g2d.setStroke(new BasicStroke(20));
                 g2d.setColor(Color.BLACK);
 
                 for (int j = 2; j < x_coords.length-2; j+=2){
@@ -305,7 +351,7 @@ public class TrackRenderWindow extends JPanel{
                 }
 
                 // Station inner stroke
-                g2d.setStroke(new BasicStroke(13)); 
+                g2d.setStroke(new BasicStroke(15)); 
                 for (int j = 2; j < x_coords.length-2; j+=2){
                     int x0 = (int)x_coords[j-2];
                     int y0 = (int)y_coords[j-2];
@@ -751,7 +797,7 @@ public class TrackRenderWindow extends JPanel{
             g2d.fillRect(train_x, train_y, train_w, train_h);
 
             // Draw the train's information on top of it
-            // --> Train name
+            // -----------------------> DISPLAY TRAIN NAME <---------------------------
             g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 16)); 
             String trainInfo = trainIDs.get(i).substring(0, 4);
             int text_x = ((xy_coords.get(i))[0]).intValue() - 16;
@@ -764,21 +810,98 @@ public class TrackRenderWindow extends JPanel{
             // Text foreground
             g2d.setColor(Color.white);
             g2d.drawString(trainInfo, text_x, text_y - 3);
-           
-            // --> Current block
-            g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 19));
-            String currBlockStr = blocks.get(positions.get(i).getCurrentBlock()).getSection()
-                                + Integer.toString(positions.get(i).getCurrentBlock() + 1);
-            text_x = ((xy_coords.get(i))[0]).intValue() - 16;
-            text_y = ((xy_coords.get(i))[1]).intValue() - 22;
 
-            // Text shadow
-            g2d.setColor(Color.BLACK);
-            g2d.drawString(currBlockStr, text_x, text_y);
+            // ----------------------->  DISPLAY PASSENGERS (current, +embarking, -disembarking)
+            if ((blocks.get(positions.get(i).getCurrentBlock()).getStation() != null) &&
+                (trainsMoving.get(i) == false)) {
 
-            // Text foreground
-            g2d.setColor(new Color(254, 208, 36));
-            g2d.drawString(currBlockStr, text_x, text_y - 3);
+                g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 14));
+                
+                String currPassengersStr = ((passengers.get(i))[0]).toString();
+                String embarkingPassengersStr = ((passengers.get(i))[1]).toString();
+                String disembarkingPassengersStr = ((passengers.get(i))[2]).toString();
+
+                // (current passengers)
+                g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 25));
+                FontMetrics fontMetrics = g2d.getFontMetrics();
+                text_x = ((xy_coords.get(i))[0]).intValue() - 68;
+                text_y = ((xy_coords.get(i))[1]).intValue();
+
+                // Text shadow
+                g2d.setColor(Color.BLACK);
+                g2d.drawString(currPassengersStr, text_x - fontMetrics.stringWidth(currPassengersStr), text_y);
+
+                // Text foreground
+                g2d.setColor(Color.ORANGE);
+                g2d.drawString(currPassengersStr, text_x - fontMetrics.stringWidth(currPassengersStr), text_y - 3);
+
+                // Rectangle behind (+) and (-)
+                int rect_x = ((xy_coords.get(i))[0]).intValue() - 65;
+                int rect_y = ((xy_coords.get(i))[1]).intValue() - 23;
+                int rect_w = 50;
+                int rect_h = 23;
+                g2d.setColor(new Color(0,0,0, 120));
+                g2d.fillRect(rect_x, rect_y, rect_w, rect_h);
+
+                // (+ passengers)
+                g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 16));
+                text_x = ((xy_coords.get(i))[0]).intValue() - 65;
+                text_y = ((xy_coords.get(i))[1]).intValue() - 5;
+
+                // Text shadow
+                g2d.setColor(Color.BLACK);
+                g2d.drawString("+" + embarkingPassengersStr, text_x, text_y);
+
+                // Text foreground
+                g2d.setColor(Color.GREEN);
+                g2d.drawString("+" + embarkingPassengersStr, text_x, text_y - 3);
+
+                // (- passengers)
+                text_x = ((xy_coords.get(i))[0]).intValue() - 35;
+                text_y = ((xy_coords.get(i))[1]).intValue() - 5;
+
+                // Text shadow
+                g2d.setColor(Color.BLACK);
+                g2d.drawString("-" + disembarkingPassengersStr, text_x, text_y);
+
+                // Text foreground
+                g2d.setColor(Color.RED);
+                g2d.drawString("-" + disembarkingPassengersStr, text_x, text_y - 3);
+
+                // -----------------------> DISPLAY STATION NAME BLOCK <---------------------------
+                g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 18));
+                String currBlockStr = blocks.get(positions.get(i).getCurrentBlock()).getStation().getId().toUpperCase();
+
+                text_x = ((xy_coords.get(i))[0]).intValue() - 90;
+                text_y = ((xy_coords.get(i))[1]).intValue() - 24;
+
+                // Text shadow
+                g2d.setColor(Color.BLACK);
+                g2d.drawString(currBlockStr, text_x, text_y);
+
+                // Text foreground
+                g2d.setColor(Color.WHITE);
+                g2d.drawString(currBlockStr, text_x, text_y - 3);
+
+            } else {
+                trainsMoving.set(i, true);    
+
+                // -----------------------> DISPLAY CURRENT BLOCK <---------------------------
+                g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 22));
+                String currBlockStr = blocks.get(positions.get(i).getCurrentBlock()).getSection()
+                                    + Integer.toString(positions.get(i).getCurrentBlock() + 1);
+                text_x = ((xy_coords.get(i))[0]).intValue() - 16;
+                text_y = ((xy_coords.get(i))[1]).intValue() - 22;
+
+                // Text shadow
+                g2d.setColor(Color.BLACK);
+                g2d.drawString(currBlockStr, text_x, text_y);
+
+                // Text foreground
+                g2d.setColor(Color.ORANGE);
+                g2d.drawString(currBlockStr, text_x, text_y - 3);
+
+            }
         }
     }
 

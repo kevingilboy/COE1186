@@ -699,6 +699,13 @@ public class Train {
     }
     
     public void setNumEmbarking(int num) {
+
+        // Limit the number of embarking passengers so that the 
+        // total after boarding does not exceed the capacity
+        // for two cars.
+        if (num > (2*TRAIN_CAPACITY) - this.numPassengers){
+            num = (2*TRAIN_CAPACITY) - this.numPassengers;
+        }
         this.numPassengers += num;
         trkMdl.passengersBoarded(trainID, num);
         trkMdl.sendTicketSalesToCtc(num);
