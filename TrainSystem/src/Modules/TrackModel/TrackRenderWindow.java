@@ -29,8 +29,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 
 public class TrackRenderWindow extends JPanel implements ActionListener{  
+    public final int ARR_SIZE = 4;
+    public boolean showArrows = false;
 
     // Reference to the main GUI's selected block
     Block blockSelected;
@@ -140,7 +143,61 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         drawSwitches(g2d);
         drawLights(g2d);
         drawSelectedBlock(g2d);
+        drawBeacons(g2d);
         drawTrains(g2d);
+
+        if (showArrows){
+            drawDirections(g2d);
+        }
+    }
+
+    void drawArrow(Graphics g1, int x1, int y1, int x2, int y2) {
+        Graphics2D g = (Graphics2D) g1.create();
+
+        double dx = x2 - x1, dy = y2 - y1;
+        double angle = Math.atan2(dy, dx);
+        int len = (int) Math.sqrt(dx*dx + dy*dy);
+        AffineTransform at = AffineTransform.getTranslateInstance(x1, y1);
+        at.concatenate(AffineTransform.getRotateInstance(angle));
+        g.transform(at);
+
+        // Draw horizontal arrow starting in (0, 0)
+        g.drawLine(0, 0, len, 0);
+        g.fillPolygon(new int[] {len+2, len-(ARR_SIZE*2+1), len-(ARR_SIZE*2+1), len+2},
+                      new int[] {0, -(ARR_SIZE-1), ARR_SIZE-1, 0}, 4);
+    }
+
+    public void drawDirections(Graphics2D g2d){
+        g2d.setColor(new Color(0, 0, 0, 80));
+        g2d.fillRect(0, 0, 335, 448);
+
+        for (int i = 0; i < blocks.size(); i+=3){
+            double[] x_coords = blocks.get(i).getXCoordinates();
+            double[] y_coords = blocks.get(i).getYCoordinates();
+
+            if (blocks.get(i).getDirection() != 0){
+
+                g2d.setColor(Color.WHITE);
+                if (blocks.get(i).getDirection() == 1){
+                    drawArrow((Graphics)g2d, (int)x_coords[x_coords.length/2-15], (int)y_coords[x_coords.length/2-15], (int)x_coords[x_coords.length/2], (int)y_coords[x_coords.length/2]);
+                }  else {
+                    drawArrow((Graphics)g2d, (int)x_coords[x_coords.length/2], (int)y_coords[x_coords.length/2], (int)x_coords[x_coords.length/2-15], (int)y_coords[x_coords.length/2-15]);
+                }
+            }
+        }
+    }
+
+    public void drawBeacons(Graphics2D g2d){
+        g2d.setColor(new Color(0, 100, 255));
+
+        for (int i = 0; i < blocks.size(); i++){
+            double[] x_coords = blocks.get(i).getXCoordinates();
+            double[] y_coords = blocks.get(i).getYCoordinates();
+
+            if (blocks.get(i).getBeacon() != null){
+                g2d.fillOval((int)x_coords[x_coords.length/2]-1, (int)y_coords[x_coords.length/2]-1, 3, 3);
+            }
+        }
     }
 
     // Render the track
@@ -185,11 +242,12 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
 
         // Draw the track's line color
         // g2d.setColor(lineColorDimmed);
-        g2d.setColor(new Color(26, 29, 35));
+        
         for (int i = 0; i < blocks.size(); i++){
             double[] x_coords = blocks.get(i).getXCoordinates();
             double[] y_coords = blocks.get(i).getYCoordinates();
 
+            g2d.setColor(new Color(26, 29, 35));
             for (int j = 0; j < x_coords.length-2; j++){
                 g2d.drawRect((int)x_coords[j]-2, (int)y_coords[j]-2, 
                             6, 6);
@@ -222,6 +280,19 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                 for (int j = 0; j < x_coords.length-2; j++){
                     g2d.drawRect((int)x_coords[j], (int)y_coords[j], 
                                 2, 2);
+                }
+            }
+        }
+
+        g2d.setColor(new Color(0, 100, 100));
+        for (int i = 0; i < blocks.size(); i++){
+            if (blocks.get(i).getCrossing() != null){
+                double[] x_coords = blocks.get(i).getXCoordinates();
+                double[] y_coords = blocks.get(i).getYCoordinates();
+
+                for (int j = 0; j < x_coords.length-2; j++){
+                    g2d.fillRect((int)x_coords[j]-1, (int)y_coords[j]-1, 
+                                6, 2);
                 }
             }
         }

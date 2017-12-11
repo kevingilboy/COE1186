@@ -85,6 +85,7 @@ public class TrackModelGUI{
 	JLabel icon_occupied;
 	JLabel icon_underground;
 	JLabel icon_railCrossing;
+	JLabel icon_beacon;
 	JLabel icon_trackHeated;
 	JLabel label_switchHead;
 	JLabel label_switchPortNormal;
@@ -326,7 +327,7 @@ public class TrackModelGUI{
 
 		comboBox_sectionId = new JComboBox();
 		stylizeComboBox(comboBox_sectionId);
-		comboBox_sectionId.setBounds(520, 116, 76, 30);
+		comboBox_sectionId.setBounds(516, 116, 100, 30);
 		frame_tmGUI.getContentPane().add(comboBox_sectionId);
 
 		ItemListener blockSelectionListener = new ItemListener() {
@@ -438,15 +439,26 @@ public class TrackModelGUI{
 		icon_railCrossing.setBounds(890, 128, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_railCrossing);
 		
+		// BEACON INFORMATION
+		JLabel label_beacon = new JLabel("BEACON");
+		stylizeInfoLabel(label_beacon);
+		label_beacon.setBounds(922, 157, 167, 23);
+		frame_tmGUI.getContentPane().add(label_beacon);
+
+		icon_beacon = new JLabel("");
+		icon_beacon.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_green.png"));
+		icon_beacon.setBounds(890, 157, 25, 23);
+		frame_tmGUI.getContentPane().add(icon_beacon);
+
 		// TRACK HEAT INFORMATION
 		JLabel label_trackHeated = new JLabel("TRACK HEATED");
 		stylizeInfoLabel(label_trackHeated);
-		label_trackHeated.setBounds(922, 157, 167, 22);
+		label_trackHeated.setBounds(922, 185, 167, 22);
 		frame_tmGUI.getContentPane().add(label_trackHeated);
 		
 		icon_trackHeated = new JLabel("");
 		icon_trackHeated.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_green.png"));
-		icon_trackHeated.setBounds(890, 157, 25, 23);
+		icon_trackHeated.setBounds(890, 185, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_trackHeated);
 
 		// SWITCH INFORMATION
@@ -627,6 +639,12 @@ public class TrackModelGUI{
 		/**
 		 * HANDLE TRACK HEATED .....
 		 */
+		
+		if (block.getBeacon() != null){
+			icon_beacon.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_green.png"));
+		} else {
+			icon_beacon.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+		}
 
 		if (block.getSwitch() != null){
 			icon_switch.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_green.png"));
@@ -758,7 +776,7 @@ public class TrackModelGUI{
 	public void initTracksOnStartup() {		
 		TrackCsvParser redParser = new TrackCsvParser();
 		trackModel.setTrack("red", redParser.parse("Modules/TrackModel/Track Layout/RedLineFinal.csv"));
-		//redParser.parseLightPositions("Modules/TrackModel/Track Layout/RedLightsCoordinates.csv", trackModel.getTrack("red"));
+		redParser.parseLightPositions("Modules/TrackModel/Track Layout/RedLightsCoordinates.csv", trackModel.getTrack("red"));
 		trackSelected = trackModel.getTrack("red");
 		blockSelected = trackSelected.get(0);
 
