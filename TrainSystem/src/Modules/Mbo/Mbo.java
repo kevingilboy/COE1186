@@ -313,40 +313,30 @@ public class Mbo implements Module {
 
 		// get the current block
 		TrainInfo train = trains.get(trainID);
-		//MboBlock block = train.getBlock();
 		MboBlock block = getBlockFromCoordinates(train.getPosition());
-		//System.out.printf("Block is %s\n", block);
 		ArrayList<MboBlock> line;
 		if (block.getLine().equals("red")) {
 			line = redLine;
 		} else {
 			line = greenLine;
 		}
-		int blockIndex = line.indexOf(block);
-		//System.out.printf("%s on %s at %s.\n", trainID, block.getLine(), block.getID());
 
-		// get displacement into block
-		// the ith coordinate is i meters in
-		//System.out.printf("%f, %f\n", train.getPosition()[0], train.getPosition()[1]);
-		//double xval = train.getPosition()[0];
+		// get displacement into block. this is positive from the start of the block's coordinate list
+		int blockIndex = line.indexOf(block);
 		int blockDisplacement = block.getOffset(train.getPosition());
-		//System.out.printf("%s is %d meters in at %f.\n", trainID, blockDisplacement, xval);
 		
+		// calculate the safe braking distance by determining how far a meter on each block slows the train down
 		double potentialSpeed = train.getSpeed();
-		//double speed = potentialSpeed;
 		int distance = 0;
 		while (potentialSpeed > 0) {
-		//	System.out.printf("speed %f potential %f\n", speed, potentialSpeed);
 			MboBlock potentialBlock = getBlockAfterMoving(line, blockIndex, blockDisplacement, distance, train.getDirection());
-		//	System.out.printf("block index %s\n", potentialBlock);
 			potentialSpeed = calculateSpeedAfterMeter(potentialSpeed, potentialBlock, train.getMass());
-		//	System.out.printf("speed %f\n", potentialSpeed);
 			distance += 1;
 		}
-		//System.out.printf("%s can stop in %d meters.\n", train, distance);
+
     	return distance;
     }
-
+/*
     private MboBlock getBlockAfterMoving(ArrayList<MboBlock> line, int index, int displacement, int distance) {
     	distance -= line.get(index).getLength() - displacement;
     	//System.out.println(distance);
@@ -358,7 +348,7 @@ public class Mbo implements Module {
     	}
     	return line.get(index);
     }
-
+*/
     private MboBlock getBlockAfterMoving(ArrayList<MboBlock> line, int index, int displacement, int distance, int direction) {
     	distance -= (direction == 1) ? line.get(index).getLength() - displacement : displacement;
     	while (distance > 0) {
