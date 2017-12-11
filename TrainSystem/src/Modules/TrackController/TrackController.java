@@ -22,6 +22,7 @@ public class TrackController implements Module{
 	public String associatedLine;
 	public String[] associatedBlocks;
 	public boolean isMovingBlockMode;
+	public boolean manualMode;
 	//Internal variables
 	private TrackController tc;
 	private String initialPLCPath = "Modules/TrackController/init.plc";
@@ -36,6 +37,7 @@ public class TrackController implements Module{
 		this.associatedLine = associatedLine;
 		this.associatedBlocks = associatedBlocks;
 		this.controllerName = controllerName;
+		this.manualMode = false;
 		this.tcgui = new TrackControllerGUI(this, this.controllerName);
 		this.tcplc = new PLC(this, initialPLCPath);
 		this.tc = this;
@@ -103,13 +105,17 @@ public class TrackController implements Module{
 	 * @param trainName A String indicating the train for the given authority
 	 * @param speed A double of the suggested setpoint speed from the CTC
 	 */
-	//TODO make this signal vital (ie check the speed limit)
-	public void transmitSuggestedTrainSetpointSpeed(String trainName, double speed){
-		trackModel.transmitSuggestedTrainSetpointSpeed(trainName, speed);
+	public void transmitSuggestedTrainSetpointSpeed(String trainName, double speed, int cb){
+		int trackSpeedLimit = trackModel.getBlock(associatedLine, cb).getSpeedLimit();
+		if(Math.ceil(speed) > trackSpeedLimit){
+			trackModel.transmitSuggestedTrainSetpointSpeed(trainName, trackSpeedLimit);
+		} else {
+			trackModel.transmitSuggestedTrainSetpointSpeed(trainName, speed);
+		}
 	}
 	
 	/**
-	 * External function to transmit the authority to the track model after making it vital.
+	 * External function to transmit the authority to the track model after making it vital in any mode.
 	 * @param trainName A String indicating the train for the given authority
 	 * @param authority An array of integers corresponding to blockId's starting with the current blockId
 	 */
@@ -126,31 +132,71 @@ public class TrackController implements Module{
 					trackModel.transmitCtcAuthority(trainName, distAuthority);
 				} else if (trackModel.getBlock(associatedLine, authority[1]).getSwitch() != null){
 					//can proceed and entering a switch so check state
-					boolean canSwitch = tcplc.canSwitchBlock(authority[1]);
-					if (canSwitch){
+					if (manualMode){
+						//manual mode, requires toggle to complete routing
 						boolean switchStateCalc = tcplc.switchStatePath(authority);
-						if (switchStateCalc) {
-							//correct state
-							transmitSwitchState(authority[1], trackModel.getBlock(associatedLine, authority[1]).getSwitch().getState());
-							distAuthority = calcAuthDist(authority);
-							trackModel.transmitCtcAuthority(trainName, distAuthority);
+						if (trackModel.getBlock(associatedLine, authority[1]).getSwitch().getEdge()){
+							//HEAD switch
+							if (switchStateCalc) {
+								//correct state so proceed
+								distAuthority = calcAuthDist(authority);
+								trackModel.transmitCtcAuthority(trainName, distAuthority);
+							} else {
+								//not correct state so stop
+								trackModel.transmitCtcAuthority(trainName, distAuthority);
+							}
 						} else {
-							//not correct state so switch it
-							transmitSwitchState(authority[1], !trackModel.getBlock(associatedLine, authority[1]).getSwitch().getState());
-							distAuthority = calcAuthDist(authority);
-							trackModel.transmitCtcAuthority(trainName, distAuthority);
+							//TAIL switch
+							if((trackModel.getBlock(associatedLine, authority[2]).getSwitch().getState()) && (authority[1] == trackModel.getBlock(associatedLine, authority[2]).getSwitch().getPortNormal())
+								|| (!trackModel.getBlock(associatedLine, authority[2]).getSwitch().getState()) && (authority[1] == trackModel.getBlock(associatedLine, authority[2]).getSwitch().getPortAlternate())){
+								//correct destination
+								if(switchStateCalc) {
+									//correct destination, correct state
+									System.out.println("here");
+									distAuthority = calcAuthDist(authority);
+									trackModel.transmitCtcAuthority(trainName, distAuthority);
+								} else {
+									//TODO not running into this state?? (could be switch at 150 error)
+									//correct destination, wrong state
+									trackModel.transmitCtcAuthority(trainName, distAuthority);
+								}
+							} else {
+								//wrong state -- wait
+								trackModel.transmitCtcAuthority(trainName, distAuthority);
+							}	
 						}
 					} else {
-						//cant switch
-						boolean switchStateCalc = tcplc.switchStatePath(authority);
-						if (switchStateCalc) {
-							//correct state so proceed anyways
-							// -- this happens when the train approaches from the tail and detects itself occupying a tail during canSwitch logic
-							distAuthority = calcAuthDist(authority);
-							trackModel.transmitCtcAuthority(trainName, distAuthority);
+						//not manual mode and can proceed and entering a switch so check state
+						boolean canSwitch = tcplc.canSwitchBlock(authority[1]);
+						if (canSwitch){
+							boolean switchStateCalc = tcplc.switchStatePath(authority);
+							if (switchStateCalc) {
+								//correct state
+								transmitSwitchState(authority[1], trackModel.getBlock(associatedLine, authority[1]).getSwitch().getState());
+								distAuthority = calcAuthDist(authority);
+								trackModel.transmitCtcAuthority(trainName, distAuthority);
+							} else {
+								//not correct state so switch it
+								transmitSwitchState(authority[1], !trackModel.getBlock(associatedLine, authority[1]).getSwitch().getState());
+								distAuthority = calcAuthDist(authority);
+								trackModel.transmitCtcAuthority(trainName, distAuthority);
+							}
 						} else {
-							//not correct state so stop
-							trackModel.transmitCtcAuthority(trainName, distAuthority);
+							//cant switch
+							boolean switchStateCalc = tcplc.switchStatePath(authority);
+							System.out.print("switch state calc: ");
+							System.out.println(switchStateCalc);
+							if (switchStateCalc) {
+								//correct state so proceed anyways
+								// -- this happens when the train approaches from the tail and detects itself occupying a tail during canSwitch logic
+								System.out.println("entered because it was correct state");
+								distAuthority = calcAuthDist(authority);
+								trackModel.transmitCtcAuthority(trainName, distAuthority);
+							} else {
+								//not correct state so stop
+								System.out.println("incorrect state -- waiting");
+								trackModel.transmitCtcAuthority(trainName, distAuthority);
+							}
 						}
 					}
 				} else {
@@ -215,12 +261,21 @@ public class TrackController implements Module{
 	 */
 	public boolean transmitCtcSwitchState(int blockId, boolean state){
 		boolean canSwitch = tcplc.canSwitchBlock(blockId);
-		if(canSwitch){
+		if(canSwitch || manualMode){
 			transmitSwitchState(blockId, state);
 			return true;
 		} else {
 			return false;
 		}
+	}
+	
+	/**
+	 * External function to transmit the light state to the track model for reservations.
+	 * @param blockId An integer indicating the block
+	 * @param state A boolean specifying the desired state
+	 */
+	public boolean transmitCtcLightState(int blockId, boolean state){
+		transmitLightState(blockId, state);
 	}
 	
 	/**
