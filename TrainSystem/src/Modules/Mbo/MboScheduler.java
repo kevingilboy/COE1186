@@ -10,6 +10,9 @@ public class MboScheduler {
 	private ArrayList<OperatorSchedule> operators;
 	private ArrayList<TrainSchedule> trains;
 
+	private final static int[] greenLineStations = {2,9,16,22,31,39,48,57,65,73,77,88,96,114,123,132,141};
+	private final static int[] redLineStations = {7,16,21,25,35,45,48,60};
+
 	private class OperatorSchedule {
 		private String name;
 		private String startTime;
@@ -88,10 +91,19 @@ public class MboScheduler {
 		StringBuilder output = new StringBuilder();
 		output.append(String.format("%s\r\n\r\n", title));
 		for (TrainSchedule train : trains) {
+			
+			// header info for each train
 			output.append(String.format("%s,%s,%s,%s\r\n", train.name, train.startTime, train.line, train.operator));
+
+			// stop for 2 minutes at every station
+			int[] stations = train.line.equals("RED") ? redLineStations : greenLineStations;
+			for (int station : stations) output.append(String.format("%d,00:02:00\r\n", station));
+
+			// newline to seperate trains
 			output.append("\r\n");
 		}
 		output.append(String.format("%f\r\n", throughput));
+		
 		return output.toString();
 	}
 }
