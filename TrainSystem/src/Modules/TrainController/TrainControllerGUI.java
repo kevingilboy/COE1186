@@ -165,7 +165,6 @@ public class TrainControllerGUI {
 		height = 380;
 		
 		frame = new JFrame();
-		// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setBounds(100, 500, 444, height);
 		frame.setTitle("Train Controller");

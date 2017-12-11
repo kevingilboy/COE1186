@@ -267,14 +267,6 @@ public class TrnController {
 		setpointSpeed = speed;
 	}
 	
-	/*public void setPassengerEmergencyBrake(boolean status) {
-		passEBrakes = status;
-	}
-	
-	public void setBeacon(int value) {
-		beacon = value;
-	}*/
-	
 	//calculates a power output to send to the Train Model
 	private void calcPowerOutput()
 	{
@@ -318,13 +310,7 @@ public class TrnController {
 			engineOff();		//set power to zero
 			eBrakesOn();		//activate e-brakes
 			return true;
-		}
-		/*else if (overallAuth == 0 && actualSpeed > 0) {
-			engineOff();
-			eBrakesOn();
-			return true;
-		}*/
-		
+		}		
 		//if the authority is less than braking distance in moving block mode or less than estimated braking distance in fixed block mode
 		else if ((overallAuth <= safeBrakingDistance && actualSpeed > 0 && blockMode == 0) || (distToStation <= safeBrakingDistance && actualSpeed > 0 && blockMode == 0) || (overallAuth <= estimatedBrakingDistance && actualSpeed > 0 && blockMode == 1) || (distToStation <= estimatedBrakingDistance && actualSpeed > 0 && blockMode == 1)) {
 			engineOff();		//set power to zero
@@ -448,14 +434,11 @@ public class TrnController {
 	//calculates an estimated braking distance with known information (does not factor in friction)
 	private double estimateBrakingDist(double initVelocity){
     	double stopDist = ((-1)*(initVelocity)*(initVelocity)) / (2*(-1.2));	//service brake decel = -1.2 as given
-    	return stopDist+15;
+    	return stopDist+15;		//add small buffer to estimate to ensure trains stop in time
 	}
 	
-	/*public void signalReady() {
-		ready = true;
-	}*/
-	
 	///////////////////////these functions transmit announcement info to the Train Model/////////////////////////////////////
+	
 	private void announceApproach(String stationName) {
 		controller.transmitAnnouncement(trainID, APPROACHING, stationName);
 	}
