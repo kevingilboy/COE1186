@@ -22,6 +22,9 @@ public class SimulatorGui {
 	protected Simulator simulator;
 	
 	private JFrame frame;
+	private final int GUI_WINDOW_HEIGHT = 950;
+	private final int GUI_WINDOW_WIDTH = 800;
+	
 	private JComboBox<String> cbTrainModelTrains;
 	private JComboBox<String> cbTrainControllerTrains;
 
@@ -56,7 +59,7 @@ public class SimulatorGui {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 800, 950);
+		frame.setBounds(100, 100, GUI_WINDOW_WIDTH, GUI_WINDOW_HEIGHT);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		frame.getContentPane().setLayout(null);
 		
@@ -182,33 +185,17 @@ public class SimulatorGui {
 		btnMbo.setBounds(537, 774, 171, 41);
 		frame.getContentPane().add(btnMbo);
 		
-		for(int i=0; i<6; i++) {
-			
-		}
-		JSeparator separator = new JSeparator();
-		separator.setBounds(100, 742, 587, 2);
-		frame.getContentPane().add(separator);
 		
-		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(100, 622, 587, 2);
-		frame.getContentPane().add(separator_1);
-		
-		JSeparator separator_2 = new JSeparator();
-		separator_2.setBounds(100, 534, 587, 2);
-		frame.getContentPane().add(separator_2);
-		
-		JSeparator separator_3 = new JSeparator();
-		separator_3.setBounds(100, 431, 587, 2);
-		frame.getContentPane().add(separator_3);
-		
-		JSeparator separator_4 = new JSeparator();
-		separator_4.setBounds(121, 292, 587, 2);
-		frame.getContentPane().add(separator_4);
-		
-		JSeparator separator_5 = new JSeparator();
-		separator_5.setBounds(0, 207, 768, 2);
-		frame.getContentPane().add(separator_5);
-		
+		int y = 200;
+		int dy = 133;
+		int width = (int)(0.8 * GUI_WINDOW_WIDTH);
+		int xStart = (GUI_WINDOW_WIDTH-width)/2;
+		for(int i=0; i<5; i++) {
+			JSeparator separator = new JSeparator();
+			separator.setBounds(xStart, y, width, 2);
+			frame.getContentPane().add(separator);
+			y += dy;
+		}		
 	}
 
 	protected void moduleObjectInitialized(ModuleType module) {
