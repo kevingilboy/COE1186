@@ -154,8 +154,8 @@ public class TrainControllerGUI {
 	public TrainControllerGUI() {
 		setLookAndFeel();
 
-		p = 6000;
-		i = 7.2641;
+		p = 50000;
+		i = 500;
 
 		ready = true;
 		guiList = new ArrayList<TrnControllerGUI>();
@@ -330,7 +330,7 @@ public class TrainControllerGUI {
 		JButton B;
 		JLabel L;
 		Point P;
-		TrnController G;
+		TrnControllerGUI G;
 		int j, y;
 		int i = -1;
 		for (JLabel l : idList) {		//finds the index of JLabel that has the same id as the id to delete

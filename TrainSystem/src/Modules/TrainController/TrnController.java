@@ -151,7 +151,7 @@ public class TrnController {
 		}
 		decodeBeacon();
 		stationCheck();
-		if (!inStation) {
+		if (!inStation) {		//don't allow doors to open if not in station
 			controlGUI.setSuggestedDoor(0);
 		}
 		updateGUI();
@@ -392,7 +392,7 @@ public class TrnController {
 					}
 				}
 			}
-			else {		//manual driving - does the same as auto but sets setpoint to zero and just calculates a recommended door side
+			else {		//manual driving - does the same as auto but sets setpoint speed to zero and just calculates a recommended door side - doors will only open in manual mode if authorized to
 				setpointSpeed = 0;
 				controlGUI.setSetpoint(0);
 				if (currentBlockInfo.getDirection() == 1 || currentBlockInfo.getDirection() == -1) {
