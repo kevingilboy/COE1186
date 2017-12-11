@@ -1,6 +1,7 @@
 package Simulator;
 
 import Shared.*;
+import Shared.Module;
 
 import Modules.Ctc.*;
 import Modules.TrackController.*;
