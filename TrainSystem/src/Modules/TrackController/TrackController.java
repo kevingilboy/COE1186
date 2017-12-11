@@ -37,7 +37,7 @@ public class TrackController implements Module{
 		this.associatedLine = associatedLine;
 		this.associatedBlocks = associatedBlocks;
 		this.controllerName = controllerName;
-		this.manualMode = true;
+		this.manualMode = false;
 		this.tcgui = new TrackControllerGUI(this, this.controllerName);
 		this.tcplc = new PLC(this, initialPLCPath);
 		this.tc = this;
@@ -115,7 +115,7 @@ public class TrackController implements Module{
 	}
 	
 	/**
-	 * External function to transmit the authority to the track model after making it vital.
+	 * External function to transmit the authority to the track model after making it vital in any mode.
 	 * @param trainName A String indicating the train for the given authority
 	 * @param authority An array of integers corresponding to blockId's starting with the current blockId
 	 */
