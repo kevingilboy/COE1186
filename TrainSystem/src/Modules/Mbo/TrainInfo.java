@@ -27,6 +27,7 @@ public class TrainInfo {
 	private int direction;
 	private SimTime timeSignalTransmitted;
 	private Mbo mbo;
+	private double mass;
 
 	public TrainInfo(String name, SimTime time, double[] position, Mbo mbo) {
 		this.name = name;
@@ -39,6 +40,7 @@ public class TrainInfo {
 		this.mbo = mbo;
 		this.direction = 1;
 		this.block = mbo.getBlockFromCoordinates(position);
+		this.mass = 37103.86;
 	}
 
 	public Object[] toDataArray() {
@@ -164,6 +166,18 @@ public class TrainInfo {
 			// and then speed is distance / time
 			speed = distance / (float) elapsedSec;
 		}
+	}
+
+	public void setWeight(double weight) {
+		this.mass = weight * 0.453592; // convert to kilogram
+	}
+
+	public double getWeight() {
+		return this.mass * 0.453592;
+	}
+
+	public double getMass() {
+		return this.mass;
 	}
 
 	private void updateLatestSignal() {

@@ -855,7 +855,7 @@ public class TrainModelGUI extends JFrame {
 	public void poofTrainfromGUIList(Train train) {
 		//mnSelectTrain.remove((train.getTrainID());
 	}
-	
+
 	/**
 	 * Given the train ID, adds a train to the select train menu to be selected. When the menu item is selected,
 	 * will populate all active GUIs with that train's menu item
