@@ -160,6 +160,7 @@ public class TrainControllerGUI {
 		ready = true;
 		guiList = new ArrayList<TrnControllerGUI>();
 		buttonList = new ArrayList<JButton>();
+		idList = new ArrayList<JLabel>();
 		yCount = 60;
 		height = 380;
 		
