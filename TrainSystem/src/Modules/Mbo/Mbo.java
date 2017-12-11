@@ -44,7 +44,7 @@ public class Mbo implements Module {
 		movingBlockModeEnabled = true;
 		initTrack();
 		startGui();
-		gui.setVisible(true);
+		gui.setVisible(false);
 	}
 
 	private void initTrack() {
@@ -53,27 +53,23 @@ public class Mbo implements Module {
 	}
 
 	private void startGui() {
-		try {
-			EventQueue.invokeAndWait(new Runnable() {
-				public void run() {
-					try {
-						gui = new MboGui(thisMbo);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			});
-		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
-		}
+		gui = new MboGui(thisMbo);
+	}
+
+	/**
+	 * Called by the SimulatorGUI class to show the GUI when this module is selected
+	 */
+	public void showGUI(){
 		gui.setVisible(true);
 	}
-/*
-	public void testInitTrains() {
-		trains.put("RED 1", new TrainInfo("RED 1", time, this));
-		trains.put("RED 2", new TrainInfo("RED 2", time, this));
-	}
-*/
+	
+	/*
+		public void testInitTrains() {
+			trains.put("RED 1", new TrainInfo("RED 1", time, this));
+			trains.put("RED 2", new TrainInfo("RED 2", time, this));
+		}
+	*/
+
 	public Object[][] getTrainData() {
 		return getTrainData("");
 	}

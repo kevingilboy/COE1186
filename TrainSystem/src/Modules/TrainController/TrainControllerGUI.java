@@ -140,6 +140,13 @@ public class TrainControllerGUI {
 	/*----------------------------------------------------------------------*/
 
 	/**
+	 * Called by the SimulatorGUI class to show the GUI when this module is selected
+	 */
+	public void showGUI(){
+		frame.setVisible(true);
+	}
+
+	/**
 	 * Create the frame.
 	 */
 	public TrainControllerGUI() {
@@ -155,7 +162,7 @@ public class TrainControllerGUI {
 		height = 380;
 		
 		frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setBounds(100, 500, 444, height);
 		frame.setTitle("Train Controller");
@@ -264,7 +271,7 @@ public class TrainControllerGUI {
 		icon_logo.setBounds(332, 248, 100, 100);
 		contentPane.add(icon_logo);
 		
-		frame.setVisible(true);
+		frame.setVisible(false);
 	}
 	
 	public void add(TrnControllerGUI g) {

@@ -186,7 +186,7 @@ public class MboGui extends JFrame implements ActionListener {
 		setSize(1350, 600);
 		getContentPane().setBackground(new Color(20, 20, 20));
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		// setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		// set the icon
 		pineapple = new JLabel(new ImageIcon("pineapple_icon.png"));
