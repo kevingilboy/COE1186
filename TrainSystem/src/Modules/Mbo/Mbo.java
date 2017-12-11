@@ -167,9 +167,30 @@ public class Mbo implements Module {
      		Double.toString(pos[1]);
 		crc.update(signal.getBytes());
 		//System.out.printf("Checksum %s: %x %x\n", train, crc.getValue(), checksum);
-		//if (checksum != crc.getValue()) return false;
+		if (checksum != crc.getValue()) return false;		
+		// add train if necessary
+		//String[] vals = segments[0].split(";");
+		//String train = vals[0];
+		if (trains.get(train) == null) {
+			trains.put(train, new TrainInfo(train, time, pos, this));
+		}
+		trains.get(train).setWeight(weight);
 
-		return receiveTrainPosition(train, pos, checksum);
+		// update train's position
+		//double x = Double.parseDouble(vals[1]);
+		//double y = Double.parseDouble(vals[2]);
+		String blockId;
+		MboBlock block = getBlockFromCoordinates(pos);
+		if (block == null) {
+			blockId = new String();
+		} else {
+			blockId = block.getID();
+		}
+		trains.get(train).updatePosition(pos, blockId, time);
+		//System.out.printf("Put %s on %s\n", train, trains.get(train).getBlockName());
+
+		//System.out.println("received train position...");
+		return true;
 	}	
 
 	public MboBlock getBlockFromCoordinates(double[] pos) {
@@ -318,7 +339,7 @@ public class Mbo implements Module {
 		//	System.out.printf("speed %f potential %f\n", speed, potentialSpeed);
 			MboBlock potentialBlock = getBlockAfterMoving(line, blockIndex, blockDisplacement, distance, train.getDirection());
 		//	System.out.printf("block index %s\n", potentialBlock);
-			potentialSpeed = calculateSpeedAfterMeter(potentialSpeed, potentialBlock);
+			potentialSpeed = calculateSpeedAfterMeter(potentialSpeed, potentialBlock, train.getMass());
 		//	System.out.printf("speed %f\n", potentialSpeed);
 			distance += 1;
 		}
@@ -349,7 +370,7 @@ public class Mbo implements Module {
     	return line.get(index);
     }
 
-    private double calculateSpeedAfterMeter(double speed, MboBlock block) {
+    private double calculateSpeedAfterMeter(double speed, MboBlock block, double mass) {
     	
     	// TODO real mass!
 
@@ -360,15 +381,15 @@ public class Mbo implements Module {
     	// Step 3: Calculate the forces acting on the train using the coefficient of friction
     	// and the train's weight in lbs converted to kg divided over the wheels (where the force is technically
     	// being applied times gravity (G)
-    	double normalForce = (TRAIN_MASS/12) * G * Math.sin(angle);	// divide by 12 for the number of wheels
-    	double downwardForce = (TRAIN_MASS/12) * G * Math.cos(angle);	// divide by 12 for the number of wheels
+    	double normalForce = (mass/12) * G * Math.sin(angle);	// divide by 12 for the number of wheels
+    	double downwardForce = (mass/12) * G * Math.cos(angle);	// divide by 12 for the number of wheels
 
     	// compute friction forc
     	double friction = (FRICTION_COEFFICIENT * downwardForce) + normalForce;
 
     	// Calculate acceleration using the F = ma equation, where m = the mass of the body moving
     	// add acceleration due to brake
-    	double trainAcceleration = friction/TRAIN_MASS + (TRAIN_MAX_ACCELERATION_SERVICE_BRAKE*1);
+    	double trainAcceleration = friction/mass + (TRAIN_MAX_ACCELERATION_SERVICE_BRAKE*1);
     	
     	// calculate the speed after traveling 1m with that acceleration
     	double finalSpeed = Math.pow(Math.pow(speed, 2) + 2*trainAcceleration, 0.5);
