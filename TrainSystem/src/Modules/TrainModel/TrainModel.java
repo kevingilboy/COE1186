@@ -395,7 +395,11 @@ public class TrainModel implements Module{
 		this.getTrain(trainID).setStation(station);
 	}
 	
-	// TODO: not sure yet if I need this??
+	/**
+	 * If any modules receiving the GPS are not getting the signal, this should be set to false
+	 * @param trainID
+	 * @param status
+	 */
 	public void setGPSAntenna(String trainID, boolean status) {
 		this.getTrain(trainID).setGPSAntenna(status);
 	}
@@ -410,6 +414,13 @@ public class TrainModel implements Module{
 		// call method to send the MBO an "incoming signal" status that passes a trainID
 	}
 	
+	/**
+	 * If the train is stopped at a station, this method will be called to generate passengers embarking
+	 * on the train at a station
+	 * @param blockId
+	 * @param line
+	 * @param numPassengers
+	 */
 	public void setPassengersEmbarking(int blockId, String line, int numPassengers) {
 		Train t = this.getTrainAtBlock(blockId, line);
 		if (t.isStopped() && !t.embarkingPassengersSet){
@@ -417,6 +428,9 @@ public class TrainModel implements Module{
 		}
 	}
 
+	/**
+	 * Returns true if communication between modules has been established
+	 */
 	@Override
 	public boolean communicationEstablished() {
 		return true;

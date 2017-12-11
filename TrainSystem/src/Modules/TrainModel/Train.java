@@ -533,7 +533,7 @@ public class Train {
     public long checkSum() {
     	CRC32 crc = new CRC32();
     	crc.reset(); // in order to reuse the object for all signals
-    	String signal = this.trainID + ":" + Double.toString(this.trainWeight) + ":" + Double.toString(this.currentX) + "," + 
+    	String signal = this.trainID + ":" + /*Double.toString(this.trainWeight) + ":" +*/ Double.toString(this.currentX) + "," + 
     			Double.toString(this.currentY);
     	crc.update(signal.getBytes()); // signal is a String containing your data
     	long checksum = crc.getValue();
