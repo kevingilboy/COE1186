@@ -329,27 +329,15 @@ public class Mbo implements Module {
 		double potentialSpeed = train.getSpeed();
 		int distance = 0;
 		while (potentialSpeed > 0) {
-			MboBlock potentialBlock = getBlockAfterMoving(line, blockIndex, blockDisplacement, distance, train.getDirection());
-			potentialSpeed = calculateSpeedAfterMeter(potentialSpeed, potentialBlock, train.getMass());
+			int[] blockInfo = getBlockAfterMoving(line, blockIndex, blockDisplacement, distance, train.getDirection());
+			potentialSpeed = calculateSpeedAfterMeter(potentialSpeed, line.get(blockInfo[0]), blockInfo[1], train.getMass());
 			distance += 1;
 		}
 
     	return distance;
     }
-/*
-    private MboBlock getBlockAfterMoving(ArrayList<MboBlock> line, int index, int displacement, int distance) {
-    	distance -= line.get(index).getLength() - displacement;
-    	//System.out.println(distance);
-    	while (distance > 0) {
-    		index++;
-    		if (index >= line.size()) index = 0;
-    		distance -= line.get(index).getLength();
-    		//System.out.printf("index %d\n", index);
-    	}
-    	return line.get(index);
-    }
-*/
-    private MboBlock getBlockAfterMoving(ArrayList<MboBlock> line, int index, int displacement, int distance, int direction) {
+
+    private int[] getBlockAfterMoving(ArrayList<MboBlock> line, int index, int displacement, int distance, int direction) {
     	distance -= (direction == 1) ? line.get(index).getLength() - displacement : displacement;
     	while (distance > 0) {
     		int[] nextBlockInfo = line.get(index).getNextBlockInfo(direction);
@@ -357,12 +345,13 @@ public class Mbo implements Module {
     		direction = nextBlockInfo[1];
     		distance -= line.get(index).getLength();
     	}
-    	return line.get(index);
+    	return new int[]{index, direction};
     }
 
-    private double calculateSpeedAfterMeter(double speed, MboBlock block, double mass) {
+    private double calculateSpeedAfterMeter(double speed, MboBlock block, int direction, double mass) {
     	
-    	// TODO real mass!
+    	// if train is traveling the block in the backward direction, flip the grade
+    	double grade = (direction == 1) ? block.getGrade() : (100 - block.getGrade());
 
     	// Calculate the slope of the train's current angle (Degrees = Tan-1 (Slope Percent/100))
     	double angle = Math.atan2(block.getGrade(),100);
