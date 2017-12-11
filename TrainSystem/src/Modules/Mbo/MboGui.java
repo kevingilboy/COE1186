@@ -460,8 +460,7 @@ public class MboGui extends JFrame implements ActionListener {
                 scheduler.updateOperatorSchedules(operators);
 
                 // generate the schedule
-                String sched = scheduler.generateSchedule(file.getName(), Double.parseDouble(throughputPrompt.getText()));
-                //sched = String.format("%s\n%s", datePrompt.getText(), sched);
+                String sched = scheduler.generateSchedule(file.getName(), datePrompt.getText(), Double.parseDouble(throughputPrompt.getText()));
                 System.out.println(sched);
 
                 // save the schedule
