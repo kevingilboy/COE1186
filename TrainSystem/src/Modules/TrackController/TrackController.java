@@ -270,6 +270,15 @@ public class TrackController implements Module{
 	}
 	
 	/**
+	 * External function to transmit the light state to the track model for reservations.
+	 * @param blockId An integer indicating the block
+	 * @param state A boolean specifying the desired state
+	 */
+	public boolean transmitCtcLightState(int blockId, boolean state){
+		transmitLightState(blockId, state);
+	}
+	
+	/**
 	 * Internal function to transmit the switch state to the track model.
 	 * @param blockId An integer indicating the block
 	 * @param state A boolean specifying the desired state
