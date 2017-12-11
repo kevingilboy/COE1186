@@ -742,8 +742,8 @@ public class Train {
     /**
      * Computes the current weight of the train
      */
-    private double getWeight() {
-    	this.trainWeight;
+    public double getWeight() {
+    	return this.trainWeight;
     }
     
     /**

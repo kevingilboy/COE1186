@@ -53,7 +53,11 @@ public class Position{
 
 			previousBlockID = currentBlockID;
 			currentBlockID = nextBlockID;
-
+			
+			//Handle case where train is in yard_in
+			if(currentBlockID == -1) {
+				return 0;
+			}
 			track.get(currentBlockID).setOccupancy(true);
 			
 			blockMeterPosition -= track.get(previousBlockID).getLength();
