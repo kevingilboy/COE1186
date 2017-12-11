@@ -1,18 +1,19 @@
 package Modules.Mbo;
 
 import java.time.LocalDateTime;
+import java.util.*;
 
 public class MboScheduler {
 	
 	private String date;
 	private int desiredThroughput;
 	private ArrayList<OperatorSchedule> operators;
-	private ArrayList<TrainSchedule> train;
+	private ArrayList<TrainSchedule> trains;
 
 	private class OperatorSchedule {
 		private String name;
-		private LocalDateTime startTime;
-		private LocalDateTime stopTime;
+		private String startTime;
+		private String stopTime;
 
 		private OperatorSchedule(String[] schedule) {
 			name = schedule[0];
@@ -23,8 +24,8 @@ public class MboScheduler {
 
 	private class TrainSchedule {
 		private String name;
-		private LocalDateTime startTime;
-		private LocalDateTime stopTime;
+		private String startTime;
+		private String stopTime;
 
 		private TrainSchedule(String[] schedule) {
 			name = schedule[0];
@@ -53,12 +54,12 @@ public class MboScheduler {
 			if (schedule[0].equals("") && schedule[1].equals("") && schedule[2].equals("")) {
 				return false;
 			}
-			trains.add(new TrainSchedule(schedule));
+			operators.add(new OperatorSchedule(schedule));
 		}
 		return true;
 	}
 
 	public String generateSchedule(String filename, double throughput) {
-		return null;
+		return filename + Double.toString(throughput);
 	}
 }

@@ -163,14 +163,17 @@ public class MboGui extends JFrame implements ActionListener {
     private JButton generateButton;
     private JFileChooser fileChooser;
     private Mbo mbo;
+    private MboScheduler scheduler;
     private Object[][] trainData;
     private JTable trainInfoTable;
     private String[] trainInfoColumns;
     private DefaultTableModel trainInfoTableModel, trainScheduleTableModel;
     private JLabel pineapple, pineapple2;
+    private JTextField datePrompt, throughputPrompt;
 
 	public MboGui(Mbo mbo) {
 		this.mbo = mbo;
+		scheduler = new MboScheduler();
         init();
 	}
 
@@ -329,16 +332,16 @@ public class MboGui extends JFrame implements ActionListener {
 		stylizeScrollPane(operatorScrollPane);
 
         // final parameter input
-		JLabel datePromptLabel = new JLabel("DATE");
+		JLabel datePromptLabel = new JLabel("SCHEDULE TITLE");
 		stylizeInfoLabel(datePromptLabel);
 
 		JLabel throughputPromptLabel = new JLabel("DESIRED THROUGHPUT");
 		stylizeInfoLabel(throughputPromptLabel);
 
-		JTextField datePrompt = new JTextField(20);
+		datePrompt = new JTextField(20);
 		stylizeTextField(datePrompt);
 
-		JTextField throughputPrompt = new JTextField(20);
+		throughputPrompt = new JTextField(20);
 		stylizeTextField(throughputPrompt);
 
 		generateButton = new JButton("GENERATE SCHEDULE");
@@ -434,8 +437,31 @@ public class MboGui extends JFrame implements ActionListener {
 			int returnVal = fileChooser.showSaveDialog(MboGui.this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
-                //This is where a real application would save the file.
-                System.out.println("Saving: " + file.getName() + ".");
+                
+                // update the Scheduler's train schedules
+                // DEBUG
+                String[][] debugSched = {{"A", "B", "C"}, {"A", "B", "C"}};
+                scheduler.updateTrainSchedules(debugSched);
+
+                // update the Scheduler's operator schedules
+                scheduler.updateOperatorSchedules(debugSched);
+
+                // generate the schedule
+                String sched = scheduler.generateSchedule(file.getName(), Double.parseDouble(throughputPrompt.getText()));
+                sched = String.format("%s\n%s", datePrompt.getText(), sched);
+                System.out.println(sched);
+
+                // save the schedule
+                PrintWriter out = null;
+    			try {
+        			out = new PrintWriter(file.getPath());
+        			out.println(sched);
+        		} catch (IOException ioExc) {
+    				System.err.println("Exception generating while writing schedule: " + ioExc.getMessage());
+				} finally {
+        			out.close();
+        		}
+
             } else {
                 System.out.println("Save command cancelled by user.");
             }
