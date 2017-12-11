@@ -187,5 +187,10 @@ public class TrackModel implements Module{
 
 	public void trainPoofByName(String line, String name) {
 		trackModelGUI.trainPoofByName(line, name);
+		if(line.equals("GREEN")) {
+			getBlock(line, greenLineBlocks.size()-2).setOccupancy(false);
+		} else if(line.equals("RED")) {
+			getBlock(line, redLineBlocks.size()-2).setOccupancy(false);
+		}		
 	}
 }

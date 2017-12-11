@@ -397,7 +397,7 @@ public class Ctc implements Module,TimeControl {
 		if(stopBlockId == -1) {
 			return path;
 		}
-
+		System.out.println("    ");
 		q.add(new ArrayList<Integer>(Arrays.asList(prevBlockId,currBlockId)));
 		
 		while(!q.isEmpty()) {
@@ -787,6 +787,7 @@ public class Ctc implements Module,TimeControl {
 				if(train.currLocation==train.line.yardIn) {
 					//Train is in the yard
 					trainsToRemove.add(train);
+					train.line.blocks[train.line.yardIn].setOccupancy(false);
 					simulator.trainPoofByName(train.line.toString(),train.name);
 				}
 			}
