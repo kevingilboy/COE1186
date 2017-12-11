@@ -172,7 +172,13 @@ public class TrackController implements Module{
 			}
 		} else {
 			//cannot proceed
-			trackModel.transmitCtcAuthority(trainName, distAuthority);
+			if(isMovingBlockMode){
+				//MBO mode so allow the MBO to stop the trains from crashing
+				distAuthority = calcAuthDist(authority);
+				trackModel.transmitCtcAuthority(trainName, distAuthority);
+			} else {
+				trackModel.transmitCtcAuthority(trainName, distAuthority);
+			}
 		}
 	} 
 	
