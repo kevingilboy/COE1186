@@ -99,6 +99,8 @@ public class TrackModelGUI{
 	JLabel icon_trackCircuitFailure;
 	String selectedFailure = "RAIL FAILURE";
 
+	int shift = 180;
+
 	/**
 	 * DYNAMIC DISPLAY GUI REFERENCES
 	 */
@@ -210,7 +212,8 @@ public class TrackModelGUI{
 		frame_tmGUI = new JFrame();
 		frame_tmGUI.setTitle("Track Model View");
 		frame_tmGUI.getContentPane().setBackground(new Color(26, 29, 35));
-		frame_tmGUI.setBounds(100, 100, 1080, 560);
+		//frame_tmGUI.setBounds(100, 100, 1080, 560);
+		frame_tmGUI.setBounds(100, 100, 1265, 780);
 		// frame_tmGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame_tmGUI.getContentPane().setLayout(null);
 		
@@ -224,7 +227,7 @@ public class TrackModelGUI{
 		// DROP DOWN MENU OF IMPORTED TRACKS
 		comboBox_selectTrack = new JComboBox();
 		stylizeComboBox(comboBox_selectTrack);
-		comboBox_selectTrack.setBounds(183, 16, 168, 30);
+		comboBox_selectTrack.setBounds(188, 16, 332, 30);
 
 		ItemListener trackSelectionListener = new ItemListener() {
 			public void itemStateChanged(ItemEvent itemEvent) {
@@ -236,7 +239,7 @@ public class TrackModelGUI{
 					trackSelected = trackModel.getTrack("green");
 					blockSelected = trackSelected.get(0);
 					panel_dynamicRender = greenLineDisplay.dynamicTrackView;
-					panel_dynamicRender.setBounds(16, 58, 335, 448);
+					panel_dynamicRender.setBounds(16, 58, (int)(1.5*(double)335), (int)(1.5*(double)448));
 					frame_tmGUI.getContentPane().add(panel_dynamicRender);
 
 					currentDisplay = greenLineDisplay;
@@ -245,7 +248,7 @@ public class TrackModelGUI{
 					trackSelected = trackModel.getTrack("red");
 					blockSelected = trackSelected.get(0);
 					panel_dynamicRender = redLineDisplay.dynamicTrackView;
-					panel_dynamicRender.setBounds(16, 58, 335, 448);
+					panel_dynamicRender.setBounds(16, 58, (int)(1.5*(double)335), (int)(1.5*(double)448));
 					frame_tmGUI.getContentPane().add(panel_dynamicRender);
 
 					currentDisplay = redLineDisplay;
@@ -261,7 +264,7 @@ public class TrackModelGUI{
 		// DYANMIC RENDER PANEL
 		panel_dynamicRender = new JPanel();
 		panel_dynamicRender.setBackground(Color.DARK_GRAY);
-		panel_dynamicRender.setBounds(16, 58, 335, 460);
+		panel_dynamicRender.setBounds(16, 58, (int)1.5*334, (int)1.5*448);
 
 		frame_tmGUI.getContentPane().add(panel_dynamicRender);
 		
@@ -269,7 +272,7 @@ public class TrackModelGUI{
 		// LABEL - STATIC
 		JLabel label_selectBlock = new JLabel("SELECT BLOCK");
 		stylizeHeadingLabel(label_selectBlock);
-		label_selectBlock.setBounds(395, 21, 236, 37);
+		label_selectBlock.setBounds(shift + 395, 21, 236, 37);
 		frame_tmGUI.getContentPane().add(label_selectBlock);
 		
 		// SELECTED BLOCK ID
@@ -277,13 +280,13 @@ public class TrackModelGUI{
 		label_blockID.setForeground(new Color(234, 201, 87));
 		label_blockID.setFont(font_24_bold);
 		label_blockID.setHorizontalAlignment(SwingConstants.CENTER);
-		label_blockID.setBounds(462, 59, 97, 52);
+		label_blockID.setBounds(shift + 462, 59, 97, 52);
 		frame_tmGUI.getContentPane().add(label_blockID);
 		
 		// SELECT BLOCK RIGHT BUTTON
 		JButton button_selectBlockRight = new JButton("\u00BB");
 		stylizeButton(button_selectBlockRight);
-		button_selectBlockRight.setBounds(559, 66, 47, 38);
+		button_selectBlockRight.setBounds(shift + 559, 66, 47, 38);
 
 		button_selectBlockRight.addActionListener(new ActionListener() { 
 			public void actionPerformed(ActionEvent e) { 
@@ -306,7 +309,7 @@ public class TrackModelGUI{
 		// SELECT BLOCK LEFT BUTTON
 		JButton button_selectBlockLeft = new JButton("\u00AB");
 		stylizeButton(button_selectBlockLeft);
-		button_selectBlockLeft.setBounds(412, 66, 47, 38);
+		button_selectBlockLeft.setBounds(shift + 412, 66, 47, 38);
 		
 		button_selectBlockLeft.addActionListener(new ActionListener() { 
 			public void actionPerformed(ActionEvent e) { 
@@ -329,12 +332,12 @@ public class TrackModelGUI{
 		// SECTION AND ID SELECTION (DO THIS LATER)
 		JLabel label_selectSectionId = new JLabel("SECTION/ID");
 		stylizeInfoLabel(label_selectSectionId);
-		label_selectSectionId.setBounds(400, 121, 110, 22);
+		label_selectSectionId.setBounds(shift + 400, 121, 110, 22);
 		frame_tmGUI.getContentPane().add(label_selectSectionId);
 
 		comboBox_sectionId = new JComboBox();
 		stylizeComboBox(comboBox_sectionId);
-		comboBox_sectionId.setBounds(516, 116, 100, 30);
+		comboBox_sectionId.setBounds(shift + 516, 116, 100, 30);
 		frame_tmGUI.getContentPane().add(comboBox_sectionId);
 
 		ItemListener blockSelectionListener = new ItemListener() {
@@ -345,6 +348,7 @@ public class TrackModelGUI{
 				int selectedBlockId = Integer.parseInt(selectedString(is).substring(1)) - 1;
 				blockSelected = trackSelected.get(selectedBlockId);
 				currentDisplay.dynamicTrackView.blockSelected = blockSelected;
+				currentDisplay.dynamicTrackView.refresh();
 				showBlockInfo(blockSelected);
 			}
 	    };
@@ -355,218 +359,218 @@ public class TrackModelGUI{
 		// BLOCK INFO LABEL - STATIC
 		JLabel label_blockInfo = new JLabel("BLOCK INFO");
 		stylizeHeadingLabel(label_blockInfo);
-		label_blockInfo.setBounds(721, 23, 236, 37);
+		label_blockInfo.setBounds(shift + 721, 23, 236, 37);
 		frame_tmGUI.getContentPane().add(label_blockInfo);
 		
 		// LENGTH INFORMATION
 		JLabel label_length = new JLabel("LENGTH");
 		stylizeInfoLabel(label_length);
-		label_length.setBounds(670, 77, 113, 22);
+		label_length.setBounds(shift + 670, 77, 113, 22);
 		frame_tmGUI.getContentPane().add(label_length);
 		
 		label_lengthVal = new JLabel("   ");
 		stylizeInfoLabel_Bold(label_lengthVal);
-		label_lengthVal.setBounds(781, 77, 103, 22);
+		label_lengthVal.setBounds(shift + 781, 77, 103, 22);
 		frame_tmGUI.getContentPane().add(label_lengthVal);
 
 		// GRADE INFORMATION
 		JLabel label_grade = new JLabel("GRADE");
 		stylizeInfoLabel(label_grade);
-		label_grade.setBounds(670, 105, 113, 22);
+		label_grade.setBounds(shift + 670, 105, 113, 22);
 		frame_tmGUI.getContentPane().add(label_grade);
 		
 		label_gradeVal = new JLabel("   ");
 		stylizeInfoLabel_Bold(label_gradeVal);
-		label_gradeVal.setBounds(781, 105, 102, 22);
+		label_gradeVal.setBounds(shift + 781, 105, 102, 22);
 		frame_tmGUI.getContentPane().add(label_gradeVal);
 
 		// ELEVATION INFORMATION
 		JLabel label_elevation = new JLabel("ELEVATION");
 		stylizeInfoLabel(label_elevation);
-		label_elevation.setBounds(670, 132, 113, 22);
+		label_elevation.setBounds(shift + 670, 132, 113, 22);
 		frame_tmGUI.getContentPane().add(label_elevation);
 		
 		label_elevationVal = new JLabel("   ");
 		stylizeInfoLabel_Bold(label_elevationVal);
-		label_elevationVal.setBounds(781, 132, 101, 22);
+		label_elevationVal.setBounds(shift + 781, 132, 101, 22);
 		frame_tmGUI.getContentPane().add(label_elevationVal);
 
 		// CUMULATIVE ELEVATION INFORMATION
 		JLabel label_cumElevation = new JLabel("CUM. ELEV.");
 		stylizeInfoLabel(label_cumElevation);
-		label_cumElevation.setBounds(670, 159, 113, 22);
+		label_cumElevation.setBounds(shift + 670, 159, 113, 22);
 		frame_tmGUI.getContentPane().add(label_cumElevation);
 			
 		label_cumElevationVal = new JLabel("   ");
 		stylizeInfoLabel_Bold(label_cumElevationVal);
-		label_cumElevationVal.setBounds(781, 159, 99, 22);
+		label_cumElevationVal.setBounds(shift + 781, 159, 99, 22);
 		frame_tmGUI.getContentPane().add(label_cumElevationVal);
 
 		// SPEED LIMIT INFORMATION
 		JLabel label_speedLimit = new JLabel("SPEED LIMIT");
 		stylizeInfoLabel(label_speedLimit);
-		label_speedLimit.setBounds(670, 185, 113, 22);
+		label_speedLimit.setBounds(shift + 670, 185, 113, 22);
 		frame_tmGUI.getContentPane().add(label_speedLimit);
 
 		label_speedLimitVal = new JLabel("   ");
 		stylizeInfoLabel_Bold(label_speedLimitVal);
-		label_speedLimitVal.setBounds(781, 185, 105, 22);
+		label_speedLimitVal.setBounds(shift + 781, 185, 105, 22);
 		frame_tmGUI.getContentPane().add(label_speedLimitVal);
 
 		// OCCUPANCY INFORMATION
 		JLabel label_occupied = new JLabel("OCCUPIED");
 		stylizeInfoLabel(label_occupied);
-		label_occupied.setBounds(922, 75, 113, 22);
+		label_occupied.setBounds(shift + 922, 75, 113, 22);
 		frame_tmGUI.getContentPane().add(label_occupied);
 
 		icon_occupied = new JLabel("");
 		icon_occupied.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
-		icon_occupied.setBounds(890, 77, 25, 23);
+		icon_occupied.setBounds(shift + 890, 77, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_occupied);
 		
 		// UNDERGROUND INFORMATION
 		JLabel label_underground = new JLabel("UNDERGROUND");
 		stylizeInfoLabel(label_underground);
-		label_underground.setBounds(922, 102, 167, 22);
+		label_underground.setBounds(shift + 922, 102, 167, 22);
 		frame_tmGUI.getContentPane().add(label_underground);
 
 		icon_underground = new JLabel("");
 		icon_underground.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
-		icon_underground.setBounds(890, 104, 25, 23);
+		icon_underground.setBounds(shift + 890, 104, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_underground);
 
 		// CROSSING INFORMATION
 		JLabel label_railCrossing = new JLabel("RAIL CROSSING");
 		stylizeInfoLabel(label_railCrossing);
-		label_railCrossing.setBounds(922, 129, 167, 22);
+		label_railCrossing.setBounds(shift + 922, 129, 167, 22);
 		frame_tmGUI.getContentPane().add(label_railCrossing);
 
 		icon_railCrossing = new JLabel("");
 		icon_railCrossing.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
-		icon_railCrossing.setBounds(890, 128, 25, 23);
+		icon_railCrossing.setBounds(shift + 890, 128, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_railCrossing);
 		
 		// BEACON INFORMATION
 		JLabel label_beacon = new JLabel("BEACON");
 		stylizeInfoLabel(label_beacon);
-		label_beacon.setBounds(922, 157, 167, 23);
+		label_beacon.setBounds(shift + 922, 157, 167, 23);
 		frame_tmGUI.getContentPane().add(label_beacon);
 
 		icon_beacon = new JLabel("");
 		icon_beacon.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_green.png"));
-		icon_beacon.setBounds(890, 157, 25, 23);
+		icon_beacon.setBounds(shift + 890, 157, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_beacon);
 
 		// TRACK HEAT INFORMATION
 		JLabel label_trackHeated = new JLabel("TRACK HEATED");
 		stylizeInfoLabel(label_trackHeated);
-		label_trackHeated.setBounds(922, 185, 167, 22);
+		label_trackHeated.setBounds(shift + 922, 185, 167, 22);
 		frame_tmGUI.getContentPane().add(label_trackHeated);
 		
 		icon_trackHeated = new JLabel("");
 		icon_trackHeated.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_green.png"));
-		icon_trackHeated.setBounds(890, 185, 25, 23);
+		icon_trackHeated.setBounds(shift + 890, 185, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_trackHeated);
 
 		// SWITCH INFORMATION
 		JLabel label_switch = new JLabel("SWITCH");
 		stylizeInfoLabel(label_switch);
-		label_switch.setBounds(705, 251, 167, 22);
+		label_switch.setBounds(shift + 705, 251, 167, 22);
 		frame_tmGUI.getContentPane().add(label_switch);
 		
 		label_switchHead = new JLabel("   ");
 		stylizeInfoLabel_Bold(label_switchHead);
-		label_switchHead.setBounds(742, 317, 62, 22);
+		label_switchHead.setBounds(shift + 742, 317, 62, 22);
 		frame_tmGUI.getContentPane().add(label_switchHead);
 		
 		label_switchPortNormal = new JLabel("   ");
 		stylizeInfoLabel_Bold(label_switchPortNormal);
-		label_switchPortNormal.setBounds(905, 283, 69, 22);
+		label_switchPortNormal.setBounds(shift + 905, 283, 69, 22);
 		frame_tmGUI.getContentPane().add(label_switchPortNormal);
 		
 		label_switchPortAlternate = new JLabel("   ");
 		stylizeInfoLabel_Bold(label_switchPortAlternate);
-		label_switchPortAlternate.setBounds(904, 349, 64, 22);
+		label_switchPortAlternate.setBounds(shift + 904, 349, 64, 22);
 		frame_tmGUI.getContentPane().add(label_switchPortAlternate);
 
 		icon_switchState = new JLabel("");
 		icon_switchState.setIcon(new ImageIcon("Modules/TrackModel/images/switch_none.png"));
-		icon_switchState.setBounds(784, 282, 112, 88);
+		icon_switchState.setBounds(shift + 784, 282, 112, 88);
 		frame_tmGUI.getContentPane().add(icon_switchState);
 
 		icon_switch = new JLabel("");
 		icon_switch.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
-		icon_switch.setBounds(673, 251, 25, 23);
+		icon_switch.setBounds(shift + 673, 251, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_switch);
 
 		// HSS LOGO
 		JLabel icon_logo = new JLabel("");
 		icon_logo.setIcon(new ImageIcon("Modules/TrackModel/Images/HSS_TrainSim_Logo.png"));
-		icon_logo.setBounds(1080 - 110, 560 - 130, 100, 100);
+		icon_logo.setBounds(shift + 1080 - 110, 638, 100, 100);
 		frame_tmGUI.getContentPane().add(icon_logo);
 
 		// STATION INFORMATION
 		JLabel label_station = new JLabel("STATION");
 		stylizeInfoLabel(label_station);
-		label_station.setBounds(705, 398, 167, 22);
+		label_station.setBounds(shift + 705, 398, 167, 22);
 		frame_tmGUI.getContentPane().add(label_station);
 			
 		label_stationName = new JLabel("   ");
 		stylizeInfoLabel_Bold(label_stationName);
-		label_stationName.setBounds(786, 439, 216, 22);
+		label_stationName.setBounds(shift + 786, 439, 216, 22);
 		frame_tmGUI.getContentPane().add(label_stationName);
 
 		icon_station = new JLabel("");
 		icon_station.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
-		icon_station.setBounds(673, 398, 25, 23);
+		icon_station.setBounds(shift + 673, 398, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_station);
 
 		// FAILURE INFORMATION
 		JLabel label_failures = new JLabel("FAILURES");
 		stylizeInfoLabel(label_failures);
-		label_failures.setBounds(399, 269, 236, 37);
+		label_failures.setBounds(shift + 399, 269, 236, 37);
 		frame_tmGUI.getContentPane().add(label_failures);
 		
 		JLabel label_railFailure = new JLabel("RAIL");
 		stylizeInfoLabel_Small(label_railFailure);
-		label_railFailure.setBounds(440, 304, 55, 22);
+		label_railFailure.setBounds(shift + 440, 304, 55, 22);
 		frame_tmGUI.getContentPane().add(label_railFailure);
 		
 		icon_railFailure = new JLabel("");
 		icon_railFailure.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
-		icon_railFailure.setBounds(405, 304, 25, 23);
+		icon_railFailure.setBounds(shift + 405, 304, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_railFailure);
 		
 		JLabel label_powerFailure = new JLabel("POWER");
 		stylizeInfoLabel_Small(label_powerFailure);
-		label_powerFailure.setBounds(439, 328, 78, 22);
+		label_powerFailure.setBounds(shift + 439, 328, 78, 22);
 		frame_tmGUI.getContentPane().add(label_powerFailure);
 		
 		icon_powerFailure = new JLabel("");
 		icon_powerFailure.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
-		icon_powerFailure.setBounds(405, 329, 25, 23);
+		icon_powerFailure.setBounds(shift + 405, 329, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_powerFailure);
 
 		JLabel label_trackCircuitFailure = new JLabel("TRACK CIRCUIT");
 		stylizeInfoLabel_Small(label_trackCircuitFailure);
-		label_trackCircuitFailure.setBounds(439, 352, 128, 22);
+		label_trackCircuitFailure.setBounds(shift + 439, 352, 128, 22);
 		frame_tmGUI.getContentPane().add(label_trackCircuitFailure);
 		
 		icon_trackCircuitFailure = new JLabel("");
 		icon_trackCircuitFailure.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
-		icon_trackCircuitFailure.setBounds(405, 352, 25, 23);
+		icon_trackCircuitFailure.setBounds(shift + 405, 352, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_trackCircuitFailure);
 		
 		
 		// FAILURE SIMULATION
 		JLabel label_simulateFailure = new JLabel("SIMULATE FAILURE");
 		stylizeInfoLabel(label_simulateFailure);
-		label_simulateFailure.setBounds(395, 405, 236, 37);
+		label_simulateFailure.setBounds(shift + 395, 405, 236, 37);
 		frame_tmGUI.getContentPane().add(label_simulateFailure);
 		
 		JButton button_toggle = new JButton("TOGGLE");
 		stylizeButton(button_toggle);
-		button_toggle.setBounds(550, 441, 98, 52);
+		button_toggle.setBounds(shift + 550, 441, 98, 52);
 
 		button_toggle.addActionListener(new ActionListener() { 
 			public void actionPerformed(ActionEvent e) { 
@@ -589,7 +593,7 @@ public class TrackModelGUI{
 
 		JComboBox comboBox_failures = new JComboBox();
 		stylizeComboBox(comboBox_failures);
-		comboBox_failures.setBounds(380, 441, 158, 52);
+		comboBox_failures.setBounds(shift + 380, 441, 158, 52);
 		comboBox_failures.addItem("RAIL FAILURE");
 		comboBox_failures.addItem("POWER FAILURE");
 		comboBox_failures.addItem("TRACK CIRCUIT FAILURE");
@@ -662,18 +666,18 @@ public class TrackModelGUI{
 			
 			if (s.getEdge() == Switch.EDGE_TYPE_HEAD){
 				label_switchHead.setText((block.getSection()).toUpperCase() + Integer.toString(block.getId() + 1));
-				label_switchPortNormal.setText((trackSelected.get(n).getSection()).toUpperCase() + Integer.toString(n));
-				label_switchPortAlternate.setText((trackSelected.get(a).getSection()).toUpperCase() + Integer.toString(a));
+				label_switchPortNormal.setText((trackSelected.get(n).getSection()).toUpperCase() + Integer.toString(n+1));
+				label_switchPortAlternate.setText((trackSelected.get(a).getSection()).toUpperCase() + Integer.toString(a+1));
 			} else if (s.getEdge() == Switch.EDGE_TYPE_TAIL){
-				label_switchHead.setText((trackSelected.get(n).getSection()).toUpperCase() + Integer.toString(n));
+				label_switchHead.setText((trackSelected.get(n).getSection()).toUpperCase() + Integer.toString(n+1));
 				
 				// Check if this tail block is the normal or the alternate
 				// by referencing the head block at the normal port of the tail block
 				if (trackSelected.get(n).getSwitch().getPortNormal() == block.getId()){
 					label_switchPortNormal.setText((block.getSection()).toUpperCase() + Integer.toString(block.getId() + 1));
-					label_switchPortAlternate.setText((trackSelected.get(a).getSection()).toUpperCase() + Integer.toString(a)); 
+					label_switchPortAlternate.setText((trackSelected.get(a).getSection()).toUpperCase() + Integer.toString(a+1)); 
 				} else {
-					label_switchPortNormal.setText((trackSelected.get(a).getSection()).toUpperCase() + Integer.toString(a)); 
+					label_switchPortNormal.setText((trackSelected.get(a).getSection()).toUpperCase() + Integer.toString(a+1)); 
 					label_switchPortAlternate.setText((block.getSection()).toUpperCase() + Integer.toString(block.getId() + 1));
 				}
 			}

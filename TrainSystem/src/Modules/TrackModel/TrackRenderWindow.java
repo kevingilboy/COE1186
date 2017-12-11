@@ -31,9 +31,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 
-public class TrackRenderWindow extends JPanel implements ActionListener{  
-    public final int ARR_SIZE = 4;
-    public boolean showArrows = false;
+public class TrackRenderWindow extends JPanel{  
 
     // Reference to the main GUI's selected block
     Block blockSelected;
@@ -44,20 +42,21 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
     // Track data structure whose information will be
     // used for the dynamic rendering
     ArrayList<Block> blocks;
-    Color lineColor;
-    Color lineColorDimmed;
 
     // Information for rendering each active train on the track
-    // int[] pingCounters = new int[100];
     int activeTrains = 0;
     ArrayList<String> trainIDs = new ArrayList<String>();
     ArrayList<Position> positions = new ArrayList<Position>();
     ArrayList<Double[]> xy_coords = new ArrayList<Double[]>();
     ArrayList<Double[]> previous_xy_coords = new ArrayList<Double[]>();
 
+    // Control variables for drawing shapes
+    public final int ARR_SIZE = 4;
+    public boolean showArrows = false;
+
+    // Constructor
     public TrackRenderWindow(int width, int height, ArrayList<Block> blocks){
         initializeWindow(width, height);
-        initializeTimer();
         initializeTrack(blocks);
         repaint();
     }
@@ -65,20 +64,10 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
     // Initialize the window in the context 
     // of the DynamicDisplay GUI window
     public void initializeWindow(int width, int height){
-        int windowPadding = 0;
-        setBounds(windowPadding, windowPadding, width, height);
+        setBounds(0, 0, width, height);
         setLayout(null);
-        setBackground(new Color(36, 39, 45));
+        setBackground(new Color(36, 39, 45)); // Dark-navy
         setVisible(true);
-    }
-
-    // Initialize the timer
-    public void initializeTimer(){
-        /*
-        timer = new Timer(250, this); // milliseconds
-        timer.setInitialDelay(0);
-        timer.start(); // Start the timer
-        */
     }
 
     // Refresh the GUI
@@ -89,22 +78,11 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
     // Initialize the track
     public void initializeTrack(ArrayList<Block> blocks){
         String line = blocks.get(0).getLine();
-
-        if (line.equals("green")){
-            lineColor = new Color(76, 195, 85);
-            lineColorDimmed = new Color(0, 60, 0);
-        } else if (line.equals("red")){
-            lineColor = new Color(211, 54, 76);
-            lineColorDimmed = new Color(60, 0, 0);
-        } else {
-            System.out.println("No track line color found!");
-        }
-
         this.blockSelected = blocks.get(0);
         this.blocks = blocks;
     }
 
-    // Dispatch a train to the track
+    // Display a newly dispatched train
     public void dispatchTrain(String trainID, Position pos){
         Double[] xy_coord = {(double)0.0, (double)0.0};
         Double[] previous_xy_coord = {(double)0.0, (double)0.0};
@@ -117,19 +95,16 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         activeTrains++;
     }
 
-    // TODO: Remove a train from the track
-    public void removeTrain(){
+    // Remove train sent to the yard 
+    public void trainPoofByName(String name) {      
+        int indexToRemove = trainIDs.indexOf(name);
+        trainIDs.remove(indexToRemove);
+        positions.remove(indexToRemove);
+        
         activeTrains--;
-        trainIDs.remove(activeTrains);
-        positions.remove(activeTrains);
-        xy_coords.remove(activeTrains);
-        previous_xy_coords.remove(activeTrains);
-    }
-
-    // Calls paintComponent(Graphics g) every time
-    // the timer goes off
-    public void actionPerformed(ActionEvent e){
-        // repaint();
+        if(activeTrains < 0) {
+            activeTrains = 0;
+        }
     }
 
     // Draw the screen (gets refreshed every time the timer is
@@ -140,6 +115,8 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         Graphics2D g2d  = (Graphics2D) g;
 
         drawTrack(g2d);
+        drawFailedBlocks(g2d);
+        drawCrossing(g2d);
         drawSwitches(g2d);
         drawYard(g2d);
         drawLights(g2d);
@@ -154,67 +131,84 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         }
     }
 
-    public void drawArrow(Graphics g1, int x1, int y1, int x2, int y2) {
-        Graphics2D g = (Graphics2D) g1.create();
-
-        double dx = x2 - x1, dy = y2 - y1;
-        double angle = Math.atan2(dy, dx);
-        int len = (int) Math.sqrt(dx*dx + dy*dy);
-        AffineTransform at = AffineTransform.getTranslateInstance(x1, y1);
-        at.concatenate(AffineTransform.getRotateInstance(angle));
-        g.transform(at);
-
-        // Draw horizontal arrow starting in (0, 0)
-        g.drawLine(0, 0, len, 0);
-        g.fillPolygon(new int[] {len+2, len-(ARR_SIZE*2+1), len-(ARR_SIZE*2+1), len+2},
-                      new int[] {0, -(ARR_SIZE-1), ARR_SIZE-1, 0}, 4);
-    }
-
+    // Display the section + block ID for each
+    // switch head (on mouse hover over dynamic
+    // display)
     public void showSwitchInfo(Graphics2D g2d){
 
         g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 16)); 
+        g2d.setColor(Color.ORANGE);
+        
         for (int i = 0; i < blocks.size(); i++){
+
             double[] x_coords = blocks.get(i).getXCoordinates();
             double[] y_coords = blocks.get(i).getYCoordinates();
 
             if (blocks.get(i).getSwitch() != null){
+
                 if (blocks.get(i).getSwitch().getEdge() == Switch.EDGE_TYPE_HEAD){
                     String section = blocks.get(i).getSection();
-                    String id = Integer.toString(i);
+                    String id = Integer.toString(i + 1);
+                    int x = (int)x_coords[x_coords.length/2] - 10;
+                    int y = (int)y_coords[y_coords.length/2] - 2;
 
-                    g2d.setColor(Color.ORANGE);
-                    g2d.drawString(section + id, (int)x_coords[x_coords.length/2] - 10, (int)y_coords[y_coords.length/2] - 2);
+                    g2d.drawString(section + id, x, y);
                 }
             }
         }
     }
 
+    // Display the directions of uni-directional
+    // track sections with arrows along those sections
+    // (on mouse hover over dynamic display)
     public void drawDirections(Graphics2D g2d){
+
+        // Dim the display by overlaying a
+        // semi-transparent filling rectangle
         g2d.setColor(new Color(0, 0, 0, 80));
-        g2d.fillRect(0, 0, 335, 448);
+        g2d.setStroke(new BasicStroke(2));
+        g2d.fillRect(0, 0, 670, 896);
 
-        for (int i = 0; i < blocks.size(); i+=3){
-            double[] x_coords = blocks.get(i).getXCoordinates();
-            double[] y_coords = blocks.get(i).getYCoordinates();
-
+        // Access uni-directional blocks
+        // and draw arrows for every third block (i += 3)
+        g2d.setColor(Color.WHITE);
+        for (int i = 0; i < blocks.size(); i += 3){
             if (blocks.get(i).getDirection() != 0){
+                
+                double[] x_coords = blocks.get(i).getXCoordinates();
+                double[] y_coords = blocks.get(i).getYCoordinates();
 
-                g2d.setColor(Color.WHITE);
+                int x0, y0, x1, y1;
+
                 if (blocks.get(i).getDirection() == 1){
-                    drawArrow((Graphics)g2d, (int)x_coords[x_coords.length/2-15], (int)y_coords[x_coords.length/2-15], (int)x_coords[x_coords.length/2], (int)y_coords[x_coords.length/2]);
+
+                    x0 = (int)x_coords[x_coords.length/2 - 15];
+                    y0 = (int)y_coords[x_coords.length/2 - 15];
+                    x1 = (int)x_coords[x_coords.length/2];
+                    y1 = (int)y_coords[x_coords.length/2];
+
                 }  else {
-                    drawArrow((Graphics)g2d, (int)x_coords[x_coords.length/2], (int)y_coords[x_coords.length/2], (int)x_coords[x_coords.length/2-15], (int)y_coords[x_coords.length/2-15]);
+
+                    x0 = (int)x_coords[x_coords.length/2];
+                    y0 = (int)y_coords[x_coords.length/2];
+                    x1 = (int)x_coords[x_coords.length/2 - 15];
+                    y1 = (int)y_coords[x_coords.length/2 - 15];
+
                 }
+
+                drawArrow((Graphics)g2d, x0, y0, x1, y1);
             }
         }
     }
 
+    // Draw the yard
+    // ("YARD" over an outlined rectangle)
     public void drawYard(Graphics2D g2d){
 
-        int yard_x = 286;
-        int yard_y = 148;
-        int yard_w = 44;
-        int yard_h = 24;
+        int yard_x = 429;
+        int yard_y = 222;
+        int yard_w = 66;
+        int yard_h = 36;
 
         g2d.setColor(Color.BLACK);
         g2d.fillRect(yard_x, yard_y+3, yard_w, yard_h);
@@ -226,128 +220,202 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         g2d.fillRect(yard_x+2, yard_y+2, yard_w-4, yard_h-4);
 
         g2d.setColor(Color.WHITE);
-        g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 14)); 
-        g2d.drawString("YARD", yard_x+7, yard_y+17);
+        g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 22)); 
+        g2d.drawString("YARD", yard_x+8, yard_y+25);
 
     }
 
+    // Draw beacons (located before and after each station)
+    // as small blue dots
     public void drawBeacons(Graphics2D g2d){
+
+        // Nice blue color :)
         g2d.setColor(new Color(0, 100, 255));
-
         for (int i = 0; i < blocks.size(); i++){
-            double[] x_coords = blocks.get(i).getXCoordinates();
-            double[] y_coords = blocks.get(i).getYCoordinates();
-
             if (blocks.get(i).getBeacon() != null){
-                g2d.fillOval((int)x_coords[x_coords.length/2]-1, (int)y_coords[x_coords.length/2]-1, 3, 3);
+                
+                double[] x_coords = blocks.get(i).getXCoordinates();
+                double[] y_coords = blocks.get(i).getYCoordinates();
+
+                int x = (int)x_coords[x_coords.length/2]-1;
+                int y = (int)y_coords[x_coords.length/2]-1;
+                int w = 3;
+                int h = 3;
+
+                g2d.fillOval(x, y, w, h);
+            
             }
         }
     }
 
-    // Render the track
+    // Draw the entire track
     public void drawTrack(Graphics2D g2d){
+
+        // Enable anti-aliasing
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        // Draw the track shadow
+        g2d.setColor(new Color(26, 29, 35));
+        g2d.setStroke(new BasicStroke(8));
         
-        // Draw black track shadow
-        /*
-        g2d.setColor(new Color(25, 25, 25));
         for (int i = 0; i < blocks.size(); i++){
+            
             double[] x_coords = blocks.get(i).getXCoordinates();
             double[] y_coords = blocks.get(i).getYCoordinates();
+            
+            for (int j = 3; j < x_coords.length-2; j+=3){
+                
+                int x0 = (int)x_coords[j-3];
+                int y0 = (int)y_coords[j-3] + 4;
+                int x1 = (int)x_coords[j];
+                int y1 = (int)y_coords[j];
 
-            for (int j = 0; j < x_coords.length-2; j++){
-                g2d.drawRect((int)x_coords[j]+1, (int)y_coords[j]+3, 
-                            4, 4);
+                g2d.drawLine(x0, y0, x1, y1);
             }
-        }
-        */
+        } 
 
         // Draw station outlines
-        g2d.setColor(Color.GRAY);
+        // (Included in this method because the station
+        // outlines are on a layer between the track's
+        // shadow and primary outline rails)
         for (int i = 0; i < blocks.size(); i++){
             if ((blocks.get(i).getStation()) != null){
+
                 double[] x_coords = blocks.get(i).getXCoordinates();
                 double[] y_coords = blocks.get(i).getYCoordinates();
 
+                // Station outer stroke
+                g2d.setStroke(new BasicStroke(17));
+                g2d.setColor(Color.BLACK);
+
+                for (int j = 2; j < x_coords.length-2; j+=2){
+                    int x0 = (int)x_coords[j-2];
+                    int y0 = (int)y_coords[j-2];
+                    int x1 = (int)x_coords[j];
+                    int y1 = (int)y_coords[j]; 
+
+                    g2d.drawLine(x0, y0, x1, y1);
+                }
+
+                // Highlight occupied station with nice teal color
                 if (blocks.get(i).getOccupied()){
-                    g2d.setColor(Color.BLUE);
-                    for (int j = 0; j < x_coords.length-2; j++){
-                        g2d.drawRect((int)x_coords[j]-4, (int)y_coords[j]-4, 
-                                10, 10);
-                    }
+                    g2d.setColor(new Color(0, 200, 255));
                 } else {
                     g2d.setColor(Color.GRAY);
-                    for (int j = 0; j < x_coords.length-2; j++){
-                        g2d.drawRect((int)x_coords[j]-4, (int)y_coords[j]-4, 
-                                10, 10);
-                    }
+                }
+
+                // Station inner stroke
+                g2d.setStroke(new BasicStroke(13)); 
+                for (int j = 2; j < x_coords.length-2; j+=2){
+                    int x0 = (int)x_coords[j-2];
+                    int y0 = (int)y_coords[j-2];
+                    int x1 = (int)x_coords[j];
+                    int y1 = (int)y_coords[j]; 
+
+                    g2d.drawLine(x0, y0, x1, y1);
                 }
             }
         }
 
-        // Draw the track's line color
-        // g2d.setColor(lineColorDimmed);
+        // Draw the track outline
+        g2d.setColor(Color.BLACK);
+        g2d.setStroke(new BasicStroke(8));
         
         for (int i = 0; i < blocks.size(); i++){
+            
             double[] x_coords = blocks.get(i).getXCoordinates();
             double[] y_coords = blocks.get(i).getYCoordinates();
+            
+            for (int j = 3; j < x_coords.length-2; j+=3){
+                int x0 = (int)x_coords[j-3];
+                int y0 = (int)y_coords[j-3];
+                int x1 = (int)x_coords[j];
+                int y1 = (int)y_coords[j];
 
-            g2d.setColor(new Color(26, 29, 35));
-            for (int j = 0; j < x_coords.length-2; j++){
-                g2d.drawRect((int)x_coords[j]-2, (int)y_coords[j]-2, 
-                            6, 6);
+                g2d.drawLine(x0, y0, x1, y1);
             }
         }
 
-        // Draw the inner black track to make it look like
-        // real track rails colored as the line color
-        // g2d.setColor(Color.BLACK);
-        /*
-        g2d.setColor(lineColorDimmed);
+        // Draw the track's inner color
+        g2d.setColor(new Color(32, 29, 55)); // Dark purple-ish/navy
+        g2d.setStroke(new BasicStroke(6));
+        
         for (int i = 0; i < blocks.size(); i++){
+
             double[] x_coords = blocks.get(i).getXCoordinates();
             double[] y_coords = blocks.get(i).getYCoordinates();
 
-            for (int j = 0; j < x_coords.length-2; j++){
-                g2d.drawRect((int)x_coords[j], (int)y_coords[j], 
-                            2, 2);
+            for (int j = 3; j < x_coords.length-2; j+=3){
+                int x0 = (int)x_coords[j-3];
+                int y0 = (int)y_coords[j-3];
+                int x1 = (int)x_coords[j];
+                int y1 = (int)y_coords[j];
+
+                g2d.drawLine(x0, y0, x1, y1);
             }
         }
-        */
+    }
 
-        // Highlight failed blocks
-        g2d.setColor(new Color(170, 0, 0));
+    // Highlight failed / maintenance blocks
+    public void drawFailedBlocks(Graphics2D g2d){
+        
+        g2d.setColor(new Color(170, 0, 0)); // dim red
+        g2d.setStroke(new BasicStroke(6));
+        
         for (int i = 0; i < blocks.size(); i++){
             if (blocks.get(i).getStatus() == Block.STATUS_NOT_WORKING){
+
                 double[] x_coords = blocks.get(i).getXCoordinates();
                 double[] y_coords = blocks.get(i).getYCoordinates();
 
-                for (int j = 0; j < x_coords.length-2; j++){
-                    g2d.drawRect((int)x_coords[j], (int)y_coords[j], 
-                                2, 2);
-                }
-            }
-        }
+                for (int j = 3; j < x_coords.length-2; j+=3){
 
-        g2d.setColor(new Color(0, 100, 100));
-        for (int i = 0; i < blocks.size(); i++){
-            if (blocks.get(i).getCrossing() != null){
-                double[] x_coords = blocks.get(i).getXCoordinates();
-                double[] y_coords = blocks.get(i).getYCoordinates();
+                    int x0 = (int)x_coords[j-3];
+                    int y0 = (int)y_coords[j-3];
+                    int x1 = (int)x_coords[j];
+                    int y1 = (int)y_coords[j];
 
-                for (int j = 0; j < x_coords.length-2; j++){
-                    g2d.fillRect((int)x_coords[j]-1, (int)y_coords[j]-1, 
-                                6, 2);
+                    g2d.drawLine(x0, y0, x1, y1);
                 }
             }
         }
     }
 
-    // Render the switches
-    public void drawSwitches(Graphics2D g2d){
+    // Highlight the crossing block
+    public void drawCrossing(Graphics2D g2d){
+
+        g2d.setColor(new Color(0, 100, 100)); // teal
+        g2d.setStroke(new BasicStroke(6));
+        
         for (int i = 0; i < blocks.size(); i++){
+            if (blocks.get(i).getCrossing() != null){
+
+                double[] x_coords = blocks.get(i).getXCoordinates();
+                double[] y_coords = blocks.get(i).getYCoordinates();
+
+                for (int j = 3; j < x_coords.length-2; j+=3){
+
+                    int x0 = (int)x_coords[j-3];
+                    int y0 = (int)y_coords[j-3];
+                    int x1 = (int)x_coords[j];
+                    int y1 = (int)y_coords[j];
+
+                    g2d.drawLine(x0, y0, x1, y1);
+                }
+            }
+        }
+    }
+
+    // Highlight the switch blocks
+    public void drawSwitches(Graphics2D g2d){
+
+        for (int i = 0; i < blocks.size(); i++){
+            
             if (blocks.get(i).getSwitch() != null){
 
+                // Highlight the tail port that the head port is connected to
                 if (blocks.get(i).getSwitch().getEdge() == Switch.EDGE_TYPE_TAIL){
+
                     int headID = blocks.get(i).getSwitch().getPortNormal();
                     boolean state = blocks.get(headID).getSwitch().getState();
                     int port = 0;
@@ -361,36 +429,95 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                         portAlt = blocks.get(headID).getSwitch().getPortNormal();
                     }
 
+                    // The tail port is at <port>, highlight this block
                     if (blocks.get(i).getId() == port){
+
                         double[] x_coords = blocks.get(i).getXCoordinates();
                         double[] y_coords = blocks.get(i).getYCoordinates();
 
-                        g2d.setColor(new Color(152, 0, 203));
-                        for (int j = 0; j < x_coords.length-2; j++){
-                            g2d.drawRect((int)x_coords[j]-2, (int)y_coords[j]-2, 6, 6);
+                        g2d.setColor(Color.BLACK);
+                        g2d.setStroke(new BasicStroke(12)); // Black outline
+
+                        for (int j = 6; j < x_coords.length-6; j+=3){
+
+                            int x0 = (int)x_coords[j-3];
+                            int y0 = (int)y_coords[j-3];
+                            int x1 = (int)x_coords[j];
+                            int y1 = (int)y_coords[j];
+
+                            g2d.drawLine(x0, y0, x1, y1);
                         }
 
-                        g2d.setColor(new Color(26, 29, 35));
-                        for (int j = 0; j < x_coords.length-2; j++){
-                            g2d.drawRect((int)x_coords[j]-1, (int)y_coords[j]-1, 4, 4);
+                        g2d.setColor(new Color(152, 0, 203)); // Magenta-ish/Purple
+                        g2d.setStroke(new BasicStroke(8));
+
+                        for (int j = 3; j < x_coords.length-2; j+=3){
+
+                            int x0 = (int)x_coords[j-3];
+                            int y0 = (int)y_coords[j-3];
+                            int x1 = (int)x_coords[j];
+                            int y1 = (int)y_coords[j];
+
+                            g2d.drawLine(x0, y0, x1, y1);
+                        }
+
+                        g2d.setColor(new Color(52, 29, 75)); // Purple-ish/Navy
+                        g2d.setStroke(new BasicStroke(6));
+
+                        for (int j = 3; j < x_coords.length-2; j+=3){
+
+                            int x0 = (int)x_coords[j-3];
+                            int y0 = (int)y_coords[j-3];
+                            int x1 = (int)x_coords[j];
+                            int y1 = (int)y_coords[j];
+
+                            g2d.drawLine(x0, y0, x1, y1);
                         }
                     }
                 }
 
                 if (blocks.get(i).getSwitch().getEdge() == Switch.EDGE_TYPE_HEAD){
+
                     double[] x_coords = blocks.get(i).getXCoordinates();
                     double[] y_coords = blocks.get(i).getYCoordinates();
 
-                    g2d.setColor(new Color(152, 0, 203));
-                    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                                        RenderingHints.VALUE_ANTIALIAS_ON);
-                    for (int j = 0; j < x_coords.length-2; j++){
-                        g2d.drawRect((int)x_coords[j]-2, (int)y_coords[j]-2, 6, 6);
+                    g2d.setColor(Color.BLACK);
+                    g2d.setStroke(new BasicStroke(12)); // Black outline
+
+                    for (int j = 6; j < x_coords.length-6; j+=3){
+
+                        int x0 = (int)x_coords[j-3];
+                        int y0 = (int)y_coords[j-3];
+                        int x1 = (int)x_coords[j];
+                        int y1 = (int)y_coords[j];
+
+                        g2d.drawLine(x0, y0, x1, y1);
                     }
 
-                    g2d.setColor(new Color(26, 29, 35));
-                    for (int j = 0; j < x_coords.length-2; j++){
-                        g2d.drawRect((int)x_coords[j]-1, (int)y_coords[j]-1, 4, 4);
+                    g2d.setColor(new Color(152, 0, 203)); // Magenta-ish/Purple
+                    g2d.setStroke(new BasicStroke(8));
+
+                    for (int j = 3; j < x_coords.length-2; j+=3){
+
+                        int x0 = (int)x_coords[j-3];
+                        int y0 = (int)y_coords[j-3];
+                        int x1 = (int)x_coords[j];
+                        int y1 = (int)y_coords[j];
+
+                        g2d.drawLine(x0, y0, x1, y1);
+                    }
+
+                    g2d.setColor(new Color(52, 29, 75)); // Purple-ish/Navy
+                    g2d.setStroke(new BasicStroke(6));
+
+                    for (int j = 3; j < x_coords.length-2; j+=3){
+
+                        int x0 = (int)x_coords[j-3];
+                        int y0 = (int)y_coords[j-3];
+                        int x1 = (int)x_coords[j];
+                        int y1 = (int)y_coords[j];
+
+                        g2d.drawLine(x0, y0, x1, y1);
                     }
                 }
             }
@@ -399,17 +526,39 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
 
     // Highlight the block selected in the main GUI
     public void drawSelectedBlock(Graphics2D g2d){
-        g2d.setColor(new Color(254, 208, 36));
+        g2d.setColor(new Color(150, 60, 10)); // burnter orange
+        g2d.setStroke(new BasicStroke(10));
+        
         double[] x_coords = blocks.get(blockSelected.getId()).getXCoordinates();
         double[] y_coords = blocks.get(blockSelected.getId()).getYCoordinates();
-        for (int i = 0; i < x_coords.length-2; i++){
-            g2d.drawRect((int)x_coords[i], (int)y_coords[i],
-                        2, 2);
+
+        for (int j = 6; j < x_coords.length-6; j+=3){
+
+            int x0 = (int)x_coords[j-3];
+            int y0 = (int)y_coords[j-3];
+            int x1 = (int)x_coords[j];
+            int y1 = (int)y_coords[j];
+
+            g2d.drawLine(x0, y0, x1, y1);
+        }
+
+        g2d.setColor(new Color(254, 208, 36)); // burnt orange
+        g2d.setStroke(new BasicStroke(6));
+
+        for (int j = 3; j < x_coords.length-2; j+=3){
+
+            int x0 = (int)x_coords[j-3];
+            int y0 = (int)y_coords[j-3];
+            int x1 = (int)x_coords[j];
+            int y1 = (int)y_coords[j];
+
+            g2d.drawLine(x0, y0, x1, y1);
         }
     }
 
     // Draw the crossing lights
     public void drawCrossingLight(Graphics2D g2d){
+
         for (int i = 0; i < blocks.size(); i++){
             if (blocks.get(i).getCrossing() != null){
 
@@ -419,40 +568,41 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                 int x_coord = (int)x_coords[x_coords.length / 2] - 15;
                 int y_coord = (int)y_coords[x_coords.length / 2] - 5;
 
-                int radius = 2;
+                int radius = 3;
 
                 g2d.setColor(Color.BLACK);
-                Shape circleOutline = new Ellipse2D.Double(x_coord - 0, y_coord - 2, 2.0*(radius+2), 2.0*(radius+2));
+
+                Shape circleOutline = new Ellipse2D.Double(x_coord - 3, y_coord - 2, 2.0*(radius+2), 2.0*(radius+2));
                 g2d.fill(circleOutline);
 
                 // Draw the pole
                 g2d.setColor(Color.BLACK);
-                g2d.fillRect(x_coord - 2, y_coord - 10, 3, 24);
+                g2d.fillRect(x_coord - 4, y_coord - 20, 3, 45);
 
                 if (blocks.get(i).getCrossing().getState() == true){
                     // Draw the gate
-
-                    g2d.setStroke(new BasicStroke(2));
+                    g2d.setStroke(new BasicStroke(3));
                     g2d.setColor(Color.BLACK);
-                    g2d.drawLine(x_coord - 24, y_coord+4, x_coord - 6, y_coord+4);
+                    g2d.drawLine(x_coord - 34, y_coord+4, x_coord - 6, y_coord+4);
 
                     g2d.setColor(Color.WHITE);
-                    g2d.drawLine(x_coord - 21, y_coord+2, x_coord - 6, y_coord+2);
+                    g2d.drawLine(x_coord - 30, y_coord+2, x_coord - 6, y_coord+2);
 
                     g2d.setColor(Color.RED);
-                    g2d.drawLine(x_coord - 21, y_coord+2, x_coord - 18, y_coord + 2);
+                    g2d.drawLine(x_coord - 33, y_coord+2, x_coord - 30, y_coord + 2);
                     
                     // Set the light color to Red
                     g2d.setColor(Color.RED);
                 } else {
                     g2d.setColor(Color.GRAY);
                 }
-                Shape circle = new Ellipse2D.Double(x_coord + 2, y_coord, 2.0*radius, 2.0*radius);
+
+                Shape circle = new Ellipse2D.Double(x_coord -1, y_coord, 2.0*radius, 2.0*radius);
                 g2d.fill(circle);
 
                 // 2nd light
                 g2d.setColor(Color.BLACK);
-                circleOutline = new Ellipse2D.Double(x_coord - 8, y_coord - 2, 2.0*(radius+2), 2.0*(radius+2));
+                circleOutline = new Ellipse2D.Double(x_coord - 11, y_coord - 2, 2.0*(radius+2), 2.0*(radius+2));
                 g2d.fill(circleOutline);
 
                 if (blocks.get(i).getCrossing().getState() == true){
@@ -460,14 +610,20 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                 } else {
                     g2d.setColor(Color.GRAY);
                 }
-                circle = new Ellipse2D.Double(x_coord - 6, y_coord, 2.0*radius, 2.0*radius);
+
+                circle = new Ellipse2D.Double(x_coord - 9, y_coord, 2.0*radius, 2.0*radius);
                 g2d.fill(circle);
 
                 //"X"
+                g2d.setColor(Color.BLACK);
+                g2d.setStroke(new BasicStroke(6));
+                g2d.drawLine(x_coord - 9, y_coord-15, x_coord + 4, y_coord - 4);
+                g2d.drawLine(x_coord + 4, y_coord-15, x_coord - 9, y_coord - 4);
+
                 g2d.setColor(Color.WHITE);
                 g2d.setStroke(new BasicStroke(2));
-                g2d.drawLine(x_coord - 6, y_coord-12, x_coord + 4, y_coord - 4);
-                g2d.drawLine(x_coord + 4, y_coord-12, x_coord - 6, y_coord - 4);
+                g2d.drawLine(x_coord - 9, y_coord-15, x_coord + 4, y_coord - 4);
+                g2d.drawLine(x_coord + 4, y_coord-15, x_coord - 9, y_coord - 4);
             }
         }
     }
@@ -476,20 +632,19 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
     public void drawLights(Graphics2D g2d){
         for (int i = 0; i < blocks.size(); i++){
             if (blocks.get(i).getLight() != null){
-                if (blocks.get(i).getSwitch() == null){
-                    System.out.println("LIGHT WITH NO SWITCH");
-                }
+
                 int x_coord = blocks.get(i).getLight().getXCoordinate();
                 int y_coord = blocks.get(i).getLight().getYCoordinate();
 
-                int radius = 3;
+                int radius = 5;
 
                 if (blocks.get(i).getLight().getState() == true){
                     g2d.setColor(new Color(0, 255, 0, 40));
                 } else {
                     g2d.setColor(new Color(255, 0, 0, 40));
                 }
-                Shape circleGlow1 = new Ellipse2D.Double(x_coord - 4, y_coord - 4, 2.0*(radius+4), 2.0*(radius+4));
+
+                Shape circleGlow1 = new Ellipse2D.Double(x_coord - 6, y_coord - 6, 2.0*(radius+6), 2.0*(radius+6));
                 g2d.fill(circleGlow1);
 
                 if (blocks.get(i).getLight().getState() == true){
@@ -497,11 +652,11 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                 } else {
                     g2d.setColor(new Color(255, 0, 0, 25));
                 }
-                Shape circleGlow2 = new Ellipse2D.Double(x_coord - 8, y_coord - 8, 2.0*(radius+8), 2.0*(radius+8));
+                Shape circleGlow2 = new Ellipse2D.Double(x_coord - 10, y_coord - 10, 2.0*(radius+10), 2.0*(radius+10));
                 g2d.fill(circleGlow2);
 
                 g2d.setColor(new Color(16, 19, 35));
-                g2d.fillRect(x_coord - 2, y_coord + 2, 3, 12);
+                g2d.fillRect(x_coord - 2, y_coord + 8, 6, 18);
 
                 g2d.setColor(Color.BLACK);
                 Shape circleOutline = new Ellipse2D.Double(x_coord - 2, y_coord - 2, 2.0*(radius+2), 2.0*(radius+2));
@@ -512,6 +667,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                 } else {
                     g2d.setColor(Color.RED);
                 }
+
                 Shape circle = new Ellipse2D.Double(x_coord, y_coord, 2.0*radius, 2.0*radius);
                 g2d.fill(circle);
             }
@@ -521,78 +677,139 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
     // Render each active train
     public void drawTrains(Graphics2D g2d){
         for (int i = 0; i < activeTrains; i++){
-                
-            /* Hard-coded train movement (track model debug only)
-            int scaledMetersToMove = (int)(blocks.get(positions.get(i).getCurrentBlock()).getLength()) / 10;
-            int direction = positions.get(i).moveTrain( scaledMetersToMove );
-            */
            
+            // Highlight the currently occupied block
+            // Outer stroke
             g2d.setColor(new Color(0, 100, 255));
+            g2d.setStroke(new BasicStroke(10));
+
             double[] x_coords = blocks.get(positions.get(i).getCurrentBlock()).getXCoordinates();
             double[] y_coords = blocks.get(positions.get(i).getCurrentBlock()).getYCoordinates();
-            for (int j = 0; j < x_coords.length-2; j++){
-                g2d.drawRect((int)x_coords[j], (int)y_coords[j],
-                            2, 2);
+            
+            for (int j = 6; j < x_coords.length - 6; j+=3){
+
+                int x0 = (int)x_coords[j-3];
+                int y0 = (int)y_coords[j-3];
+                int x1 = (int)x_coords[j]; 
+                int y1 = (int)y_coords[j];
+
+                g2d.drawLine(x0, y0, x1, y1);
             }
+
+            // Inner stroke
+            g2d.setColor(new Color(0, 80, 200));
+            g2d.setStroke(new BasicStroke(6));
+            
+            for (int j = 6; j < x_coords.length - 6; j+=3){
+
+                int x0 = (int)x_coords[j-3];
+                int y0 = (int)y_coords[j-3];
+                int x1 = (int)x_coords[j]; 
+                int y1 = (int)y_coords[j];
+
+                g2d.drawLine(x0, y0, x1, y1);
+            }
+
            
             int direction = positions.get(i).getCurrentDirection();
 
+            // Order the coordinates to iterate through based on the
+            // train's direction
             if (direction == 1){
+
                 (xy_coords.get(i))[0] = (positions.get(i).getCoordinates())[0];
                 (xy_coords.get(i))[1] = (positions.get(i).getCoordinates())[1];
                 (previous_xy_coords.get(i))[0] = (xy_coords.get(i))[0];
                 (previous_xy_coords.get(i))[1] = (xy_coords.get(i))[1];
+
             } else if (direction == -1){
+
                 (xy_coords.get(i))[0] = (positions.get(i).getInverseCoordinates())[0];
                 (xy_coords.get(i))[1] = (positions.get(i).getInverseCoordinates())[1];
                 (previous_xy_coords.get(i))[0] = (xy_coords.get(i))[0];
                 (previous_xy_coords.get(i))[1] = (xy_coords.get(i))[1];
+
             } else {
+
                 (xy_coords.get(i))[0] = (previous_xy_coords.get(i))[0];
                 (xy_coords.get(i))[1] = (previous_xy_coords.get(i))[1];
+
             }
             
-            g2d.setColor(Color.white);
-
             // Draw the train
-            g2d.fillRect(((xy_coords.get(i))[0]).intValue() - 1, ((xy_coords.get(i))[1]).intValue() - 1, 5, 5);
-            g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 14)); 
+            int train_x = ((xy_coords.get(i))[0]).intValue() - 2;
+            int train_y = ((xy_coords.get(i))[1]).intValue() - 2;
+            int train_w = 6;
+            int train_h = 6;
+
+            // Outer Stroke
+            g2d.setColor(Color.BLACK);
+            g2d.fillRect(train_x-2, train_y-2, train_w + 4, train_h + 4);
+
+            // Inside fill
+            g2d.setColor(Color.WHITE);
+            g2d.fillRect(train_x, train_y, train_w, train_h);
+
+            // Draw the train's information on top of it
+            // --> Train name
+            g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 16)); 
+            String trainInfo = trainIDs.get(i).substring(0, 4);
+            int text_x = ((xy_coords.get(i))[0]).intValue() - 16;
+            int text_y = ((xy_coords.get(i))[1]).intValue() - 6;
             
-            g2d.setColor(new Color(26, 29, 35));
-            // Draw the train's information
-            g2d.drawString(blocks.get(positions.get(i).getCurrentBlock()).getSection() + Integer.toString(blocks.get(positions.get(i).getCurrentBlock()).getId() + 1), 
-                ((xy_coords.get(i))[0]).intValue() - 9, ((xy_coords.get(i))[1]).intValue() - 5);
+            // Text shadow
+            g2d.setColor(Color.BLACK);
+            g2d.drawString(trainInfo, text_x, text_y);
 
+            // Text foreground
             g2d.setColor(Color.white);
-            g2d.drawString(blocks.get(positions.get(i).getCurrentBlock()).getSection() + Integer.toString(blocks.get(positions.get(i).getCurrentBlock()).getId() + 1), 
-                ((xy_coords.get(i))[0]).intValue() - 9, ((xy_coords.get(i))[1]).intValue() - 7);
-     
-            g2d.setColor(lineColor);
+            g2d.drawString(trainInfo, text_x, text_y - 3);
+           
+            // --> Current block
+            g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 19));
+            String currBlockStr = blocks.get(positions.get(i).getCurrentBlock()).getSection()
+                                + Integer.toString(positions.get(i).getCurrentBlock() + 1);
+            text_x = ((xy_coords.get(i))[0]).intValue() - 16;
+            text_y = ((xy_coords.get(i))[1]).intValue() - 22;
 
-            /*
-            (pingCounters[i])++;
-            int radius = (pingCounters[i] % 14);
-            Shape circle = new Ellipse2D.Double(((xy_coords.get(i))[0]).intValue() - radius, 
-                            ((xy_coords.get(i))[1]).intValue() - radius,
-                            2.0*radius, 2.0*radius );
-            g2d.draw(circle);
-            */
+            // Text shadow
+            g2d.setColor(Color.BLACK);
+            g2d.drawString(currBlockStr, text_x, text_y);
 
-            if (direction == -2){
-                removeTrain();
-            }
+            // Text foreground
+            g2d.setColor(new Color(254, 208, 36));
+            g2d.drawString(currBlockStr, text_x, text_y - 3);
         }
     }
 
-	public void trainPoofByName(String name) {	    
-	    int indexToRemove = trainIDs.indexOf(name);
-	    trainIDs.remove(indexToRemove);
-	    positions.remove(indexToRemove);
-	    
-	    activeTrains--;
-	    if(activeTrains < 0) {
-	    	activeTrains = 0;
-	    }
-	}
+
+
+    // Draw arrows (used for displaying block directions)
+    public void drawArrow(Graphics g1, int x1, int y1, int x2, int y2) {
+        Graphics2D g = (Graphics2D) g1.create();
+
+        double dx = x2 - x1, dy = y2 - y1;
+        double angle = Math.atan2(dy, dx);
+        int len = (int) Math.sqrt(dx*dx + dy*dy);
+        AffineTransform at = AffineTransform.getTranslateInstance(x1, y1);
+        at.concatenate(AffineTransform.getRotateInstance(angle));
+        g.transform(at);
+
+        g.drawLine(0, 0, len, 0);
+        g.fillPolygon(new int[] {len+2, len-(ARR_SIZE*2+1), len-(ARR_SIZE*2+1), len+2},
+                      new int[] {0, -(ARR_SIZE-1), ARR_SIZE-1, 0}, 4);
+    }
+
+    // Remove a train from the display
+    /*
+    public void removeTrain(){
+        System.out.println("POOFEDDDD");
+        activeTrains--;
+        trainIDs.remove(activeTrains);
+        positions.remove(activeTrains);
+        xy_coords.remove(activeTrains);
+        previous_xy_coords.remove(activeTrains);
+    }
+    */
 }
 

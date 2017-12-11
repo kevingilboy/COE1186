@@ -25,8 +25,8 @@ public class DynamicDisplay{
 
 	// Dimensions of the track layout view
 	public int VERTICAL_FRAME_PADDING = 0;
-	public int TRACK_LAYOUT_WIDTH = 334;
-	public int TRACK_LAYOUT_HEIGHT = 448;
+	public int TRACK_LAYOUT_WIDTH = 2*334;
+	public int TRACK_LAYOUT_HEIGHT = 2*448;
 
 	// Dimensions of the overall GUI, currently set to the
 	// dimensions of the track layout view
