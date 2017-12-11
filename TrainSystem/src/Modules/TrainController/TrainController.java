@@ -32,9 +32,7 @@ public class TrainController implements Module {
 	
 	public final double SPEEDCONVERSION = 3.6;			//1 m/s = 3.6 kph
 
-	/**
-	 * Called by the SimulatorGUI class to show the GUI when this module is selected
-	 */
+	//called by the SimulatorGUI class to show the GUI when this module is selected
 	public void showGUI(){
 		mainGUI.showGUI();
 	}
@@ -45,6 +43,7 @@ public class TrainController implements Module {
 		stationList = new String[]{"", "Pioneer", "Edgebrook", "Station", "Whited", "South Bank", "Central", "Inglewood", "Overbrook", "Glenbury", "Dormont", "Mt. Lebanon", "Poplar", "Castle Shannon", "Glenbury", "Overbrook", "Inglewood", "Central", "Shadyside", "Herron Avenue", "Swissville", "Penn Station", "Steel Plaza", "First Avenue", "Station Square", "South Hills Junction"};
 	}
 
+	//return a single individual controller object by its train identity string
 	public TrnController getController(String ID){
 		return controlList.get(ID);
 	}
@@ -208,6 +207,7 @@ public class TrainController implements Module {
 		return true;
 	}
 
+	//called by the simulator when a train enters yard_in, deletes the controller object and removes it from the gui
 	public void trainPoofByName(String line, String name) {
 		TrnController tc = controlList.remove(name);
 		tc = null;

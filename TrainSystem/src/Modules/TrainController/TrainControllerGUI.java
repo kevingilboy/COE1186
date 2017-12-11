@@ -23,6 +23,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Point;
 
 /*--- REQUIRED LIBRARIES FOR HSS DARK THEME ----*/
 import java.awt.GraphicsEnvironment;
@@ -59,6 +60,7 @@ public class TrainControllerGUI {
 	
 	private ArrayList<TrnControllerGUI> guiList;
 	private ArrayList<JButton> buttonList;
+	private ArrayList<JLabel> idList;
 	
 	private JLabel icon_logo;
 	
@@ -280,6 +282,7 @@ public class TrainControllerGUI {
 		
 		JLabel L = new JLabel(g.getId());
 		stylizeInfoLabel_Bold(L);
+		idList.add(L);
 		L.setBounds(30, yCount + 8, 100, 24);
 		contentPane.add(L);
 		
@@ -329,6 +332,32 @@ public class TrainControllerGUI {
 
 	public void trainPoofByName(String name) {
 		// TODO Auto-generated method stub
-		
+		JButton B;
+		JLabel L;
+		Point P;
+		int j, y;
+		int i = -1;
+		for (JLabel l : idList) {
+			if (l.getText().equals(name)) {
+				i = idList.indexOf(l);
+				break;
+			}
+		}
+		if (i != -1) {
+			for (j = (i + 1); j < idList.size(); j++) {
+				B = buttonList.get(j);
+				P = B.getLocation();
+				y = (int)P.getY();
+				B.setBounds(150, y - 50, 70, 37);
+				L = idList.get(j);
+				L.setBounds(30, y - 42, 100, 24);
+			}
+			B = buttonList.remove(i);
+			B.setVisible(false);
+			B = null;
+			L = idList.remove(i);
+			L.setVisible(false);
+			L = null;
+		}
 	}
 }
