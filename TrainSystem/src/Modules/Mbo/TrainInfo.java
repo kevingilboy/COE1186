@@ -24,6 +24,7 @@ public class TrainInfo {
 	private double speed;
 	private double authority;
 	private double safeBrakingDistance;
+	private int direction;
 	private SimTime timeSignalTransmitted;
 	private Mbo mbo;
 
@@ -36,6 +37,8 @@ public class TrainInfo {
 		timePreviousSignalReceived = time;
 		this.previousPosition = position;
 		this.mbo = mbo;
+		this.direction = 1;
+		this.block = mbo.getBlockFromCoordinates(position);
 	}
 
 	public Object[] toDataArray() {
@@ -44,28 +47,31 @@ public class TrainInfo {
 		output[1] = timeSignalReceived.toString();
 		output[2] = String.format("(%.3f, %.3f)", position[0], position[1]);
 		//System.out.printf("%s on %s.\n", name, blockName);
-		output[3] = blockName;
+		output[3] = block.getID();
 		output[4] = String.format("%.3f", speed * (SECONDS_PER_HOUR / METERS_PER_MILE));
-		output[5] = String.format("%.3f", authority / METERS_PER_MILE);
+		output[5] = (authority != Double.MAX_VALUE) ? String.format("%.3f", authority / METERS_PER_MILE) : "n/a";
 		output[6] = String.format("%.3f", safeBrakingDistance / METERS_PER_MILE);
 		//System.out.printf("Dist %f\n", safeBrakingDistance);
 		return output;
 	}
 
 	public void updatePosition(double[] pos, SimTime time) {
-		//timePreviousSignalReceived.ms = timeSignalReceived.ms;
-		//timePreviousSignalReceived.sec = timeSignalReceived.sec;
-		//timePreviousSignalReceived.min = timeSignalReceived.min;
-		//timePreviousSignalReceived.hr = timePreviousSignalReceived.hr;
+
+		// get the new times
 		lastSignalSec = signalSec;
 		signalSec = time.sec;
-		timeSignalReceived = time;/*
-		timeSignalReceived.ms = time.ms;
-		timeSignalReceived.sec = time.ms;
-		timeSignalReceived.min = time.ms;
-		timeSignalReceived.ms = time.ms;*/
+		timeSignalReceived = time;
+
+		// if the block changed, used the direction of travel on the previous block to determine the direction of travel 
+		// on this block
 		previousPosition = position;
 		position = pos;
+		MboBlock newBlock = mbo.getBlockFromCoordinates(pos);
+		if (block != newBlock) {
+			int[] blockInfo = block.getNextBlockInfo(direction);
+			direction = blockInfo[1];
+			block = newBlock;
+		} 
 		calculateSpeed();
 		//System.out.printf("%s at %f:%f\n", name, pos[0], pos[1]);
 	}
@@ -77,6 +83,10 @@ public class TrainInfo {
 
 	public double[] getPosition() {
 		return position;
+	}
+
+	public int getDirection() {
+		return direction;
 	}
 
 	public MboBlock getBlock() {
