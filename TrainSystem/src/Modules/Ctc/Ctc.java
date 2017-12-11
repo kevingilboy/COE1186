@@ -271,6 +271,7 @@ public class Ctc implements Module,TimeControl {
 	
 	protected Schedule removeScheduleByName(String name) {
 		Schedule removedSchedule = schedules.remove(name);
+		gui.updateQueueTable();
 		return removedSchedule;
 	}
 	
@@ -298,6 +299,7 @@ public class Ctc implements Module,TimeControl {
 			schedule.addStop(2, 1, new SimTime("00:02:00"));
 			addSchedule(testName,schedule);
 			dispatchTrain(testName);
+			removeScheduleByName(testName);
 		}
 		else if(line==Line.RED) {
 			Schedule schedule = new Schedule(Line.RED);
@@ -308,6 +310,7 @@ public class Ctc implements Module,TimeControl {
 			schedule.addStop(2, 59, new SimTime("00:02:00"));
 			addSchedule(testName,schedule);
 			dispatchTrain(testName);
+			removeScheduleByName(testName);
 		}
 	}
 	
@@ -323,7 +326,7 @@ public class Ctc implements Module,TimeControl {
 	 * Dispatch a train and call respective methods in TrainModel and TrainController
 	 */
 	public void dispatchTrain(String name) {
-		Schedule schedule = removeScheduleByName(name);
+		Schedule schedule = getScheduleByName(name);
 		
 		//If the first block is not occupied, dispatch
 		//Else add it to a queue to be subsequently dispatched
@@ -338,7 +341,6 @@ public class Ctc implements Module,TimeControl {
 		Train train = new Train(schedule);
 		schedule.train = train;
 		trains.put(schedule.name, train);
-		//train.line.blocks[train.line.yardOut].setOccupancy(true);
 		
 		trainModel.dispatchTrain(schedule.name, train.line.toString().toUpperCase());
 		trainController.dispatchTrain(schedule.name, train.line.toString().toUpperCase()); 
@@ -701,18 +703,25 @@ public class Ctc implements Module,TimeControl {
 		/*
 		 * AUTO-DISPATCH
 		 */
+		ArrayList<String> schedulesToDelete = new ArrayList<String>();
 		for(Schedule schedule : schedules.values()) {
 			if(schedule.departureTime.equals(currentTime)) {
 				String name = schedule.name;
 				dispatchTrain(name);
+				schedulesToDelete.add(name);
 				gui.autoDispatchFromQueue(name);
 			}
+		}
+		while(schedulesToDelete.size()>0) {
+			removeScheduleByName(schedulesToDelete.remove(0));
 		}
 		
 		//If a train was waiting for yard_out to be unoccupied, check yardout and dispatch if clear
 		Schedule scheduleToDispatch = scheduleQueueToDispatch.peek();
 		if(scheduleToDispatch!=null && checkDispatchability(scheduleToDispatch)) {
-			dispatchTrain(scheduleQueueToDispatch.poll());
+			Schedule schedule = scheduleQueueToDispatch.poll();
+			dispatchTrain(schedule.name);
+			removeScheduleByName(schedule.name);
 		}
 		
 		/*
