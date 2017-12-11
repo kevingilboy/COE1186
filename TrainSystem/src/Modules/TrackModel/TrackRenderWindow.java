@@ -140,6 +140,7 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
         Graphics2D g2d  = (Graphics2D) g;
 
         drawTrack(g2d);
+        drawYard(g2d);
         drawSwitches(g2d);
         drawLights(g2d);
         drawSelectedBlock(g2d);
@@ -185,6 +186,28 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
                 }
             }
         }
+    }
+
+    public void drawYard(Graphics2D g2d){
+
+        int yard_x = 286;
+        int yard_y = 148;
+        int yard_w = 44;
+        int yard_h = 24;
+
+        g2d.setColor(Color.BLACK);
+        g2d.fillRect(yard_x, yard_y+3, yard_w, yard_h);
+
+        g2d.setColor(Color.GRAY); 
+        g2d.fillRect(yard_x, yard_y, yard_w, yard_h);
+
+        g2d.setColor(new Color(26, 29, 35));
+        g2d.fillRect(yard_x+2, yard_y+2, yard_w-4, yard_h-4);
+
+        g2d.setColor(Color.WHITE);
+        g2d.setFont(new Font("Roboto Condensed", Font.BOLD, 14)); 
+        g2d.drawString("YARD", yard_x+7, yard_y+17);
+
     }
 
     public void drawBeacons(Graphics2D g2d){
@@ -475,5 +498,16 @@ public class TrackRenderWindow extends JPanel implements ActionListener{
             }
         }
     }
+
+	public void trainPoofByName(String name) {	    
+	    int indexToRemove = trainIDs.indexOf(name);
+	    trainIDs.remove(indexToRemove);
+	    positions.remove(indexToRemove);
+	    
+	    activeTrains--;
+	    if(activeTrains < 0) {
+	    	activeTrains = 0;
+	    }
+	}
 }
 

@@ -115,4 +115,8 @@ public class DynamicDisplay{
             frame.setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
         }
     }
+
+	public void trainPoofByName(String name) {
+		dynamicTrackView.trainPoofByName(name);
+	}
 }

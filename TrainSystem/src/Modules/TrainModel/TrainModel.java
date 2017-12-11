@@ -179,6 +179,7 @@ public class TrainModel implements Module{
 	    // Figure out which train is occupying the block at 'id'
 	    // set that train's beacon information to 'beaconInfo'
 		Train beaconTrain = getTrainAtBlock(blockId, line);
+		if(beaconTrain==null) return;
 		// something like
 		setBeacon(beaconTrain.getTrainID(), beaconInfo);
 		
@@ -395,7 +396,11 @@ public class TrainModel implements Module{
 		this.getTrain(trainID).setStation(station);
 	}
 	
-	// TODO: not sure yet if I need this??
+	/**
+	 * If any modules receiving the GPS are not getting the signal, this should be set to false
+	 * @param trainID
+	 * @param status
+	 */
 	public void setGPSAntenna(String trainID, boolean status) {
 		this.getTrain(trainID).setGPSAntenna(status);
 	}
@@ -406,10 +411,17 @@ public class TrainModel implements Module{
 	 * @param trainID
 	 */
 	public void setMBOSignal(String trainID) {
-		mbo.receiveTrainPosition(trainID, getCoordinates(trainID), this.getTrain(trainID).checkSum());
+		mbo.receiveTrainPosition(trainID, getCoordinates(trainID), this.getTrain(trainID).getWeight(), this.getTrain(trainID).checkSum());
 		// call method to send the MBO an "incoming signal" status that passes a trainID
 	}
 	
+	/**
+	 * If the train is stopped at a station, this method will be called to generate passengers embarking
+	 * on the train at a station
+	 * @param blockId
+	 * @param line
+	 * @param numPassengers
+	 */
 	public void setPassengersEmbarking(int blockId, String line, int numPassengers) {
 		Train t = this.getTrainAtBlock(blockId, line);
 		if (t.isStopped() && !t.embarkingPassengersSet){
@@ -417,6 +429,9 @@ public class TrainModel implements Module{
 		}
 	}
 
+	/**
+	 * Returns true if communication between modules has been established
+	 */
 	@Override
 	public boolean communicationEstablished() {
 		return true;
@@ -433,6 +448,12 @@ public class TrainModel implements Module{
 				t.getTrainGUI().dispose();
 			}
 		}
+	}
+
+	public void trainPoofByName(String line, String name) {
+		Train t = trainList.remove(name.hashCode());
+		t.position = null;
+		t = null;
 	}
 
 }

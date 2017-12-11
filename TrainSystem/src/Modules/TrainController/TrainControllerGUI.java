@@ -319,4 +319,9 @@ public class TrainControllerGUI {
 			return -1;
 		}
 	}
+
+	public void trainPoofByName(String name) {
+		// TODO Auto-generated method stub
+		
+	}
 }
