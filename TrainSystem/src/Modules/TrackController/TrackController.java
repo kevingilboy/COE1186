@@ -103,9 +103,13 @@ public class TrackController implements Module{
 	 * @param trainName A String indicating the train for the given authority
 	 * @param speed A double of the suggested setpoint speed from the CTC
 	 */
-	//TODO make this signal vital (ie check the speed limit)
-	public void transmitSuggestedTrainSetpointSpeed(String trainName, double speed){
-		trackModel.transmitSuggestedTrainSetpointSpeed(trainName, speed);
+	public void transmitSuggestedTrainSetpointSpeed(String trainName, double speed, int cb){
+		int trackSpeedLimit = trackModel.getBlock(associatedLine, cb).getSpeedLimit();
+		if(Math.ceil(speed) > trackSpeedLimit){
+			trackModel.transmitSuggestedTrainSetpointSpeed(trainName, trackSpeedLimit);
+		} else {
+			trackModel.transmitSuggestedTrainSetpointSpeed(trainName, speed);
+		}
 	}
 	
 	/**

@@ -666,8 +666,8 @@ public class Ctc implements Module,TimeControl {
 	 *  TRANSMITTERS
 	 * ------------------------------
 	 */
-	protected void transmitSuggestedSpeed(String name, TrackController wayside, double speed) {
-		wayside.transmitSuggestedTrainSetpointSpeed(name,speed);
+	protected void transmitSuggestedSpeed(String name, TrackController wayside, double speed, int cb) {
+		wayside.transmitSuggestedTrainSetpointSpeed(name,speed, cb);
 	}
 	protected void transmitCtcAuthority(String name, TrackController wayside, int[] auth) {
 		wayside.transmitCtcAuthority(name,auth);
@@ -835,7 +835,7 @@ public class Ctc implements Module,TimeControl {
 			 */
 			//Calculate speed
 			calculateSuggestedSpeed(train);
-			transmitSuggestedSpeed(train.name, wayside, train.suggestedSpeed);
+			transmitSuggestedSpeed(train.name, wayside, train.suggestedSpeed, train.currLocation);
 		}
 		
 		/*
