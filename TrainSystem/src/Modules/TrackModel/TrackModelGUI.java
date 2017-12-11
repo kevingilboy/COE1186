@@ -326,7 +326,7 @@ public class TrackModelGUI{
 
 		comboBox_sectionId = new JComboBox();
 		stylizeComboBox(comboBox_sectionId);
-		comboBox_sectionId.setBounds(520, 116, 76, 30);
+		comboBox_sectionId.setBounds(516, 116, 100, 30);
 		frame_tmGUI.getContentPane().add(comboBox_sectionId);
 
 		ItemListener blockSelectionListener = new ItemListener() {
@@ -758,7 +758,7 @@ public class TrackModelGUI{
 	public void initTracksOnStartup() {		
 		TrackCsvParser redParser = new TrackCsvParser();
 		trackModel.setTrack("red", redParser.parse("Modules/TrackModel/Track Layout/RedLineFinal.csv"));
-		//redParser.parseLightPositions("Modules/TrackModel/Track Layout/RedLightsCoordinates.csv", trackModel.getTrack("red"));
+		redParser.parseLightPositions("Modules/TrackModel/Track Layout/RedLightsCoordinates.csv", trackModel.getTrack("red"));
 		trackSelected = trackModel.getTrack("red");
 		blockSelected = trackSelected.get(0);
 
