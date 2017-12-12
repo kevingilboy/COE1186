@@ -57,8 +57,8 @@ public class TrackCsvParser{
 				String[] coords = (blockData[13]).split(coordDelimiter);
 
 				for (int i = 0; i < coords.length; i++){
-					x_coordinates[i] = Double.parseDouble((coords[i].split(xyDelimiter))[0]);
-					y_coordinates[i] = Double.parseDouble((coords[i].split(xyDelimiter))[1]);
+					x_coordinates[i] = 1.5*Double.parseDouble((coords[i].split(xyDelimiter))[0]);
+					y_coordinates[i] = 1.5*Double.parseDouble((coords[i].split(xyDelimiter))[1]);
 				}
 
 				/* Generate block from currently parsed CSV line */

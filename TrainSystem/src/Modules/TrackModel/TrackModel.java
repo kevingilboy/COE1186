@@ -10,6 +10,7 @@ import Shared.SimTime;
 
 import Simulator.Simulator;
 import Modules.TrainModel.TrainModel;
+import Modules.TrainModel.Train;
 import Modules.TrainModel.Position;
 import Modules.Ctc.Ctc;
 
@@ -135,7 +136,7 @@ public class TrackModel implements Module{
 			int beaconInfo = 0;
 
 			for (int i = 0; i < track.size(); i++){
-				if ((track.get(i).getBeacon() != null) && (track.get(i).getOccupied())){
+				if ((track.get(i).getBeacon() != null) && (track.get(i).getOccupied()) && (track.get(i).getStatus())){
 					blockID = i;
 					beaconInfo = track.get(i).getBeacon().getInfo();
 					trainModel.setBeaconBlockOccupancy(line, blockID, beaconInfo);
@@ -159,7 +160,7 @@ public class TrackModel implements Module{
 			int numTicketSales = 0;
 
 			for (int i = 0; i < track.size(); i++){
-				if ((track.get(i).getStation() != null) && (track.get(i).getOccupied())){
+				if ((track.get(i).getStation() != null) && (track.get(i).getOccupied()) && (track.get(i).getStatus())){
 					blockID = i;
 					numTicketSales = track.get(i).getStation().getTicketSales();
 					trainModel.setPassengersEmbarking(blockID, line, numTicketSales);
@@ -173,10 +174,28 @@ public class TrackModel implements Module{
 	// for calculation of throughput.
 	public void passengersBoarded(String trainName, int numPassengers){
 		ctc.addPassengers(trainName, numPassengers);
+
+		Train train = trainModel.getTrain(trainName);
+		String line = train.getLine();
+
+		if ((line.toLowerCase()).equals("green")){
+			trackModelGUI.greenLineDisplay.dynamicTrackView.updatePassengers(trainName, numPassengers, TrackRenderWindow.PASSENGERS_EMBARKING);
+		} else {
+			trackModelGUI.redLineDisplay.dynamicTrackView.updatePassengers(trainName, numPassengers, TrackRenderWindow.PASSENGERS_EMBARKING);
+		}
 	}
 
 	public void passengersUnboarded(String trainName, int numPassengers){
 		ctc.removePassengers(trainName, numPassengers);
+
+		Train train = trainModel.getTrain(trainName);
+		String line = train.getLine();
+
+		if ((line.toLowerCase()).equals("green")){
+			trackModelGUI.greenLineDisplay.dynamicTrackView.updatePassengers(trainName, numPassengers, TrackRenderWindow.PASSENGERS_DISEMBARKING);
+		} else {
+			trackModelGUI.redLineDisplay.dynamicTrackView.updatePassengers(trainName, numPassengers, TrackRenderWindow.PASSENGERS_DISEMBARKING);
+		}
 	}
 
 	public void sendTicketSalesToCtc(int numTicketSales){
