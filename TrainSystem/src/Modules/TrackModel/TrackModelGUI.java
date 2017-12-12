@@ -509,6 +509,24 @@ public class TrackModelGUI{
 		icon_logo.setBounds(shift + 1080 - 110, 638, 100, 100);
 		frame_tmGUI.getContentPane().add(icon_logo);
 
+		// LEGEND
+		JLabel icon_legend = new JLabel("");
+		icon_legend.setIcon(new ImageIcon("Modules/TrackModel/Images/legend_black.png"));
+		icon_legend.setBounds(shift + 360, 520, 593, 206);
+		icon_legend.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				icon_legend.setIcon(new ImageIcon("Modules/TrackModel/Images/legend_hover.png"));
+				refresh();
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				icon_legend.setIcon(new ImageIcon("Modules/TrackModel/Images/legend_black.png"));
+				refresh();
+			}
+		});
+		frame_tmGUI.getContentPane().add(icon_legend);
+
 		// STATION INFORMATION
 		JLabel label_station = new JLabel("STATION");
 		stylizeInfoLabel(label_station);
