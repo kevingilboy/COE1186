@@ -1,12 +1,8 @@
+//Kevin Gilboy
+//This object is a train and holds all relevant metadata
+
 package Modules.Ctc;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-
-import Modules.TrackModel.Switch;
-import Modules.TrackModel.TrackIterator;
 import Shared.SimTime;
 
 public class Train {

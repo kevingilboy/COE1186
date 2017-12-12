@@ -1,14 +1,11 @@
+//Kevin Gilboy
+//This program creates a GUI for a Train System CTC
+
 package Modules.Ctc;
 
 import Modules.TrackModel.Block;
-import Modules.TrackModel.Light;
-import Modules.TrackModel.Crossing;
-import Modules.TrackModel.Station;
-import Modules.TrackModel.Switch;
 import Shared.SimTime;
-import Modules.TrackModel.Beacon;
 
-import java.awt.EventQueue;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -17,14 +14,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-//import java.io.File;
 import java.awt.Container;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.SystemColor;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import java.awt.event.KeyAdapter;
@@ -827,7 +822,7 @@ public class CtcGui {
 		suggestedSpeed = new JTextField();
 		stylizeTextField(suggestedSpeed);
 		suggestedSpeed.setColumns(12);
-		suggestedSpeed.setBounds(1250, 441, 52, 35);
+		suggestedSpeed.setBounds(1250, 441, 45, 35);
 		frame.getContentPane().add(suggestedSpeed);
 		
 		btnSuggestSpeed = new JButton("SEND");
@@ -841,10 +836,10 @@ public class CtcGui {
 			}
 		});
 		stylizeButton_Disabled(btnSuggestSpeed);
-		btnSuggestSpeed.setBounds(1310, 441, 80, 32);
+		btnSuggestSpeed.setBounds(1303, 441, 70, 32);
 		frame.getContentPane().add(btnSuggestSpeed);
 		
-		chckbxManualOverride = new JCheckBox("MANUAL OVERRIDE");
+		chckbxManualOverride = new JCheckBox("<html>MANUAL<br>OVERRIDE</html>");
 		chckbxManualOverride.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Train train = ctc.getTrainByName(dispatchSelectedTable.schedule.name);
@@ -859,7 +854,7 @@ public class CtcGui {
 		});
 		chckbxManualOverride.setBackground(new Color(20,20,20));
 		chckbxManualOverride.setForeground(Color.WHITE);
-		chckbxManualOverride.setBounds(1250, 478, 135, 18);
+		chckbxManualOverride.setBounds(1250, 478, 85, 34);
 		frame.getContentPane().add(chckbxManualOverride);
 		
 		enableManualSpeedComponents();
@@ -881,7 +876,8 @@ public class CtcGui {
 		frame.getContentPane().add(lbltrackStatusAnd);
 
 		JLabel hazardIcon = new JLabel();
-		//TODO hazardIcon.setIcon(new ImageIcon(CtcGui.class.getResource("/javax/swing/plaf/metal/icons/ocean/warning.png")));
+		//Icon not in Java9
+		//hazardIcon.setIcon(new ImageIcon(CtcGui.class.getResource("/javax/swing/plaf/metal/icons/ocean/warning.png")));
 		hazardIcon.setBounds(377, 656, 37, 32);
 		frame.getContentPane().add(hazardIcon);
 		
@@ -989,6 +985,11 @@ public class CtcGui {
 		panel_1.setBounds(704, 455, 191, 145);
 		frame.getContentPane().add(panel_1);
 		
+		JLabel lblJustDoIt = new JLabel("<html>RAPID<br>TEST :</html>");
+		stylizeInfoLabel_Small(lblJustDoIt);
+		lblJustDoIt.setBounds(1175, 520, 89, 70);
+		frame.getContentPane().add(lblJustDoIt);
+		
 		JButton btnJustDoItGreen = new JButton("<html><center>JUST<br>DO IT<br>(G)</center></html>");
 		stylizeButton(btnJustDoItGreen);
 		btnJustDoItGreen.addActionListener(new ActionListener() {
@@ -996,7 +997,7 @@ public class CtcGui {
 				ctc.testDispatch(Line.GREEN);
 			}
 		});
-		btnJustDoItGreen.setBounds(1214, 520, 75, 68);
+		btnJustDoItGreen.setBounds(1244, 520, 70, 68);
 		frame.getContentPane().add(btnJustDoItGreen);
 		
 		JButton btnJustDoItRed = new JButton("<html><center>JUST<br>DO IT<br>(R)</center></html>");
@@ -1006,7 +1007,7 @@ public class CtcGui {
 				ctc.testDispatch(Line.RED);
 			}
 		});
-		btnJustDoItRed.setBounds(1284, 520, 75, 68);
+		btnJustDoItRed.setBounds(1309, 520, 70, 68);
 		frame.getContentPane().add(btnJustDoItRed);
 		
 		JButton btnR1 = new JButton("R1");
@@ -1066,7 +1067,7 @@ public class CtcGui {
 		});
 		chckbxRmanual.setForeground(Color.WHITE);
 		chckbxRmanual.setBackground(new Color(20, 20, 20));
-		chckbxRmanual.setBounds(1066, 674, 90, 18);
+		chckbxRmanual.setBounds(1066, 674, 93, 18);
 		frame.getContentPane().add(chckbxRmanual);
 		
 		JCheckBox chckbxGmanual = new JCheckBox("G-MANUAL");
@@ -1080,7 +1081,7 @@ public class CtcGui {
 		});
 		chckbxGmanual.setForeground(Color.WHITE);
 		chckbxGmanual.setBackground(new Color(20, 20, 20));
-		chckbxGmanual.setBounds(1066, 704, 90, 18);
+		chckbxGmanual.setBounds(1066, 704, 93, 18);
 		frame.getContentPane().add(chckbxGmanual);
 		
 		rdbtnFixedBlockMode = new JRadioButton("Fixed Block Mode");

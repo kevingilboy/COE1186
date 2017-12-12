@@ -1,17 +1,18 @@
+//Kevin Gilboy
+//This custom JTable embeds a schedule and special editing tables
+
 package Modules.Ctc;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -21,7 +22,7 @@ import Shared.SimTime;
 
 @SuppressWarnings("serial")
 public class ScheduleJTable extends JTable{	
-	private static Object[] columns = {"Stop","Time to Dwell","Time to Station"};
+	private static Object[] columns = {"Stop","Dwell","Next"};
 	private static Object[] blankRow = new Object[columns.length];
 	private ScheduleJTable table = this;
 	public Schedule schedule = null;

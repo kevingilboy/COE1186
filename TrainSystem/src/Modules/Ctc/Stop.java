@@ -1,3 +1,6 @@
+//Kevin Gilboy
+//This object holds a stop that is to be put inside of a schedule
+
 package Modules.Ctc;
 
 import Shared.SimTime;

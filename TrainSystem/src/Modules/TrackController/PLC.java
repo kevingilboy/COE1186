@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class PLC {
 	//Parent Class
@@ -27,12 +28,11 @@ public class PLC {
 	}
 	
 	public boolean parsePLC(String plcPath){
-		//System.out.println("parsing file: " + plcPath);
 		BufferedReader 	br 			= null;
 		String 			currline 	= "";
 		String 			delimeter 	= ":";
 		try {
-			br = new BufferedReader(new FileReader(plcPath));
+			br = new BufferedReader(new InputStreamReader(ClassLoader.getSystemResourceAsStream(plcPath)));
 			// Read from plc file and save logic expression for each
 			while ((currline = br.readLine()) != null){
 				String [] logic = currline.split(delimeter);

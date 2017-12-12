@@ -55,22 +55,24 @@ public class Switch{
 
 	public void setState(boolean newState){
 		state = newState;
-
-		if (tailType == TAIL_TYPE_ALTERNATE){
-			if (state == STATE_NORMAL){
-				switchNormal.setPortState(STATE_ALTERNATE);
-				switchAlternate.setPortState(STATE_ALTERNATE);
-			} else if (state == STATE_ALTERNATE){
-				switchNormal.setPortState(STATE_NORMAL);
-				switchAlternate.setPortState(STATE_NORMAL);
-			}
-		} else {
-			if (state == STATE_NORMAL){
-				switchNormal.setPortState(STATE_NORMAL);
-				switchAlternate.setPortState(STATE_ALTERNATE);
-			} else if (state == STATE_ALTERNATE){
-				switchNormal.setPortState(STATE_ALTERNATE);
-				switchAlternate.setPortState(STATE_NORMAL);
+		
+		if (status == STATUS_WORKING){
+			if (tailType == TAIL_TYPE_ALTERNATE){
+				if (state == STATE_NORMAL){
+					switchNormal.setPortState(STATE_ALTERNATE);
+					switchAlternate.setPortState(STATE_ALTERNATE);
+				} else if (state == STATE_ALTERNATE){
+					switchNormal.setPortState(STATE_NORMAL);
+					switchAlternate.setPortState(STATE_NORMAL);
+				}
+			} else {
+				if (state == STATE_NORMAL){
+					switchNormal.setPortState(STATE_NORMAL);
+					switchAlternate.setPortState(STATE_ALTERNATE);
+				} else if (state == STATE_ALTERNATE){
+					switchNormal.setPortState(STATE_ALTERNATE);
+					switchAlternate.setPortState(STATE_NORMAL);
+				}
 			}
 		}
 	}
@@ -80,6 +82,12 @@ public class Switch{
 	}
 
 	public void setStatus(boolean newStatus){
+		status = newStatus;
+		switchNormal.setPortStatus(newStatus);
+		switchAlternate.setPortStatus(newStatus);
+	}
+
+	protected void setPortStatus(boolean newStatus){
 		status = newStatus;
 	}
 
