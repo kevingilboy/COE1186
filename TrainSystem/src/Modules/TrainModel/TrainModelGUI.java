@@ -183,7 +183,7 @@ public class TrainModelGUI extends JFrame {
 	private Line2D verticalLine3;
 	private Line2D verticalLine4;
 	private boolean arrivalStatus = true;
-	//private int setPowerIn;
+
 	private boolean serviceBrake = false;
 	private boolean emerBrake = false;
 	private int numCars = 1;
@@ -200,7 +200,6 @@ public class TrainModelGUI extends JFrame {
 	private JLabel lblWidth = new JLabel("WIDTH:");
 	private JLabel lblOfCars = new JLabel("# OF CARS:");
 	private JLabel lblCapacity = new JLabel("CAPACITY:");
-	//private JLabel lblSpeedLimit = new JLabel("Speed Limit:");
 	private JLabel lblGpsAntenna = new JLabel("GPS ANTENNA:");
 	private JLabel lblMboAntenna = new JLabel("MBO ANTENNA:");
 	private JLabel lblNextStation = new JLabel("NEXT STATION:");
@@ -274,9 +273,7 @@ public class TrainModelGUI extends JFrame {
 	// The instance of the TrainModel class we will use to go between the back end elements
 	// and the GUI elements of the Train Model
 	public static Train train;
-	//private final JMenuItem mntmSimulateBrakeFailure = new JMenuItem("Simulate Brake Failure");
-	//private final JMenuItem mntmSimulateEngineFailure = new JMenuItem("Simulate Engine Failure");
-	//private final JMenuItem mntmSimulateSignalFailure = new JMenuItem("Simulate Signal Failure");
+
 	private final JMenuItem mntmExit = new JMenuItem("Exit All");
 	private Image ledImage = new ImageIcon(this.getClass().getResource("images/statusIcon_grey.png")).getImage();
 	private Image ledImageRed = new ImageIcon(this.getClass().getResource("images/statusIcon_red.png")).getImage();
@@ -286,21 +283,24 @@ public class TrainModelGUI extends JFrame {
 	private Image safety = new ImageIcon(this.getClass().getResource("safety.jpg")).getImage();
 	private Image mouse = new ImageIcon(this.getClass().getResource("mouse.jpg")).getImage();
 	private ArrayList<Image> imgArray = new ArrayList<>();
+	
 	private int i = 0;
 	private final JLabel ledImageLabel = new JLabel();
 	private final JLabel ledImageLabel2 = new JLabel();
 	private final JLabel ledImageLabel3 = new JLabel();
-	//private final JMenuItem mntmEndFailures = new JMenuItem("End Failure(s)");
+
 	JButton btnCauseFailure = new JButton("CAUSE");
 	JCheckBox engineFailCheckBox = new JCheckBox("");
 	JCheckBox signalFailCheckBox = new JCheckBox("");
 	JCheckBox brakeFailCheckBox = new JCheckBox("");
 	private final JButton btnEndFailure = new JButton("END");
-	
-	/*public TrainModelNewGUI() {
-		
-	}*/
-	
+	protected boolean engineFailChecked;
+	protected boolean sigFailChecked;
+	protected boolean brakeFailChecked;
+
+	/**
+	 * Method used to draw the GUI, primarily with the separator lines
+	 */
 	public void paint(Graphics g) {
 		 	Dimension d = contentPane.getSize();
 	        super.paint(g);  // fixes the immediate problem.
@@ -325,14 +325,6 @@ public class TrainModelGUI extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		/**try {
-			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-			
-		}
-		catch (Throwable e) {
-			e.printStackTrace();
-		}*/
-		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -343,30 +335,45 @@ public class TrainModelGUI extends JFrame {
 				}
 			}
 		});
-		
-		//double currSpeed = trainModel.setTrainValues();
-		//System.out.println(currSpeed);
-	}
-	public boolean serviceBrakeStatus() {
-		return serviceBrake;
+
 	}
 	
+	/**
+	 * Sets the emergency brake status - needed for turning the passenger brake on or off
+	 * @return boolean - true if on, false if off
+	 */
 	public boolean emerBrakeStatus() {
 		return emerBrake;
 	}
 	
+	/**
+	 * Returns the engine fail status
+	 * @return boolean - true if on, false if off
+	 */
 	public boolean engineFailStatus() {
 		return engineFail;
 	}
 	
+	/**
+	 * Returns the signal fail status
+	 * @return boolean - true if on, false if off
+	 */
 	public boolean signalFailStatus() {
 		return sigFail;
 	}
 	
+	/**
+	 * Returns the braking status
+	 * @return boolean - true if on, false if off
+	 */
 	public boolean brakeFailStatus() {
 		return brakeFail;
 	}
 	
+	/**
+	 * Returns an image used for advertisements so that we can rotate through them
+	 * @return
+	 */
 	private Image getImage() {
 		if(i == imgArray.size()-1) {
 			i = 0;
@@ -395,6 +402,9 @@ public class TrainModelGUI extends JFrame {
 		this.train = newTrain;
 	}
 		
+	/**
+	 * Method created to initialize all GUI components
+	 */
 	private void initComponents() {
 		splitPane = new JSplitPane();
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -446,6 +456,8 @@ public class TrainModelGUI extends JFrame {
 			  setEnabled(true);
 			  ledImageLabel.setIcon(new ImageIcon(ledImage));
 			  engineFail = false;
+			  emerBrake = false;
+			  train.setEBrake(false);
 			  //train.engineFailureStatus();
 			  engineFailCheckBox.setSelected(engineFail);
 			  ledImageLabel2.setIcon(new ImageIcon(ledImage));
@@ -456,6 +468,9 @@ public class TrainModelGUI extends JFrame {
 			  brakeFail = false;
 			  //train.brakeFailureStatus();
 			  brakeFailCheckBox.setSelected(brakeFail);
+			  engineFailChecked = false;
+			  sigFailChecked = false;
+			  brakeFailChecked = false;
 			  repaint();
 		  }
 		});
@@ -468,19 +483,31 @@ public class TrainModelGUI extends JFrame {
 			public void actionPerformed(ActionEvent e)
 			{
 				setEnabled(true);
-				if(engineFail) { 
+				if(engineFailChecked) { 
 					//train.engineFailureStatus();
 					ledImageLabel.setIcon(new ImageIcon(ledImageRed)); 
+					engineFail = true;
+					emerBrake = true;
+			  		train.setEBrake(true);
+
 				}
 				
-				if(sigFail)	{ 
+				if(sigFailChecked)	{ 
 					//train.signalFailureStatus();
-					ledImageLabel2.setIcon(new ImageIcon(ledImageRed)); 
+					ledImageLabel2.setIcon(new ImageIcon(ledImageRed));
+					sigFail = true;
+					emerBrake = true;
+			  		train.setEBrake(true);
+
 				}
 				
-				if(brakeFail) { 
+				if(brakeFailChecked) { 
 					//train.brakeFailureStatus();
 					ledImageLabel3.setIcon(new ImageIcon(ledImageRed)); 
+					brakeFail = true;
+					emerBrake = true;
+			  		train.setEBrake(true);
+			  		train.setServiceBrake(false);
 				}
 				repaint();
 			}
@@ -491,7 +518,7 @@ public class TrainModelGUI extends JFrame {
 		contentPane.add(engineFailCheckBox);
 		engineFailCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				engineFail = true;
+				engineFailChecked = true;
 			}
 		});
 
@@ -500,7 +527,7 @@ public class TrainModelGUI extends JFrame {
 		contentPane.add(signalFailCheckBox);
 		signalFailCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				sigFail = true;
+				sigFailChecked = true;
 			}
 		});
 
@@ -509,7 +536,7 @@ public class TrainModelGUI extends JFrame {
 		contentPane.add(brakeFailCheckBox);
 		brakeFailCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				brakeFail = true;
+				brakeFailChecked = true;
 			}
 		});
 		
@@ -556,7 +583,7 @@ public class TrainModelGUI extends JFrame {
 		contentPane.add(lblHeight);
 
 		stylizeInfoLabel(lblWeight);
-		lblWeight.setBounds(60, 125, 69, 20);
+		lblWeight.setBounds(60, 125, 75, 20);
 		contentPane.add(lblWeight);
 
 		stylizeInfoLabel(lblLength);
@@ -597,7 +624,7 @@ public class TrainModelGUI extends JFrame {
 		contentPane.add(lblTimeOfArrival);
 		
 		stylizeInfoLabel(lblStatus);
-		lblStatus.setBounds(60, 447, 69, 20);
+		lblStatus.setBounds(60, 447, 75, 20);
 		contentPane.add(lblStatus);
 
 		arrivalStatusLabel.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -852,8 +879,8 @@ public class TrainModelGUI extends JFrame {
 	 * Given the train ID, poofs the train from existence, and removes it from the train list
 	 * @param train
 	 */
-	public void poofTrainfromGUIList(Train train) {
-		//mnSelectTrain.remove((train.getTrainID());
+	public void poofTrainfromGUIList() {
+		mnSelectTrain.removeAll();
 	}
 
 	/**

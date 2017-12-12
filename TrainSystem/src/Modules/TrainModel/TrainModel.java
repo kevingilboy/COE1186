@@ -450,10 +450,43 @@ public class TrainModel implements Module{
 		}
 	}
 
+	/**
+	 * Removes a train from the simulation via yard in
+	 * @param line
+	 * @param name
+	 */
 	public void trainPoofByName(String line, String name) {
 		Train t = trainList.remove(name.hashCode());
+		t.getTrainGUI().dispose();
+		for(Train tn : trainList.values()) {
+			tn.getTrainGUI().poofTrainfromGUIList();
+			
+		}
+		
 		t.position = null;
 		t = null;
+		
+		for(Train tn : trainList.values()) {
+			addListItems(tn);
+		}
+		
+	}
+	
+	/**
+	 * Method for re-adding trains onto the GUI lists after a single train has been removed
+	 * @param train
+	 */
+	public void addListItems(Train train) {
+		for(Train t : trainList.values()) {
+			// adds all the active trains to the new train's GUI
+			// adds this new train to all the other train's GUI lists
+			if(train == t) {
+				continue;
+			} else if(trainList.size() > 0) {
+				TrainModelGUI otherGUI = t.getTrainGUI();
+				otherGUI.addTraintoGUIList(train);	
+			}
+		}
 	}
 
 }
