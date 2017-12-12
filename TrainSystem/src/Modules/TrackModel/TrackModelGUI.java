@@ -284,7 +284,7 @@ public class TrackModelGUI{
 		frame_tmGUI.getContentPane().add(label_blockID);
 		
 		// SELECT BLOCK RIGHT BUTTON
-		JButton button_selectBlockRight = new JButton("\u00BB");
+		JButton button_selectBlockRight = new JButton(">");
 		stylizeButton(button_selectBlockRight);
 		button_selectBlockRight.setBounds(shift + 559, 66, 47, 38);
 
@@ -307,7 +307,7 @@ public class TrackModelGUI{
 		frame_tmGUI.getContentPane().add(button_selectBlockRight);
 
 		// SELECT BLOCK LEFT BUTTON
-		JButton button_selectBlockLeft = new JButton("\u00AB");
+		JButton button_selectBlockLeft = new JButton("<");
 		stylizeButton(button_selectBlockLeft);
 		button_selectBlockLeft.setBounds(shift + 412, 66, 47, 38);
 		
@@ -546,49 +546,49 @@ public class TrackModelGUI{
 		// FAILURE INFORMATION
 		JLabel label_failures = new JLabel("FAILURES");
 		stylizeInfoLabel(label_failures);
-		label_failures.setBounds(shift + 399, 269, 236, 37);
+		label_failures.setBounds(shift + 399, 169, 236, 37);
 		frame_tmGUI.getContentPane().add(label_failures);
 		
 		JLabel label_railFailure = new JLabel("RAIL");
 		stylizeInfoLabel_Small(label_railFailure);
-		label_railFailure.setBounds(shift + 440, 304, 55, 22);
+		label_railFailure.setBounds(shift + 440, 204, 55, 22);
 		frame_tmGUI.getContentPane().add(label_railFailure);
 		
 		icon_railFailure = new JLabel("");
 		icon_railFailure.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
-		icon_railFailure.setBounds(shift + 405, 304, 25, 23);
+		icon_railFailure.setBounds(shift + 405, 204, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_railFailure);
 		
 		JLabel label_powerFailure = new JLabel("POWER");
 		stylizeInfoLabel_Small(label_powerFailure);
-		label_powerFailure.setBounds(shift + 439, 328, 78, 22);
+		label_powerFailure.setBounds(shift + 439, 228, 78, 22);
 		frame_tmGUI.getContentPane().add(label_powerFailure);
 		
 		icon_powerFailure = new JLabel("");
 		icon_powerFailure.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
-		icon_powerFailure.setBounds(shift + 405, 329, 25, 23);
+		icon_powerFailure.setBounds(shift + 405, 228, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_powerFailure);
 
 		JLabel label_trackCircuitFailure = new JLabel("TRACK CIRCUIT");
 		stylizeInfoLabel_Small(label_trackCircuitFailure);
-		label_trackCircuitFailure.setBounds(shift + 439, 352, 128, 22);
+		label_trackCircuitFailure.setBounds(shift + 439, 252, 128, 22);
 		frame_tmGUI.getContentPane().add(label_trackCircuitFailure);
 		
 		icon_trackCircuitFailure = new JLabel("");
 		icon_trackCircuitFailure.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
-		icon_trackCircuitFailure.setBounds(shift + 405, 352, 25, 23);
+		icon_trackCircuitFailure.setBounds(shift + 405, 252, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_trackCircuitFailure);
 		
 		
 		// FAILURE SIMULATION
 		JLabel label_simulateFailure = new JLabel("SIMULATE FAILURE");
 		stylizeInfoLabel(label_simulateFailure);
-		label_simulateFailure.setBounds(shift + 395, 405, 236, 37);
+		label_simulateFailure.setBounds(shift + 395, 305, 236, 37);
 		frame_tmGUI.getContentPane().add(label_simulateFailure);
 		
 		JButton button_toggle = new JButton("TOGGLE");
 		stylizeButton(button_toggle);
-		button_toggle.setBounds(shift + 550, 441, 98, 52);
+		button_toggle.setBounds(shift + 550, 341, 98, 52);
 
 		button_toggle.addActionListener(new ActionListener() { 
 			public void actionPerformed(ActionEvent e) { 
@@ -611,7 +611,7 @@ public class TrackModelGUI{
 
 		JComboBox comboBox_failures = new JComboBox();
 		stylizeComboBox(comboBox_failures);
-		comboBox_failures.setBounds(shift + 380, 441, 158, 52);
+		comboBox_failures.setBounds(shift + 380, 341, 158, 52);
 		comboBox_failures.addItem("RAIL FAILURE");
 		comboBox_failures.addItem("POWER FAILURE");
 		comboBox_failures.addItem("TRACK CIRCUIT FAILURE");
