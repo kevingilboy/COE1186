@@ -16,15 +16,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TrainController implements Module {
-	private HashMap<String, TrnController> controlList;
-	private TrainControllerGUI mainGUI;
-	public TrackModel trackModel;
+	private HashMap<String, TrnController> controlList;		//stores individual controller objects for each train
+	private TrainControllerGUI mainGUI;						//reference to main GUI
+	public TrackModel trackModel;							//communication references to other modules
 	public TrainModel trainModel;
-	private ArrayList<BlockInfo> redInfo;
+	private ArrayList<BlockInfo> redInfo;					//holds all relevant info about both tracks
 	private ArrayList<BlockInfo> greenInfo;
-	private SimTime time;
-	private String[] stationList;
-	private int blockMode = 0;
+	private String[] stationList;							//array of station names
+	private int blockMode;									//0 indicates MBO mode, 1 indicates fixed mode
 	
 	public final int APPROACHING = 0;
 	public final int ARRIVED = 1;
@@ -33,9 +32,7 @@ public class TrainController implements Module {
 	
 	public final double SPEEDCONVERSION = 3.6;			//1 m/s = 3.6 kph
 
-	/**
-	 * Called by the SimulatorGUI class to show the GUI when this module is selected
-	 */
+	//called by the SimulatorGUI class to show the GUI when this module is selected
 	public void showGUI(){
 		mainGUI.showGUI();
 	}
@@ -46,10 +43,12 @@ public class TrainController implements Module {
 		stationList = new String[]{"", "Pioneer", "Edgebrook", "Station", "Whited", "South Bank", "Central", "Inglewood", "Overbrook", "Glenbury", "Dormont", "Mt. Lebanon", "Poplar", "Castle Shannon", "Glenbury", "Overbrook", "Inglewood", "Central", "Shadyside", "Herron Avenue", "Swissville", "Penn Station", "Steel Plaza", "First Avenue", "Station Square", "South Hills Junction"};
 	}
 
+	//return a single individual controller object by its train identity string
 	public TrnController getController(String ID){
 		return controlList.get(ID);
 	}
 	
+	//gets P and I values from main GUI, or waits until values are available, and creates an individual train controller (TrnController) object with relevant information about its track
 	public void dispatchTrain(String trainID, String line) {
 		double p, i;
 		p = mainGUI.getP();
@@ -66,22 +65,21 @@ public class TrainController implements Module {
 		}
 	}
 	
+	//called by the MBO, sets authority to a particular train
 	public void setMboAuthority(String trainID, double auth) {
 		TrnController C = controlList.get(trainID);
 		if(C==null) return;
 		C.setMboAuthority(auth);
 	}
 	
+	//called by the MBO, sets the safe braking distance of a particular train
 	public void setSafeBrakingDistance(String trainID, double dist) {
 		TrnController C = controlList.get(trainID);
 		if(C==null) return;
 		C.setSafeBrakingDistance(dist);
 	}
 	
-	public void setPassengerEmergencyBrake(String trainID, boolean status) {
-		TrnController C = controlList.get(trainID);
-		C.setPassengerEmergencyBrake(status);
-	}
+	/////these functions called by a particular TrnController object to pass a value through this object to the Train Model////////
 	
 	public void transmitPower(String trainID, double power) {
 		trainModel.setPower(trainID, power);
@@ -116,6 +114,10 @@ public class TrainController implements Module {
 		trainModel.setArrivalStatus(trainID, status, stationName);
 	}
 	
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/////these functions called by a particular TrnController object to access a value from the Train Model through this object/////
+	
 	public double receiveTrainActualSpeed(String trainID) {						//train model calculates actual speed in m/s
 		return trainModel.getVelocity(trainID);
 	}
@@ -144,17 +146,19 @@ public class TrainController implements Module {
 		return trainModel.getBeacon(trainID);
 	}
 	
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	//called by the CTC to choose whether the system will run in fixed or moving block mode
 	public void enableMovingBlockMode(Boolean isMovingBlock) {
 		if (isMovingBlock) {
-			//Set to moving block mode
-			blockMode = 0;
+			blockMode = 0;		//set to moving block mode
 		}
 		else {
-			//Set to fixed block mode
-			blockMode = 1;
+			blockMode = 1;		//set to fixed block mode
 		}
 	}
 	
+	//stores all valid track information from the Track Model in local ArrayLists that are then passed to each individual TrnController object as it is created
 	public void receiveMap() {
 		ArrayList<Block> redBlocks = trackModel.getTrack("RED");
 		ArrayList<Block> greenBlocks = trackModel.getTrack("GREEN");
@@ -181,6 +185,7 @@ public class TrainController implements Module {
 		}
 	}
 
+	//called by the Simulator at every clock tick to drive the simulation
 	@Override
 	public boolean updateTime(SimTime time) {
 		for (TrnController T : controlList.values()) {
@@ -189,12 +194,14 @@ public class TrainController implements Module {
 		return true;
 	}
 
+	//allows the module to receive map info from the Track Model before the simulation actually begins
 	@Override
 	public boolean communicationEstablished() {
 		receiveMap();
 		return true;
 	}
 
+	//called by the simulator when a train enters yard_in, deletes the controller object and removes it from the gui
 	public void trainPoofByName(String line, String name) {
 		TrnController tc = controlList.remove(name);
 		tc = null;
