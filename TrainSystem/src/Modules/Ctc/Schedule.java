@@ -1,8 +1,10 @@
+//Kevin Gilboy
+//This is a schedule object containing stops, name, and dispatch time
+
 package Modules.Ctc;
 
 import Shared.SimTime;
 import Modules.TrackModel.Switch;
-import Modules.TrackModel.TrackIterator;
 
 import java.util.ArrayList;
 import java.util.Arrays;

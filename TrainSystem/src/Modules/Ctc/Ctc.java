@@ -1,4 +1,5 @@
 //Kevin Gilboy
+//This program mimics the workings of a Train System CTC
 
 package Modules.Ctc;
 

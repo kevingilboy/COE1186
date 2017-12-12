@@ -1,14 +1,11 @@
+//Kevin Gilboy
+//This program creates a GUI for a Train System CTC
+
 package Modules.Ctc;
 
 import Modules.TrackModel.Block;
-import Modules.TrackModel.Light;
-import Modules.TrackModel.Crossing;
-import Modules.TrackModel.Station;
-import Modules.TrackModel.Switch;
 import Shared.SimTime;
-import Modules.TrackModel.Beacon;
 
-import java.awt.EventQueue;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -17,14 +14,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-//import java.io.File;
 import java.awt.Container;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.SystemColor;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import java.awt.event.KeyAdapter;
