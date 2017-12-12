@@ -135,7 +135,6 @@ public class Schedule {
 				currBlockId = path.get(path.size()-1);
 				prevBlockId = path.get(path.size()-2);
 				
-				//TODO below is a temporary fix for the switch issue
 				if(currBlockId>line.yardOut ||currBlockId<0) continue;
 				
 				

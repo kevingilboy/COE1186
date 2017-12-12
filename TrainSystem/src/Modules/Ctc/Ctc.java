@@ -419,7 +419,7 @@ public class Ctc implements Module,TimeControl {
 			path = q.remove();
 			currBlockId = path.get(path.size()-1);
 			prevBlockId = path.get(path.size()-2);
-			//TODO below is a temporary fix for the switch issue
+
 			if(currBlockId>train.line.yardOut ||currBlockId<0) continue;
 			
 			//-------------------
@@ -546,6 +546,9 @@ public class Ctc implements Module,TimeControl {
 		//If about to enter bidirectional and there is no existing reservation...
 		//Else it is not on bidirectional but it has a reservation so retract the reservation
 		if(path.size()>=4 && train.line.blocks[path.get(3)].getDirection()==0 && bidirectionalReservation[0].equals("")) {
+			//In moving block mode, we must account for two trains on a block
+			//Here we check to see the earliest train that arrived at the block
+			//The earliest train is granted the reservation
 			boolean yieldToOtherTrainsAtLocation = false;
 			for(Train otherTrain : trains.values()) {
 				if(otherTrain==train) continue;
@@ -556,8 +559,9 @@ public class Ctc implements Module,TimeControl {
 				int nextBlock = Ctc.getNextBlockId(train.line, train.currLocation, train.prevLocation);
 				if(otherTrain.currLocation==nextBlock)
 					yieldToOtherTrainsAtLocation = true;
-			}
+			}		
 			
+			//If the train is the earliest to the block, grant it the reservation
 			if(!yieldToOtherTrainsAtLocation) {
 				//Make a reservation
 				int prevIndex = 2;
@@ -579,10 +583,12 @@ public class Ctc implements Module,TimeControl {
 					}
 				}while(train.line.blocks[nb].getDirection()==0);
 				
+				//Alert the wayside that the block is reserved to change light state
 				TrackController waysideStart = getWaysideOfBlock(train.line, startBlock);
 				waysideStart.transmitCtcReservation(startBlock, true);
 				TrackController waysideEnd = getWaysideOfBlock(train.line, startBlock);
 				waysideEnd.transmitCtcReservation(endBlock, true);
+				
 				if(train.line==Line.GREEN) {
 					bidirectionalReservationGreen = new String[] {train.name,Integer.toString(startBlock),Integer.toString(endBlock)};
 				}
@@ -593,9 +599,10 @@ public class Ctc implements Module,TimeControl {
 		}
 		else if(bidirectionalReservation[0].equals(train.name) && path.size()>=4 && train.line.blocks[path.get(3)].getDirection()!=0){
 			//Retract a reservation
-			
 			int startBlock = Integer.parseInt(bidirectionalReservation[1]);
 			int endBlock = Integer.parseInt(bidirectionalReservation[2]);
+			
+			//Alert the wayside that the block is no longer reserved to change light state
 			TrackController waysideStart = getWaysideOfBlock(train.line, startBlock);
 			waysideStart.transmitCtcReservation(startBlock, false);
 			TrackController waysideEnd = getWaysideOfBlock(train.line, endBlock);
@@ -614,13 +621,14 @@ public class Ctc implements Module,TimeControl {
 			path.remove(0);
 		}
 
+		//Calculate the distance of the authority
 		double dist = 0;
 		for(int blockId : path) {
 			if(blockId>=0) {
 				dist += train.line.blocks[blockId].getLength();
 			}
 		}
-		train.authority = dist; //convert distance to miles for display
+		train.authority = dist; //km
 		
 		//-------------------
 		// Return the found path as the authority
@@ -633,8 +641,14 @@ public class Ctc implements Module,TimeControl {
 		return path;
 	}
 	
+	/**
+	 * Calculate speed for a train taking into account
+	 * the mode that it is in
+	 */
 	public void calculateSuggestedSpeed(Train train) {
-		//Send speed limit if not dwelling, else send 0
+		//Send 0 if dwelling
+		//Else send manual if in manual
+		//Else send speed limit
 		if(train.dwelling) {
 			train.suggestedSpeed = 0;
 		}
@@ -646,8 +660,10 @@ public class Ctc implements Module,TimeControl {
 		}
 	}
 	
+	/**
+	 * Check a bidirectional stretch of blocks to see if it is occupied
+	 */
 	private boolean bidirectionalStretchOccupied(Line line, int currBlockId, int prevBlockId, int selfLocation) {
-		//TODO test this method
 		Boolean[] visited = new Boolean[line.blocks.length];
 		for(int i=0; i<visited.length; i++) {
 			visited[i] = false;
@@ -675,6 +691,9 @@ public class Ctc implements Module,TimeControl {
 		return false;
 	}
 	
+	/**
+	 * Add element to, and return a new ArrayList
+	 */
 	public <T> ArrayList<T> cloneAndAppendAL(ArrayList<T> oldAl, T newEl) {
 		ArrayList<T> newAl = new ArrayList<T>();
 		for(T oldEl : oldAl) {
@@ -690,11 +709,17 @@ public class Ctc implements Module,TimeControl {
 	 *  TICKETS
 	 * ------------------------------
 	 */
-	//TrackModel uses this method to add ticket sales for throughput
+	
+	/**
+	 * TrackModel uses this method to add ticket sales for throughput
+	 */
 	public void addTicketSales(int tickets) {
 		runningTicketSales+=tickets;
 	}
 	
+	/**
+	 * Calculates throughput based on ticket sales
+	 */
 	protected void calculateThroughput() {
 		double timeElapsed = SimTime.hoursBetween(startTime, currentTime);
 		throughput = runningTicketSales/timeElapsed;
@@ -705,9 +730,17 @@ public class Ctc implements Module,TimeControl {
 	 *  TRANSMITTERS
 	 * ------------------------------
 	 */
+	
+	/**
+	 * Send suggested speed to wayside
+	 */
 	protected void transmitSuggestedSpeed(String name, TrackController wayside, double speed, int cb) {
 		wayside.transmitSuggestedTrainSetpointSpeed(name,speed, cb);
 	}
+	
+	/**
+	 * Send suggested authority to wayside as path of blocks
+	 */
 	protected void transmitCtcAuthority(String name, TrackController wayside, int[] auth) {
 		wayside.transmitCtcAuthority(name,auth);
 	}
@@ -716,6 +749,10 @@ public class Ctc implements Module,TimeControl {
 	 * ------------------------------
 	 *  MODULE REQUIREMENTS
 	 * ------------------------------
+	 */
+	
+	/**
+	 * Called every clock tick
 	 */
 	@Override
 	public boolean updateTime(SimTime time) {
@@ -824,7 +861,6 @@ public class Ctc implements Module,TimeControl {
 			}
 			
 			//Make train dwell if at stop
-			//TODO this may be moved within the "if" when the train stops at the stop correctly
 			if(train.currLocation == train.schedule.getNextStop() && train.dwelling==false) {
 				train.dwelling = true;
 				train.timeToFinishDwelling = currentTime.add(train.schedule.stops.get(0).timeToDwell);

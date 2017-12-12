@@ -881,7 +881,8 @@ public class CtcGui {
 		frame.getContentPane().add(lbltrackStatusAnd);
 
 		JLabel hazardIcon = new JLabel();
-		//TODO hazardIcon.setIcon(new ImageIcon(CtcGui.class.getResource("/javax/swing/plaf/metal/icons/ocean/warning.png")));
+		//Icon not in Java9
+		//hazardIcon.setIcon(new ImageIcon(CtcGui.class.getResource("/javax/swing/plaf/metal/icons/ocean/warning.png")));
 		hazardIcon.setBounds(377, 656, 37, 32);
 		frame.getContentPane().add(hazardIcon);
 		
