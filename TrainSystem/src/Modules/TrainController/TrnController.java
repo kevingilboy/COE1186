@@ -39,7 +39,6 @@ public class TrnController {
 	private boolean eBrakes;
 	private boolean passEBrakes;
 	private boolean inStation;
-	//private boolean ready;
 	private boolean passed;
 	private ArrayList<BlockInfo> mapInfo;
 	private BlockInfo currentBlockInfo;
@@ -59,7 +58,6 @@ public class TrnController {
 		trainID = id;
 		line = ln;
 		currentStation = null;
-		//ready = true;
 		if (line.equals("RED")) {
 			currentBlock = 76;	//yard
 		}
@@ -70,7 +68,6 @@ public class TrnController {
 		pi = new PIController(p, i);
 		driveMode = 0;
 		blockMode = b;
-		//blockMode = 1;
 		beacon = 0;
 		ctcAuth = 0;
 		mboAuth = 0;
@@ -242,11 +239,6 @@ public class TrnController {
 		driveMode = mode;
 	}
 	
-	//called by the CTC
-	/*public void setCtcAuthority(double auth) {
-		ctcAuth = auth;
-	}*/
-	
 	///////////////these functions called by the TrainController object when the MBO sets values to the train////////////////////
 	
 	public void setMboAuthority(double auth) {
@@ -273,9 +265,6 @@ public class TrnController {
 		if (sBrakes || eBrakes || leftDoor || rightDoor) {		//won't calculate power if brakes are on or doors are open
 			power = 0;
 		}
-		/*else if (!ready) {
-			power = 0;
-		}*/
 		else {
 			if (setpointSpeed > speedLimit) {		//regulate setpoint to speed limit
 				setpointSpeed = speedLimit;
