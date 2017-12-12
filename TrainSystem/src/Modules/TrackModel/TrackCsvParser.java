@@ -27,7 +27,7 @@ public class TrackCsvParser{
 		String delimeter = ",";
 
 		try {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(csvFile)));
+			br = new BufferedReader(new InputStreamReader(ClassLoader.getSystemResourceAsStream(csvFile)));
 
 			while ((currentLine = br.readLine()) != null){
 				String [] blockData = currentLine.split(delimeter);
