@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -32,9 +33,9 @@ public class Ctc implements Module,TimeControl {
 	public SimTime currentTime;
 	public int speedup = 1;
 	
-	public HashMap<String,Train> trains = new HashMap<>();
+	public HashMap<String,Train> trains = new LinkedHashMap <>();
 	public ArrayList<Train> trainsToRemove = new ArrayList<Train>();
-	public HashMap<String,Schedule> schedules = new HashMap<>();
+	public HashMap<String,Schedule> schedules = new LinkedHashMap <>();
 	public Queue<Schedule> scheduleQueueToDispatch = new LinkedList<>();
 
 	public TrackCsvParser trackParser = new TrackCsvParser();

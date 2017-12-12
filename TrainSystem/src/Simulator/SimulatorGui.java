@@ -307,7 +307,7 @@ public class SimulatorGui {
 		cbTrainModelTrains = new JComboBox<String>();
 		stylizeComboBox_disabled(cbTrainModelTrains);
 
-		cbTrainModelTrains.addItem("...");
+		cbTrainModelTrains.addItem("<html><i>No Active Trains</i></html>");
 		cbTrainModelTrains.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String trainName = (String)cbTrainModelTrains.getSelectedItem();
@@ -347,7 +347,7 @@ public class SimulatorGui {
 		cbTrainControllerTrains = new JComboBox<String>();
 		stylizeComboBox_disabled(cbTrainControllerTrains);
 
-		cbTrainControllerTrains.addItem("...");
+		cbTrainControllerTrains.addItem("<html><i>No Active Trains</i></html>");
 		cbTrainControllerTrains.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String trainName = (String)cbTrainControllerTrains.getSelectedItem();
@@ -484,7 +484,6 @@ public class SimulatorGui {
 				simulator.trainModel.getTrain(trainName).showTrainGUI();
 				break;
 			case TRAINCONTROLLER:
-				// THIS STILL HAS BUGS
 				simulator.trainController.getController(trainName).showGUI();
 				break;	
 		}
@@ -500,17 +499,17 @@ public class SimulatorGui {
 		boolean trainModelChanged = false;
 		boolean trainControllerChanged = false;
 		
-		// newTrainModelTrains.addElement("...");
-		// newTrainControllerTrains.addElement("...");
+		newTrainModelTrains.addElement("<html><i>Select a Train</i></html>");
+		newTrainControllerTrains.addElement("<html><i>Select a Train</i></html>");
 
 		for(String key : simulator.ctc.trains.keySet()) {
-			if(currentTrainModelTrains.getIndexOf(key)==-1) {
-				newTrainModelTrains.addElement(key);
+			newTrainModelTrains.addElement(key);
+			if(currentTrainModelTrains.getIndexOf(key)==-1) {	
 				trainModelChanged = true;
 			}
 
-			if(currentTrainControllerTrains.getIndexOf(key)==-1){
-				newTrainControllerTrains.addElement(key);
+			newTrainControllerTrains.addElement(key);
+			if(currentTrainControllerTrains.getIndexOf(key)==-1){	
 				trainControllerChanged = true;
 			}
 		}
