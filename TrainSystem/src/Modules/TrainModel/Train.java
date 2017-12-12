@@ -251,18 +251,18 @@ public class Train {
         this.trainModelGUI.heightVal.setText(Double.toString(truncateTo(this.trainHeight, 2)));
         this.trainModelGUI.widthVal.setText(Double.toString(truncateTo(this.trainWidth, 2)));
         this.trainModelGUI.lengthVal.setText(Double.toString(truncateTo(this.trainLength, 2)));
-        this.trainModelGUI.weightVal.setText(Double.toString(truncateTo(this.trainWeight, 2)));
+        this.trainModelGUI.weightVal.setText(Integer.toString(((int)this.trainWeight)));
         this.trainModelGUI.capacityVal.setText(Integer.toString(this.trainCapacity));
         this.trainModelGUI.powerVal.setText(Double.toString(truncateTo(this.powerIn/1000,2)));
         
         GPSAntenna = this.trainModelGUI.signalFailStatus();
-        if(GPSAntenna == true) {
+        if(!GPSAntenna) {
         	this.trainModelGUI.gpsAntennaStatusLabel.setText("ON");
         } else {
         	this.trainModelGUI.gpsAntennaStatusLabel.setText("OFF");
         }
         MBOAntenna = this.trainModelGUI.signalFailStatus();
-        if(MBOAntenna == true) {
+        if(!MBOAntenna) {
         	this.trainModelGUI.mboAntennaStatusLabel.setText("ON");
         } else {
         	this.trainModelGUI.mboAntennaStatusLabel.setText("OFF");
@@ -436,11 +436,11 @@ public class Train {
     	// TODO
     	this.signalFailureActive = trainModelGUI.signalFailStatus();
     	if(this.signalFailureActive) {
-        	this.setGPSAntenna(false);
-        	this.setMBOAntenna(false);
-    	} else {
-    		this.setGPSAntenna(true);
+        	this.setGPSAntenna(true);
         	this.setMBOAntenna(true);
+    	} else {
+    		this.setGPSAntenna(false);
+        	this.setMBOAntenna(false);
     	}
 
     	
@@ -559,10 +559,6 @@ public class Train {
     	return this.lineColor;
     }
     
-    public void setTime(SimTime time) {
-    	
-    }
-    
     /**
      * Sets the grade of the current block/position of the train
      * 
@@ -633,7 +629,9 @@ public class Train {
      * @param ebrake
      */
     public void setEBrake(boolean ebrake) {
-    	this.emerBrake = ebrake;
+        if(!brakeFailureActive && !signalFailureActive && !engineFailureActive) {
+            this.emerBrake = ebrake;
+        }
     	//trnMdl.setPassengerEmergencyBrake(this.trainID, ebrake);
     }
     
@@ -643,7 +641,9 @@ public class Train {
      * @param sBrake
      */
     public void setServiceBrake(boolean sBrake) {
-    	this.serviceBrake = sBrake;
+        if(!brakeFailureActive){
+            this.serviceBrake = sBrake;
+        }
     }
     
     /**
@@ -699,6 +699,13 @@ public class Train {
     }
     
     public void setNumEmbarking(int num) {
+
+        // Limit the number of embarking passengers so that the 
+        // total after boarding does not exceed the capacity
+        // for two cars.
+        if (num > (2*TRAIN_CAPACITY) - this.numPassengers){
+            num = (2*TRAIN_CAPACITY) - this.numPassengers;
+        }
         this.numPassengers += num;
         trkMdl.passengersBoarded(trainID, num);
         trkMdl.sendTicketSalesToCtc(num);

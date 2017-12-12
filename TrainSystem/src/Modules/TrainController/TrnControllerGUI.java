@@ -235,7 +235,7 @@ public class TrnControllerGUI {
 		stylizeButton(speedSet);
 		speedSet.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e) {	//if in manual mode, ensures that the input is a valid number, changes the gui's value, and sends the new value to the controller
 				if (driveMode == 1) {
 					try {
 						double d;
@@ -312,7 +312,7 @@ public class TrnControllerGUI {
 		
 		tempField.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyPressed(KeyEvent e) {
+			public void keyPressed(KeyEvent e) {	//if in manual mode, will enable temperature set button if driver modifies the value
 				if (driveMode == 1) {
 					tempSet.setEnabled(true);
 				}
@@ -320,7 +320,7 @@ public class TrnControllerGUI {
 		});
 		tempSet.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e) {	//if in manual mode, will check that the input is a valid number and set a new temperature to the gui and train controller
 				if (driveMode == 1) {
 					try {
 						int t = Integer.parseInt(tempField.getText());
@@ -346,7 +346,7 @@ public class TrnControllerGUI {
 		stylizeButton(serviceBtn);
 		serviceBtn.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e) {	//if in manual mode, will toggle the service brakes
 				if (driveMode == 1) {
 					if (serviceBtn.getText().equals("OFF")) {
 						serviceBtn.setText("ON");
@@ -375,7 +375,7 @@ public class TrnControllerGUI {
 		stylizeButton(emergencyBtn);
 		emergencyBtn.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e) {	//if in manual mode, will toggle the emergency brakes
 				if (driveMode == 1) {
 					if (emergencyBtn.getText().equals("OFF")) {
 						emergencyBtn.setText("ON");
@@ -404,7 +404,7 @@ public class TrnControllerGUI {
 		stylizeButton(rightBtn);
 		rightBtn.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e) {	//if in manual mode, will toggle the right doors - doors only open if the controller authorized the opening of the right doors
 				if (driveMode == 1) {
 					if (rightBtn.getText().equals("CLOSED") && suggestedDoor == 1) {
 						rightBtn.setText("OPEN");
@@ -436,7 +436,7 @@ public class TrnControllerGUI {
 		stylizeButton(leftBtn);
 		leftBtn.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e) {	//if in manual mode, will toggle the left doors - doors only open if the controller authorized the opening of the left doors
 				if (driveMode == 1) {
 					if (leftBtn.getText().equals("CLOSED") && suggestedDoor == -1) {
 						leftBtn.setText("OPEN");
@@ -468,7 +468,7 @@ public class TrnControllerGUI {
 		stylizeButton(lightBtn);
 		lightBtn.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e) {	//if in manual mode, will toggle the train's lights
 				if (driveMode == 1) {
 					if (lightBtn.getText().equals("OFF")) {
 						lightBtn.setText("ON");
@@ -495,7 +495,7 @@ public class TrnControllerGUI {
 		modeBtn = new JButton();
 		modeBtn.setText("AUTO");
 		stylizeButton(modeBtn);
-		modeBtn.addMouseListener(new MouseAdapter() {
+		modeBtn.addMouseListener(new MouseAdapter() {	//will toggle the train beween auto and manual mode
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (modeBtn.getText().equals("MANUAL")) {
@@ -513,6 +513,7 @@ public class TrnControllerGUI {
 		modeBtn.setBounds(374, 53, 185, 37);
 		contentPane.add(modeBtn);
 		
+		//disable the components since the train starts in auto mode
 		speedSet.setEnabled(false);
 		tempSet.setEnabled(false);
 		serviceBtn.setEnabled(false);
@@ -526,6 +527,7 @@ public class TrnControllerGUI {
 		frame.setVisible(false);
 	}
 	
+	//update gui values, enable or disable components based on driving mode
 	public boolean guiUpdate() {
 		speedValue.setText(df.format(speed) + " mi/h");
 		setpointValue.setText(df.format(setpoint) + " mi/h");
@@ -648,6 +650,7 @@ public class TrnControllerGUI {
 		lights = b;
 	}
 	
+	//called by the TrnController to authorize the driver to safely open doors - input of zero does not allow opening of either doors
 	public void setSuggestedDoor(int d) {
 		suggestedDoor = d;
 	}

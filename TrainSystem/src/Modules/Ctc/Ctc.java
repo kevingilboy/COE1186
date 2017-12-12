@@ -50,7 +50,8 @@ public class Ctc implements Module,TimeControl {
 	
 	private boolean isMovingBlockMode = false;
 	
-	private String[] bidirectionalReservation = new String[] {"","-1","-1"};
+	private String[] bidirectionalReservationGreen = new String[] {"","-1","-1"};
+	private String[] bidirectionalReservationRed = new String[] {"","-1","-1"};
 	
 	boolean lockReservation = false;
 	int testTrainNum = 0;
@@ -400,10 +401,14 @@ public class Ctc implements Module,TimeControl {
 		int prevBlockId = train.prevLocation;
 		int stopBlockId = train.schedule.getNextStop();
 		
+		String[] bidirectionalReservation = train.line==Line.GREEN?bidirectionalReservationGreen:bidirectionalReservationRed;
+		
 		//If no stops, send blank authority
 		if(stopBlockId == -1) {
 			return path;
 		}
+		//System.out.println("    ");
+
 		q.add(new ArrayList<Integer>(Arrays.asList(prevBlockId,currBlockId)));
 		
 		while(!q.isEmpty()) {
@@ -567,13 +572,40 @@ public class Ctc implements Module,TimeControl {
 					catch(IndexOutOfBoundsException e) {
 						break;
 					}
+					if(nb==-1) {
+						endBlock = train.line.yardIn;
+						break;
+					}
 				}while(train.line.blocks[nb].getDirection()==0);
-				bidirectionalReservation = new String[] {train.name,Integer.toString(startBlock),Integer.toString(endBlock)};
+				
+				TrackController waysideStart = getWaysideOfBlock(train.line, startBlock);
+				waysideStart.transmitCtcReservation(startBlock, true);
+				TrackController waysideEnd = getWaysideOfBlock(train.line, startBlock);
+				waysideEnd.transmitCtcReservation(endBlock, true);
+				if(train.line==Line.GREEN) {
+					bidirectionalReservationGreen = new String[] {train.name,Integer.toString(startBlock),Integer.toString(endBlock)};
+				}
+				else if(train.line==Line.RED) {
+					bidirectionalReservationRed = new String[] {train.name,Integer.toString(startBlock),Integer.toString(endBlock)};
+				}
 			}
 		}
 		else if(bidirectionalReservation[0].equals(train.name) && path.size()>=4 && train.line.blocks[path.get(3)].getDirection()!=0){
 			//Retract a reservation
-			bidirectionalReservation = new String[] {"","-1","-1"};
+			
+			int startBlock = Integer.parseInt(bidirectionalReservation[1]);
+			int endBlock = Integer.parseInt(bidirectionalReservation[2]);
+			TrackController waysideStart = getWaysideOfBlock(train.line, startBlock);
+			waysideStart.transmitCtcReservation(startBlock, false);
+			TrackController waysideEnd = getWaysideOfBlock(train.line, endBlock);
+			waysideEnd.transmitCtcReservation(endBlock, false);
+			
+			if(train.line==Line.GREEN) {
+				bidirectionalReservationGreen = new String[] {"","-1","-1"};
+			}
+			else if(train.line==Line.RED) {
+				bidirectionalReservationRed = new String[] {"","-1","-1"};
+			}
 		}
 		
 		//Remove the first only if not coming from the yard
@@ -672,8 +704,8 @@ public class Ctc implements Module,TimeControl {
 	 *  TRANSMITTERS
 	 * ------------------------------
 	 */
-	protected void transmitSuggestedSpeed(String name, TrackController wayside, double speed) {
-		wayside.transmitSuggestedTrainSetpointSpeed(name,speed);
+	protected void transmitSuggestedSpeed(String name, TrackController wayside, double speed, int cb) {
+		wayside.transmitSuggestedTrainSetpointSpeed(name,speed, cb);
 	}
 	protected void transmitCtcAuthority(String name, TrackController wayside, int[] auth) {
 		wayside.transmitCtcAuthority(name,auth);
@@ -701,9 +733,14 @@ public class Ctc implements Module,TimeControl {
 		/*
 		 * AUTO-DISPATCH
 		 */
+		ArrayList<String[]> schedulesToIterate = new ArrayList<String[]>();
 		for(Schedule schedule : schedules.values()) {
-			if(schedule.departureTime.equals(currentTime)) {
-				String name = schedule.name;
+			schedulesToIterate.add(new String[] {schedule.departureTime.toString(), schedule.name});
+		}
+		for(int i=0; i<schedulesToIterate.size(); i++) {
+			String [] currSchedule = schedulesToIterate.get(i);
+			if((new SimTime(currSchedule[0])).equals(currentTime)) {
+				String name = currSchedule[1];
 				dispatchTrain(name);
 				gui.autoDispatchFromQueue(name);
 			}
@@ -844,7 +881,7 @@ public class Ctc implements Module,TimeControl {
 			 */
 			//Calculate speed
 			calculateSuggestedSpeed(train);
-			transmitSuggestedSpeed(train.name, wayside, train.suggestedSpeed);
+			transmitSuggestedSpeed(train.name, wayside, train.suggestedSpeed, train.currLocation);
 		}
 		
 		/*
