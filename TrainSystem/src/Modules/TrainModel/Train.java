@@ -629,7 +629,9 @@ public class Train {
      * @param ebrake
      */
     public void setEBrake(boolean ebrake) {
-    	this.emerBrake = ebrake;
+        if(!brakeFailureActive && !signalFailureActive && !engineFailureActive) {
+            this.emerBrake = ebrake;
+        }
     	//trnMdl.setPassengerEmergencyBrake(this.trainID, ebrake);
     }
     
@@ -639,7 +641,9 @@ public class Train {
      * @param sBrake
      */
     public void setServiceBrake(boolean sBrake) {
-    	this.serviceBrake = sBrake;
+        if(!brakeFailureActive){
+            this.serviceBrake = sBrake;
+        }
     }
     
     /**

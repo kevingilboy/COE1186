@@ -456,6 +456,8 @@ public class TrainModelGUI extends JFrame {
 			  setEnabled(true);
 			  ledImageLabel.setIcon(new ImageIcon(ledImage));
 			  engineFail = false;
+			  emerBrake = false;
+			  train.setEBrake(false);
 			  //train.engineFailureStatus();
 			  engineFailCheckBox.setSelected(engineFail);
 			  ledImageLabel2.setIcon(new ImageIcon(ledImage));
@@ -466,6 +468,9 @@ public class TrainModelGUI extends JFrame {
 			  brakeFail = false;
 			  //train.brakeFailureStatus();
 			  brakeFailCheckBox.setSelected(brakeFail);
+			  engineFailChecked = false;
+			  sigFailChecked = false;
+			  brakeFailChecked = false;
 			  repaint();
 		  }
 		});
@@ -482,18 +487,27 @@ public class TrainModelGUI extends JFrame {
 					//train.engineFailureStatus();
 					ledImageLabel.setIcon(new ImageIcon(ledImageRed)); 
 					engineFail = true;
+					emerBrake = true;
+			  		train.setEBrake(true);
+
 				}
 				
 				if(sigFailChecked)	{ 
 					//train.signalFailureStatus();
 					ledImageLabel2.setIcon(new ImageIcon(ledImageRed));
 					sigFail = true;
+					emerBrake = true;
+			  		train.setEBrake(true);
+
 				}
 				
 				if(brakeFailChecked) { 
 					//train.brakeFailureStatus();
 					ledImageLabel3.setIcon(new ImageIcon(ledImageRed)); 
 					brakeFail = true;
+					emerBrake = true;
+			  		train.setEBrake(true);
+			  		train.setServiceBrake(false);
 				}
 				repaint();
 			}
