@@ -5,7 +5,7 @@ import java.util.Random;
 public class Station{
 
 	public int MIN_GENERATED_TICKET_SALES = 10;
-	public int MAX_GENERATED_TICKET_SALES = 50;
+	public int MAX_GENERATED_TICKET_SALES = 100;
 	public boolean DOOR_SIDE_RIGHT = true;
 	public boolean DOOR_SIDE_LEFT = false;
 	public boolean DOOR_SIDE_NONE = false;
