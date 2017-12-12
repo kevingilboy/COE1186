@@ -139,7 +139,7 @@ public class TrackControllerGUI extends JFrame{
 	public TrackController tc;
 	//GUI Variables
 	private JPanel contentPane;
-	private JTextField textStatus;
+	private JTextField textMode;
 	private JTextField textLine;
 	private JTextField textOccupancy;
 	JComboBox<String> comboBlock = new JComboBox<String>();
@@ -147,6 +147,10 @@ public class TrackControllerGUI extends JFrame{
 	JRadioButton switchButtonBottom = new JRadioButton();
 	JLabel labelCrossingGraphic = new JLabel();
 	JLabel labelLightGraphic = new JLabel();
+	JLabel labelSwitchGraphic = new JLabel();
+	JLabel labelSwitchCurr;
+	JLabel labelSwitchNorm;
+	JLabel labelSwitchAlt;
 	JComboBox comboOccupancy = new JComboBox();
 	//Other Variables
 	private String line;
@@ -201,14 +205,14 @@ public class TrackControllerGUI extends JFrame{
 		trackInfoPanel.setLayout(null);
 		
 		JPanel updatePanel = new JPanel();
-		updatePanel.setBounds(10, 32, 487, 59);
+		updatePanel.setBounds(10, 12, 487, 79);
 		updatePanel.setBackground(new Color(26, 29, 35));
 		trackInfoPanel.add(updatePanel);
 		updatePanel.setLayout(null);
 		
 		JPanel switchPanel = new JPanel();
 		switchPanel.setBorder(null);
-		switchPanel.setBounds(236, 120, 240, 66);
+		switchPanel.setBounds(250, 125, 240, 100);
 		switchPanel.setBackground(new Color(26, 29, 35));
 		trackInfoPanel.add(switchPanel);
 		switchPanel.setLayout(null);
@@ -217,7 +221,7 @@ public class TrackControllerGUI extends JFrame{
 		lightsPanel.setLayout(null);
 		lightsPanel.setBorder(null);
 		lightsPanel.setBackground(new Color(26, 29, 35));
-		lightsPanel.setBounds(10, 119, 240, 123);
+		lightsPanel.setBounds(10, 119, 240, 143);
 		trackInfoPanel.add(lightsPanel);
 		
 		//Separators
@@ -258,11 +262,7 @@ public class TrackControllerGUI extends JFrame{
 		stylizeInfoLabel(labelBlock);
 		labelBlock.setBounds(272, 23, 70, 16);
 		trackSelectorPanel.add(labelBlock);
-		
-		/*JLabel labelSection = new JLabel("Section");
-		labelSection.setBounds(164, 23, 46, 16);
-		trackSelectorPanel.add(labelSection);
-		*/
+	
 		JLabel labelLine = new JLabel("LINE");
 		stylizeInfoLabel(labelLine);
 		labelLine.setBounds(68, 23, 50, 16);
@@ -274,12 +274,7 @@ public class TrackControllerGUI extends JFrame{
 		comboBlock.setSelectedIndex(0);
 		comboBlock.addActionListener(new UpdateInfo(tc));
 		trackSelectorPanel.add(comboBlock);
-		
-		/*JComboBox comboSection = new JComboBox();
-		comboSection.setBounds(222, 19, 104, 27);
-		trackSelectorPanel.add(comboSection);
-		comboSection.setModel(new DefaultComboBoxModel(new String[] {"-", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "ZZ", "YY"}));
-		*/
+	
 		textLine = new JTextField();
 		stylizeTextField(textLine);
 		textLine.setBounds(118, 19, 104, 27);
@@ -288,37 +283,33 @@ public class TrackControllerGUI extends JFrame{
 		textLine.setText(line.toUpperCase());
 		textLine.setEditable(false);
 		textLine.setColumns(10);
-		
-		//Controller Specifier
-		/*JLabel labelController = new JLabel("<html><b>Controller - "+name+"</b><html>");
-		labelController.setBounds(0, -1, 502, 32);
-		trackInfoPanel.add(labelController);
-		labelController.setHorizontalAlignment(SwingConstants.CENTER);*/
 	
-		//Block Status
-		/*JLabel labelStatus = new JLabel("Status");
-		labelStatus.setBounds(136, 0, 73, 28);
-		updatePanel.add(labelStatus);
-		labelStatus.setHorizontalAlignment(SwingConstants.TRAILING);
+		//Controller Mode
+		JLabel labelMode = new JLabel("MANUAL MODE");
+		stylizeInfoLabel(labelMode);
+		labelMode.setBounds(80, 0, 150, 28);
+		updatePanel.add(labelMode);
+		labelMode.setHorizontalAlignment(SwingConstants.TRAILING);
 		
-		textStatus = new JTextField();
-		textStatus.setBounds(220, 0, 134, 28);
-		updatePanel.add(textStatus);
-		textStatus.setHorizontalAlignment(SwingConstants.CENTER);
-		textStatus.setText("-");
-		textStatus.setEditable(false);
-		textStatus.setColumns(10);
-		*/
+		textMode = new JTextField();
+		stylizeTextField(textMode);
+		textMode.setBounds(241, 0, 134, 28);
+		updatePanel.add(textMode);
+		textMode.setHorizontalAlignment(SwingConstants.CENTER);
+		textMode.setText("-");
+		textMode.setEditable(false);
+		textMode.setColumns(10);
+		
 		//Block Occupancy
-		JLabel labelOccupancy = new JLabel("OCCUPANCY");
+		JLabel labelOccupancy = new JLabel("OCCUPANCY ");
 		stylizeInfoLabel(labelOccupancy);
-		labelOccupancy.setBounds(99, 28, 134, 28);
+		labelOccupancy.setBounds(80, 38, 150, 28);
 		updatePanel.add(labelOccupancy);
 		labelOccupancy.setHorizontalAlignment(SwingConstants.TRAILING);
 		
 		textOccupancy = new JTextField();
 		stylizeTextField(textOccupancy);
-		textOccupancy.setBounds(241, 28, 134, 28);
+		textOccupancy.setBounds(241, 38, 134, 28);
 		updatePanel.add(textOccupancy);
 		textOccupancy.setHorizontalAlignment(SwingConstants.CENTER);
 		textOccupancy.setText("-");
@@ -326,37 +317,42 @@ public class TrackControllerGUI extends JFrame{
 		textOccupancy.setColumns(10);
 		
 		//Block Switch
-		JLabel labelSwitchState = new JLabel("<html><CENTER>SWITCH<br>STATE</CENTER></html>");
+		JLabel labelSwitchState = new JLabel("SWITCH STATE");
 		stylizeInfoLabel(labelSwitchState);
-		labelSwitchState.setBounds(0, 0, 88, 70);
+		labelSwitchState.setBounds(50, 0, 140, 37);
 		switchPanel.add(labelSwitchState);
-		labelSwitchState.setHorizontalAlignment(SwingConstants.TRAILING);
+		labelSwitchState.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		JLabel labelSwitchGraphic = new JLabel();
-		labelSwitchGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/switch_none.png"));
-		labelSwitchGraphic.setBounds(100, 17, 55, 33);
+		labelSwitchGraphic.setBounds(90, 54, 55, 33);
 		switchPanel.add(labelSwitchGraphic);
+		labelSwitchGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/switch_none.png"));
 		
-		switchButtonTop.setBounds(164, 6, 80, 28);
-		switchButtonTop.setForeground(Color.WHITE);
-		switchButtonTop.setBackground(new Color(20, 20, 20));
-		switchPanel.add(switchButtonTop);
-		switchButtonTop.setHorizontalAlignment(SwingConstants.LEFT);
+		labelSwitchCurr = new JLabel("---");
+		stylizeInfoLabel_Bold(labelSwitchCurr);
+		labelSwitchCurr.setBounds(0, 55, 80, 32);
+		labelSwitchCurr.setHorizontalAlignment(SwingConstants.TRAILING);
+		switchPanel.add(labelSwitchCurr);
 		
-		switchButtonBottom.setBounds(164, 35, 80, 28);
-		switchButtonBottom.setForeground(Color.WHITE);
-		switchButtonBottom.setBackground(new Color(20, 20, 20));
-		switchPanel.add(switchButtonBottom);
-		switchButtonBottom.setHorizontalAlignment(SwingConstants.LEFT);
+		labelSwitchNorm = new JLabel("---");
+		stylizeInfoLabel_Bold(labelSwitchNorm);
+		labelSwitchNorm.setBounds(160, 35, 80, 32);
+		labelSwitchNorm.setHorizontalAlignment(SwingConstants.LEADING);
+		switchPanel.add(labelSwitchNorm);
+		
+		labelSwitchAlt = new JLabel("---");
+		stylizeInfoLabel_Bold(labelSwitchAlt);
+		labelSwitchAlt.setBounds(160, 75, 80, 32);
+		labelSwitchAlt.setHorizontalAlignment(SwingConstants.LEADING);
+		switchPanel.add(labelSwitchAlt);
 		
 		//Block Lights
 		JLabel labelLights = new JLabel("LIGHTS");
 		stylizeInfoLabel(labelLights);
 		labelLights.setHorizontalAlignment(SwingConstants.TRAILING);
-		labelLights.setBounds(0, 0, 88, 57);
+		labelLights.setBounds(10, 0, 88, 57);
 		lightsPanel.add(labelLights);
 		
-		labelLightGraphic.setBounds(149, 0, 39, 57);
+		labelLightGraphic.setBounds(159, 0, 39, 57);
 		lightsPanel.add(labelLightGraphic);
 		labelLightGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/lightsOff.png"));
 		
@@ -364,32 +360,27 @@ public class TrackControllerGUI extends JFrame{
 		JLabel labelCrossing = new JLabel("CROSSING");
 		stylizeInfoLabel(labelCrossing);
 		labelCrossing.setHorizontalAlignment(SwingConstants.TRAILING);
-		labelCrossing.setBounds(0, 60, 88, 57);
+		labelCrossing.setBounds(10, 80, 88, 57);
 		lightsPanel.add(labelCrossing);
 		
 		labelCrossingGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/crossingOff.png"));
 		labelCrossingGraphic.setForeground(Color.LIGHT_GRAY);
 		labelCrossingGraphic.setFont(new Font("Helvetica", Font.BOLD, 40));
 		labelCrossingGraphic.setHorizontalAlignment(SwingConstants.CENTER);
-		labelCrossingGraphic.setBounds(149, 60, 39, 57);
+		labelCrossingGraphic.setBounds(159, 80, 39, 57);
 		lightsPanel.add(labelCrossingGraphic);
 		
 		//Buttons
-		/*JButton buttonUpdate = new JButton("Update");
-		buttonUpdate.setBounds(260, 294, 96, 29);
-		buttonUpdate.addActionListener(new updateInfo());
-		trackInfoPanel.add(buttonUpdate);
-		*/
 		JButton buttonImportPlc = new JButton("IMPORT PLC");
 		stylizeButton(buttonImportPlc);
-		buttonImportPlc.setBounds(64, 270, 117, 29);
+		buttonImportPlc.setBounds(190, 290, 117, 29);
 		buttonImportPlc.addActionListener(new UploadPLC());
 		trackInfoPanel.add(buttonImportPlc);
 		
 		//Pineapple logo
 		JLabel labelPineapple = new JLabel("");
 		labelPineapple.setIcon(new ImageIcon("Modules/TrackModel/Images/HSS_TrainSim_Logo.png"));
-		labelPineapple.setBounds(364, 237, 138, 76);
+		labelPineapple.setBounds(415, 255, 138, 76);
 		trackInfoPanel.add(labelPineapple);
 	}	
 	
@@ -411,6 +402,7 @@ public class TrackControllerGUI extends JFrame{
 			int rVal = c.showOpenDialog(null);
 			if(rVal == JFileChooser.APPROVE_OPTION) {
 				String plcPath = c.getCurrentDirectory().toString() + "/" + c.getSelectedFile().getName();
+				System.out.println("path = " + plcPath);
 				boolean parserSuccess = tc.tcplc.parsePLC(plcPath);
 			}
 	    }
@@ -421,9 +413,11 @@ public class TrackControllerGUI extends JFrame{
 		String line = textLine.getText();
 		
 		//update gui
-		/*if(tc.trackModel.getBlock(line, blockId).getStatus() == ){
-			textStatus.setText();
-		}*/
+		if(tc.manualMode){
+			textMode.setText("TRUE");
+		} else {
+			textMode.setText("FALSE");
+		}
 		if(tc.trackModel.getBlock(line, blockId).getOccupied() == true){
 			textOccupancy.setText("TRUE");
 		} else {
@@ -435,30 +429,35 @@ public class TrackControllerGUI extends JFrame{
 			} else {
 				labelLightGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/redLight.png"));
 			}
+		} else {
+			labelLightGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/lightsOff.png"));
 		}
 		if (tc.trackModel.getBlock(line, blockId).getSwitch() != null){
-			if(tc.trackModel.getBlock(line, blockId).getSwitch().getState() == true){
-				switchButtonTop.setSelected(true);
-				switchButtonTop.setText("ALT");
-				switchButtonBottom.setSelected(false);
-				switchButtonBottom.setText("NORM");
+			if(tc.trackModel.getBlock(line, blockId).getSwitch().getState()){
+				//normal state
+				labelSwitchGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/switch_normal.png"));
+				labelSwitchCurr.setText(Integer.toString(blockId+1));
+				labelSwitchNorm.setText(Integer.toString(tc.trackModel.getBlock(line, blockId).getSwitch().getPortNormal()+1));
+				labelSwitchAlt.setText(Integer.toString(tc.trackModel.getBlock(line, blockId).getSwitch().getPortAlternate()+1));
 			} else {
-				switchButtonTop.setSelected(false);
-				switchButtonTop.setText("Alt");
-				switchButtonBottom.setSelected(true);
-				switchButtonBottom.setText("Norm");
+				//alt state
+				labelSwitchGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/switch_alternate.png"));
+				labelSwitchCurr.setText(Integer.toString(blockId+1));
+				labelSwitchNorm.setText(Integer.toString(tc.trackModel.getBlock(line, blockId).getSwitch().getPortNormal()+1));
+				labelSwitchAlt.setText(Integer.toString(tc.trackModel.getBlock(line, blockId).getSwitch().getPortAlternate()+1));
 			}
 		} else {
-			switchButtonTop.setSelected(false);
-			switchButtonTop.setText("-");
-			switchButtonBottom.setSelected(false);
-			switchButtonBottom.setText("-");
+			//no switch
+			labelSwitchGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/switch_none.png"));
+			labelSwitchCurr.setText("---");
+			labelSwitchNorm.setText("---");
+			labelSwitchAlt.setText("---");
 		}
 		if (tc.trackModel.getBlock(line, blockId).getCrossing() != null){
 			if(tc.trackModel.getBlock(line, blockId).getCrossing().getState() == true){
-				labelCrossingGraphic.setIcon(new ImageIcon("imgs/crossingOn.gif"));
+				labelCrossingGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/crossingOn.gif"));
 			} else {
-				labelCrossingGraphic.setIcon(new ImageIcon("imgs/crossingOff.png"));
+				labelCrossingGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/crossingOff.png"));
 			}
 		}
 	}
