@@ -21,7 +21,7 @@ import Shared.SimTime;
 
 @SuppressWarnings("serial")
 public class ScheduleJTable extends JTable{	
-	private static Object[] columns = {"Stop","Time to Dwell","Time to Station"};
+	private static Object[] columns = {"Stop","Dwell","Next"};
 	private static Object[] blankRow = new Object[columns.length];
 	private ScheduleJTable table = this;
 	public Schedule schedule = null;

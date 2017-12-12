@@ -827,7 +827,7 @@ public class CtcGui {
 		suggestedSpeed = new JTextField();
 		stylizeTextField(suggestedSpeed);
 		suggestedSpeed.setColumns(12);
-		suggestedSpeed.setBounds(1250, 441, 52, 35);
+		suggestedSpeed.setBounds(1250, 441, 45, 35);
 		frame.getContentPane().add(suggestedSpeed);
 		
 		btnSuggestSpeed = new JButton("SEND");
@@ -841,10 +841,10 @@ public class CtcGui {
 			}
 		});
 		stylizeButton_Disabled(btnSuggestSpeed);
-		btnSuggestSpeed.setBounds(1310, 441, 80, 32);
+		btnSuggestSpeed.setBounds(1303, 441, 70, 32);
 		frame.getContentPane().add(btnSuggestSpeed);
 		
-		chckbxManualOverride = new JCheckBox("MANUAL OVERRIDE");
+		chckbxManualOverride = new JCheckBox("<html>MANUAL<br>OVERRIDE</html>");
 		chckbxManualOverride.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Train train = ctc.getTrainByName(dispatchSelectedTable.schedule.name);
@@ -859,7 +859,7 @@ public class CtcGui {
 		});
 		chckbxManualOverride.setBackground(new Color(20,20,20));
 		chckbxManualOverride.setForeground(Color.WHITE);
-		chckbxManualOverride.setBounds(1250, 478, 135, 18);
+		chckbxManualOverride.setBounds(1250, 478, 85, 34);
 		frame.getContentPane().add(chckbxManualOverride);
 		
 		enableManualSpeedComponents();
@@ -1066,7 +1066,7 @@ public class CtcGui {
 		});
 		chckbxRmanual.setForeground(Color.WHITE);
 		chckbxRmanual.setBackground(new Color(20, 20, 20));
-		chckbxRmanual.setBounds(1066, 674, 90, 18);
+		chckbxRmanual.setBounds(1066, 674, 93, 18);
 		frame.getContentPane().add(chckbxRmanual);
 		
 		JCheckBox chckbxGmanual = new JCheckBox("G-MANUAL");
@@ -1080,7 +1080,7 @@ public class CtcGui {
 		});
 		chckbxGmanual.setForeground(Color.WHITE);
 		chckbxGmanual.setBackground(new Color(20, 20, 20));
-		chckbxGmanual.setBounds(1066, 704, 90, 18);
+		chckbxGmanual.setBounds(1066, 704, 93, 18);
 		frame.getContentPane().add(chckbxGmanual);
 		
 		rdbtnFixedBlockMode = new JRadioButton("Fixed Block Mode");
