@@ -55,8 +55,7 @@ public class Switch{
 
 	public void setState(boolean newState){
 		state = newState;
-
-			if (state == STATE_NORMAL){
+		
 		if (status == STATUS_WORKING){
 			if (tailType == TAIL_TYPE_ALTERNATE){
 				if (state == STATE_NORMAL){
