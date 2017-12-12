@@ -40,7 +40,7 @@ public class SimulatorGui {
 	 */
 	Font font_14_bold = new Font("Roboto Condensed", Font.BOLD, 16);
 	Font font_16_bold = new Font("Roboto Condensed", Font.BOLD, 16);
-	Font font_20_bold = new Font("Roboto Condensed Bold", Font.BOLD, 30);
+	Font font_20_bold = new Font("Roboto Condensed Bold", Font.BOLD, 24);
 	Font font_24_bold = new Font("Roboto Condensed", Font.BOLD, 38);
 
 	/**
@@ -98,9 +98,9 @@ public class SimulatorGui {
 	}
 
 	public void stylizeHeadingLabel(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.LEFT);
 		l.setFont(font_20_bold);
 		l.setForeground(Color.WHITE);
-		l.setHorizontalAlignment(SwingConstants.CENTER);
 	}
 
 	public void stylizeInfoLabel(JLabel l){
@@ -146,6 +146,14 @@ public class SimulatorGui {
 	
 	private JComboBox<String> cbTrainModelTrains;
 	private JComboBox<String> cbTrainControllerTrains;
+	private JLabel lblCtc;
+	private JLabel lblTrkCtl;
+	private JLabel lblTrkMdl;
+	private JLabel lblTrnMdl;
+	private JLabel lblTrnCtl;
+	private JLabel lblMbo;
+	private JLabel lblSelectAWayside;
+	private JLabel lblHashSlingingSlashers;
 
 	/**
 	 * Create the application.
@@ -184,15 +192,6 @@ public class SimulatorGui {
 
 		icon_logo.setBounds(logo_x, logo_y, logo_w, logo_h);
 		frame.getContentPane().add(icon_logo);
-
-		/**
-		 * FOOTER
-		 */
-		JLabel footer = new JLabel("HSS Train Simulator | COE1186 Final Project | FALL 2017");
-		footer.setBackground(Color.BLACK);
-		footer.setForeground(Color.WHITE);
-		footer.setBounds(0, GUI_WINDOW_HEIGHT - 16, GUI_WINDOW_WIDTH, 16);
-		frame.getContentPane().add(footer);
 		
 		/*
 		 * ------------------------------
@@ -235,7 +234,7 @@ public class SimulatorGui {
 				openGui(ModuleType.TRACKCONTROLLER,Waysides.R1);
 			}
 		});
-		btnWaysideR1.setBounds(420, 362, 65, 30);
+		btnWaysideR1.setBounds(420, 362, 68, 30);
 		frame.getContentPane().add(btnWaysideR1);
 		
 		btnWaysideR2 = new JButton("R2");
@@ -246,7 +245,7 @@ public class SimulatorGui {
 				openGui(ModuleType.TRACKCONTROLLER,Waysides.R2);
 			}
 		});
-		btnWaysideR2.setBounds(495, 362, 65, 30);
+		btnWaysideR2.setBounds(492, 362, 68, 30);
 		frame.getContentPane().add(btnWaysideR2);
 		
 		btnWaysideG1 = new JButton("G1");	
@@ -257,7 +256,7 @@ public class SimulatorGui {
 				openGui(ModuleType.TRACKCONTROLLER,Waysides.G1);
 			}
 		});
-		btnWaysideG1.setBounds(420, 312, 65, 30);
+		btnWaysideG1.setBounds(420, 328, 68, 30);
 		frame.getContentPane().add(btnWaysideG1);
 		
 		btnWaysideG2 = new JButton("G2");
@@ -268,7 +267,7 @@ public class SimulatorGui {
 				openGui(ModuleType.TRACKCONTROLLER,Waysides.G2);
 			}
 		});
-		btnWaysideG2.setBounds(495, 312, 65, 30);
+		btnWaysideG2.setBounds(492, 328, 68, 30);
 		frame.getContentPane().add(btnWaysideG2);
 		
 		/*
@@ -373,7 +372,7 @@ public class SimulatorGui {
 		mbo_logo.setBounds(46, 714, 72, 72);
 		frame.getContentPane().add(mbo_logo);	
 
-		btnMbo = new JButton("MBO");
+		btnMbo = new JButton("LAUNCH");
 		stylizeButton_disabled(btnMbo);
 
 		btnMbo.addActionListener(new ActionListener() {
@@ -383,6 +382,50 @@ public class SimulatorGui {
 		});
 		btnMbo.setBounds(420, 732, 140, 30);
 		frame.getContentPane().add(btnMbo);
+		
+		lblCtc = new JLabel("CTC");
+		stylizeHeadingLabel(lblCtc);
+		lblCtc.setBounds(150, 234, 115, 30);
+		frame.getContentPane().add(lblCtc);
+		
+		lblTrkCtl = new JLabel("WAYSIDE CONTROLLER");
+		stylizeHeadingLabel(lblTrkCtl);
+		lblTrkCtl.setBounds(150, 334, 300, 30);
+		frame.getContentPane().add(lblTrkCtl);
+		
+		lblTrkMdl = new JLabel("TRACK MODEL");
+		stylizeHeadingLabel(lblTrkMdl);
+		lblTrkMdl.setBounds(150, 434, 300, 30);
+		frame.getContentPane().add(lblTrkMdl);
+		
+		lblTrnMdl = new JLabel("TRAIN MODEL");
+		stylizeHeadingLabel(lblTrnMdl);
+		lblTrnMdl.setBounds(150, 534, 300, 30);
+		frame.getContentPane().add(lblTrnMdl);
+		
+		lblTrnCtl = new JLabel("TRAIN CONTROLLER");
+		stylizeHeadingLabel(lblTrnCtl);
+		lblTrnCtl.setBounds(150, 634, 300, 30);
+		frame.getContentPane().add(lblTrnCtl);
+		
+		lblMbo = new JLabel("MOVING BLOCK OVERLAY");
+		stylizeHeadingLabel(lblMbo);
+		lblMbo.setBounds(150, 734, 300, 30);
+		frame.getContentPane().add(lblMbo);
+		
+		lblSelectAWayside = new JLabel("SELECT WAYSIDE:");
+		stylizeInfoLabel_Small(lblSelectAWayside);
+		lblSelectAWayside.setBounds(430, 300, 149, 30);
+		frame.getContentPane().add(lblSelectAWayside);
+		
+		int height = 60;
+		lblHashSlingingSlashers = new JLabel("Developed by The Hash Slinging Slashers   |  COE 1186  |  Fall 2017");
+		lblHashSlingingSlashers.setFont(font_14_bold);
+		lblHashSlingingSlashers.setForeground(new Color(255,255,255,128));
+		lblHashSlingingSlashers.setBackground(Color.BLACK);
+		lblHashSlingingSlashers.setHorizontalAlignment(JLabel.CENTER);
+		lblHashSlingingSlashers.setBounds(0, GUI_WINDOW_HEIGHT-(int)(1.4*height), GUI_WINDOW_WIDTH, height);
+		frame.getContentPane().add(lblHashSlingingSlashers);
 		
 		
 		int y = 200;
