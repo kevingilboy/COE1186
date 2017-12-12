@@ -139,6 +139,12 @@ public class MboGui extends JFrame implements ActionListener {
 		l.setHorizontalAlignment(SwingConstants.LEFT);
 	}
 
+	public void stylizeMessageLabel(JLabel l){
+		l.setFont(font_16_bold);
+		l.setForeground(Color.WHITE);
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+	}
+
 	public void stylizeInfoLabel(JLabel l){
 		l.setHorizontalAlignment(SwingConstants.LEFT);
 		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
@@ -168,7 +174,8 @@ public class MboGui extends JFrame implements ActionListener {
     private JTable trainInfoTable;
     private String[] trainInfoColumns;
     private DefaultTableModel trainInfoTableModel, trainScheduleTableModel;
-    private JLabel pineapple, pineapple2;
+    private JLabel pineapple, modeLight;
+    private ImageIcon offLight, onLight;
     private JTextField datePrompt, throughputPrompt;
     private JTable trainTable, operatorTable;
 
@@ -193,9 +200,11 @@ public class MboGui extends JFrame implements ActionListener {
 		// setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		// set the icon
-		pineapple = new JLabel(new ImageIcon("pineapple_icon.png"));
-		pineapple2 = new JLabel(new ImageIcon("pineapple_icon.png"));
-		setIconImage((new ImageIcon("Shared/static/pineapple2.png")).getImage());
+		pineapple = new JLabel(new ImageIcon("Modules/Mbo/static/HSS_TrainSim_Logo.png"));
+		offLight = new ImageIcon("Modules/Mbo/static/statusIcon_grey.png");
+		onLight = new ImageIcon("Modules/Mbo/static/statusIcon_green.png");
+		modeLight = mbo.isMovingBlockModeEnabled() ? new JLabel(onLight) : new JLabel(offLight);
+		setIconImage((new ImageIcon("Modules/Mbo/static/HSS_TrainSim_Logo.png")).getImage());
 
 		// create the infopanel
         JPanel infoPanel = new JPanel();
@@ -223,10 +232,15 @@ public class MboGui extends JFrame implements ActionListener {
 		stylizeTextField(searchBox);
 
 		// create a clock
-		this.timeBox = new JLabel("07:00:00");
+		this.timeBox = new JLabel("<html><div style='text-align: center;'>" + 
+							      "07:00:00" + "</div></html>");
 		stylizeHeadingLabel(this.timeBox);
 
-		//searchBar.getDocument().addDocumentListener(new SearchListener());
+		JLabel modeLabel = new JLabel("<html><div style='text-align: center;'>" + 
+									  "LIGHT WILL SHINE<br>WHEN MOVING BLOCK MODE<br>ENABLED</div></html>",
+									  SwingConstants.CENTER);
+		stylizeMessageLabel(modeLabel);
+
 
         // create a table with train info
 		trainInfoColumns = new String [] {"<html><br><br><center>Train Name<br><br></center></html>",
@@ -271,7 +285,10 @@ public class MboGui extends JFrame implements ActionListener {
 															                       .addComponent(this.timeBox, GroupLayout.Alignment.CENTER,
 															                       				 GroupLayout.PREFERRED_SIZE, 160,
           																						 GroupLayout.PREFERRED_SIZE)
-																				   .addComponent(map))
+															                       .addComponent(modeLabel, GroupLayout.Alignment.CENTER,
+															                       				 GroupLayout.PREFERRED_SIZE, 160,
+          																						 GroupLayout.PREFERRED_SIZE)
+																				   .addComponent(modeLight, GroupLayout.Alignment.CENTER))
 				                                          .addGroup(infoPanelLayout.createParallelGroup()
 					                                                               .addComponent(searchBox)
 				                                                                   .addComponent(scrollPane)
@@ -287,7 +304,9 @@ public class MboGui extends JFrame implements ActionListener {
 															                       			   GroupLayout.PREFERRED_SIZE, 50,
           																					   GroupLayout.PREFERRED_SIZE))
 				                                        .addGroup(infoPanelLayout.createParallelGroup()
-															                     .addComponent(map)
+															                     .addGroup(infoPanelLayout.createSequentialGroup()
+															                     						  .addComponent(modeLabel)
+															                     						  .addComponent(modeLight))
 															                     .addGroup(infoPanelLayout.createSequentialGroup()
 																										  .addComponent(scrollPane)
 				                                       													  .addComponent(pineapple))));
@@ -386,7 +405,7 @@ public class MboGui extends JFrame implements ActionListener {
 										.addGroup(layout.createParallelGroup()
 											            .addComponent(operatorTitle)
 														.addComponent(operatorScrollPane)
-										.addComponent(pineapple2, GroupLayout.Alignment.TRAILING)));
+										.addComponent(pineapple, GroupLayout.Alignment.TRAILING)));
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				                      .addGroup(layout.createParallelGroup()
 				                                      .addComponent(trainTitle)
@@ -396,7 +415,7 @@ public class MboGui extends JFrame implements ActionListener {
 												      .addComponent(operatorScrollPane))
 									  .addGroup(layout.createParallelGroup()
 									  	              .addComponent(finalInputPanel)
-									  	              .addComponent(pineapple2, GroupLayout.Alignment.TRAILING)));
+									  	              .addComponent(pineapple, GroupLayout.Alignment.TRAILING)));
 	}
 
     private class SearchListener implements DocumentListener {
@@ -502,7 +521,8 @@ public class MboGui extends JFrame implements ActionListener {
 	}
 
 	public void update(SimTime time) {
-		this.timeBox.setText(time.toString());
+		this.timeBox.setText("<html><div style='text-align: center;'>" + 
+							 time.toString() + "</div></html>");
 		this.trainData = mbo.getTrainData();
 		//this.trainInfoTableModel.setDataVector(this.trainData, this.trainInfoColumns);
 		DefaultTableModel model = new DefaultTableModel(this.trainData, this.trainInfoColumns);

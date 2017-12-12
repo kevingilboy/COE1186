@@ -41,7 +41,7 @@ public class Mbo implements Module {
 		thisMbo = this;
 		this.trains = new TreeMap<String,TrainInfo>();
 		this.crc = new CRC32();
-		movingBlockModeEnabled = true;
+		movingBlockModeEnabled = false;
 		initTrack();
 		startGui();
 		gui.setVisible(false);
@@ -116,6 +116,10 @@ public class Mbo implements Module {
 
 	public void enableMovingBlockMode(boolean enabled) {
 		movingBlockModeEnabled = enabled;
+	}
+
+	public boolean isMovingBlockModeEnabled() {
+		return movingBlockModeEnabled;
 	}
 
 	// returns true if checksum is valid, otherwise false
