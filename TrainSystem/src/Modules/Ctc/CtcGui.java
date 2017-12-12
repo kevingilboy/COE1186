@@ -985,6 +985,11 @@ public class CtcGui {
 		panel_1.setBounds(704, 455, 191, 145);
 		frame.getContentPane().add(panel_1);
 		
+		JLabel lblJustDoIt = new JLabel("<html>RAPID<br>TEST :</html>");
+		stylizeInfoLabel_Small(lblJustDoIt);
+		lblJustDoIt.setBounds(1175, 520, 89, 70);
+		frame.getContentPane().add(lblJustDoIt);
+		
 		JButton btnJustDoItGreen = new JButton("<html><center>JUST<br>DO IT<br>(G)</center></html>");
 		stylizeButton(btnJustDoItGreen);
 		btnJustDoItGreen.addActionListener(new ActionListener() {
@@ -992,7 +997,7 @@ public class CtcGui {
 				ctc.testDispatch(Line.GREEN);
 			}
 		});
-		btnJustDoItGreen.setBounds(1214, 520, 75, 68);
+		btnJustDoItGreen.setBounds(1244, 520, 70, 68);
 		frame.getContentPane().add(btnJustDoItGreen);
 		
 		JButton btnJustDoItRed = new JButton("<html><center>JUST<br>DO IT<br>(R)</center></html>");
@@ -1002,7 +1007,7 @@ public class CtcGui {
 				ctc.testDispatch(Line.RED);
 			}
 		});
-		btnJustDoItRed.setBounds(1284, 520, 75, 68);
+		btnJustDoItRed.setBounds(1309, 520, 70, 68);
 		frame.getContentPane().add(btnJustDoItRed);
 		
 		JButton btnR1 = new JButton("R1");
