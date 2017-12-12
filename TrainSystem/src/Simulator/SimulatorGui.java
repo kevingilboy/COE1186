@@ -166,8 +166,7 @@ public class SimulatorGui {
 	}
 
 	/**
-	 * Initialize the contents of the frame.
-	 */
+	 * Initialize the contents of the frame.	 */
 	private void initialize() {
 		frame = new JFrame();
 		frame.getContentPane().setBackground(new Color(26, 29, 35));
@@ -183,7 +182,7 @@ public class SimulatorGui {
 		 * ------------------------------
 		 */
 		JLabel icon_logo = new JLabel("");
-		icon_logo.setIcon(new ImageIcon("Simulator/Images/HSS_splash_screen_logo.png"));
+		icon_logo.setIcon(new ImageIcon("Simulator/Images/HSS_splash_screen_logo.gif"));
 	
 		int logo_w = 662;
 		int logo_h = 211;
