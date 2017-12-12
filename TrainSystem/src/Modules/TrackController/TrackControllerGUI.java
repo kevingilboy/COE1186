@@ -162,8 +162,6 @@ public class TrackControllerGUI extends JFrame{
 			blocks[i] = Integer.toString((Integer.parseInt(blocks[i])+1));//offset for displaying
 		}
 		drawTrackControllerGui(tc, line, blocks, controllerName);
-		//System.out.println(this);
-		//this.setVisible(true);
 	}
 	
 	/**
@@ -413,7 +411,6 @@ public class TrackControllerGUI extends JFrame{
 			int rVal = c.showOpenDialog(null);
 			if(rVal == JFileChooser.APPROVE_OPTION) {
 				String plcPath = c.getCurrentDirectory().toString() + "/" + c.getSelectedFile().getName();
-				System.out.println("path = " + plcPath);
 				boolean parserSuccess = tc.tcplc.parsePLC(plcPath);
 			}
 	    }

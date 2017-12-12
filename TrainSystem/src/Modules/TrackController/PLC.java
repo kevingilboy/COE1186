@@ -27,7 +27,6 @@ public class PLC {
 	}
 	
 	public boolean parsePLC(String plcPath){
-		//System.out.println("parsing file: " + plcPath);
 		BufferedReader 	br 			= null;
 		String 			currline 	= "";
 		String 			delimeter 	= ":";

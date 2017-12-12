@@ -152,11 +152,9 @@ public class TrackController implements Module{
 								//correct destination
 								if(switchStateCalc) {
 									//correct destination, correct state
-									System.out.println("here");
 									distAuthority = calcAuthDist(authority);
 									trackModel.transmitCtcAuthority(trainName, distAuthority);
 								} else {
-									//TODO not running into this state?? (could be switch at 150 error)
 									//correct destination, wrong state
 									trackModel.transmitCtcAuthority(trainName, distAuthority);
 								}
@@ -184,17 +182,13 @@ public class TrackController implements Module{
 						} else {
 							//cant switch
 							boolean switchStateCalc = tcplc.switchStatePath(authority);
-							System.out.print("switch state calc: ");
-							System.out.println(switchStateCalc);
 							if (switchStateCalc) {
 								//correct state so proceed anyways
 								// -- this happens when the train approaches from the tail and detects itself occupying a tail during canSwitch logic
-								System.out.println("entered because it was correct state");
 								distAuthority = calcAuthDist(authority);
 								trackModel.transmitCtcAuthority(trainName, distAuthority);
 							} else {
 								//not correct state so stop
-								System.out.println("incorrect state -- waiting");
 								trackModel.transmitCtcAuthority(trainName, distAuthority);
 							}
 						}
@@ -270,11 +264,10 @@ public class TrackController implements Module{
 	}
 	
 	/**
-	 * External function to transmit the light state to the track model for reservations.
+	 * External function to transmit the reservation state to the track model for reservations.
 	 * @param blockId An integer indicating the block
-	 * @param state A boolean specifying the desired state
+	 * @param reserved A boolean specifying the reservation state of the block
 	 */
-	//TODO fix header and write function
 	public void transmitCtcReservation(int blockId, boolean reserved){
 		trackModel.getBlock(associatedLine, blockId).setReserved(reserved);
 	}
@@ -336,7 +329,6 @@ public class TrackController implements Module{
 	 */
 	@Override
 	public boolean communicationEstablished() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 }
