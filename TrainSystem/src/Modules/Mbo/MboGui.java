@@ -259,7 +259,7 @@ public class MboGui extends JFrame implements ActionListener {
     		}
   		};
   		//trainInfoTable = new JTable(this.trainData, this.trainInfoColumns);
-		trainInfoTable = new JTable(trainInfoTableModel);
+		trainInfoTable = new TrainInfoTable(trainData, trainInfoColumns);
 		stylizeTable(trainInfoTable);
 		trainInfoTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
