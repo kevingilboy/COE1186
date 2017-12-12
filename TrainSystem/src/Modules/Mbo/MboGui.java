@@ -204,7 +204,7 @@ public class MboGui extends JFrame implements ActionListener {
 		offLight = new ImageIcon(getClass().getResource("/Modules/Mbo/static/statusIcon_grey.png"));
 		onLight = new ImageIcon(getClass().getResource("/Modules/Mbo/static/statusIcon_green.png"));
 		modeLight = mbo.isMovingBlockModeEnabled() ? new JLabel(onLight) : new JLabel(offLight);
-		setIconImage((new ImageIcon(getClass().getResource("/Modules/Mbo/static/HSS_TrainSim_Logo.png"))).getImage());
+		setIconImage((new ImageIcon(getClass().getResource("/Simulator/images/mbo_logo.png"))).getImage());
 
 		// create the infopanel
         JPanel infoPanel = new JPanel();
