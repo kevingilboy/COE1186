@@ -92,19 +92,26 @@ public class Simulator {
 		//Initialize all modules
 		ctc = new Ctc();
 		simulatorGui.moduleObjectInitialized(ModuleType.CTC);
+		sleep(200);
+
 		simulatorGui.moduleObjectInitialized(ModuleType.TRACKCONTROLLER);
+		sleep(200);
 		
 		trackModel = new TrackModel();
 		simulatorGui.moduleObjectInitialized(ModuleType.TRACKMODEL);
+		sleep(200);
 		
 		trainModel = new TrainModel();
 		simulatorGui.moduleObjectInitialized(ModuleType.TRAINMODEL);
+		sleep(200);
 		
 		trainController = new TrainController();
 		simulatorGui.moduleObjectInitialized(ModuleType.TRAINCONTROLLER);
+		sleep(200);
 		
 		mbo = new Mbo();
 		simulatorGui.moduleObjectInitialized(ModuleType.MBO);
+		sleep(200);
 	}
 	
 	private void initializeCommunication() {
@@ -146,7 +153,7 @@ public class Simulator {
 	 *  THREAD CONTROL
 	 * ------------------------------
 	 */
-	private void sleep(int time) {
+	protected void sleep(int time) {
 		try {
 			Thread.sleep(time);
 		} catch (InterruptedException e) {
