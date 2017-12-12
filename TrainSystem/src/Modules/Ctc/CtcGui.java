@@ -8,6 +8,7 @@ import Shared.SimTime;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.Dimension;
 
 import java.awt.Color;
 import java.awt.event.ActionListener;
@@ -193,10 +194,11 @@ public class CtcGui {
 	/*
 	 * Dispatched train tables
 	 */
-	private Object[] dispatchedTrainsColumnNames = {"Train","Location","Sug. Speed","Authority","Passengers"};
+	private Object[] dispatchedTrainsColumnNames = {"Train","Location","<html>Sug.<br>Speed</html>","Authority","Passengers"};
 	private Object[][] dispatchedTrainsInitialData = new Object[0][dispatchedTrainsColumnNames.length];
 
 	protected ScheduleJTable dispatchSelectedTable;
+	private JScrollPane dispatchScrollPane;
 	private JButton btnSuggestSpeed;
 	private JCheckBox chckbxManualOverride;
 		
@@ -778,11 +780,16 @@ public class CtcGui {
 		contentPane.add(dispatchedTabbedPane);
 		
 		for(Line line : Line.values()) {
-			JScrollPane scrollPane = new JScrollPane();
-			stylizeScrollPane(scrollPane);
+			dispatchScrollPane = new JScrollPane();
+			stylizeScrollPane(dispatchScrollPane);
 			
 			line.dispatchedData = new DefaultTableModel(dispatchedTrainsInitialData,dispatchedTrainsColumnNames);
 			line.dispatchedTable = new JTable(line.dispatchedData);
+
+			line.dispatchedTable.getTableHeader().setPreferredSize(
+			     new Dimension(100, 60)
+			);
+
 			stylizeTable(line.dispatchedTable);
 			line.dispatchedTable.addMouseListener(new MouseAdapter() {
 				@Override
@@ -794,8 +801,8 @@ public class CtcGui {
 					enableManualSpeedComponents();
 				}
 			});
-			scrollPane.setViewportView(line.dispatchedTable);
-			dispatchedTabbedPane.addTab(line.toString(), null, scrollPane, null);
+			dispatchScrollPane.setViewportView(line.dispatchedTable);
+			dispatchedTabbedPane.addTab(line.toString(), null, dispatchScrollPane, null);
 		}
 		stylizeTabbedPane(dispatchedTabbedPane);
 
@@ -1213,10 +1220,19 @@ public class CtcGui {
 			train.line.dispatchedData.addRow(row);
 		}
 
+		for(Line line: Line.values()){
+			// Fixes cell widths to stop horizontal flickering
+			for (int i = 0; i < line.dispatchedTable.getColumnCount(); i++){
+				line.dispatchedTable.getColumnModel().getColumn(i).setMinWidth(83); 
+			}
+			line.dispatchedTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		}
+
 		//Update the tables in the GUI
 		for(Line line : Line.values()) {
 			line.dispatchedData.fireTableDataChanged();
 		}
+
 		
 		//If a schedule was selected, restore the selection in the table
 		if(dispatchSelectedTable.schedule!=null) {
