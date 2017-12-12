@@ -195,7 +195,7 @@ public class TrnControllerGUI {
 		frame.setTitle(trainID);
 		frame.setBackground(new Color(26, 29, 35));
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(26, 29, 25));
+		contentPane.setBackground(new Color(26, 29, 35));
 		frame.setContentPane(contentPane);
 		contentPane.setLayout(null);
 		

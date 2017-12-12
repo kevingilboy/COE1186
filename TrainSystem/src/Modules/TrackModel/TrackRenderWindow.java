@@ -40,9 +40,6 @@ public class TrackRenderWindow extends JPanel{
     // Reference to the main GUI's selected block
     Block blockSelected;
 
-    // Timer used to update the dynamic track view
-    Timer timer;
-
     // Track data structure whose information will be
     // used for the dynamic rendering
     ArrayList<Block> blocks;
@@ -924,17 +921,5 @@ public class TrackRenderWindow extends JPanel{
         g.fillPolygon(new int[] {len+2, len-(ARR_SIZE*2+1), len-(ARR_SIZE*2+1), len+2},
                       new int[] {0, -(ARR_SIZE-1), ARR_SIZE-1, 0}, 4);
     }
-
-    // Remove a train from the display
-    /*
-    public void removeTrain(){
-        System.out.println("POOFEDDDD");
-        activeTrains--;
-        trainIDs.remove(activeTrains);
-        positions.remove(activeTrains);
-        xy_coords.remove(activeTrains);
-        previous_xy_coords.remove(activeTrains);
-    }
-    */
 }
 

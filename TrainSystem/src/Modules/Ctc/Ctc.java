@@ -95,6 +95,11 @@ public class Ctc implements Module,TimeControl {
 		} catch (InvocationTargetException | InterruptedException e) {
 			e.printStackTrace();
 		}
+		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+			public void uncaughtException(Thread t, Throwable e) {
+				//... silence awt exceptions
+			}
+	    });
 	}
 	
 	/*
@@ -289,7 +294,9 @@ public class Ctc implements Module,TimeControl {
 		if(!simulator.simulationRunning) {
 			play();
 			gui.btnPlay.setEnabled(false);
+			gui.stylizeButton_Disabled(gui.btnPlay);
 			gui.btnPause.setEnabled(true);
+			gui.stylizeButton(gui.btnPause);		
 		}
 		String testName = "TestTrain"+testTrainNum++;
 		if(line==Line.GREEN) {
