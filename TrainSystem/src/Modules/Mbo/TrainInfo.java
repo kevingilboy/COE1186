@@ -28,6 +28,7 @@ public class TrainInfo {
 	private SimTime timeSignalTransmitted;
 	private Mbo mbo;
 	private double mass;
+	private boolean poofable;
 
 	public TrainInfo(String name, SimTime time, double[] position, Mbo mbo) {
 		this.name = name;
@@ -41,6 +42,7 @@ public class TrainInfo {
 		this.direction = 1;
 		this.block = mbo.getBlockFromCoordinates(position);
 		this.mass = 37103.86;
+		this.poofable = false;
 	}
 
 	public Object[] toDataArray() {
@@ -69,6 +71,12 @@ public class TrainInfo {
 		previousPosition = position;
 		position = pos;
 		MboBlock newBlock = mbo.getBlockFromCoordinates(pos);
+
+		// determine whether the train has returned to the yard
+		if (newBlock.getID().contains("YARD") && !block.getID().contains("YARD")) {
+			poofable = true;
+		}
+
 		if (block != newBlock) {
 			int[] blockInfo = block.getNextBlockInfo(direction);
 			direction = blockInfo[1];
@@ -105,6 +113,10 @@ public class TrainInfo {
 
 	public String getName() {
 		return name;
+	}
+
+	public boolean isPoofable() {
+		return poofable;
 	}
 
 	public double getSpeed() {

@@ -214,6 +214,12 @@ public class Mbo implements Module {
 
 	public void updateTrainInfo() {
 		for (String train : trains.keySet()) {
+
+			// remove the train from the hashmap if it's returned to the yard
+			if (trains.get(train).isPoofable()) {
+				trains.remove(train);
+				continue;
+			}
 			//System.out.printf("Updating info for %s\n", train);
 			trains.get(train).setAuthority(calculateAuthority(train));
 			//System.out.printf("auth set");
