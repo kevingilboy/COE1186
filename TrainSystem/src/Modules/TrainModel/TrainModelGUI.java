@@ -448,7 +448,6 @@ public class TrainModelGUI extends JFrame {
 		menuBar.add(mnFile);
 		stylizeButton(btnEndFailure);
 		
-		//mnFile.add(mntmEndFailures);
 		btnEndFailure.addActionListener(new ActionListener()
 		{
 		  public void actionPerformed(ActionEvent e)
@@ -457,16 +456,16 @@ public class TrainModelGUI extends JFrame {
 			  ledImageLabel.setIcon(new ImageIcon(ledImage));
 			  engineFail = false;
 			  emerBrake = false;
-			  train.setEBrake(false);
-			  //train.engineFailureStatus();
+			  //train.setEBrake(false);
+
 			  engineFailCheckBox.setSelected(engineFail);
 			  ledImageLabel2.setIcon(new ImageIcon(ledImage));
 			  sigFail = false;
-			  //train.signalFailureStatus();
+
 			  signalFailCheckBox.setSelected(sigFail);
 			  ledImageLabel3.setIcon(new ImageIcon(ledImage));
 			  brakeFail = false;
-			  //train.brakeFailureStatus();
+
 			  brakeFailCheckBox.setSelected(brakeFail);
 			  engineFailChecked = false;
 			  sigFailChecked = false;
