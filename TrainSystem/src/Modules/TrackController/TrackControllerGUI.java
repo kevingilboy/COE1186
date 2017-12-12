@@ -148,6 +148,7 @@ public class TrackControllerGUI extends JFrame{
 	JLabel labelCrossingGraphic = new JLabel();
 	JLabel labelLightGraphic = new JLabel();
 	JLabel labelSwitchGraphic = new JLabel();
+	//JButton labelSwitchGraphic = new JButton();
 	JLabel labelSwitchCurr;
 	JLabel labelSwitchNorm;
 	JLabel labelSwitchAlt;
@@ -324,8 +325,10 @@ public class TrackControllerGUI extends JFrame{
 		labelSwitchState.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		labelSwitchGraphic.setBounds(90, 54, 55, 33);
+		//labelSwitchGraphic.setBorder(null);
 		switchPanel.add(labelSwitchGraphic);
 		labelSwitchGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/switch_none.png"));
+		//labelSwitchGraphic.addActionListener(new ToggleSwitch(tc));
 		
 		labelSwitchCurr = new JLabel("---");
 		stylizeInfoLabel_Bold(labelSwitchCurr);
@@ -393,6 +396,23 @@ public class TrackControllerGUI extends JFrame{
 			displayInfo(tc);
 	    }
 	}
+	
+	/*
+	class ToggleSwitch implements ActionListener {
+		private TrackController tc;
+		public ToggleSwitch(TrackController tc){
+			this.tc = tc;
+		}
+	    public void actionPerformed(ActionEvent e){
+			int blockId = getSelectedBlockId();
+			boolean state = tc.trackModel.getBlock(line, blockId).getSwitch().getState();
+			boolean success = tc.transmitCtcSwitchState(blockId, !state);
+			if (success){
+				displayInfo(tc);
+			}
+	    }
+	}
+	*/
 
 	class UploadPLC implements ActionListener {
 	    public void actionPerformed(ActionEvent e){
