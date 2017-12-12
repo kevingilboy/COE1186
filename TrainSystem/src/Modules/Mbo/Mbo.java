@@ -112,6 +112,13 @@ public class Mbo implements Module {
 		//	System.out.printf("Did auth for %s\n", train.getName());
 			trainController.setSafeBrakingDistance(train.getName(), train.getSafeBrakingDistance());
 		//	System.out.printf("Did dist for %s\n", train.getName());
+			double recommendedSpeed;
+			if (train.getAuthority() <= train.getSafeBrakingDistance()) {
+				recommendedSpeed = 0;
+			} else {
+				recommendedSpeed = train.getSpeed();
+			}
+			//trainController.setMboSpeed(train.getName(), recommendedSpeed);
 		}
 		//System.out.println("gui");
 		gui.update(time);
@@ -133,9 +140,6 @@ public class Mbo implements Module {
 
 		// check that checksum is valid
 		crc.reset();
-		//System.out.printf("Received %f:%f for %s\n", pos[0], pos[1], train);
-		//String[] segments = signal.split(":");
-		//long checksum = Long.parseLong(segments[1]);
     	String signal = train + ":" + Double.toString(pos[0]) + "," + Double.toString(pos[1]);
 		crc.update(signal.getBytes());
 		//System.out.printf("Checksum %s: %x %x\n", train, crc.getValue(), checksum);
