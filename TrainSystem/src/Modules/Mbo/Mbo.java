@@ -230,12 +230,20 @@ public class Mbo implements Module {
 				continue;
 			}
 			//System.out.printf("Updating info for %s\n", train);
-			trains.get(train).setAuthority(calculateAuthority(train));
+			trains.get(train).setAuthority(calculateAuthoritySafetyCritical(train));
 			//System.out.printf("auth set");
 			//System.out.printf("auth for %s\n", train);
-			trains.get(train).setSafeBrakingDistance(calculateSafeBrakingDistance(train));
+			trains.get(train).setSafeBrakingDistance(calculateSafeBrakingDistanceSafetyCritical(train));
 			//System.out.printf("Updated %s\n", train);
 		}
+	}
+
+	private double calculateAuthoritySafetyCritical(String trainID) {
+		double[] authorities = new double[3];
+		do {
+			for (int i = 0; i < 3; i++) authorities[i] = calculateAuthority(trainID);
+		} while (authorities[0] != authorities[1] || authorities[1] != authorities[2]);
+		return authorities[0];
 	}
 
 	private double calculateAuthority(String trainID) {
@@ -327,6 +335,14 @@ public class Mbo implements Module {
 		//if (distance > lineLength / 2) distance = lineLength - distance;
 
 		return (int) Math.round(distance);
+	}
+
+	private double calculateSafeBrakingDistanceSafetyCritical(String trainID) {
+		double[] distances = new double[3];
+		do {
+			for (int i = 0; i < 3; i++) distances[i] = calculateSafeBrakingDistance(trainID);
+		} while (distances[0] != distances[1] || distances[1] != distances[2]);
+		return distances[0];
 	}
 
 	private double calculateSafeBrakingDistance(String trainID) {
