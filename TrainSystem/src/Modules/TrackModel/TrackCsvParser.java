@@ -148,8 +148,8 @@ public class TrackCsvParser{
 				String[] coords = (blockData[15]).split(coordDelimiter);
 
 				for (int i = 0; i < coords.length; i++){
-					x_coordinates[i] = Double.parseDouble((coords[i].split(xyDelimiter))[0]);
-					y_coordinates[i] = Double.parseDouble((coords[i].split(xyDelimiter))[1]);
+					x_coordinates[i] = 1.5*Double.parseDouble((coords[i].split(xyDelimiter))[0]);
+					y_coordinates[i] = 1.5*Double.parseDouble((coords[i].split(xyDelimiter))[1]);
 				}
 
 				/* Generate block from currently parsed CSV line */
@@ -224,8 +224,8 @@ public class TrackCsvParser{
 
 				String line 			= data[0];
 				int id 					= Integer.parseInt(data[1]); 
-				int x_coordinate 		= Integer.parseInt(data[2]);
-				int y_coordinate 		= Integer.parseInt(data[3]);
+				int x_coordinate 		= (int)(1.5*(double)Integer.parseInt(data[2]));
+				int y_coordinate 		= (int)(1.5*(double)Integer.parseInt(data[3]));
 
 				for (int i = 0; i < blocks.size(); i++){
 					if (track.get(id).getLight() != null){

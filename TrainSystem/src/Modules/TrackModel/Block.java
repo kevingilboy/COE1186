@@ -14,6 +14,7 @@ public class Block{
 	private boolean trackCircuitStatus = STATUS_WORKING;
 
 	private boolean occupied;
+	private boolean reserved;
 	
 	private String line; // [0]
 	private String section; // [1]	
@@ -75,6 +76,7 @@ public class Block{
 		this.occupied = occupied;
 		this.x_coordinates = x_coordinates;
 		this.y_coordinates = y_coordinates;
+		this.reserved = false;
 	}
 
 	public String getLine(){
@@ -140,6 +142,10 @@ public class Block{
 	public boolean getOccupied(){
 		return occupied;
 	}
+	
+	public boolean getReserved(){
+		return reserved;
+	}
 
 	public void setRailStatus(boolean status){
 		railStatus = status;
@@ -203,6 +209,10 @@ public class Block{
 
 	public void setOccupancy(boolean occupancy){
 		this.occupied = occupancy;
+	}
+	
+	public void setReserved(boolean reserved){
+		this.reserved = reserved;
 	}
 
 	public String toString(){
