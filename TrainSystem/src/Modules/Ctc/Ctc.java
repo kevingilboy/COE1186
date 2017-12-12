@@ -289,7 +289,9 @@ public class Ctc implements Module,TimeControl {
 		if(!simulator.simulationRunning) {
 			play();
 			gui.btnPlay.setEnabled(false);
+			gui.stylizeButton_Disabled(gui.btnPlay);
 			gui.btnPause.setEnabled(true);
+			gui.stylizeButton(gui.btnPause);		
 		}
 		String testName = "TestTrain"+testTrainNum++;
 		if(line==Line.GREEN) {
