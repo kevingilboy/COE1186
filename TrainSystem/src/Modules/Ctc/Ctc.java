@@ -95,6 +95,11 @@ public class Ctc implements Module,TimeControl {
 		} catch (InvocationTargetException | InterruptedException e) {
 			e.printStackTrace();
 		}
+		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+			public void uncaughtException(Thread t, Throwable e) {
+				//... silence awt exceptions
+			}
+	    });
 	}
 	
 	/*
