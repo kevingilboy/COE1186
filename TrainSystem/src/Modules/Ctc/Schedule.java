@@ -1,8 +1,10 @@
+//Kevin Gilboy
+//This is a schedule object containing stops, name, and dispatch time
+
 package Modules.Ctc;
 
 import Shared.SimTime;
 import Modules.TrackModel.Switch;
-import Modules.TrackModel.TrackIterator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -135,7 +137,6 @@ public class Schedule {
 				currBlockId = path.get(path.size()-1);
 				prevBlockId = path.get(path.size()-2);
 				
-				//TODO below is a temporary fix for the switch issue
 				if(currBlockId>line.yardOut ||currBlockId<0) continue;
 				
 				

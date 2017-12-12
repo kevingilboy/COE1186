@@ -1,3 +1,6 @@
+//Kevin Gilboy
+//This enum holds the RED and GREEN lines
+
 package Modules.Ctc;
 
 import java.util.ArrayList;

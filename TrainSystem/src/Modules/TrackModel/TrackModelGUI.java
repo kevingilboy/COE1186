@@ -424,7 +424,7 @@ public class TrackModelGUI{
 		frame_tmGUI.getContentPane().add(label_occupied);
 
 		icon_occupied = new JLabel("");
-		icon_occupied.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+		icon_occupied.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 		icon_occupied.setBounds(shift + 890, 77, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_occupied);
 		
@@ -435,7 +435,7 @@ public class TrackModelGUI{
 		frame_tmGUI.getContentPane().add(label_underground);
 
 		icon_underground = new JLabel("");
-		icon_underground.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+		icon_underground.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 		icon_underground.setBounds(shift + 890, 104, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_underground);
 
@@ -446,7 +446,7 @@ public class TrackModelGUI{
 		frame_tmGUI.getContentPane().add(label_railCrossing);
 
 		icon_railCrossing = new JLabel("");
-		icon_railCrossing.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+		icon_railCrossing.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 		icon_railCrossing.setBounds(shift + 890, 128, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_railCrossing);
 		
@@ -457,7 +457,7 @@ public class TrackModelGUI{
 		frame_tmGUI.getContentPane().add(label_beacon);
 
 		icon_beacon = new JLabel("");
-		icon_beacon.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_green.png"));
+		icon_beacon.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_green.png")));
 		icon_beacon.setBounds(shift + 890, 157, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_beacon);
 
@@ -468,7 +468,7 @@ public class TrackModelGUI{
 		frame_tmGUI.getContentPane().add(label_trackHeated);
 		
 		icon_trackHeated = new JLabel("");
-		icon_trackHeated.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_green.png"));
+		icon_trackHeated.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_green.png")));
 		icon_trackHeated.setBounds(shift + 890, 185, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_trackHeated);
 
@@ -494,34 +494,34 @@ public class TrackModelGUI{
 		frame_tmGUI.getContentPane().add(label_switchPortAlternate);
 
 		icon_switchState = new JLabel("");
-		icon_switchState.setIcon(new ImageIcon("Modules/TrackModel/images/switch_none.png"));
+		icon_switchState.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/switch_none.png")));
 		icon_switchState.setBounds(shift + 784, 282, 112, 88);
 		frame_tmGUI.getContentPane().add(icon_switchState);
 
 		icon_switch = new JLabel("");
-		icon_switch.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+		icon_switch.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 		icon_switch.setBounds(shift + 673, 251, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_switch);
 
 		// HSS LOGO
 		JLabel icon_logo = new JLabel("");
-		icon_logo.setIcon(new ImageIcon("Modules/TrackModel/Images/HSS_TrainSim_Logo.png"));
+		icon_logo.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/Images/HSS_TrainSim_Logo.png")));
 		icon_logo.setBounds(shift + 1080 - 110, 638, 100, 100);
 		frame_tmGUI.getContentPane().add(icon_logo);
 
 		// LEGEND
 		JLabel icon_legend = new JLabel("");
-		icon_legend.setIcon(new ImageIcon("Modules/TrackModel/Images/legend_black.png"));
+		icon_legend.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/Images/legend_black.png")));
 		icon_legend.setBounds(shift + 360, 520, 593, 206);
 		icon_legend.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				icon_legend.setIcon(new ImageIcon("Modules/TrackModel/Images/legend_hover.png"));
+				icon_legend.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/Images/legend_hover.png")));
 				refresh();
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				icon_legend.setIcon(new ImageIcon("Modules/TrackModel/Images/legend_black.png"));
+				icon_legend.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/Images/legend_black.png")));
 				refresh();
 			}
 		});
@@ -539,7 +539,7 @@ public class TrackModelGUI{
 		frame_tmGUI.getContentPane().add(label_stationName);
 
 		icon_station = new JLabel("");
-		icon_station.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+		icon_station.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 		icon_station.setBounds(shift + 673, 398, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_station);
 
@@ -555,7 +555,7 @@ public class TrackModelGUI{
 		frame_tmGUI.getContentPane().add(label_railFailure);
 		
 		icon_railFailure = new JLabel("");
-		icon_railFailure.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+		icon_railFailure.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 		icon_railFailure.setBounds(shift + 405, 304, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_railFailure);
 		
@@ -565,7 +565,7 @@ public class TrackModelGUI{
 		frame_tmGUI.getContentPane().add(label_powerFailure);
 		
 		icon_powerFailure = new JLabel("");
-		icon_powerFailure.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+		icon_powerFailure.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 		icon_powerFailure.setBounds(shift + 405, 329, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_powerFailure);
 
@@ -575,7 +575,7 @@ public class TrackModelGUI{
 		frame_tmGUI.getContentPane().add(label_trackCircuitFailure);
 		
 		icon_trackCircuitFailure = new JLabel("");
-		icon_trackCircuitFailure.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+		icon_trackCircuitFailure.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 		icon_trackCircuitFailure.setBounds(shift + 405, 352, 25, 23);
 		frame_tmGUI.getContentPane().add(icon_trackCircuitFailure);
 		
@@ -648,21 +648,21 @@ public class TrackModelGUI{
 		label_speedLimitVal.setText(df.format((double)block.getSpeedLimit() * KPH_TO_MPH_FACTOR) + " mi/h");
 
 		if (block.getOccupied()){
-			icon_occupied.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_green.png"));
+			icon_occupied.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_green.png")));
 		} else {
-			icon_occupied.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+			icon_occupied.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 		}
 
 		if (block.getUndergroundStatus()){
-			icon_underground.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_green.png"));
+			icon_underground.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_green.png")));
 		} else {
-			icon_underground.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+			icon_underground.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 		}
 
 		if (block.getCrossing() != null){
-			icon_railCrossing.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_green.png"));
+			icon_railCrossing.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_green.png")));
 		} else {
-			icon_railCrossing.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+			icon_railCrossing.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 		}
 
 		/**
@@ -670,13 +670,13 @@ public class TrackModelGUI{
 		 */
 		
 		if (block.getBeacon() != null){
-			icon_beacon.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_green.png"));
+			icon_beacon.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_green.png")));
 		} else {
-			icon_beacon.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+			icon_beacon.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 		}
 
 		if (block.getSwitch() != null){
-			icon_switch.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_green.png"));
+			icon_switch.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_green.png")));
 
 			Switch s = block.getSwitch();
 			int n = s.getPortNormal();
@@ -702,51 +702,51 @@ public class TrackModelGUI{
 
 			if (block.getSwitch().getTailType() == Switch.TAIL_TYPE_NORMAL){
 				if (block.getSwitch().getState() == Switch.STATE_NORMAL){
-					icon_switchState.setIcon(new ImageIcon("Modules/TrackModel/images/switch_normal.png"));
+					icon_switchState.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/switch_normal.png")));
 				} else if (block.getSwitch().getState() == Switch.STATE_ALTERNATE){
-					icon_switchState.setIcon(new ImageIcon("Modules/TrackModel/images/switch_alternate.png"));
+					icon_switchState.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/switch_alternate.png")));
 				}
 			} else {
 				if (block.getSwitch().getState() == Switch.STATE_ALTERNATE){
-					icon_switchState.setIcon(new ImageIcon("Modules/TrackModel/images/switch_alternate.png"));
+					icon_switchState.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/switch_alternate.png")));
 				} else if (block.getSwitch().getState() == Switch.STATE_NORMAL){
-					icon_switchState.setIcon(new ImageIcon("Modules/TrackModel/images/switch_normal.png"));
+					icon_switchState.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/switch_normal.png")));
 				}
 			}
 
 		} else {
-			icon_switch.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+			icon_switch.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 
 			label_switchHead.setText("   ");
 			label_switchPortNormal.setText("   ");
 			label_switchPortAlternate.setText("   ");
-			icon_switchState.setIcon(new ImageIcon("Modules/TrackModel/images/switch_none.png"));
+			icon_switchState.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/switch_none.png")));
 		}
 
 		if (block.getStation() != null){
-			icon_station.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_green.png"));
+			icon_station.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_green.png")));
 			label_stationName.setText((block.getStation().getId()).toUpperCase());
 		} else {
-			icon_station.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+			icon_station.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 			label_stationName.setText("   ");
 		}
 
 		if (block.getRailStatus() == Block.STATUS_NOT_WORKING){
-			icon_railFailure.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_red.png"));
+			icon_railFailure.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_red.png")));
 		} else {
-			icon_railFailure.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+			icon_railFailure.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 		}
 
 		if (block.getPowerStatus() == Block.STATUS_NOT_WORKING){
-			icon_powerFailure.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_red.png"));
+			icon_powerFailure.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_red.png")));
 		} else {
-			icon_powerFailure.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+			icon_powerFailure.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 		}
 
 		if (block.getTrackCircuitStatus() == Block.STATUS_NOT_WORKING){
-			icon_trackCircuitFailure.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_red.png"));
+			icon_trackCircuitFailure.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_red.png")));
 		} else {
-			icon_trackCircuitFailure.setIcon(new ImageIcon("Modules/TrackModel/images/statusIcon_grey.png"));
+			icon_trackCircuitFailure.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 		}
 	}
 

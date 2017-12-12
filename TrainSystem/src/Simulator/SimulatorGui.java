@@ -1,12 +1,12 @@
 package Simulator;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
-
 import Modules.Ctc.Line;
 
 import javax.swing.ComboBoxModel;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -14,7 +14,117 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
 
+/*--- REQUIRED LIBRARIES FOR HSS DARK THEME ----*/
+import javax.swing.ImageIcon;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
+import java.awt.EventQueue;
+import java.awt.event.*;
+import java.io.*;
+import javax.swing.border.*;
+import java.awt.FontFormatException;
+import javax.swing.JComboBox;
+import javax.swing.UIManager;
+import javax.swing.SwingConstants;
+/*----------------------------------------------*/
+
 public class SimulatorGui {
+
+/*----------------------------------------------------------------------*/
+	/*-------------------- HSS GUI DARK THEME REDESIGN ---------------------*/
+	/*----------------------------------------------------------------------*/
+
+	/**
+	 * Variations of Roboto Condensed Font
+	 */
+	Font font_14_bold = new Font("Roboto Condensed", Font.BOLD, 16);
+	Font font_16_bold = new Font("Roboto Condensed", Font.BOLD, 16);
+	Font font_20_bold = new Font("Roboto Condensed Bold", Font.BOLD, 24);
+	Font font_24_bold = new Font("Roboto Condensed", Font.BOLD, 38);
+
+	/**
+	 * Set any UI configurations done by the UI manager
+	 *
+	 * NOTE: This method must be called first in the GUI instantiation!
+	 */
+	public void setLookAndFeel(){
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * JComponent styling wrappers
+	 */
+	public void stylizeButton_disabled(JButton b){
+		b.setFont(font_16_bold);
+		b.setForeground(new Color(46, 49, 55));
+		b.setBackground(new Color(46, 49, 55));
+		b.setEnabled(false);
+	}
+
+	public void stylizeButton(JButton b){
+		b.setFocusPainted(false);
+		b.setFont(font_16_bold);
+		b.setForeground(Color.WHITE);
+		b.setBackground(new Color(46, 49, 55));
+		b.setEnabled(true);
+	}
+
+	public void stylizeComboBox_disabled(JComboBox c){
+		c.setFont(font_14_bold);
+		((JLabel)c.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
+		c.setForeground(Color.BLACK);
+		c.setBackground(new Color(26, 29, 35));
+		c.setEnabled(false);
+	}
+
+	public void stylizeComboBox(JComboBox c){
+		c.setFont(font_14_bold);
+		((JLabel)c.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
+		c.setForeground(Color.BLACK);
+		c.setBackground(Color.WHITE);
+		c.setEnabled(true);
+	}
+
+	public void stylizeTextField(JTextField t){
+		t.setFont(font_14_bold);
+		t.setForeground(Color.BLACK);
+		t.setBackground(Color.WHITE);
+		t.setHorizontalAlignment(JTextField.CENTER);
+	}
+
+	public void stylizeHeadingLabel(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+		l.setFont(font_20_bold);
+		l.setForeground(Color.WHITE);
+	}
+
+	public void stylizeInfoLabel(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
+		l.setFont(font_16_bold);
+	}
+
+	public void stylizeInfoLabel_Bold(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+		l.setForeground(new Color(234, 201, 87));
+		l.setFont(font_16_bold);
+	}
+
+	public void stylizeInfoLabel_Small(JLabel l){
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
+		l.setFont(font_14_bold);
+	}
+	
+	/*----------------------------------------------------------------------*/
+	/*-------------------- HSS GUI DARK THEME REDESIGN ---------------------*/
+	/*----------------------------------------------------------------------*/
+
 	private enum Waysides{
 		G1, G2, R1, R2;
 	};
@@ -22,34 +132,35 @@ public class SimulatorGui {
 	protected Simulator simulator;
 	
 	private JFrame frame;
-	private final int GUI_WINDOW_HEIGHT = 950;
-	private final int GUI_WINDOW_WIDTH = 800;
+	private final int GUI_WINDOW_WIDTH = 600;
+	private final int GUI_WINDOW_HEIGHT = 870;
+
+	JButton btnCtc;
+	JButton btnWaysideR1;
+	JButton btnWaysideR2;
+	JButton btnWaysideG1;
+	JButton btnWaysideG2;
+	JButton btnTrackModel;
+	JButton btnTraincontroller;
+	JButton btnMbo;
 	
 	private JComboBox<String> cbTrainModelTrains;
 	private JComboBox<String> cbTrainControllerTrains;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SimulatorGui window = new SimulatorGui(null);
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JLabel lblCtc;
+	private JLabel lblTrkCtl;
+	private JLabel lblTrkMdl;
+	private JLabel lblTrnMdl;
+	private JLabel lblTrnCtl;
+	private JLabel lblMbo;
+	private JLabel lblSelectAWayside;
+	private JLabel lblHashSlingingSlashers;
 
 	/**
 	 * Create the application.
 	 */
 	public SimulatorGui(Simulator sim) {
+		setLookAndFeel();
 		simulator = sim;
-		
 		initialize();
 		frame.setVisible(true);
 	}
@@ -59,22 +170,49 @@ public class SimulatorGui {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.getContentPane().setBackground(new Color(26, 29, 35));
+		frame.setResizable(false);
 		frame.setBounds(100, 100, GUI_WINDOW_WIDTH, GUI_WINDOW_HEIGHT);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		frame.getContentPane().setLayout(null);
+
+		/**
+		 *
+		 * ------------------------------
+		 *  BIG LOGO
+		 * ------------------------------
+		 */
+		JLabel icon_logo = new JLabel("");
+		icon_logo.setIcon(new ImageIcon("Simulator/Images/HSS_splash_screen_logo.png"));
+	
+		int logo_w = 662;
+		int logo_h = 211;
+		int logo_x = 38;
+		int logo_y = 0;
+
+		icon_logo.setBounds(logo_x, logo_y, logo_w, logo_h);
+		frame.getContentPane().add(icon_logo);
 		
 		/*
 		 * ------------------------------
 		 *  CTC
 		 * ------------------------------
 		 */
-		JButton btnCtc = new JButton("CTC");
+		JLabel ctc_logo = new JLabel("");
+		ctc_logo.setIcon(new ImageIcon("Simulator/Images/ctc_logo.png"));
+
+		ctc_logo.setBounds(46, 214, 72, 72);
+		frame.getContentPane().add(ctc_logo);
+
+		btnCtc = new JButton("LAUNCH");
+		stylizeButton_disabled(btnCtc);
+
 		btnCtc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				openGui(ModuleType.CTC);
 			}
 		});
-		btnCtc.setBounds(537, 226, 171, 41);
+		btnCtc.setBounds(420, 234, 140, 30);
 		frame.getContentPane().add(btnCtc);
 		
 		/*
@@ -82,40 +220,54 @@ public class SimulatorGui {
 		 *  TRACK CONTROLLER
 		 * ------------------------------
 		 */
-		JButton btnWaysideR1 = new JButton("R1");
+		JLabel trkCtrl_logo = new JLabel("");
+		trkCtrl_logo.setIcon(new ImageIcon("Simulator/Images/trackcontroller_logo.png"));
+
+		trkCtrl_logo.setBounds(46, 314, 72, 72);
+		frame.getContentPane().add(trkCtrl_logo);
+
+		btnWaysideR1 = new JButton("R1");
+		stylizeButton_disabled(btnWaysideR1);
+
 		btnWaysideR1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				openGui(ModuleType.TRACKCONTROLLER,Waysides.R1);
 			}
 		});
-		btnWaysideR1.setBounds(568, 362, 65, 41);
+		btnWaysideR1.setBounds(420, 362, 68, 30);
 		frame.getContentPane().add(btnWaysideR1);
 		
-		JButton btnWaysideR2 = new JButton("R2");
+		btnWaysideR2 = new JButton("R2");
+		stylizeButton_disabled(btnWaysideR2);
+
 		btnWaysideR2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				openGui(ModuleType.TRACKCONTROLLER,Waysides.R2);
 			}
 		});
-		btnWaysideR2.setBounds(643, 362, 65, 41);
+		btnWaysideR2.setBounds(492, 362, 68, 30);
 		frame.getContentPane().add(btnWaysideR2);
 		
-		JButton btnWaysideG1 = new JButton("G1");
+		btnWaysideG1 = new JButton("G1");	
+		stylizeButton_disabled(btnWaysideG1);
+
 		btnWaysideG1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				openGui(ModuleType.TRACKCONTROLLER,Waysides.G1);
 			}
 		});
-		btnWaysideG1.setBounds(568, 312, 65, 41);
+		btnWaysideG1.setBounds(420, 328, 68, 30);
 		frame.getContentPane().add(btnWaysideG1);
 		
-		JButton btnWaysideG2 = new JButton("G2");
+		btnWaysideG2 = new JButton("G2");
+		stylizeButton_disabled(btnWaysideG2);
+
 		btnWaysideG2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				openGui(ModuleType.TRACKCONTROLLER,Waysides.G2);
 			}
 		});
-		btnWaysideG2.setBounds(643, 312, 65, 41);
+		btnWaysideG2.setBounds(492, 328, 68, 30);
 		frame.getContentPane().add(btnWaysideG2);
 		
 		/*
@@ -123,13 +275,21 @@ public class SimulatorGui {
 		 *  TRACK MODEL
 		 * ------------------------------
 		 */
-		JButton btnTrackModel = new JButton("Track Model");
+		JLabel trkMdl_logo = new JLabel("");
+		trkMdl_logo.setIcon(new ImageIcon("Simulator/Images/trackmodel_logo.png"));
+
+		trkMdl_logo.setBounds(46, 414, 72, 72);
+		frame.getContentPane().add(trkMdl_logo);
+
+		btnTrackModel = new JButton("LAUNCH");
+		stylizeButton_disabled(btnTrackModel);
+
 		btnTrackModel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				openGui(ModuleType.TRACKMODEL);
 			}
 		});
-		btnTrackModel.setBounds(537, 465, 171, 41);
+		btnTrackModel.setBounds(420, 436, 140, 30);
 		frame.getContentPane().add(btnTrackModel);
 		
 		/*
@@ -137,8 +297,16 @@ public class SimulatorGui {
 		 *  TRAIN MODEL
 		 * ------------------------------
 		 */
+		JLabel trnMdl_logo = new JLabel("");
+		trnMdl_logo.setIcon(new ImageIcon("Simulator/Images/trainmodel_logo.png"));
+
+		trnMdl_logo.setBounds(46, 514, 72, 72);
+		frame.getContentPane().add(trnMdl_logo);		
+
 		cbTrainModelTrains = new JComboBox<String>();
-		cbTrainModelTrains.addItem("...");
+		stylizeComboBox_disabled(cbTrainModelTrains);
+
+		cbTrainModelTrains.addItem("<html><i>No Active Trains</i></html>");
 		cbTrainModelTrains.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String trainName = (String)cbTrainModelTrains.getSelectedItem();
@@ -150,7 +318,7 @@ public class SimulatorGui {
 				cbTrainModelTrains.setSelectedIndex(0);
 			}
 		});		
-		cbTrainModelTrains.setBounds(656, 562, 52, 39);
+		cbTrainModelTrains.setBounds(420, 536, 140, 30);
 		frame.getContentPane().add(cbTrainModelTrains);
 		
 		/*
@@ -158,17 +326,27 @@ public class SimulatorGui {
 		 *  TRAIN CONTROLLER
 		 * ------------------------------
 		 */
-		JButton btnTraincontroller = new JButton("TrainController");
+		JLabel trnCtrl_logo = new JLabel("");
+		trnCtrl_logo.setIcon(new ImageIcon("Simulator/Images/traincontroller_logo.png"));
+
+		trnCtrl_logo.setBounds(46, 614, 72, 72);
+		frame.getContentPane().add(trnCtrl_logo);	
+
+		btnTraincontroller = new JButton("LAUNCH");
+		stylizeButton_disabled(btnTraincontroller);
+
 		btnTraincontroller.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				openGui(ModuleType.TRAINCONTROLLER);
 			}
 		});
-		btnTraincontroller.setBounds(537, 652, 171, 41);
+		btnTraincontroller.setBounds(420, 618, 140, 30);
 		frame.getContentPane().add(btnTraincontroller);
 		
 		cbTrainControllerTrains = new JComboBox<String>();
-		cbTrainControllerTrains.addItem("...");
+		stylizeComboBox_disabled(cbTrainControllerTrains);
+
+		cbTrainControllerTrains.addItem("<html><i>No Active Trains</i></html>");
 		cbTrainControllerTrains.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String trainName = (String)cbTrainControllerTrains.getSelectedItem();
@@ -180,7 +358,7 @@ public class SimulatorGui {
 				cbTrainControllerTrains.setSelectedIndex(0);
 			}
 		});
-		cbTrainControllerTrains.setBounds(469, 653, 52, 39);
+		cbTrainControllerTrains.setBounds(420, 656, 140, 30);
 		frame.getContentPane().add(cbTrainControllerTrains);
 		
 		/*
@@ -188,22 +366,76 @@ public class SimulatorGui {
 		 *  MBO
 		 * ------------------------------
 		 */
-		JButton btnMbo = new JButton("MBO");
+		JLabel mbo_logo = new JLabel("");
+		mbo_logo.setIcon(new ImageIcon("Simulator/Images/mbo_logo.png"));
+
+		mbo_logo.setBounds(46, 714, 72, 72);
+		frame.getContentPane().add(mbo_logo);	
+
+		btnMbo = new JButton("LAUNCH");
+		stylizeButton_disabled(btnMbo);
+
 		btnMbo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				openGui(ModuleType.MBO);
 			}
 		});
-		btnMbo.setBounds(537, 774, 171, 41);
+		btnMbo.setBounds(420, 732, 140, 30);
 		frame.getContentPane().add(btnMbo);
+		
+		lblCtc = new JLabel("CTC");
+		stylizeHeadingLabel(lblCtc);
+		lblCtc.setBounds(150, 234, 115, 30);
+		frame.getContentPane().add(lblCtc);
+		
+		lblTrkCtl = new JLabel("WAYSIDE CONTROLLER");
+		stylizeHeadingLabel(lblTrkCtl);
+		lblTrkCtl.setBounds(150, 334, 300, 30);
+		frame.getContentPane().add(lblTrkCtl);
+		
+		lblTrkMdl = new JLabel("TRACK MODEL");
+		stylizeHeadingLabel(lblTrkMdl);
+		lblTrkMdl.setBounds(150, 434, 300, 30);
+		frame.getContentPane().add(lblTrkMdl);
+		
+		lblTrnMdl = new JLabel("TRAIN MODEL");
+		stylizeHeadingLabel(lblTrnMdl);
+		lblTrnMdl.setBounds(150, 534, 300, 30);
+		frame.getContentPane().add(lblTrnMdl);
+		
+		lblTrnCtl = new JLabel("TRAIN CONTROLLER");
+		stylizeHeadingLabel(lblTrnCtl);
+		lblTrnCtl.setBounds(150, 634, 300, 30);
+		frame.getContentPane().add(lblTrnCtl);
+		
+		lblMbo = new JLabel("MOVING BLOCK OVERLAY");
+		stylizeHeadingLabel(lblMbo);
+		lblMbo.setBounds(150, 734, 300, 30);
+		frame.getContentPane().add(lblMbo);
+		
+		lblSelectAWayside = new JLabel("SELECT WAYSIDE:");
+		stylizeInfoLabel_Small(lblSelectAWayside);
+		lblSelectAWayside.setBounds(430, 300, 149, 30);
+		frame.getContentPane().add(lblSelectAWayside);
+		
+		int height = 60;
+		lblHashSlingingSlashers = new JLabel("Developed by The Hash Slinging Slashers   |  COE 1186  |  Fall 2017");
+		lblHashSlingingSlashers.setFont(font_14_bold);
+		lblHashSlingingSlashers.setForeground(new Color(255,255,255,128));
+		lblHashSlingingSlashers.setBackground(Color.BLACK);
+		lblHashSlingingSlashers.setHorizontalAlignment(JLabel.CENTER);
+		lblHashSlingingSlashers.setBounds(0, GUI_WINDOW_HEIGHT-(int)(1.4*height), GUI_WINDOW_WIDTH, height);
+		frame.getContentPane().add(lblHashSlingingSlashers);
 		
 		
 		int y = 200;
-		int dy = 133;
-		int width = (int)(0.8 * GUI_WINDOW_WIDTH);
+		int dy = 100;
+		int width = (int)(0.90 * GUI_WINDOW_WIDTH);
 		int xStart = (GUI_WINDOW_WIDTH-width)/2;
-		for(int i=0; i<5; i++) {
+		for(int i=0; i<6; i++) {
 			JSeparator separator = new JSeparator();
+			separator.setForeground(new Color(36, 39, 45));
+			separator.setBackground(new Color(36, 39, 45));
 			separator.setBounds(xStart, y, width, 2);
 			frame.getContentPane().add(separator);
 			y += dy;
@@ -214,22 +446,26 @@ public class SimulatorGui {
 		//We can use this to update the GUI with what module has just been initialized
 		switch (module) {
 			case CTC:
-				//...
+				stylizeButton(btnCtc);
 				break;
 			case TRACKCONTROLLER:
-				//...
+				stylizeButton(btnWaysideR1);
+				stylizeButton(btnWaysideR2);
+				stylizeButton(btnWaysideG1);
+				stylizeButton(btnWaysideG2);
 				break;
 			case TRACKMODEL:
-				//...
+				stylizeButton(btnTrackModel);
 				break;
 			case TRAINMODEL:
-				//...
+				stylizeComboBox(cbTrainModelTrains);
 				break;
 			case TRAINCONTROLLER:
-				//...
+				stylizeComboBox(cbTrainControllerTrains);
+				stylizeButton(btnTraincontroller);
 				break;
 			case MBO:
-				//...
+				stylizeButton(btnMbo);
 				break;		
 		}
 	}
@@ -283,6 +519,7 @@ public class SimulatorGui {
 				break;
 		}
 	}
+
 	private void openGui(ModuleType module, String trainName) {
 		//We can use this to open a respective Module's GUI
 		switch (module) {
@@ -290,30 +527,42 @@ public class SimulatorGui {
 				simulator.trainModel.getTrain(trainName).showTrainGUI();
 				break;
 			case TRAINCONTROLLER:
-				// THIS STILL HAS BUGS
 				simulator.trainController.getController(trainName).showGUI();
 				break;	
 		}
 	}
 	
 	protected void repaint() {
-		DefaultComboBoxModel<String> currentTrains = (DefaultComboBoxModel<String>)cbTrainControllerTrains.getModel();
-		DefaultComboBoxModel<String> newTrains = new DefaultComboBoxModel<String>();
+		DefaultComboBoxModel<String> currentTrainModelTrains = (DefaultComboBoxModel<String>)cbTrainModelTrains.getModel();
+		DefaultComboBoxModel<String> currentTrainControllerTrains = (DefaultComboBoxModel<String>)cbTrainControllerTrains.getModel();
+
+		DefaultComboBoxModel<String> newTrainModelTrains = new DefaultComboBoxModel<String>();
+		DefaultComboBoxModel<String> newTrainControllerTrains = new DefaultComboBoxModel<String>();
 		
-		Boolean changed = false;
+		boolean trainModelChanged = false;
+		boolean trainControllerChanged = false;
 		
-		newTrains.addElement("...");
+		newTrainModelTrains.addElement("<html><i>Select a Train</i></html>");
+		newTrainControllerTrains.addElement("<html><i>Select a Train</i></html>");
+
 		for(String key : simulator.ctc.trains.keySet()) {
-			if(currentTrains.getIndexOf(key)==-1) {
-				changed = true;
+			newTrainModelTrains.addElement(key);
+			if(currentTrainModelTrains.getIndexOf(key)==-1) {	
+				trainModelChanged = true;
 			}
-			
-			newTrains.addElement(key);
+
+			newTrainControllerTrains.addElement(key);
+			if(currentTrainControllerTrains.getIndexOf(key)==-1){	
+				trainControllerChanged = true;
+			}
 		}
 		
-		if(changed) {
-			cbTrainControllerTrains.setModel(newTrains);
-			cbTrainModelTrains.setModel(newTrains);			
+		if(trainModelChanged) {
+			cbTrainModelTrains.setModel(newTrainModelTrains);			
+		}
+		
+		if(trainControllerChanged){
+			cbTrainControllerTrains.setModel(newTrainControllerTrains);
 		}
 	}
 }
