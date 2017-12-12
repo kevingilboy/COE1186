@@ -200,11 +200,11 @@ public class MboGui extends JFrame implements ActionListener {
 		// setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		// set the icon
-		pineapple = new JLabel(new ImageIcon("Modules/Mbo/static/HSS_TrainSim_Logo.png"));
-		offLight = new ImageIcon("Modules/Mbo/static/statusIcon_grey.png");
-		onLight = new ImageIcon("Modules/Mbo/static/statusIcon_green.png");
+		pineapple = new JLabel(new ImageIcon(getClass().getResource("/Modules/Mbo/static/HSS_TrainSim_Logo.png")));
+		offLight = new ImageIcon(getClass().getResource("/Modules/Mbo/static/statusIcon_grey.png"));
+		onLight = new ImageIcon(getClass().getResource("/Modules/Mbo/static/statusIcon_green.png"));
 		modeLight = mbo.isMovingBlockModeEnabled() ? new JLabel(onLight) : new JLabel(offLight);
-		setIconImage((new ImageIcon("Modules/Mbo/static/HSS_TrainSim_Logo.png")).getImage());
+		setIconImage((new ImageIcon(getClass().getResource("/Modules/Mbo/static/HSS_TrainSim_Logo.png"))).getImage());
 
 		// create the infopanel
         JPanel infoPanel = new JPanel();
@@ -267,7 +267,7 @@ public class MboGui extends JFrame implements ActionListener {
 	    stylizeScrollPane(scrollPane);
 
 		// create the train map
-		ImageIcon mapIcon = new ImageIcon("..\\..\\Shared\\static\\dummy_map.png");
+		ImageIcon mapIcon = new ImageIcon(getClass().getResource("..\\..\\Shared\\static\\dummy_map.png"));
 		mapIcon = new ImageIcon(mapIcon.getImage().getScaledInstance(349, 467, Image.SCALE_DEFAULT));
 		JLabel map = new JLabel(mapIcon);
 		
