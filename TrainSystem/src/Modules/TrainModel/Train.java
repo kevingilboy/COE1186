@@ -424,17 +424,18 @@ public class Train {
     	return this.trainID;
     }
     
-    // TODO: NOT SURE IF NECESSARY? Are failures only GUI features? Or do I actually have to tell other modules
-    // that I am failing in some way?
+	/**
+	 * Sets the status of an engine failure
+	 */
     public void engineFailureStatus() {
-    	this.engineFailureActive = trainModelGUI.engineFailStatus();
+    	this.engineFailureActive = this.trainModelGUI.engineFailStatus();
     }
     
-    // TODO: NOT SURE IF NECESSARY? Are failures only GUI features? Or do I actually have to tell other modules
-    // that I am failing in some way?
+	/**
+	 * Sets the status of an signal failure
+	 */
     public void signalFailureStatus() {
-    	// TODO
-    	this.signalFailureActive = trainModelGUI.signalFailStatus();
+    	this.signalFailureActive = this.trainModelGUI.signalFailStatus();
     	if(this.signalFailureActive) {
         	this.setGPSAntenna(true);
         	this.setMBOAntenna(true);
@@ -446,10 +447,11 @@ public class Train {
     	
     }
     
-    // TODO: NOT SURE IF NECESSARY? Are failures only GUI features? Or do I actually have to tell other modules
-    // that I am failing in some way?
+	/**
+	 * Sets the status of an brake failure
+	 */
     public void brakeFailureStatus() {
-    	this.brakeFailureActive = trainModelGUI.brakeFailStatus();
+    	this.brakeFailureActive = this.trainModelGUI.brakeFailStatus();
     }
     
     /**
@@ -632,12 +634,11 @@ public class Train {
 		this.engineFailureStatus();
 		this.brakeFailureStatus();
 		this.signalFailureStatus();
-        if(!brakeFailureActive && !signalFailureActive && !engineFailureActive) {
+        if(!this.brakeFailureActive && !this.signalFailureActive && !this.engineFailureActive) {
             this.emerBrake = ebrake;
-        } else {
+        } else if(this.brakeFailureActive || this.signalFailureActive || this.engineFailureActive){
 			this.emerBrake = true;
 		}
-    	//trnMdl.setPassengerEmergencyBrake(this.trainID, ebrake);
     }
     
     /**
@@ -646,8 +647,9 @@ public class Train {
      * @param sBrake
      */
     public void setServiceBrake(boolean sBrake) {
+		this.serviceBrake = sBrake;
 		this.brakeFailureStatus();
-        if(!brakeFailureActive){
+        if(!this.brakeFailureActive){
             this.serviceBrake = sBrake;
         } else {
 			this.serviceBrake = false;

@@ -226,9 +226,9 @@ public class TrainModelGUI extends JFrame {
 	public JPanel engineFailPanel = new JPanel();
 	public JPanel signalFailPanel = new JPanel();
 	public JPanel brakeFailPanel = new JPanel();
-	private boolean engineFail;
-	private boolean sigFail;
-	private boolean brakeFail;
+	public boolean engineFail;
+	public boolean sigFail;
+	public boolean brakeFail;
 	public JMenu mnFile = new JMenu("FILE");
 	public JMenu mnSelectTrain = new JMenu("SELECT TRAIN");
 	public JMenuItem menuTrainlist = new JMenuItem(new AbstractAction("") {
@@ -455,7 +455,7 @@ public class TrainModelGUI extends JFrame {
 			  setEnabled(true);
 			  ledImageLabel.setIcon(new ImageIcon(ledImage));
 			  engineFail = false;
-			  emerBrake = false;
+			  //emerBrake = false;
 			  //train.setEBrake(false);
 
 			  engineFailCheckBox.setSelected(engineFail);
@@ -486,7 +486,7 @@ public class TrainModelGUI extends JFrame {
 					//train.engineFailureStatus();
 					ledImageLabel.setIcon(new ImageIcon(ledImageRed)); 
 					engineFail = true;
-					emerBrake = true;
+					//emerBrake = true;
 			  		train.setEBrake(true);
 
 				}
@@ -495,7 +495,7 @@ public class TrainModelGUI extends JFrame {
 					//train.signalFailureStatus();
 					ledImageLabel2.setIcon(new ImageIcon(ledImageRed));
 					sigFail = true;
-					emerBrake = true;
+					//emerBrake = true;
 			  		train.setEBrake(true);
 
 				}
@@ -504,7 +504,7 @@ public class TrainModelGUI extends JFrame {
 					//train.brakeFailureStatus();
 					ledImageLabel3.setIcon(new ImageIcon(ledImageRed)); 
 					brakeFail = true;
-					emerBrake = true;
+					//emerBrake = true;
 			  		train.setEBrake(true);
 			  		train.setServiceBrake(false);
 				}
@@ -539,7 +539,6 @@ public class TrainModelGUI extends JFrame {
 			}
 		});
 		
-		// Not working currently...not sure what's going on, but will just remove if needed
 		mnFile.add(mntmExit);
 		mntmExit.addActionListener(new ActionListener()
 		{
