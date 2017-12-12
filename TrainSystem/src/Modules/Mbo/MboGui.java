@@ -139,6 +139,12 @@ public class MboGui extends JFrame implements ActionListener {
 		l.setHorizontalAlignment(SwingConstants.LEFT);
 	}
 
+	public void stylizeMessageLabel(JLabel l){
+		l.setFont(font_16_bold);
+		l.setForeground(Color.WHITE);
+		l.setHorizontalAlignment(SwingConstants.LEFT);
+	}
+
 	public void stylizeInfoLabel(JLabel l){
 		l.setHorizontalAlignment(SwingConstants.LEFT);
 		l.setForeground(UIManager.getColor("Button.disabledToolBarBorderBackground"));
@@ -163,14 +169,19 @@ public class MboGui extends JFrame implements ActionListener {
     private JButton generateButton;
     private JFileChooser fileChooser;
     private Mbo mbo;
+    private MboScheduler scheduler;
     private Object[][] trainData;
     private JTable trainInfoTable;
     private String[] trainInfoColumns;
     private DefaultTableModel trainInfoTableModel, trainScheduleTableModel;
-    private JLabel pineapple, pineapple2;
+    private JLabel pineapple, modeLight;
+    private ImageIcon offLight, onLight;
+    private JTextField datePrompt, throughputPrompt;
+    private JTable trainTable, operatorTable;
 
 	public MboGui(Mbo mbo) {
 		this.mbo = mbo;
+		scheduler = new MboScheduler();
         init();
 	}
 
@@ -189,9 +200,11 @@ public class MboGui extends JFrame implements ActionListener {
 		// setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		// set the icon
-		pineapple = new JLabel(new ImageIcon("pineapple_icon.png"));
-		pineapple2 = new JLabel(new ImageIcon("pineapple_icon.png"));
-		setIconImage((new ImageIcon("Shared/static/pineapple2.png")).getImage());
+		pineapple = new JLabel(new ImageIcon("Modules/Mbo/static/HSS_TrainSim_Logo.png"));
+		offLight = new ImageIcon("Modules/Mbo/static/statusIcon_grey.png");
+		onLight = new ImageIcon("Modules/Mbo/static/statusIcon_green.png");
+		modeLight = mbo.isMovingBlockModeEnabled() ? new JLabel(onLight) : new JLabel(offLight);
+		setIconImage((new ImageIcon("Modules/Mbo/static/HSS_TrainSim_Logo.png")).getImage());
 
 		// create the infopanel
         JPanel infoPanel = new JPanel();
@@ -219,10 +232,15 @@ public class MboGui extends JFrame implements ActionListener {
 		stylizeTextField(searchBox);
 
 		// create a clock
-		this.timeBox = new JLabel("07:00:00");
+		this.timeBox = new JLabel("<html><div style='text-align: center;'>" + 
+							      "07:00:00" + "</div></html>");
 		stylizeHeadingLabel(this.timeBox);
 
-		//searchBar.getDocument().addDocumentListener(new SearchListener());
+		JLabel modeLabel = new JLabel("<html><div style='text-align: center;'>" + 
+									  "LIGHT WILL SHINE<br>WHEN MOVING BLOCK MODE<br>ENABLED</div></html>",
+									  SwingConstants.CENTER);
+		stylizeMessageLabel(modeLabel);
+
 
         // create a table with train info
 		trainInfoColumns = new String [] {"<html><br><br><center>Train Name<br><br></center></html>",
@@ -241,7 +259,7 @@ public class MboGui extends JFrame implements ActionListener {
     		}
   		};
   		//trainInfoTable = new JTable(this.trainData, this.trainInfoColumns);
-		trainInfoTable = new JTable(trainInfoTableModel);
+		trainInfoTable = new TrainInfoTable(trainData, trainInfoColumns);
 		stylizeTable(trainInfoTable);
 		trainInfoTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
@@ -267,7 +285,10 @@ public class MboGui extends JFrame implements ActionListener {
 															                       .addComponent(this.timeBox, GroupLayout.Alignment.CENTER,
 															                       				 GroupLayout.PREFERRED_SIZE, 160,
           																						 GroupLayout.PREFERRED_SIZE)
-																				   .addComponent(map))
+															                       .addComponent(modeLabel, GroupLayout.Alignment.CENTER,
+															                       				 GroupLayout.PREFERRED_SIZE, 160,
+          																						 GroupLayout.PREFERRED_SIZE)
+																				   .addComponent(modeLight, GroupLayout.Alignment.CENTER))
 				                                          .addGroup(infoPanelLayout.createParallelGroup()
 					                                                               .addComponent(searchBox)
 				                                                                   .addComponent(scrollPane)
@@ -283,7 +304,9 @@ public class MboGui extends JFrame implements ActionListener {
 															                       			   GroupLayout.PREFERRED_SIZE, 50,
           																					   GroupLayout.PREFERRED_SIZE))
 				                                        .addGroup(infoPanelLayout.createParallelGroup()
-															                     .addComponent(map)
+															                     .addGroup(infoPanelLayout.createSequentialGroup()
+															                     						  .addComponent(modeLabel)
+															                     						  .addComponent(modeLight))
 															                     .addGroup(infoPanelLayout.createSequentialGroup()
 																										  .addComponent(scrollPane)
 				                                       													  .addComponent(pineapple))));
@@ -307,7 +330,7 @@ public class MboGui extends JFrame implements ActionListener {
 		                                {new String(), new String(), new String()}, 
 		                                {new String(), new String(), new String()}, 
 		                                {new String(), new String(), new String()}};
-		JTable trainTable = new JTable(trainTableData, trainTableHeaders);
+		trainTable = new JTable(trainTableData, trainTableHeaders);
 		trainTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		stylizeTable(trainTable);
 
@@ -321,7 +344,7 @@ public class MboGui extends JFrame implements ActionListener {
 		                                {new String(), new String(), new String()}, 
 		                                {new String(), new String(), new String()}, 
 		                                {new String(), new String(), new String()}};
-		JTable operatorTable = new JTable(operatorTableData, operatorTableHeaders);
+		operatorTable = new JTable(operatorTableData, operatorTableHeaders);
 		operatorTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		stylizeTable(operatorTable);
 
@@ -329,16 +352,16 @@ public class MboGui extends JFrame implements ActionListener {
 		stylizeScrollPane(operatorScrollPane);
 
         // final parameter input
-		JLabel datePromptLabel = new JLabel("DATE");
+		JLabel datePromptLabel = new JLabel("SCHEDULE TITLE");
 		stylizeInfoLabel(datePromptLabel);
 
 		JLabel throughputPromptLabel = new JLabel("DESIRED THROUGHPUT");
 		stylizeInfoLabel(throughputPromptLabel);
 
-		JTextField datePrompt = new JTextField(20);
+		datePrompt = new JTextField(20);
 		stylizeTextField(datePrompt);
 
-		JTextField throughputPrompt = new JTextField(20);
+		throughputPrompt = new JTextField(20);
 		stylizeTextField(throughputPrompt);
 
 		generateButton = new JButton("GENERATE SCHEDULE");
@@ -382,7 +405,7 @@ public class MboGui extends JFrame implements ActionListener {
 										.addGroup(layout.createParallelGroup()
 											            .addComponent(operatorTitle)
 														.addComponent(operatorScrollPane)
-										.addComponent(pineapple2, GroupLayout.Alignment.TRAILING)));
+										.addComponent(pineapple, GroupLayout.Alignment.TRAILING)));
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				                      .addGroup(layout.createParallelGroup()
 				                                      .addComponent(trainTitle)
@@ -392,7 +415,7 @@ public class MboGui extends JFrame implements ActionListener {
 												      .addComponent(operatorScrollPane))
 									  .addGroup(layout.createParallelGroup()
 									  	              .addComponent(finalInputPanel)
-									  	              .addComponent(pineapple2, GroupLayout.Alignment.TRAILING)));
+									  	              .addComponent(pineapple, GroupLayout.Alignment.TRAILING)));
 	}
 
     private class SearchListener implements DocumentListener {
@@ -434,8 +457,42 @@ public class MboGui extends JFrame implements ActionListener {
 			int returnVal = fileChooser.showSaveDialog(MboGui.this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
-                //This is where a real application would save the file.
-                System.out.println("Saving: " + file.getName() + ".");
+                
+                // update the Scheduler's train schedules
+                String[][] trains = new String[trainTable.getModel().getRowCount()][3];
+                //System.out.printf("Rows: %d\n", trainTable.getModel().getRowCount());
+                for (int i = 0; i < trainTable.getModel().getRowCount(); i++){
+ 					trains[i][0] = (String)trainTable.getModel().getValueAt(i,0);
+ 					trains[i][1] = (String)trainTable.getModel().getValueAt(i,1);
+ 					trains[i][2] = (String)trainTable.getModel().getValueAt(i,2);
+				}
+                //String[][] debugSched = {{"A", "B", "C"}, {"A", "B", "C"}};
+                scheduler.updateTrainSchedules(trains);
+
+                // update the Scheduler's operator schedules
+                String[][] operators = new String[operatorTable.getModel().getRowCount()][3];
+                for (int i = 0; i < trainTable.getModel().getRowCount(); i++){
+ 					operators[i][0] = (String)operatorTable.getModel().getValueAt(i,0);
+ 					operators[i][1] = (String)operatorTable.getModel().getValueAt(i,1);
+ 					operators[i][2] = (String)operatorTable.getModel().getValueAt(i,2);
+				}
+                scheduler.updateOperatorSchedules(operators);
+
+                // generate the schedule
+                String sched = scheduler.generateSchedule(file.getName(), datePrompt.getText(), Double.parseDouble(throughputPrompt.getText()));
+                System.out.println(sched);
+
+                // save the schedule
+                PrintWriter out = null;
+    			try {
+        			out = new PrintWriter(file.getPath());
+        			out.println(sched);
+        		} catch (IOException ioExc) {
+    				System.err.println("Exception generating while writing schedule: " + ioExc.getMessage());
+				} finally {
+        			out.close();
+        		}
+
             } else {
                 System.out.println("Save command cancelled by user.");
             }
@@ -464,12 +521,15 @@ public class MboGui extends JFrame implements ActionListener {
 	}
 
 	public void update(SimTime time) {
-		this.timeBox.setText(time.toString());
+		this.timeBox.setText("<html><div style='text-align: center;'>" + 
+							 time.toString() + "</div></html>");
 		this.trainData = mbo.getTrainData();
 		//this.trainInfoTableModel.setDataVector(this.trainData, this.trainInfoColumns);
 		DefaultTableModel model = new DefaultTableModel(this.trainData, this.trainInfoColumns);
 		//for (Object[] row : trainData) model.addRow(row);
 		trainInfoTable.setModel(model);
+		ImageIcon icon = mbo.isMovingBlockModeEnabled() ? onLight : offLight;
+		modeLight.setIcon(icon);
 		//trainInfoTableModel.fireTableDataChanged();
 		//((DefaultTableModel) this.trainInfoTable.getModel()).fireTableDataChanged();
 		//for (int i; i < this.trainData.length; i++) {
