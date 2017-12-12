@@ -72,13 +72,8 @@ public class DynamicDisplay{
 
 		dynamicTrackView.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseEntered(MouseEvent e) {
-				dynamicTrackView.showArrows = true;
-				dynamicTrackView.refresh();
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				dynamicTrackView.showArrows = false;
+			public void mousePressed(MouseEvent e) {
+				dynamicTrackView.showArrows = !dynamicTrackView.showArrows;
 				dynamicTrackView.refresh();
 			}
 		});

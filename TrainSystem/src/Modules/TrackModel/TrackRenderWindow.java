@@ -155,16 +155,16 @@ public class TrackRenderWindow extends JPanel{
 
         // Render each of these components in
         // this sequence for correct layering
+        drawLights(g2d);
         drawTrack(g2d);
         drawFailedBlocks(g2d);
         drawCrossing(g2d);
+        drawCrossingLight(g2d);
         drawSwitches(g2d);
         drawYard(g2d);
         drawSelectedBlock(g2d);
         drawBeacons(g2d);
         drawTrains(g2d);
-        drawCrossingLight(g2d);
-        drawLights(g2d);
 
         if (showArrows){
             drawDirections(g2d);
