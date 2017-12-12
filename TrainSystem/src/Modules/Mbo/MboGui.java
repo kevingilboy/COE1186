@@ -267,7 +267,7 @@ public class MboGui extends JFrame implements ActionListener {
 	    stylizeScrollPane(scrollPane);
 
 		// create the train map
-		ImageIcon mapIcon = new ImageIcon(getClass().getResource("..\\..\\Shared\\static\\dummy_map.png"));
+		ImageIcon mapIcon = new ImageIcon(getClass().getResource("/Shared/static/map.png"));
 		mapIcon = new ImageIcon(mapIcon.getImage().getScaledInstance(349, 467, Image.SCALE_DEFAULT));
 		JLabel map = new JLabel(mapIcon);
 		
