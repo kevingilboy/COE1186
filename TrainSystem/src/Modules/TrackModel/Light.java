@@ -31,11 +31,18 @@ public class Light{
 	}
 
 	public void setState(boolean newState){
-		state = newState;
+		if (status == STATUS_WORKING){
+			state = newState;
+		} else {
+			state = STATE_LIGHTS_OFF;
+		}
 	}
 
 	public void setStatus(boolean newStatus){
 		status = newStatus;
+		if (status == STATUS_NOT_WORKING){
+			setState(STATE_LIGHTS_OFF);
+		}
 	}
 
 	public int getXCoordinate(){

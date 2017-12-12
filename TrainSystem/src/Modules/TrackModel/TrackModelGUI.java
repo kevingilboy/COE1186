@@ -595,10 +595,23 @@ public class TrackModelGUI{
 				if (trackSelected != null){
 					if (selectedFailure.equals("RAIL FAILURE")){
 						blockSelected.setRailStatus(!blockSelected.getRailStatus());
+						
 					} else if (selectedFailure.equals("POWER FAILURE")){
 						blockSelected.setPowerStatus(!blockSelected.getPowerStatus());
+
+						// Turn lights off (red) if power failure
+						if (blockSelected.getLight() != null){
+							blockSelected.getLight().setStatus(blockSelected.getPowerStatus());
+						}
+
 					} else if (selectedFailure.equals("TRACK CIRCUIT FAILURE")){
 						blockSelected.setTrackCircuitStatus(!blockSelected.getTrackCircuitStatus());
+
+						// Disable switching if track circuit failure
+						if (blockSelected.getSwitch() != null){
+							blockSelected.getSwitch().setStatus(blockSelected.getTrackCircuitStatus());
+						}
+
 					} else {
 						// ... 
 					}
