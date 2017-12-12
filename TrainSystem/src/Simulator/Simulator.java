@@ -227,7 +227,7 @@ public class Simulator {
 		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, this.getClass().getClassLoader().getResourceAsStream("Shared/fonts/RobotoCondensed-Italic.ttf")));
 		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, this.getClass().getClassLoader().getResourceAsStream("Shared/fonts/RobotoCondensed-Regular.ttf")));
 
-		    System.out.println("Loaded custom fonts!");
+		    //System.out.println("Loaded custom fonts!");
 		} catch (IOException|FontFormatException e) {
 			System.out.println("HssVisualizer Error: Cannot load custom font.");
 		}
