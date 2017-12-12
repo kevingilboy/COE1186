@@ -116,6 +116,7 @@ public class Mbo implements Module {
 
 	public void enableMovingBlockMode(boolean enabled) {
 		movingBlockModeEnabled = enabled;
+		System.out.printf("Moving block mode: %s\n", enabled);
 	}
 
 	public boolean isMovingBlockModeEnabled() {

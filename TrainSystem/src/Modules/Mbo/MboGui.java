@@ -528,6 +528,8 @@ public class MboGui extends JFrame implements ActionListener {
 		DefaultTableModel model = new DefaultTableModel(this.trainData, this.trainInfoColumns);
 		//for (Object[] row : trainData) model.addRow(row);
 		trainInfoTable.setModel(model);
+		ImageIcon icon = mbo.isMovingBlockModeEnabled() ? onLight : offLight;
+		modeLight.setIcon(icon);
 		//trainInfoTableModel.fireTableDataChanged();
 		//((DefaultTableModel) this.trainInfoTable.getModel()).fireTableDataChanged();
 		//for (int i; i < this.trainData.length; i++) {
