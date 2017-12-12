@@ -256,7 +256,7 @@ public class TrackControllerGUI extends JFrame{
 		labelTrackImg.setBackground(Color.WHITE);
 		labelTrackImg.setBounds(0, 0, 334, 448);
 		panel.add(labelTrackImg);
-		labelTrackImg.setIcon(new ImageIcon("Modules/TrackController/imgs/track.png"));
+		labelTrackImg.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackController/imgs/track.png")));
 		
 		//Block Selectors
 		JLabel labelBlock = new JLabel("BLOCK");
@@ -327,7 +327,7 @@ public class TrackControllerGUI extends JFrame{
 		labelSwitchGraphic.setBounds(90, 54, 55, 33);
 		//labelSwitchGraphic.setBorder(null);
 		switchPanel.add(labelSwitchGraphic);
-		labelSwitchGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/switch_none.png"));
+		labelSwitchGraphic.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackController/imgs/switch_none.png")));
 		//labelSwitchGraphic.addActionListener(new ToggleSwitch(tc));
 		
 		labelSwitchCurr = new JLabel("---");
@@ -357,7 +357,7 @@ public class TrackControllerGUI extends JFrame{
 		
 		labelLightGraphic.setBounds(159, 0, 39, 57);
 		lightsPanel.add(labelLightGraphic);
-		labelLightGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/lightsOff.png"));
+		labelLightGraphic.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackController/imgs/lightsOff.png")));
 		
 		//Block Crossing
 		JLabel labelCrossing = new JLabel("CROSSING");
@@ -366,7 +366,7 @@ public class TrackControllerGUI extends JFrame{
 		labelCrossing.setBounds(10, 80, 88, 57);
 		lightsPanel.add(labelCrossing);
 		
-		labelCrossingGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/crossingOff.png"));
+		labelCrossingGraphic.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackController/imgs/crossingOff.png")));
 		labelCrossingGraphic.setForeground(Color.LIGHT_GRAY);
 		labelCrossingGraphic.setFont(new Font("Helvetica", Font.BOLD, 40));
 		labelCrossingGraphic.setHorizontalAlignment(SwingConstants.CENTER);
@@ -382,7 +382,7 @@ public class TrackControllerGUI extends JFrame{
 		
 		//Pineapple logo
 		JLabel labelPineapple = new JLabel("");
-		labelPineapple.setIcon(new ImageIcon("Modules/TrackModel/Images/HSS_TrainSim_Logo.png"));
+		labelPineapple.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/Images/HSS_TrainSim_Logo.png")));
 		labelPineapple.setBounds(415, 255, 138, 76);
 		trackInfoPanel.add(labelPineapple);
 	}	
@@ -445,39 +445,39 @@ public class TrackControllerGUI extends JFrame{
 		}
 		if (tc.trackModel.getBlock(line, blockId).getLight() != null){
 			if(tc.trackModel.getBlock(line, blockId).getLight().getState() == true){
-				labelLightGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/greenLight.png"));
+				labelLightGraphic.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackController/imgs/greenLight.png")));
 			} else {
-				labelLightGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/redLight.png"));
+				labelLightGraphic.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackController/imgs/redLight.png")));
 			}
 		} else {
-			labelLightGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/lightsOff.png"));
+			labelLightGraphic.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackController/imgs/lightsOff.png")));
 		}
 		if (tc.trackModel.getBlock(line, blockId).getSwitch() != null){
 			if(tc.trackModel.getBlock(line, blockId).getSwitch().getState()){
 				//normal state
-				labelSwitchGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/switch_normal.png"));
+				labelSwitchGraphic.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackController/imgs/switch_normal.png")));
 				labelSwitchCurr.setText(Integer.toString(blockId+1));
 				labelSwitchNorm.setText(Integer.toString(tc.trackModel.getBlock(line, blockId).getSwitch().getPortNormal()+1));
 				labelSwitchAlt.setText(Integer.toString(tc.trackModel.getBlock(line, blockId).getSwitch().getPortAlternate()+1));
 			} else {
 				//alt state
-				labelSwitchGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/switch_alternate.png"));
+				labelSwitchGraphic.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackController/imgs/switch_alternate.png")));
 				labelSwitchCurr.setText(Integer.toString(blockId+1));
 				labelSwitchNorm.setText(Integer.toString(tc.trackModel.getBlock(line, blockId).getSwitch().getPortNormal()+1));
 				labelSwitchAlt.setText(Integer.toString(tc.trackModel.getBlock(line, blockId).getSwitch().getPortAlternate()+1));
 			}
 		} else {
 			//no switch
-			labelSwitchGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/switch_none.png"));
+			labelSwitchGraphic.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackController/imgs/switch_none.png")));
 			labelSwitchCurr.setText("---");
 			labelSwitchNorm.setText("---");
 			labelSwitchAlt.setText("---");
 		}
 		if (tc.trackModel.getBlock(line, blockId).getCrossing() != null){
 			if(tc.trackModel.getBlock(line, blockId).getCrossing().getState() == true){
-				labelCrossingGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/crossingOn.gif"));
+				labelCrossingGraphic.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackController/imgs/crossingOn.gif")));
 			} else {
-				labelCrossingGraphic.setIcon(new ImageIcon("Modules/TrackController/imgs/crossingOff.png"));
+				labelCrossingGraphic.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackController/imgs/crossingOff.png")));
 			}
 		}
 	}
