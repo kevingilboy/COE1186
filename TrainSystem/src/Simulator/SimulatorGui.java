@@ -182,7 +182,7 @@ public class SimulatorGui {
 		 * ------------------------------
 		 */
 		JLabel icon_logo = new JLabel("");
-		icon_logo.setIcon(new ImageIcon("Simulator/Images/HSS_splash_screen_logo.gif"));
+		icon_logo.setIcon(new ImageIcon(getClass().getResource("/Simulator/Images/HSS_splash_screen_logo.gif")));
 	
 		int logo_w = 662;
 		int logo_h = 211;
@@ -198,7 +198,7 @@ public class SimulatorGui {
 		 * ------------------------------
 		 */
 		JLabel ctc_logo = new JLabel("");
-		ctc_logo.setIcon(new ImageIcon("Simulator/Images/ctc_logo.png"));
+		ctc_logo.setIcon(new ImageIcon(getClass().getResource("/Simulator/Images/ctc_logo.png")));
 
 		ctc_logo.setBounds(46, 214, 72, 72);
 		frame.getContentPane().add(ctc_logo);
@@ -220,7 +220,7 @@ public class SimulatorGui {
 		 * ------------------------------
 		 */
 		JLabel trkCtrl_logo = new JLabel("");
-		trkCtrl_logo.setIcon(new ImageIcon("Simulator/Images/trackcontroller_logo.png"));
+		trkCtrl_logo.setIcon(new ImageIcon(getClass().getResource("/Simulator/Images/trackcontroller_logo.png")));
 
 		trkCtrl_logo.setBounds(46, 314, 72, 72);
 		frame.getContentPane().add(trkCtrl_logo);
@@ -275,7 +275,7 @@ public class SimulatorGui {
 		 * ------------------------------
 		 */
 		JLabel trkMdl_logo = new JLabel("");
-		trkMdl_logo.setIcon(new ImageIcon("Simulator/Images/trackmodel_logo.png"));
+		trkMdl_logo.setIcon(new ImageIcon(getClass().getResource("/Simulator/Images/trackmodel_logo.png")));
 
 		trkMdl_logo.setBounds(46, 414, 72, 72);
 		frame.getContentPane().add(trkMdl_logo);
@@ -297,7 +297,7 @@ public class SimulatorGui {
 		 * ------------------------------
 		 */
 		JLabel trnMdl_logo = new JLabel("");
-		trnMdl_logo.setIcon(new ImageIcon("Simulator/Images/trainmodel_logo.png"));
+		trnMdl_logo.setIcon(new ImageIcon(getClass().getResource("/Simulator/Images/trainmodel_logo.png")));
 
 		trnMdl_logo.setBounds(46, 514, 72, 72);
 		frame.getContentPane().add(trnMdl_logo);		
@@ -326,7 +326,7 @@ public class SimulatorGui {
 		 * ------------------------------
 		 */
 		JLabel trnCtrl_logo = new JLabel("");
-		trnCtrl_logo.setIcon(new ImageIcon("Simulator/Images/traincontroller_logo.png"));
+		trnCtrl_logo.setIcon(new ImageIcon(getClass().getResource("/Simulator/Images/traincontroller_logo.png")));
 
 		trnCtrl_logo.setBounds(46, 614, 72, 72);
 		frame.getContentPane().add(trnCtrl_logo);	
@@ -366,7 +366,7 @@ public class SimulatorGui {
 		 * ------------------------------
 		 */
 		JLabel mbo_logo = new JLabel("");
-		mbo_logo.setIcon(new ImageIcon("Simulator/Images/mbo_logo.png"));
+		mbo_logo.setIcon(new ImageIcon(getClass().getResource("/Simulator/Images/mbo_logo.png")));
 
 		mbo_logo.setBounds(46, 714, 72, 72);
 		frame.getContentPane().add(mbo_logo);	

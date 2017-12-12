@@ -62,11 +62,6 @@ public class DynamicDisplay{
 		f.setResizable(false);
 		f.add(new JLabel("test label"));
 
-		// Make the frame draggable
-		FrameDragListener frameDragListener = new FrameDragListener(f);
-		dynamicTrackView.addMouseListener(frameDragListener);
-		dynamicTrackView.addMouseMotionListener(frameDragListener);
-
 		// Add the dynamic track view panel
 		f.add(dynamicTrackView);
 
@@ -83,33 +78,6 @@ public class DynamicDisplay{
 	public void dispatchTrain(String trainID, Position pos){
 		dynamicTrackView.dispatchTrain(trainID, pos);
 	}
-
-	// FrameDragListener class to enable enable draggable
-	// frame, used for dynamic track rendering since the
-	// window will not have a border or minimize / maximize / close
-	// buttons
-	public class FrameDragListener extends MouseAdapter {
-        private final JFrame frame;
-        private Point mouseDownCompCoords = null;
-
-        public FrameDragListener(JFrame frame) {
-            this.frame = frame;
-        }
-
-        public void mouseReleased(MouseEvent e) {
-            mouseDownCompCoords = null;
-        }
-
-        public void mousePressed(MouseEvent e) {
-            mouseDownCompCoords = e.getPoint();
-        }
-
-        // Relocate the frame relative to the position dragged
-        public void mouseDragged(MouseEvent e) {
-            Point currCoords = e.getLocationOnScreen();
-            frame.setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
-        }
-    }
 
 	public void trainPoofByName(String name) {
 		dynamicTrackView.trainPoofByName(name);

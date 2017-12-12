@@ -54,6 +54,11 @@ public class Mbo implements Module {
 
 	private void startGui() {
 		gui = new MboGui(thisMbo);
+		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+			public void uncaughtException(Thread t, Throwable e) {
+				//... silence awt exceptions
+			}
+	    });
 	}
 
 	/**
