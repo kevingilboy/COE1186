@@ -629,9 +629,14 @@ public class Train {
      * @param ebrake
      */
     public void setEBrake(boolean ebrake) {
+		this.engineFailureStatus();
+		this.brakeFailureStatus();
+		this.signalFailureStatus();
         if(!brakeFailureActive && !signalFailureActive && !engineFailureActive) {
             this.emerBrake = ebrake;
-        }
+        } else {
+			this.emerBrake = true;
+		}
     	//trnMdl.setPassengerEmergencyBrake(this.trainID, ebrake);
     }
     
@@ -641,9 +646,12 @@ public class Train {
      * @param sBrake
      */
     public void setServiceBrake(boolean sBrake) {
+		this.brakeFailureStatus();
         if(!brakeFailureActive){
             this.serviceBrake = sBrake;
-        }
+        } else {
+			this.serviceBrake = false;
+		}
     }
     
     /**
