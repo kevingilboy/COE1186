@@ -93,6 +93,7 @@ public class TrackModelGUI{
 	JLabel icon_switchState;
 	JLabel icon_switch;
 	JLabel label_stationName;
+	JLabel label_stationPassengers;
 	JLabel icon_station;
 	JLabel icon_railFailure;
 	JLabel icon_powerFailure;
@@ -534,9 +535,14 @@ public class TrackModelGUI{
 		frame_tmGUI.getContentPane().add(label_station);
 			
 		label_stationName = new JLabel("   ");
-		stylizeInfoLabel_Bold(label_stationName);
-		label_stationName.setBounds(shift + 786, 439, 216, 22);
+		stylizeHeadingLabel(label_stationName);
+		label_stationName.setBounds(shift + 746, 416, 216, 40);
 		frame_tmGUI.getContentPane().add(label_stationName);
+
+		label_stationPassengers = new JLabel("   ");
+		stylizeInfoLabel_Bold(label_stationPassengers);
+		label_stationPassengers.setBounds(shift + 786, 452, 240, 22);
+		frame_tmGUI.getContentPane().add(label_stationPassengers);
 
 		icon_station = new JLabel("");
 		icon_station.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
@@ -739,9 +745,12 @@ public class TrackModelGUI{
 		if (block.getStation() != null){
 			icon_station.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_green.png")));
 			label_stationName.setText((block.getStation().getId()).toUpperCase());
+			label_stationPassengers.setText(Integer.toString(block.getStation().getWaitingPassengers()) + 
+											" WAITING PASSENGERS");
 		} else {
 			icon_station.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 			label_stationName.setText("   ");
+			label_stationPassengers.setText("   ");
 		}
 
 		if (block.getRailStatus() == Block.STATUS_NOT_WORKING){
