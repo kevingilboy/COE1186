@@ -689,15 +689,10 @@ public class TrackRenderWindow extends JPanel{
 
                 int radius = 5;
 
-                if (blocks.get(i).getLight().getStatus() == true){
-                    if (blocks.get(i).getLight().getState() == true){
-                        g2d.setColor(new Color(0, 255, 0, 40));
-                    } else {
-                        g2d.setColor(new Color(255, 0, 0, 40));
-                    }
+                if (blocks.get(i).getLight().getState() == true){
+                    g2d.setColor(new Color(0, 255, 0, 40));
                 } else {
-                    // Turn the lights "off" (GRAY) if there is a power failure
-                    g2d.setColor(Color.DARK_GRAY);
+                    g2d.setColor(new Color(255, 0, 0, 40));
                 }
 
                 Shape circleGlow1 = new Ellipse2D.Double(x_coord - 6, y_coord - 6, 2.0*(radius+6), 2.0*(radius+6));
@@ -718,10 +713,15 @@ public class TrackRenderWindow extends JPanel{
                 Shape circleOutline = new Ellipse2D.Double(x_coord - 2, y_coord - 2, 2.0*(radius+2), 2.0*(radius+2));
                 g2d.fill(circleOutline);
 
-                if (blocks.get(i).getLight().getState() == true){
-                    g2d.setColor(Color.GREEN);
+                if (blocks.get(i).getLight().getStatus() == true){
+                    if (blocks.get(i).getLight().getState() == true){
+                        g2d.setColor(Color.GREEN);
+                    } else {
+                        g2d.setColor(Color.RED);
+                    }
                 } else {
-                    g2d.setColor(Color.RED);
+                    // Turn the lights "off" (GRAY) if there is a power failure
+                    g2d.setColor(Color.DARK_GRAY);
                 }
 
                 Shape circle = new Ellipse2D.Double(x_coord, y_coord, 2.0*radius, 2.0*radius);
