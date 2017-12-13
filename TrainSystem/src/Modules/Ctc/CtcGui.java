@@ -873,7 +873,7 @@ public class CtcGui {
 		JLabel logoPineapple = new JLabel();
 		Image img = new ImageIcon(this.getClass().getResource("pineapple_icon.png")).getImage();
 		logoPineapple.setIcon(new ImageIcon(img));
-		logoPineapple.setBounds(1288,682,138,76);
+		logoPineapple.setBounds(1288,675,138,76);
 		contentPane.add(logoPineapple);
 		
 		JLabel lbltrackStatusAnd = new JLabel("<html>TRACK STATUS<br> AND MAINTENANCE</html>");

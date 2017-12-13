@@ -506,23 +506,23 @@ public class TrackModelGUI{
 
 		// HSS LOGO
 		JLabel icon_logo = new JLabel("");
-		icon_logo.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/Images/HSS_TrainSim_Logo.png")));
+		icon_logo.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/HSS_TrainSim_Logo.png")));
 		icon_logo.setBounds(shift + 1080 - 110, 638, 100, 100);
 		frame_tmGUI.getContentPane().add(icon_logo);
 
 		// LEGEND
 		JLabel icon_legend = new JLabel("");
-		icon_legend.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/Images/legend_black.png")));
+		icon_legend.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/legend_black.png")));
 		icon_legend.setBounds(shift + 360, 520, 593, 206);
 		icon_legend.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				icon_legend.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/Images/legend_hover.png")));
+				icon_legend.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/legend_hover.png")));
 				refresh();
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				icon_legend.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/Images/legend_black.png")));
+				icon_legend.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/legend_black.png")));
 				refresh();
 			}
 		});
@@ -800,7 +800,7 @@ public class TrackModelGUI{
 			if ((trackFilename.toLowerCase()).equals("greenlinefinal.csv") || (trackFilename.toLowerCase()).equals("redlinefinal.csv")){
 				if ((trackFilename.toLowerCase()).equals("greenlinefinal.csv")){
 					// MUST BE CALLED IN THIS ORDER
-					trackModel.setTrack("green", (new TrackCsvParser()).parse("Modules/TrackModel/Track Layout/GreenLineFinal.csv"));
+					trackModel.setTrack("green", (new TrackCsvParser()).parse("Modules/TrackModel/TrackLayout/GreenLineFinal.csv"));
 					trackSelected = trackModel.getTrack("green");
 					blockSelected = trackSelected.get(0);
 
@@ -811,7 +811,7 @@ public class TrackModelGUI{
 					comboBox_selectTrack.setSelectedItem("GREEN LINE");
 				} else if ((trackFilename.toLowerCase()).equals("redlinefinal.csv")){
 					// MUST BE CALLED IN THIS ORDER
-					trackModel.setTrack("red", (new TrackCsvParser()).parse("Modules/TrackModel/Track Layout/RedLineFinal.csv"));
+					trackModel.setTrack("red", (new TrackCsvParser()).parse("Modules/TrackModel/TrackLayout/RedLineFinal.csv"));
 					trackSelected = trackModel.getTrack("red");
 					blockSelected = trackSelected.get(0);
 
@@ -828,8 +828,8 @@ public class TrackModelGUI{
 	
 	public void initTracksOnStartup() {		
 		TrackCsvParser redParser = new TrackCsvParser();
-		trackModel.setTrack("red", redParser.parse("Modules/TrackModel/Track Layout/RedLineFinal.csv"));
-		redParser.parseLightPositions("Modules/TrackModel/Track Layout/RedLightsCoordinates.csv", trackModel.getTrack("red"));
+		trackModel.setTrack("red", redParser.parse("Modules/TrackModel/TrackLayout/RedLineFinal.csv"));
+		redParser.parseLightPositions("Modules/TrackModel/TrackLayout/RedLightsCoordinates.csv", trackModel.getTrack("red"));
 		trackSelected = trackModel.getTrack("red");
 		blockSelected = trackSelected.get(0);
 
@@ -839,8 +839,8 @@ public class TrackModelGUI{
 		comboBox_selectTrack.addItem("RED LINE");
 
 		TrackCsvParser greenParser = new TrackCsvParser();
-		trackModel.setTrack("green", greenParser.parse("Modules/TrackModel/Track Layout/GreenLineFinal.csv"));
-		greenParser.parseLightPositions("Modules/TrackModel/Track Layout/GreenLightsCoordinates.csv", trackModel.getTrack("green"));
+		trackModel.setTrack("green", greenParser.parse("Modules/TrackModel/TrackLayout/GreenLineFinal.csv"));
+		greenParser.parseLightPositions("Modules/TrackModel/TrackLayout/GreenLightsCoordinates.csv", trackModel.getTrack("green"));
 		trackSelected = trackModel.getTrack("green");
 		blockSelected = trackSelected.get(0);
 

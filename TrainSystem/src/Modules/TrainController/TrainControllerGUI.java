@@ -265,7 +265,7 @@ public class TrainControllerGUI {
 		panel.add(confirmButton);
 		
 		icon_logo = new JLabel("");
-		icon_logo.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/Images/HSS_TrainSim_Logo.png")));
+		icon_logo.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/HSS_TrainSim_Logo.png")));
 		icon_logo.setBounds(332, 248, 100, 100);
 		contentPane.add(icon_logo);
 		

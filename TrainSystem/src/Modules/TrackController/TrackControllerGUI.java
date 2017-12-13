@@ -174,7 +174,7 @@ public class TrackControllerGUI extends JFrame{
 	public void drawTrackControllerGui(TrackController tc, String line, String[] blocks, String name) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setTitle("Track Controller "+name);
-		setBounds(100, 100, 870, 490);
+		setBounds(100, 100, 890, 520);
 		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -379,7 +379,7 @@ public class TrackControllerGUI extends JFrame{
 		
 		//Pineapple logo
 		JLabel labelPineapple = new JLabel("");
-		labelPineapple.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/Images/HSS_TrainSim_Logo.png")));
+		labelPineapple.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/HSS_TrainSim_Logo.png")));
 		labelPineapple.setBounds(415, 255, 138, 76);
 		trackInfoPanel.add(labelPineapple);
 	}	
