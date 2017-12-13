@@ -148,7 +148,6 @@ public class TrackControllerGUI extends JFrame{
 	JLabel labelCrossingGraphic = new JLabel();
 	JLabel labelLightGraphic = new JLabel();
 	JLabel labelSwitchGraphic = new JLabel();
-	//JButton labelSwitchGraphic = new JButton();
 	JLabel labelSwitchCurr;
 	JLabel labelSwitchNorm;
 	JLabel labelSwitchAlt;
@@ -325,10 +324,8 @@ public class TrackControllerGUI extends JFrame{
 		labelSwitchState.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		labelSwitchGraphic.setBounds(90, 54, 55, 33);
-		//labelSwitchGraphic.setBorder(null);
 		switchPanel.add(labelSwitchGraphic);
 		labelSwitchGraphic.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackController/imgs/switch_none.png")));
-		//labelSwitchGraphic.addActionListener(new ToggleSwitch(tc));
 		
 		labelSwitchCurr = new JLabel("---");
 		stylizeInfoLabel_Bold(labelSwitchCurr);
@@ -396,34 +393,17 @@ public class TrackControllerGUI extends JFrame{
 			displayInfo(tc);
 	    }
 	}
-	
-	/*
-	class ToggleSwitch implements ActionListener {
-		private TrackController tc;
-		public ToggleSwitch(TrackController tc){
-			this.tc = tc;
-		}
-	    public void actionPerformed(ActionEvent e){
-			int blockId = getSelectedBlockId();
-			boolean state = tc.trackModel.getBlock(line, blockId).getSwitch().getState();
-			boolean success = tc.transmitCtcSwitchState(blockId, !state);
-			if (success){
-				displayInfo(tc);
-			}
-	    }
-	}
-	*/
 
 	class UploadPLC implements ActionListener {
 	    public void actionPerformed(ActionEvent e){
 			JFileChooser c = new JFileChooser();
 			FileNameExtensionFilter filter = new FileNameExtensionFilter("plc", "PLC");
 			c.setFileFilter(filter);
+			c.setCurrentDirectory(new File(System.getProperty("user.dir")));
 			int rVal = c.showOpenDialog(null);
 			if(rVal == JFileChooser.APPROVE_OPTION) {
-				String plcPath = c.getCurrentDirectory().toString() + "/" + c.getSelectedFile().getName();
-				System.out.println("path = " + plcPath);
-				boolean parserSuccess = tc.tcplc.parsePLC(plcPath);
+				String plcPath = c.getCurrentDirectory().toString() + "\\" + c.getSelectedFile().getName();
+				boolean parserSuccess = tc.tcplc.parseNewPLC(plcPath);
 			}
 	    }
 	}
