@@ -419,11 +419,12 @@ public class TrackControllerGUI extends JFrame{
 			JFileChooser c = new JFileChooser();
 			FileNameExtensionFilter filter = new FileNameExtensionFilter("plc", "PLC");
 			c.setFileFilter(filter);
+			c.setCurrentDirectory(new File(System.getProperty("user.dir")));
 			int rVal = c.showOpenDialog(null);
 			if(rVal == JFileChooser.APPROVE_OPTION) {
-				String plcPath = c.getCurrentDirectory().toString() + "/" + c.getSelectedFile().getName();
+				String plcPath = c.getCurrentDirectory().toString() + "\\" + c.getSelectedFile().getName();
 				System.out.println("path = " + plcPath);
-				boolean parserSuccess = tc.tcplc.parsePLC(plcPath);
+				boolean parserSuccess = tc.tcplc.parseNewPLC(plcPath);
 			}
 	    }
 	}
