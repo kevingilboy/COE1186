@@ -272,7 +272,7 @@ public class TrainModelGUI extends JFrame {
 	
 	// The instance of the TrainModel class we will use to go between the back end elements
 	// and the GUI elements of the Train Model
-	public static Train train;
+	private static Train train;
 
 	private final JMenuItem mntmExit = new JMenuItem("Exit All");
 	private Image ledImage = new ImageIcon(this.getClass().getResource("images/statusIcon_grey.png")).getImage();

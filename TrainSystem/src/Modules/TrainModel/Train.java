@@ -371,6 +371,7 @@ public class Train {
     		this.trainAcceleration = TRAIN_MAX_ACCELERATION * 1;	// time elapsed (one second)
     	}
     	
+		emerBrake = this.getEBrake();
     	// decelerates the train based on the values given in the spec sheet for the emergency brake
     	if (emerBrake) {
     		this.trainAcceleration += (TRAIN_MAX_ACCELERATION_E_BRAKE*1);
