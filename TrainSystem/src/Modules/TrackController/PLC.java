@@ -29,11 +29,13 @@ public class PLC {
 		jexl = new JexlEngine();
 	}
 	
+	//For JAR use to load initially
 	public boolean parseInitialPLC(String plcPath) {
 		InputStreamReader isr = new InputStreamReader(ClassLoader.getSystemResourceAsStream(plcPath));
 		return parsePLC(isr);
 	}
 	
+	//For JAR use after system is running
 	public boolean parseNewPLC(String plcPath) {
 		try {
 			InputStream is = new FileInputStream(plcPath);
