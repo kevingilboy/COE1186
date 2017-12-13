@@ -298,7 +298,7 @@ public class Ctc implements Module,TimeControl {
 			gui.btnPause.setEnabled(true);
 			gui.stylizeButton(gui.btnPause);		
 		}
-		String testName = "Trains"+testTrainNum++;
+		String testName = "Train"+testTrainNum++;
 		if(line==Line.GREEN) {
 			Schedule schedule = new Schedule(Line.GREEN);
 			schedule.departureTime = new SimTime("11:11:11");
