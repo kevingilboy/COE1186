@@ -216,7 +216,7 @@ public class TrackModel implements Module{
 		if(line.equals("GREEN")) {
 			getBlock(line, greenLineBlocks.size()-2).setOccupancy(false);
 		} else if(line.equals("RED")) {
-			getBlock(line, redLineBlocks.size()-2).setOccupancy(false);
+			getBlock(line, redLineBlocks.size()-1).setOccupancy(false);
 		}		
 	}
 }
