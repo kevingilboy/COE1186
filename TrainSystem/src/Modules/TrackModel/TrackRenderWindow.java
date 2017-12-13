@@ -689,10 +689,15 @@ public class TrackRenderWindow extends JPanel{
 
                 int radius = 5;
 
-                if (blocks.get(i).getLight().getState() == true){
-                    g2d.setColor(new Color(0, 255, 0, 40));
+                if (blocks.get(i).getLight().getStatus() == true){
+                    if (blocks.get(i).getLight().getState() == true){
+                        g2d.setColor(new Color(0, 255, 0, 40));
+                    } else {
+                        g2d.setColor(new Color(255, 0, 0, 40));
+                    }
                 } else {
-                    g2d.setColor(new Color(255, 0, 0, 40));
+                    // Turn the lights "off" (GRAY) if there is a power failure
+                    g2d.setColor(Color.DARK_GRAY);
                 }
 
                 Shape circleGlow1 = new Ellipse2D.Double(x_coord - 6, y_coord - 6, 2.0*(radius+6), 2.0*(radius+6));
