@@ -1,4 +1,5 @@
 //Michael Kotcher
+//Hash Slinging Slashers
 
 package Modules.TrainController;
 
@@ -28,6 +29,7 @@ public class TrnController {
 	private double overallAuth;					//meters
 	private double actualSpeed;					//meters per second
 	private double setpointSpeed;				//meters per second
+	private double mboSpeed;					//meters per second
 	private double speedLimit;					//meters per second
 	private double power;						//watts
 	private double safeBrakingDistance;			//meters
@@ -247,6 +249,10 @@ public class TrnController {
 	
 	public void setSafeBrakingDistance(double dist) {
 		safeBrakingDistance = dist;
+	}
+	
+	public void setMboSpeed(double speed) {
+		mboSpeed = speed;
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
