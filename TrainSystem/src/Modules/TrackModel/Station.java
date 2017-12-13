@@ -4,14 +4,18 @@ import java.util.Random;
 
 public class Station{
 
-	public int MIN_GENERATED_TICKET_SALES = 10;
-	public int MAX_GENERATED_TICKET_SALES = 100;
+	public int MIN_GENERATED_PASSENGERS = 10;
+	public int MAX_GENERATED_PASSENGERS = 100;
+	public int MIN_GENERATED_TICKET_SALES = 0;
+	public int MAX_GENERATED_TICKET_SALES = 444;
 	public boolean DOOR_SIDE_RIGHT = true;
 	public boolean DOOR_SIDE_LEFT = false;
 	public boolean DOOR_SIDE_NONE = false;
 
 	private String id;
 	private int ticketSales;
+	private int nextWaitingPassengers;
+	private int waitingPassengers;
 
 	// Side of train the door should open when moving
 	// in direction of increasing Block ID.
@@ -26,6 +30,8 @@ public class Station{
 	public Station(){
 		id = "";
 		ticketSales = 0;
+		updateWaitingPassengers();
+		waitingPassengers = getWaitingPassengers();
 	}
 
 	public String getId(){
@@ -53,15 +59,31 @@ public class Station{
 	}
 
 	public int getTicketSales(){
-		ticketSales = randomizeTicketSales(MIN_GENERATED_TICKET_SALES, MAX_GENERATED_TICKET_SALES);
+		// Maximum number of ticket sales is the number of people
+		// waiting at the station. Not all of them might board.
+		ticketSales = getWaitingPassengers();
 		return ticketSales;
 	}
 
-	private int randomizeTicketSales(int min, int max){
+	public void updateWaitingPassengers(){
+		// Called after a train arrives at a station and embarks / disembarks passengers.
+		nextWaitingPassengers = randomize(MIN_GENERATED_PASSENGERS, MAX_GENERATED_PASSENGERS);
+	}
+
+	public int getWaitingPassengers(){
+		int passengers = waitingPassengers;
+		waitingPassengers = nextWaitingPassengers;
+		return passengers;
+	}
+
+	public void removePassengers(int num){
+		waitingPassengers -= num;
+	}
+
+	private int randomize(int min, int max){
 		Random rand = new Random();
 
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 		return randomNum;
 	}
-
 }
