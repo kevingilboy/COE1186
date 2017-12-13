@@ -1,4 +1,5 @@
 //Michael Kotcher
+//Hash Slinging Slashers
 //This is a Java translation of the MiniPID open source controller
 //shortened to include only the necessary pieces
 //https://github.com/tekdemo/MiniPID

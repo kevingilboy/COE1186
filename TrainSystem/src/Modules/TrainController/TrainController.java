@@ -1,4 +1,5 @@
 //Michael Kotcher
+//Hash Slinging Slashers
 
 package Modules.TrainController;
 
@@ -68,15 +69,21 @@ public class TrainController implements Module {
 	//called by the MBO, sets authority to a particular train
 	public void setMboAuthority(String trainID, double auth) {
 		TrnController C = controlList.get(trainID);
-		if(C==null) return;
+		if(C == null) return;
 		C.setMboAuthority(auth);
 	}
 	
 	//called by the MBO, sets the safe braking distance of a particular train
 	public void setSafeBrakingDistance(String trainID, double dist) {
 		TrnController C = controlList.get(trainID);
-		if(C==null) return;
+		if (C == null) return;
 		C.setSafeBrakingDistance(dist);
+	}
+	
+	public void setMboSpeed(String trainID, double speed) {
+		TrnController C = controlList.get(trainID);
+		if (C == null) return;
+		C.setMboSpeed(speed);
 	}
 	
 	/////these functions called by a particular TrnController object to pass a value through this object to the Train Model////////

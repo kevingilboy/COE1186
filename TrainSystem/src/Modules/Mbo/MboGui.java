@@ -39,7 +39,7 @@ public class MboGui extends JFrame implements ActionListener {
 	 * ALLOWABLE FONTS
 	 */
 	
-	Font font_14_bold = new Font("Roboto Condensed", Font.BOLD, 16);
+	Font font_14_bold = new Font("Roboto Condensed", Font.BOLD, 18);
 	Font font_16_bold = new Font("Roboto Condensed", Font.BOLD, 20);
 	Font font_20_bold = new Font("Roboto Condensed Bold", Font.BOLD, 30);
 	Font font_24_bold = new Font("Roboto Condensed", Font.BOLD, 38);
@@ -194,7 +194,8 @@ public class MboGui extends JFrame implements ActionListener {
 
 		// initialize the jframe
         setTitle("Moving Block Overlay");
-		setSize(1350, 600);
+		setSize(65 + 8*150, 600);
+		setResizable(false);
 		getContentPane().setBackground(new Color(20, 20, 20));
 		setLocationRelativeTo(null);
 		// setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -204,7 +205,7 @@ public class MboGui extends JFrame implements ActionListener {
 		offLight = new ImageIcon(getClass().getResource("/Modules/Mbo/static/statusIcon_grey.png"));
 		onLight = new ImageIcon(getClass().getResource("/Modules/Mbo/static/statusIcon_green.png"));
 		modeLight = mbo.isMovingBlockModeEnabled() ? new JLabel(onLight) : new JLabel(offLight);
-		setIconImage((new ImageIcon(getClass().getResource("/Modules/Mbo/static/HSS_TrainSim_Logo.png"))).getImage());
+		setIconImage((new ImageIcon(getClass().getResource("/Simulator/images/mbo_logo.png"))).getImage());
 
 		// create the infopanel
         JPanel infoPanel = new JPanel();
@@ -236,20 +237,18 @@ public class MboGui extends JFrame implements ActionListener {
 							      "07:00:00" + "</div></html>");
 		stylizeHeadingLabel(this.timeBox);
 
-		JLabel modeLabel = new JLabel("<html><div style='text-align: center;'>" + 
-									  "LIGHT WILL SHINE<br>WHEN MOVING BLOCK MODE<br>ENABLED</div></html>",
-									  SwingConstants.CENTER);
+		JLabel modeLabel = new JLabel("<html><center>MOVING BLOCK<br>MODE ENABLED</center></html>");
 		stylizeMessageLabel(modeLabel);
 
 
         // create a table with train info
-		trainInfoColumns = new String [] {"<html><br><br><center>Train Name<br><br></center></html>",
-			                "<html><center>Time Most<br>Recent Signal<br>Received</center></html>",
-						    "<html><center>Coordinates<br>Received<br>(mi, mi)</center></html>",
-							"<html><center>Calculated<br>Location</center></html>",
-							"<html><center>Calculated<br>Velocity<br>(mi/h)</center></html>",
-							"<html><center>Transmitted<br>Authority<br>(mi)</center></html>",
-							"<html><center>Transmitted<br>Safe Braking<br>Distance (mi)</center></html>"};
+		trainInfoColumns = new String [] {"<html><br><br><center>TRAIN NAME<br><br></center></html>",
+			                "<html><center>TIME MOST<br>RECENT SIGNAL<br>RECEIVED</center></html>",
+						    "<html><center>COORDINATES<br>RECEIVED<br>(mi, mi)</center></html>",
+							"<html><center>CALCULATED<br>LOCATION</center></html>",
+							"<html><center>CALCULATED<br>VELOCITY<br>(mi/h)</center></html>",
+							"<html><center>TRANSMITTED<br>AUTHORITY<br>(mi)</center></html>",
+							"<html><center>TRANSMITTED<br>SAFE BRAKING<br>DISTANCE (mi)</center></html>"};
 		//trainInfoColumns.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
 		//System.out.println("About to try with " + mbo);
 		this.trainData = mbo.getTrainData();
@@ -324,7 +323,7 @@ public class MboGui extends JFrame implements ActionListener {
 		GroupLayout layout = new GroupLayout(schedulerPanel);
 
         // train schedule table
-		String[] trainTableHeaders = {"Train Name", "Start Time", "Stop Time"};
+		String[] trainTableHeaders = {"TRAIN NAME", "START TIME", "STOP TIME"};
 		Object[][] trainTableData = {{new String(), new String(), new String()}, 
 		                                {new String(), new String(), new String()}, 
 		                                {new String(), new String(), new String()}, 
@@ -338,7 +337,7 @@ public class MboGui extends JFrame implements ActionListener {
 		stylizeScrollPane(trainScrollPane);
 
 		// operator schedule table
-		String[] operatorTableHeaders = {"Operator Name", "Start Time", "Stop Time"};
+		String[] operatorTableHeaders = {"OPERATOR NAME", "START TIME", "STOP TIME"};
 		Object[][] operatorTableData = {{new String(), new String(), new String()}, 
 		                                {new String(), new String(), new String()}, 
 		                                {new String(), new String(), new String()}, 
@@ -528,6 +527,13 @@ public class MboGui extends JFrame implements ActionListener {
 		DefaultTableModel model = new DefaultTableModel(this.trainData, this.trainInfoColumns);
 		//for (Object[] row : trainData) model.addRow(row);
 		trainInfoTable.setModel(model);
+
+		// Fixes cell widths to stop horizontal flickering
+		for (int i = 0; i < trainInfoTable.getColumnCount(); i++){
+			trainInfoTable.getColumnModel().getColumn(i).setMinWidth(150); 
+		}
+		trainInfoTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
 		ImageIcon icon = mbo.isMovingBlockModeEnabled() ? onLight : offLight;
 		modeLight.setIcon(icon);
 		//trainInfoTableModel.fireTableDataChanged();

@@ -13,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import Shared.Module;
 import Shared.SimTime;
-
+import Modules.Ctc.Train;
 import Modules.TrainController.TrainController;
 import Modules.TrainModel.TrainModel;
 
@@ -112,6 +112,13 @@ public class Mbo implements Module {
 		//	System.out.printf("Did auth for %s\n", train.getName());
 			trainController.setSafeBrakingDistance(train.getName(), train.getSafeBrakingDistance());
 		//	System.out.printf("Did dist for %s\n", train.getName());
+			double recommendedSpeed;
+			if (train.getAuthority() <= train.getSafeBrakingDistance()) {
+				recommendedSpeed = 0;
+			} else {
+				recommendedSpeed = train.getSpeed();
+			}
+			//trainController.setMboSpeed(train.getName(), recommendedSpeed);
 		}
 		//System.out.println("gui");
 		gui.update(time);
@@ -133,9 +140,6 @@ public class Mbo implements Module {
 
 		// check that checksum is valid
 		crc.reset();
-		//System.out.printf("Received %f:%f for %s\n", pos[0], pos[1], train);
-		//String[] segments = signal.split(":");
-		//long checksum = Long.parseLong(segments[1]);
     	String signal = train + ":" + Double.toString(pos[0]) + "," + Double.toString(pos[1]);
 		crc.update(signal.getBytes());
 		//System.out.printf("Checksum %s: %x %x\n", train, crc.getValue(), checksum);
@@ -218,14 +222,34 @@ public class Mbo implements Module {
 	}
 
 	public void updateTrainInfo() {
+		ArrayList<String> trainsToRemove = new ArrayList<String>();
+		
 		for (String train : trains.keySet()) {
+
+			// remove the train from the hashmap if it's returned to the yard
+			if (trains.get(train).isPoofable()) {
+				trainsToRemove.add(train);
+				continue;
+			}
 			//System.out.printf("Updating info for %s\n", train);
-			trains.get(train).setAuthority(calculateAuthority(train));
+			trains.get(train).setAuthority(calculateAuthoritySafetyCritical(train));
 			//System.out.printf("auth set");
 			//System.out.printf("auth for %s\n", train);
-			trains.get(train).setSafeBrakingDistance(calculateSafeBrakingDistance(train));
+			trains.get(train).setSafeBrakingDistance(calculateSafeBrakingDistanceSafetyCritical(train));
 			//System.out.printf("Updated %s\n", train);
 		}
+		
+		while(trainsToRemove.size()>0) {
+			trains.remove(trainsToRemove.remove(0));
+		}
+	}
+
+	private double calculateAuthoritySafetyCritical(String trainID) {
+		double[] authorities = new double[3];
+		do {
+			for (int i = 0; i < 3; i++) authorities[i] = calculateAuthority(trainID);
+		} while (authorities[0] != authorities[1] || authorities[1] != authorities[2]);
+		return authorities[0];
 	}
 
 	private double calculateAuthority(String trainID) {
@@ -317,6 +341,14 @@ public class Mbo implements Module {
 		//if (distance > lineLength / 2) distance = lineLength - distance;
 
 		return (int) Math.round(distance);
+	}
+
+	private double calculateSafeBrakingDistanceSafetyCritical(String trainID) {
+		double[] distances = new double[3];
+		do {
+			for (int i = 0; i < 3; i++) distances[i] = calculateSafeBrakingDistance(trainID);
+		} while (distances[0] != distances[1] || distances[1] != distances[2]);
+		return distances[0];
 	}
 
 	private double calculateSafeBrakingDistance(String trainID) {
