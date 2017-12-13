@@ -876,6 +876,9 @@ public class Ctc implements Module,TimeControl {
 					//Train is in the yard
 					trainsToRemove.add(train);
 					train.line.blocks[train.line.yardIn].setOccupancy(false);
+					if(train.name.equals(bidirectionalReservationRed[0])) {
+						bidirectionalReservationRed = new String[] {"","-1","-1"};
+					}
 					simulator.trainPoofByName(train.line.toString(),train.name);
 				}
 			}

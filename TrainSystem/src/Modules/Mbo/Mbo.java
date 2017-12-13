@@ -57,7 +57,6 @@ public class Mbo implements Module {
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 			public void uncaughtException(Thread t, Throwable e) {
 				//... silence awt exceptions
-				System.out.println(e);
 			}
 	    });
 	}
