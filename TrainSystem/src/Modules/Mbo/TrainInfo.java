@@ -71,6 +71,7 @@ public class TrainInfo {
 		previousPosition = position;
 		position = pos;
 		MboBlock newBlock = mbo.getBlockFromCoordinates(pos);
+		if(newBlock==null) return;
 
 		// determine whether the train has returned to the yard
 		if (newBlock.getID().contains("YARD") && !block.getID().contains("YARD")) {
