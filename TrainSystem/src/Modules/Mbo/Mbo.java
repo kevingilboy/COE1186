@@ -67,13 +67,6 @@ public class Mbo implements Module {
 	public void showGUI(){
 		gui.setVisible(true);
 	}
-	
-	/*
-		public void testInitTrains() {
-			trains.put("RED 1", new TrainInfo("RED 1", time, this));
-			trains.put("RED 2", new TrainInfo("RED 2", time, this));
-		}
-	*/
 
 	public Object[][] getTrainData() {
 		return getTrainData("");
@@ -102,33 +95,24 @@ public class Mbo implements Module {
 
 	@Override
 	public boolean updateTime(SimTime time) {
-		//System.out.println("entering MBO");
 		this.time = time;
-		//System.out.println("Time updated");
 		this.updateTrainInfo();
-		//System.out.println("Info updated");
 		for (TrainInfo train : trains.values()) {
 			trainController.setMboAuthority(train.getName(), train.getAuthority());
-		//	System.out.printf("Did auth for %s\n", train.getName());
 			trainController.setSafeBrakingDistance(train.getName(), train.getSafeBrakingDistance());
-		//	System.out.printf("Did dist for %s\n", train.getName());
 			double recommendedSpeed;
 			if (train.getAuthority() <= train.getSafeBrakingDistance()) {
 				recommendedSpeed = 0;
 			} else {
 				recommendedSpeed = train.getSpeed();
 			}
-			//trainController.setMboSpeed(train.getName(), recommendedSpeed);
 		}
-		//System.out.println("gui");
 		gui.update(time);
-		//System.out.println("done");
 		return true;
 	}
 
 	public void enableMovingBlockMode(boolean enabled) {
 		movingBlockModeEnabled = enabled;
-		//System.out.printf("Moving block mode: %s\n", enabled);
 	}
 
 	public boolean isMovingBlockModeEnabled() {
@@ -142,19 +126,14 @@ public class Mbo implements Module {
 		crc.reset();
     	String signal = train + ":" + Double.toString(pos[0]) + "," + Double.toString(pos[1]);
 		crc.update(signal.getBytes());
-		//System.out.printf("Checksum %s: %x %x\n", train, crc.getValue(), checksum);
 		if (checksum != crc.getValue()) return false;
 
 		// add train if necessary
-		//String[] vals = segments[0].split(";");
-		//String train = vals[0];
 		if (trains.get(train) == null) {
 			trains.put(train, new TrainInfo(train, time, pos, this));
 		}
 
 		// update train's position
-		//double x = Double.parseDouble(vals[1]);
-		//double y = Double.parseDouble(vals[2]);
 		String blockId;
 		MboBlock block = getBlockFromCoordinates(pos);
 		if (block == null) {
@@ -163,9 +142,7 @@ public class Mbo implements Module {
 			blockId = block.getID();
 		}
 		trains.get(train).updatePosition(pos, blockId, time);
-		//System.out.printf("Put %s on %s\n", train, trains.get(train).getBlockName());
 
-		//System.out.println("received train position...");
 		return true;
 	}
 
@@ -174,25 +151,18 @@ public class Mbo implements Module {
 
 		// check that checksum is valid
 		crc.reset();
-		//System.out.printf("Received %f:%f for %s\n", pos[0], pos[1], train);
-		//String[] segments = signal.split(":");
-		//long checksum = Long.parseLong(segments[1]);
     	String signal = train + ":" + Double.toString(weight) + ":" + Double.toString(pos[0]) + "," + 
      		Double.toString(pos[1]);
 		crc.update(signal.getBytes());
-		//System.out.printf("Checksum %s: %x %x\n", train, crc.getValue(), checksum);
 		if (checksum != crc.getValue()) return false;		
+		
 		// add train if necessary
-		//String[] vals = segments[0].split(";");
-		//String train = vals[0];
 		if (trains.get(train) == null) {
 			trains.put(train, new TrainInfo(train, time, pos, this));
 		}
 		trains.get(train).setWeight(weight);
 
 		// update train's position
-		//double x = Double.parseDouble(vals[1]);
-		//double y = Double.parseDouble(vals[2]);
 		String blockId;
 		MboBlock block = getBlockFromCoordinates(pos);
 		if (block == null) {
@@ -201,9 +171,7 @@ public class Mbo implements Module {
 			blockId = block.getID();
 		}
 		trains.get(train).updatePosition(pos, blockId, time);
-		//System.out.printf("Put %s on %s\n", train, trains.get(train).getBlockName());
 
-		//System.out.println("received train position...");
 		return true;
 	}	
 
@@ -229,12 +197,9 @@ public class Mbo implements Module {
 				trains.remove(train);
 				continue;
 			}
-			//System.out.printf("Updating info for %s\n", train);
+
 			trains.get(train).setAuthority(calculateAuthoritySafetyCritical(train));
-			//System.out.printf("auth set");
-			//System.out.printf("auth for %s\n", train);
 			trains.get(train).setSafeBrakingDistance(calculateSafeBrakingDistanceSafetyCritical(train));
-			//System.out.printf("Updated %s\n", train);
 		}
 	}
 
@@ -252,18 +217,12 @@ public class Mbo implements Module {
 		for (String other : trains.keySet()) {
 			if (trainID.equals(other)) continue;
 			double[] otherPos = trains.get(other).getPosition();
-			//double dispX = pos[0] - otherPos[0];
-			//double dispY = pos[1] - otherPos[1];
 			MboBlock otherBlock = getBlockFromCoordinates(otherPos);
-		//	System.out.printf("other block %s", otherBlock.getID());
 			if (!otherBlock.isYardLine()) {
 				double newDist = calculateDistanceBetweenPositions(pos, otherPos, trains.get(trainID).getDirection());
 				if (newDist < minDistance) minDistance = newDist;
-		//		System.out.printf("%f to %f\n", newDist, minDistance);
 			}
-			//double newDist = Math.pow((Math.pow(dispX, 2) + Math.pow(dispY, 2)), 0.5);
 		}
-		//System.out.printf("Authority for %s: %f\n", trainID, minDistance);
 
 		// train model's position signals have error +/-2m
 		double error = 4;
@@ -284,8 +243,6 @@ public class Mbo implements Module {
 		MboBlock block2 = getBlockFromCoordinates(pos2);
 
 		// fail if blocks on different lines
-		//System.out.printf("%f %f\n", pos2[0], pos2[1]);
-		//System.out.printf("%s %s\n", block1, block2);
 		if (!block1.getLine().equals(block2.getLine())) {
 			return -1;
 		}
@@ -310,11 +267,7 @@ public class Mbo implements Module {
 				distance += line.get(index1).getLength();
 				int[] nextBlock = line.get(index1).getNextBlockInfo(direction);
 				index1 = nextBlock[0] - 1;
-				//System.out.printf("%d %d\n", index1, index2);
 				direction = nextBlock[1];
-				//index1 = (index1 + 1) % line.size();
-				//System.out.printf("Index: %d %d\n", index1, index2);
-				//	System.out.printf("from %d to %d\n", index1, index2);
 			} else {
 				index1 = index2;
 			}
@@ -329,10 +282,6 @@ public class Mbo implements Module {
 
 		// if both were initially on the same block but pos2 < pos1, result is negative; convert to positive
 		if (distance < 0) distance += lineLength; 
-
-		//TODO figure this shit out a better way
-		// problem is as the train comes off the track
-		//if (distance > lineLength / 2) distance = lineLength - distance;
 
 		return (int) Math.round(distance);
 	}
@@ -391,7 +340,6 @@ public class Mbo implements Module {
 
     	// Calculate the slope of the train's current angle (Degrees = Tan-1 (Slope Percent/100))
     	double angle = Math.atan2(block.getGrade(),100);
-//    	double angle = Math.toDegrees(slope);
     	
     	// Step 3: Calculate the forces acting on the train using the coefficient of friction
     	// and the train's weight in lbs converted to kg divided over the wheels (where the force is technically
@@ -414,7 +362,6 @@ public class Mbo implements Module {
 
 	@Override
 	public boolean communicationEstablished() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 

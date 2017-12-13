@@ -226,10 +226,6 @@ public class MboGui extends JFrame implements ActionListener {
 	}
 	
 	private void initInfoPanel(JPanel infoPanel) {
-		
-		// create a search bar
-		JTextField searchBox = new JTextField(" SEARCH FOR A PARTICULAR TRAIN...");
-		stylizeTextField(searchBox);
 
 		// create a clock
 		this.timeBox = new JLabel("<html><div style='text-align: center;'>" + 
@@ -237,13 +233,13 @@ public class MboGui extends JFrame implements ActionListener {
 		stylizeHeadingLabel(this.timeBox);
 
 		JLabel modeLabel = new JLabel("<html><div style='text-align: center;'>" + 
-									  "LIGHT WILL SHINE<br>WHEN MOVING BLOCK MODE<br>ENABLED</div></html>",
+									  "MOVING BLOCK MODE<br>ENABLED</div></html>",
 									  SwingConstants.CENTER);
 		stylizeMessageLabel(modeLabel);
 
 
         // create a table with train info
-		trainInfoColumns = new String [] {"<html><br><br><center>Train Name<br><br></center></html>",
+		trainInfoColumns = new String [] {"<html><br><center>Train Name<br><br></center></html>",
 			                "<html><center>Time Most<br>Recent Signal<br>Received</center></html>",
 						    "<html><center>Coordinates<br>Received<br>(mi, mi)</center></html>",
 							"<html><center>Calculated<br>Location</center></html>",
@@ -282,34 +278,22 @@ public class MboGui extends JFrame implements ActionListener {
 		infoPanelLayout.setAutoCreateGaps(true);
 		infoPanelLayout.setHorizontalGroup(infoPanelLayout.createSequentialGroup()
 				                                          .addGroup(infoPanelLayout.createParallelGroup()
-															                       .addComponent(this.timeBox, GroupLayout.Alignment.CENTER,
+															                       .addComponent(timeBox, GroupLayout.Alignment.CENTER,
 															                       				 GroupLayout.PREFERRED_SIZE, 160,
           																						 GroupLayout.PREFERRED_SIZE)
+																				   .addComponent(modeLight, GroupLayout.Alignment.CENTER)
 															                       .addComponent(modeLabel, GroupLayout.Alignment.CENTER,
 															                       				 GroupLayout.PREFERRED_SIZE, 160,
-          																						 GroupLayout.PREFERRED_SIZE)
-																				   .addComponent(modeLight, GroupLayout.Alignment.CENTER))
+          																						 GroupLayout.PREFERRED_SIZE))
 				                                          .addGroup(infoPanelLayout.createParallelGroup()
-					                                                               .addComponent(searchBox)
-				                                                                   .addComponent(scrollPane)
-																				   .addComponent(pineapple, GroupLayout.Alignment.TRAILING)));
-        infoPanelLayout.setVerticalGroup(infoPanelLayout.createSequentialGroup()
+				                                                                   .addComponent(scrollPane)));
+        infoPanelLayout.setVerticalGroup(infoPanelLayout.createParallelGroup()
+				                                        .addGroup(infoPanelLayout.createSequentialGroup()
+					                                                             .addComponent(timeBox)
+															                     .addComponent(modeLight)
+															                     .addComponent(modeLabel))
 				                                        .addGroup(infoPanelLayout.createParallelGroup()
-					                                                             .addComponent(this.timeBox,
-					                                                             			   GroupLayout.Alignment.CENTER,
-															                       			   GroupLayout.PREFERRED_SIZE, 50,
-          																					   GroupLayout.PREFERRED_SIZE)
-					                                                             .addComponent(searchBox,
-					                                                             			   GroupLayout.Alignment.CENTER,
-															                       			   GroupLayout.PREFERRED_SIZE, 50,
-          																					   GroupLayout.PREFERRED_SIZE))
-				                                        .addGroup(infoPanelLayout.createParallelGroup()
-															                     .addGroup(infoPanelLayout.createSequentialGroup()
-															                     						  .addComponent(modeLabel)
-															                     						  .addComponent(modeLight))
-															                     .addGroup(infoPanelLayout.createSequentialGroup()
-																										  .addComponent(scrollPane)
-				                                       													  .addComponent(pineapple))));
+				                                                                   .addComponent(scrollPane)));
 	}
 	
 	private void initSchedulerPanel(JPanel schedulerPanel) {
