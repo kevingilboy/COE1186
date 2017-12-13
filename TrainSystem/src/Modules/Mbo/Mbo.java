@@ -13,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import Shared.Module;
 import Shared.SimTime;
-
+import Modules.Ctc.Train;
 import Modules.TrainController.TrainController;
 import Modules.TrainModel.TrainModel;
 
@@ -57,6 +57,7 @@ public class Mbo implements Module {
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 			public void uncaughtException(Thread t, Throwable e) {
 				//... silence awt exceptions
+				System.out.println(e);
 			}
 	    });
 	}
@@ -190,16 +191,22 @@ public class Mbo implements Module {
 	}
 
 	public void updateTrainInfo() {
+		ArrayList<String> trainsToRemove = new ArrayList<String>();
+		
 		for (String train : trains.keySet()) {
 
 			// remove the train from the hashmap if it's returned to the yard
 			if (trains.get(train).isPoofable()) {
-				trains.remove(train);
+				trainsToRemove.add(train);
 				continue;
 			}
 
 			trains.get(train).setAuthority(calculateAuthoritySafetyCritical(train));
 			trains.get(train).setSafeBrakingDistance(calculateSafeBrakingDistanceSafetyCritical(train));
+		}
+		
+		while(trainsToRemove.size()>0) {
+			trains.remove(trainsToRemove.remove(0));
 		}
 	}
 
