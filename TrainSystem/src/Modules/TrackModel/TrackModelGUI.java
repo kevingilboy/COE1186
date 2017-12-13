@@ -761,8 +761,10 @@ public class TrackModelGUI{
 
 		if (block.getPowerStatus() == Block.STATUS_NOT_WORKING){
 			icon_powerFailure.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_red.png")));
+			icon_trackHeated.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
 		} else {
 			icon_powerFailure.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_grey.png")));
+			icon_trackHeated.setIcon(new ImageIcon(getClass().getResource("/Modules/TrackModel/images/statusIcon_green.png")));
 		}
 
 		if (block.getTrackCircuitStatus() == Block.STATUS_NOT_WORKING){
