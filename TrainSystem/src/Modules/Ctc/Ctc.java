@@ -298,7 +298,7 @@ public class Ctc implements Module,TimeControl {
 			gui.btnPause.setEnabled(true);
 			gui.stylizeButton(gui.btnPause);		
 		}
-		String testName = "Trains"+testTrainNum++;
+		String testName = "Train"+testTrainNum++;
 		if(line==Line.GREEN) {
 			Schedule schedule = new Schedule(Line.GREEN);
 			schedule.departureTime = new SimTime("11:11:11");
@@ -876,6 +876,9 @@ public class Ctc implements Module,TimeControl {
 					//Train is in the yard
 					trainsToRemove.add(train);
 					train.line.blocks[train.line.yardIn].setOccupancy(false);
+					if(train.name.equals(bidirectionalReservationRed[0])) {
+						bidirectionalReservationRed = new String[] {"","-1","-1"};
+					}
 					simulator.trainPoofByName(train.line.toString(),train.name);
 				}
 			}
