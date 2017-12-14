@@ -96,29 +96,4 @@ public class TrackCsvParser{
 
     	return blocks;
 	}
-
-	/*public void showParsedTrack(){
-		if (blocks.size() > 0){
-			for (int i = 0; i < blocks.size(); i++){
-				System.out.print(	blocks.get(i).getLine() + "\t" +
-								 	blocks.get(i).getSection() + "\t" + 
-								 	blocks.get(i).getId() + "\t" +
-								 	blocks.get(i).getLength() + "\t" + 
-								 	blocks.get(i).getGrade() + "\t" +
-								 	blocks.get(i).getElevation() + "\t" +
-								 	blocks.get(i).getCumElevation() + "\t" +
-								 	blocks.get(i).getSpeedLimit() + "\t" +
-								 	blocks.get(i).getDirection() + "\t" +
-								 	blocks.get(i).getLight() + "\t" +
-								 	blocks.get(i).getCrossing() + "\t" +
-								 	blocks.get(i).getStation() + "\t" +
-								 	blocks.get(i).getSwitch() + "\t" +
-								 	blocks.get(i).getBeacon() + "\t" +
-								 	blocks.get(i).getUndergroundStatus() + "\t" +
-								 	blocks.get(i).getOccupied()	+ "\n");
-			}
-		} else {
-			System.out.println("No parsed track to display.");
-		}
-	}*/
 }

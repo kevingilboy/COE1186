@@ -50,12 +50,10 @@ public class TrainInfo {
 		output[0] = name;
 		output[1] = timeSignalReceived.toString();
 		output[2] = String.format("(%.3f, %.3f)", position[0], position[1]);
-		//System.out.printf("%s on %s.\n", name, blockName);
 		output[3] = block.getID();
 		output[4] = String.format("%.3f", speed * (SECONDS_PER_HOUR / METERS_PER_MILE));
 		output[5] = (authority != Double.MAX_VALUE) ? String.format("%.3f", authority / METERS_PER_MILE) : "n/a";
 		output[6] = String.format("%.3f", safeBrakingDistance / METERS_PER_MILE);
-		//System.out.printf("Dist %f\n", safeBrakingDistance);
 		return output;
 	}
 
@@ -84,7 +82,6 @@ public class TrainInfo {
 			block = newBlock;
 		} 
 		calculateSpeed();
-		//System.out.printf("%s at %f:%f\n", name, pos[0], pos[1]);
 	}
 
 	public void updatePosition(double[] pos, String blockName, SimTime time) {
@@ -126,7 +123,6 @@ public class TrainInfo {
 
 	public void setAuthority(double auth) {
 		authority = auth;
-		//System.out.printf("Authority for %s is %f\n", name, authority);
 	}
 
 	public double getSafeBrakingDistance() {
@@ -135,19 +131,13 @@ public class TrainInfo {
 
 	public void setSafeBrakingDistance(double dist) {
 		this.safeBrakingDistance = dist;
-		//System.out.printf("%s has dist %f\n", name, safeBrakingDistance);
 	}
 
 	private void calculateVelocity() {
-		//double elapsedSec = timePreviousSignalReceived.until(timeSignalReceived, ChronoUnit.MILLIS);
 		int elapsedSec = signalSec - lastSignalSec;
-		// System.out.printf("time %d %d\n", signalSec, lastSignalSec);
 		if (elapsedSec != 0) {
-			//System.out.printf("pos %.3f prev %.3f\n", position[0], previousPosition[0]);
-			//System.out.printf("pos %.3f prev %.3f\n", position[1], previousPosition[1]);
 			velocity[0] = (position[0] - previousPosition[0]) / (double)elapsedSec;
 			velocity[1] = (position[1] - previousPosition[1]) / (double)elapsedSec;
-			//System.out.printf("0 %.3f 1 %.3f\n", velocity[0], velocity[1]);
 		}
 
 		// calculate the speed in m/s
@@ -164,7 +154,6 @@ public class TrainInfo {
 			MboBlock block = mbo.getBlockFromCoordinates(position);
 			int offset = block.getOffset(position);
 			MboBlock previousBlock = mbo.getBlockFromCoordinates(previousPosition);
-			//System.out.printf("%s on %s at %f, %f\n", name, previousBlock, previousPosition[0], previousPosition[1]);
 			int prevOffset = previousBlock.getOffset(previousPosition);
 
 			// if trains are on same block, distance traveled is absolute distance between offsets

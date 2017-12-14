@@ -30,9 +30,9 @@ public class Mbo implements Module {
 	private boolean movingBlockModeEnabled;
 	private CRC32 crc;
 
-	final private static double TRAIN_MAX_ACCELERATION_SERVICE_BRAKE = -1.2;
-	final private static double FRICTION_COEFFICIENT = 0.16;
-	final private static double G = 9.8;
+	final private static double TRAIN_MAX_ACCELERATION_SERVICE_BRAKE = -1.2; // m/s^2
+	final private static double FRICTION_COEFFICIENT = 0.16; // dimensionless	
+	final private static double G = 9.8;				// m/s^2
 	final private static double TRAIN_MASS = 37103.86; 	// kg
 	final private static double TRAIN_LENGTH = 32.2; 	// m
 
@@ -47,11 +47,13 @@ public class Mbo implements Module {
 		gui.setVisible(false);
 	}
 
+	// loads the red and green line from MBO specific CSV files
 	private void initTrack() {
 		redLine = new TrackCsvParser().parse("Modules/Mbo/MboRedLine.csv");
 		greenLine = new TrackCsvParser().parse("Modules/Mbo/MboGreenLine.csv");
 	}
 
+	// initializes the MBOGui object
 	private void startGui() {
 		gui = new MboGui(thisMbo);
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
@@ -67,22 +69,9 @@ public class Mbo implements Module {
 	public void showGUI(){
 		gui.setVisible(true);
 	}
-	
-	/*
-		public void testInitTrains() {
-			trains.put("RED 1", new TrainInfo("RED 1", time, this));
-			trains.put("RED 2", new TrainInfo("RED 2", time, this));
-		}
-	*/
 
-	public Object[][] getTrainData() {
-		return getTrainData("");
-	}
-
-	public double[] getTrainPosition(String regex) {
-		return trains.get(regex).getPosition();
-	}
-
+	// returns relevant information about trains for display by the MBOGui
+	// trains that contain a string matching the given regex are returned
 	public Object[][] getTrainData(String regex) {
 		Pattern pattern = Pattern.compile(".*" + regex + ".*");
 		ArrayList<Object[]> trainObjs = new ArrayList<Object[]>();
@@ -100,35 +89,39 @@ public class Mbo implements Module {
 		return output;
 	}
 
+	// when search box is empty, return data for all trains currently in yard
+	public Object[][] getTrainData() {
+		return getTrainData("");
+	}
+
+	// returns the pixel coordinates of the train
+	public double[] getTrainPosition(String regex) {
+		return trains.get(regex).getPosition();
+	}
+
+
+	// on every clock tic, update the info for the trains, and then transmit authority, SBD, and recommended speed
 	@Override
 	public boolean updateTime(SimTime time) {
-		//System.out.println("entering MBO");
 		this.time = time;
-		//System.out.println("Time updated");
 		this.updateTrainInfo();
-		//System.out.println("Info updated");
 		for (TrainInfo train : trains.values()) {
 			trainController.setMboAuthority(train.getName(), train.getAuthority());
-		//	System.out.printf("Did auth for %s\n", train.getName());
 			trainController.setSafeBrakingDistance(train.getName(), train.getSafeBrakingDistance());
-		//	System.out.printf("Did dist for %s\n", train.getName());
 			double recommendedSpeed;
 			if (train.getAuthority() <= train.getSafeBrakingDistance()) {
 				recommendedSpeed = 0;
 			} else {
 				recommendedSpeed = train.getSpeed();
 			}
-			//trainController.setMboSpeed(train.getName(), recommendedSpeed);
 		}
-		//System.out.println("gui");
 		gui.update(time);
-		//System.out.println("done");
 		return true;
 	}
 
+	// capacity to toggle moving block mode currently resides with CTC GUI
 	public void enableMovingBlockMode(boolean enabled) {
 		movingBlockModeEnabled = enabled;
-		//System.out.printf("Moving block mode: %s\n", enabled);
 	}
 
 	public boolean isMovingBlockModeEnabled() {
@@ -136,25 +129,21 @@ public class Mbo implements Module {
 	}
 
 	// returns true if checksum is valid, otherwise false
+	// DEPRECATED in favor of receiveTrainPosition that includes the train's weight
 	public boolean receiveTrainPosition(String train, double[] pos, long checksum) {
 
 		// check that checksum is valid
 		crc.reset();
     	String signal = train + ":" + Double.toString(pos[0]) + "," + Double.toString(pos[1]);
 		crc.update(signal.getBytes());
-		//System.out.printf("Checksum %s: %x %x\n", train, crc.getValue(), checksum);
 		if (checksum != crc.getValue()) return false;
 
 		// add train if necessary
-		//String[] vals = segments[0].split(";");
-		//String train = vals[0];
 		if (trains.get(train) == null) {
 			trains.put(train, new TrainInfo(train, time, pos, this));
 		}
 
 		// update train's position
-		//double x = Double.parseDouble(vals[1]);
-		//double y = Double.parseDouble(vals[2]);
 		String blockId;
 		MboBlock block = getBlockFromCoordinates(pos);
 		if (block == null) {
@@ -163,9 +152,7 @@ public class Mbo implements Module {
 			blockId = block.getID();
 		}
 		trains.get(train).updatePosition(pos, blockId, time);
-		//System.out.printf("Put %s on %s\n", train, trains.get(train).getBlockName());
 
-		//System.out.println("received train position...");
 		return true;
 	}
 
@@ -174,25 +161,18 @@ public class Mbo implements Module {
 
 		// check that checksum is valid
 		crc.reset();
-		//System.out.printf("Received %f:%f for %s\n", pos[0], pos[1], train);
-		//String[] segments = signal.split(":");
-		//long checksum = Long.parseLong(segments[1]);
     	String signal = train + ":" + Double.toString(weight) + ":" + Double.toString(pos[0]) + "," + 
      		Double.toString(pos[1]);
 		crc.update(signal.getBytes());
-		//System.out.printf("Checksum %s: %x %x\n", train, crc.getValue(), checksum);
 		if (checksum != crc.getValue()) return false;		
+		
 		// add train if necessary
-		//String[] vals = segments[0].split(";");
-		//String train = vals[0];
 		if (trains.get(train) == null) {
 			trains.put(train, new TrainInfo(train, time, pos, this));
 		}
 		trains.get(train).setWeight(weight);
 
 		// update train's position
-		//double x = Double.parseDouble(vals[1]);
-		//double y = Double.parseDouble(vals[2]);
 		String blockId;
 		MboBlock block = getBlockFromCoordinates(pos);
 		if (block == null) {
@@ -201,12 +181,11 @@ public class Mbo implements Module {
 			blockId = block.getID();
 		}
 		trains.get(train).updatePosition(pos, blockId, time);
-		//System.out.printf("Put %s on %s\n", train, trains.get(train).getBlockName());
 
-		//System.out.println("received train position...");
 		return true;
 	}	
 
+	// returns the MboBlock containing the given coordinates and null otherwise	
 	public MboBlock getBlockFromCoordinates(double[] pos) {
 		for (MboBlock block : redLine) {
 			if (block.onBlock(pos[0], pos[1])) {
@@ -221,6 +200,7 @@ public class Mbo implements Module {
 		return null;
 	}
 
+	// removes trains that have returned to yard; sets authority and SBD
 	public void updateTrainInfo() {
 		ArrayList<String> trainsToRemove = new ArrayList<String>();
 		
@@ -231,19 +211,19 @@ public class Mbo implements Module {
 				trainsToRemove.add(train);
 				continue;
 			}
-			//System.out.printf("Updating info for %s\n", train);
+
+			// calculate and set the train's commanded values in a safety-critical manner
 			trains.get(train).setAuthority(calculateAuthoritySafetyCritical(train));
-			//System.out.printf("auth set");
-			//System.out.printf("auth for %s\n", train);
 			trains.get(train).setSafeBrakingDistance(calculateSafeBrakingDistanceSafetyCritical(train));
-			//System.out.printf("Updated %s\n", train);
 		}
 		
+		// avoids ConcurrentExecutionException 
 		while(trainsToRemove.size()>0) {
 			trains.remove(trainsToRemove.remove(0));
 		}
 	}
 
+	// wraps a triply redundant voting system around the authority calculation
 	private double calculateAuthoritySafetyCritical(String trainID) {
 		double[] authorities = new double[3];
 		do {
@@ -252,35 +232,35 @@ public class Mbo implements Module {
 		return authorities[0];
 	}
 
+	// calculates authority by taking the minimum of the forward distances to other trains
+	// ie TrainA and TrainB are 1 meter apart traveling clockwise on a circular track of circumference 10
+	// TrainA has authority 9; TrainB has authority 1
 	private double calculateAuthority(String trainID) {
 		double minDistance = Double.MAX_VALUE;
 		double[] pos = trains.get(trainID).getPosition();
 		for (String other : trains.keySet()) {
 			if (trainID.equals(other)) continue;
 			double[] otherPos = trains.get(other).getPosition();
-			//double dispX = pos[0] - otherPos[0];
-			//double dispY = pos[1] - otherPos[1];
 			MboBlock otherBlock = getBlockFromCoordinates(otherPos);
-		//	System.out.printf("other block %s", otherBlock.getID());
 			if (!otherBlock.isYardLine()) {
 				double newDist = calculateDistanceBetweenPositions(pos, otherPos, trains.get(trainID).getDirection());
 				if (newDist < minDistance) minDistance = newDist;
-		//		System.out.printf("%f to %f\n", newDist, minDistance);
 			}
-			//double newDist = Math.pow((Math.pow(dispX, 2) + Math.pow(dispY, 2)), 0.5);
 		}
-		//System.out.printf("Authority for %s: %f\n", trainID, minDistance);
 
 		// train model's position signals have error +/-2m
 		double error = 4;
 
+		// account for both the error and the length of the train
 		return Math.max(0, minDistance - error - TRAIN_LENGTH);
 	}
 
+	// used in debugging, should be removed in a future version
 	public double debug_getAuthority(String trainID) {
 		return trains.get(trainID).getAuthority();
 	}
 
+	// returns the distance that a train traveling in DIRECTION would have to cover to travel from pos1 to pos2
 	public int calculateDistanceBetweenPositions(double[] pos1, double[] pos2, int direction) {
 		
 		double distance = 0;
@@ -290,8 +270,6 @@ public class Mbo implements Module {
 		MboBlock block2 = getBlockFromCoordinates(pos2);
 
 		// fail if blocks on different lines
-		//System.out.printf("%f %f\n", pos2[0], pos2[1]);
-		//System.out.printf("%s %s\n", block1, block2);
 		if (!block1.getLine().equals(block2.getLine())) {
 			return -1;
 		}
@@ -310,17 +288,12 @@ public class Mbo implements Module {
 		// add the lengths of all blocks between these
 		int index1 = line.indexOf(block1);
 		int index2 = line.indexOf(block2);
-
 		while (index1 != index2) {
 			if (index1 >= 1){
 				distance += line.get(index1).getLength();
 				int[] nextBlock = line.get(index1).getNextBlockInfo(direction);
 				index1 = nextBlock[0] - 1;
-				//System.out.printf("%d %d\n", index1, index2);
 				direction = nextBlock[1];
-				//index1 = (index1 + 1) % line.size();
-				//System.out.printf("Index: %d %d\n", index1, index2);
-				//	System.out.printf("from %d to %d\n", index1, index2);
 			} else {
 				index1 = index2;
 			}
@@ -336,13 +309,10 @@ public class Mbo implements Module {
 		// if both were initially on the same block but pos2 < pos1, result is negative; convert to positive
 		if (distance < 0) distance += lineLength; 
 
-		//TODO figure this shit out a better way
-		// problem is as the train comes off the track
-		//if (distance > lineLength / 2) distance = lineLength - distance;
-
 		return (int) Math.round(distance);
 	}
 
+	// wraps a triply redudant voting system around SBD calculation
 	private double calculateSafeBrakingDistanceSafetyCritical(String trainID) {
 		double[] distances = new double[3];
 		do {
@@ -351,6 +321,7 @@ public class Mbo implements Module {
 		return distances[0];
 	}
 
+	// returns the distance it would take the given train to stop if it cut all power and threw the service brake
 	private double calculateSafeBrakingDistance(String trainID) {
 
 		// get the current block
@@ -368,6 +339,7 @@ public class Mbo implements Module {
 		int blockDisplacement = block.getOffset(train.getPosition());
 		
 		// calculate the safe braking distance by determining how far a meter on each block slows the train down
+		// and continuing until the train has slowed to a stop
 		double potentialSpeed = train.getSpeed();
 		int distance = 0;
 		while (potentialSpeed > 0) {
@@ -379,6 +351,8 @@ public class Mbo implements Module {
     	return distance;
     }
 
+    // determine the block index and direction of travel for a train after traveling a given distance from a certain 
+    // point on either line
     private int[] getBlockAfterMoving(ArrayList<MboBlock> line, int index, int displacement, int distance, int direction) {
     	distance -= (direction == 1) ? line.get(index).getLength() - displacement : displacement;
     	while (distance > 0) {
@@ -390,6 +364,7 @@ public class Mbo implements Module {
     	return new int[]{index, direction};
     }
 
+    // determine the final velocity of a train after traveling a meter on a given block in a given direction
     private double calculateSpeedAfterMeter(double speed, MboBlock block, int direction, double mass) {
     	
     	// if train is traveling the block in the backward direction, flip the grade
@@ -397,7 +372,6 @@ public class Mbo implements Module {
 
     	// Calculate the slope of the train's current angle (Degrees = Tan-1 (Slope Percent/100))
     	double angle = Math.atan2(block.getGrade(),100);
-//    	double angle = Math.toDegrees(slope);
     	
     	// Step 3: Calculate the forces acting on the train using the coefficient of friction
     	// and the train's weight in lbs converted to kg divided over the wheels (where the force is technically
@@ -420,7 +394,6 @@ public class Mbo implements Module {
 
 	@Override
 	public boolean communicationEstablished() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
