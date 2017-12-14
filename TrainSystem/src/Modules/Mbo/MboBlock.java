@@ -62,11 +62,7 @@ public class MboBlock {
 
 	public boolean onBlock(double x, double y) {
 		boolean result = false;
-		//System.out.printf("x: %f, y: %f\n", x, y);
-		//System.out.printf("coord: %s %s\n", x_coordinates, y_coordinates);
-		//System.out.printf("%d %f\n", x_coordinates.length, x_coordinates[0]);
 		for (int i = 0; i < x_coordinates.length; i++) {
-		//	System.out.printf("index %d\n", i);
 			if (x == x_coordinates[i] && y == y_coordinates[i]) {
 				result = true;
 				break;

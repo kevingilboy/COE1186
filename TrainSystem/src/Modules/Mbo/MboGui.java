@@ -190,7 +190,6 @@ public class MboGui extends JFrame implements ActionListener {
 		// initialize class attributes
 		this.font = new Font(Font.SANS_SERIF, Font.PLAIN, 40);
 		fileChooser = new JFileChooser();
-		//fileChooser.setForeground(Color.WHITE);
 
 		// initialize the jframe
         setTitle("Moving Block Overlay");
@@ -198,7 +197,6 @@ public class MboGui extends JFrame implements ActionListener {
 		setResizable(false);
 		getContentPane().setBackground(new Color(20, 20, 20));
 		setLocationRelativeTo(null);
-		// setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		// set the icon
 		pineapple = new JLabel(new ImageIcon(getClass().getResource("/Modules/Mbo/static/HSS_TrainSim_Logo.png")));
@@ -245,15 +243,12 @@ public class MboGui extends JFrame implements ActionListener {
 							"<html><center>CALCULATED<br>VELOCITY<br>(mi/h)</center></html>",
 							"<html><center>TRANSMITTED<br>AUTHORITY<br>(mi)</center></html>",
 							"<html><center>TRANSMITTED<br>SAFE BRAKING<br>DISTANCE (mi)</center></html>"};
-		//trainInfoColumns.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
-		//System.out.println("About to try with " + mbo);
 		this.trainData = mbo.getTrainData();
 		trainInfoTableModel = new DefaultTableModel(trainData, trainInfoColumns) {
     		public boolean isCellEditable(int row, int column) {
       			return false;
     		}
   		};
-  		//trainInfoTable = new JTable(this.trainData, this.trainInfoColumns);
 		trainInfoTable = new TrainInfoTable(trainData, trainInfoColumns);
 		stylizeTable(trainInfoTable);
 		trainInfoTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
@@ -265,10 +260,6 @@ public class MboGui extends JFrame implements ActionListener {
 		ImageIcon mapIcon = new ImageIcon(getClass().getResource("/Shared/static/map.png"));
 		mapIcon = new ImageIcon(mapIcon.getImage().getScaledInstance(349, 467, Image.SCALE_DEFAULT));
 		JLabel map = new JLabel(mapIcon);
-		
-		// set sizes of layout components
-		//searchBox.setPreferredSize(new Dimension(40, 40));
-		//this.timeBox.setPreferredSize(new Dimension(40, 40));
 
         // populate the information panel
 		GroupLayout infoPanelLayout = new GroupLayout(infoPanel);
@@ -443,13 +434,11 @@ public class MboGui extends JFrame implements ActionListener {
                 
                 // update the Scheduler's train schedules
                 String[][] trains = new String[trainTable.getModel().getRowCount()][3];
-                //System.out.printf("Rows: %d\n", trainTable.getModel().getRowCount());
                 for (int i = 0; i < trainTable.getModel().getRowCount(); i++){
  					trains[i][0] = (String)trainTable.getModel().getValueAt(i,0);
  					trains[i][1] = (String)trainTable.getModel().getValueAt(i,1);
  					trains[i][2] = (String)trainTable.getModel().getValueAt(i,2);
 				}
-                //String[][] debugSched = {{"A", "B", "C"}, {"A", "B", "C"}};
                 scheduler.updateTrainSchedules(trains);
 
                 // update the Scheduler's operator schedules
@@ -507,9 +496,7 @@ public class MboGui extends JFrame implements ActionListener {
 		this.timeBox.setText("<html><div style='text-align: center;'>" + 
 							 time.toString() + "</div></html>");
 		this.trainData = mbo.getTrainData();
-		//this.trainInfoTableModel.setDataVector(this.trainData, this.trainInfoColumns);
 		DefaultTableModel model = new DefaultTableModel(this.trainData, this.trainInfoColumns);
-		//for (Object[] row : trainData) model.addRow(row);
 		trainInfoTable.setModel(model);
 
 		// Fixes cell widths to stop horizontal flickering
@@ -520,23 +507,12 @@ public class MboGui extends JFrame implements ActionListener {
 
 		ImageIcon icon = mbo.isMovingBlockModeEnabled() ? onLight : offLight;
 		modeLight.setIcon(icon);
-		//trainInfoTableModel.fireTableDataChanged();
-		//((DefaultTableModel) this.trainInfoTable.getModel()).fireTableDataChanged();
-		//for (int i; i < this.trainData.length; i++) {
-		//	for (int j; j < this.trainData[0].length; j++) {
-		//		this.trainInfoTableModel
-		//	}
-		//}
-		//this.trainInfoTableModel.update(this.trainData);
-		//this.trainInfoTable.repaint();
 	}
 
 	public static void main(String[] args) throws InterruptedException {
 
-    	//MaterialLookAndFeel ui = new MaterialLookAndFeel(GUITheme.DARK_THEME);
     	MboGui MboGui = new MboGui(new Mbo());
         EventQueue.invokeLater(() -> {
-            //MboGui = new MboGui();
 			MboGui.setVisible(true);
 		});
 		while (true) {
