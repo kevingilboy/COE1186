@@ -2,9 +2,11 @@ package Modules.TrackController;
 
 import org.apache.commons.jexl2.*;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class PLC {
@@ -23,16 +25,34 @@ public class PLC {
 	public PLC(TrackController tc, String plcPath){
 		this.tc = tc;
 		this.line = tc.associatedLine;
-		parsePLC(plcPath);
+		parseInitialPLC(plcPath);
 		jexl = new JexlEngine();
 	}
 	
-	public boolean parsePLC(String plcPath){
+	//For JAR use to load initially
+	public boolean parseInitialPLC(String plcPath) {
+		InputStreamReader isr = new InputStreamReader(ClassLoader.getSystemResourceAsStream(plcPath));
+		return parsePLC(isr);
+	}
+	
+	//For JAR use after system is running
+	public boolean parseNewPLC(String plcPath) {
+		try {
+			InputStream is = new FileInputStream(plcPath);
+			InputStreamReader isr = new InputStreamReader(is);
+			return parsePLC(isr);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public boolean parsePLC(InputStreamReader isr){
 		BufferedReader 	br 			= null;
 		String 			currline 	= "";
 		String 			delimeter 	= ":";
 		try {
-			br = new BufferedReader(new InputStreamReader(ClassLoader.getSystemResourceAsStream(plcPath)));
+			br = new BufferedReader(isr);
 			// Read from plc file and save logic expression for each
 			while ((currline = br.readLine()) != null){
 				String [] logic = currline.split(delimeter);

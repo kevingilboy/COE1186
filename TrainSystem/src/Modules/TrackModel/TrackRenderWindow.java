@@ -136,6 +136,10 @@ public class TrackRenderWindow extends JPanel{
         int indexToRemove = trainIDs.indexOf(name);
         trainIDs.remove(indexToRemove);
         positions.remove(indexToRemove);
+        xy_coords.remove(indexToRemove);
+        previous_xy_coords.remove(indexToRemove);
+        trainsMoving.remove(indexToRemove);
+        passengers.remove(indexToRemove);
         
         activeTrains--;
         if(activeTrains < 0) {
@@ -154,11 +158,12 @@ public class TrackRenderWindow extends JPanel{
         // this sequence for correct layering
         drawLights(g2d);
         drawTrack(g2d);
-        drawFailedBlocks(g2d);
+        drawOccupiedBlocks(g2d);
         drawCrossing(g2d);
         drawCrossingLight(g2d);
         drawSwitches(g2d);
         drawYard(g2d);
+        drawFailedBlocks(g2d);
         drawSelectedBlock(g2d);
         drawBeacons(g2d);
         drawTrains(g2d);
@@ -708,10 +713,15 @@ public class TrackRenderWindow extends JPanel{
                 Shape circleOutline = new Ellipse2D.Double(x_coord - 2, y_coord - 2, 2.0*(radius+2), 2.0*(radius+2));
                 g2d.fill(circleOutline);
 
-                if (blocks.get(i).getLight().getState() == true){
-                    g2d.setColor(Color.GREEN);
+                if (blocks.get(i).getLight().getStatus() == true){
+                    if (blocks.get(i).getLight().getState() == true){
+                        g2d.setColor(Color.GREEN);
+                    } else {
+                        g2d.setColor(Color.RED);
+                    }
                 } else {
-                    g2d.setColor(Color.RED);
+                    // Turn the lights "off" (GRAY) if there is a power failure
+                    g2d.setColor(Color.DARK_GRAY);
                 }
 
                 Shape circle = new Ellipse2D.Double(x_coord, y_coord, 2.0*radius, 2.0*radius);
@@ -720,11 +730,9 @@ public class TrackRenderWindow extends JPanel{
         }
     }
 
-    // Render each active train
-    public void drawTrains(Graphics2D g2d){
+    // Highlight the currently occupied block
+    public void drawOccupiedBlocks(Graphics2D g2d){
         for (int i = 0; i < activeTrains; i++){
-           
-            // Highlight the currently occupied block
             // Outer stroke
             g2d.setColor(new Color(0, 100, 255,150));
             g2d.setStroke(new BasicStroke(10));
@@ -755,7 +763,12 @@ public class TrackRenderWindow extends JPanel{
 
                 g2d.drawLine(x0, y0, x1, y1);
             }
+        }
+    }
 
+    // Render each active train
+    public void drawTrains(Graphics2D g2d){
+        for (int i = 0; i < activeTrains; i++){
            
             int direction = positions.get(i).getCurrentDirection();
 

@@ -193,8 +193,18 @@ public class TrackModel implements Module{
 
 		if ((line.toLowerCase()).equals("green")){
 			trackModelGUI.greenLineDisplay.dynamicTrackView.updatePassengers(trainName, numPassengers, TrackRenderWindow.PASSENGERS_DISEMBARKING);
+			for (int i = 0; i < greenLineBlocks.size(); i++){
+				if ((greenLineBlocks.get(i).getStation() != null) && (greenLineBlocks.get(i).getOccupied()) && (greenLineBlocks.get(i).getStatus())){
+					greenLineBlocks.get(i).getStation().updateWaitingPassengers();
+				}
+			}
 		} else {
 			trackModelGUI.redLineDisplay.dynamicTrackView.updatePassengers(trainName, numPassengers, TrackRenderWindow.PASSENGERS_DISEMBARKING);
+			for (int i = 0; i < redLineBlocks.size(); i++){
+				if ((redLineBlocks.get(i).getStation() != null) && (redLineBlocks.get(i).getOccupied()) && (redLineBlocks.get(i).getStatus())){
+					redLineBlocks.get(i).getStation().updateWaitingPassengers();
+				}
+			}
 		}
 	}
 
