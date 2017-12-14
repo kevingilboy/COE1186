@@ -1,7 +1,18 @@
+/**
+ * COE 1186
+ * DynamicDisplay.java
+ * 
+ * Model of a Light.
+ *
+ * @author Kevin Le
+ * @version 1.0 12/14/2017
+ */
+
 package Modules.TrackModel;
 
 public class Light{
 
+	// Light state and status variables
 	public boolean STATE_LIGHTS_ON = true;
 	public boolean STATE_LIGHTS_OFF = false;
 	public boolean STATUS_WORKING = true;
@@ -10,11 +21,12 @@ public class Light{
 	private boolean state;
 	private boolean status;
 
+	// Coordinates of light used for
+	// rendering on dynamic display
 	private int x_coordinate;
 	private int y_coordinate;
 
 	public Light(){
-		// Default state and status
 		state = STATE_LIGHTS_ON;
 		status = STATUS_WORKING;
 
@@ -22,6 +34,10 @@ public class Light{
 		y_coordinate = 0;
 	}
 
+	/**
+	 * Getters and setters.
+	 */
+	
 	public boolean getState(){
 		return state;
 	}

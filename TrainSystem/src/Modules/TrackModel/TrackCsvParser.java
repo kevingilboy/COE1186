@@ -1,3 +1,14 @@
+/**
+ * COE 1186
+ * TrackCsvParser.java
+ * 
+ * Parser for importing track information
+ * stored in a CSV file into the system.
+ *
+ * @author Kevin Le
+ * @version 1.0 12/14/2017
+ */
+
 package Modules.TrackModel;
 
 import java.io.BufferedReader;
@@ -14,12 +25,22 @@ import java.lang.*;
 
 public class TrackCsvParser{
 
+	// Temporary track structure to store block information
 	private ArrayList<Block> blocks = new ArrayList<Block>();
 
 	public TrackCsvParser(){
-		// ...
+		// (nothing to execute on construction)
 	}
 
+	/**
+	 * Parses a specified CSV file into a track
+	 * ArrayList of Blocks with the CSV's stored
+	 * information.
+	 * 
+	 * @param  csvFile : name of the file to parse
+	 * @return ArrayList of Block objects corresponding
+	 * to the track generated from the CSV's information.
+	 */
 	public ArrayList<Block> parse(String csvFile){
 
 		BufferedReader br = null;
@@ -211,6 +232,9 @@ public class TrackCsvParser{
     	return blocks;
 	}
 
+	/**
+	 * Parse the coordinate positions of light objects
+	 */
 	public void parseLightPositions(String csvFile, ArrayList<Block> track){
 		BufferedReader br = null;
 		String currentLine = "";

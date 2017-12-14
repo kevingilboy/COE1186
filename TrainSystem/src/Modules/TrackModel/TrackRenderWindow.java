@@ -1,3 +1,14 @@
+/**
+ * COE 1186
+ * TrackRenderWindow.java
+ * 
+ * Renders the dynamically drawn graphics
+ * used to display the train system
+ *
+ * @author Kevin Le
+ * @version 1.0 12/14/2017
+ */
+
 package Modules.TrackModel;
 
 import Modules.TrainModel.Position;
@@ -34,8 +45,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.FontMetrics;
 
 public class TrackRenderWindow extends JPanel{  
-    public static final boolean PASSENGERS_EMBARKING = true;
-    public static final boolean PASSENGERS_DISEMBARKING = false;
 
     // Reference to the main GUI's selected block
     Block blockSelected;
@@ -56,6 +65,10 @@ public class TrackRenderWindow extends JPanel{
     // Control variables for drawing shapes
     public final int ARR_SIZE = 4;
     public boolean showArrows = false;
+
+    // Other variables to track
+    public static final boolean PASSENGERS_EMBARKING = true;
+    public static final boolean PASSENGERS_DISEMBARKING = false;
 
     // Constructor
     public TrackRenderWindow(int width, int height, ArrayList<Block> blocks){
@@ -917,7 +930,6 @@ public class TrackRenderWindow extends JPanel{
             }
         }
     }
-
 
     // Draw arrows (used for displaying block directions)
     public void drawArrow(Graphics g1, int x1, int y1, int x2, int y2) {

@@ -1,3 +1,23 @@
+/**
+ * COE 1186
+ * TrackIterator.java
+ * 
+ * A helper class for the train's
+ * Position class to iterate through a 
+ * track based state machine logic for 
+ * the track's current configuration and
+ * the train's current and previous positions
+ * to obtain a next position.
+ *
+ * NOTE: This does NOT perform the functionalities
+ * of the Track Controller to determine and control
+ * switch states, nor does it control the movement
+ * of the train  (done by the Train Controller).
+ * 
+ * @author Kevin Le
+ * @version 1.0 12/14/2017
+ */
+
 package Modules.TrackModel;
 
 import java.util.*;
@@ -14,6 +34,13 @@ public class TrackIterator{
 		this.prevBlockID = prevBlockID;
 	}
 
+	/**
+	 * Returns the ID of the next block to iterate to
+	 * based on the current configuration of the track
+	 * and direction the train is moving.
+	 * 
+	 * @return nextBlock: the next block to iterate to.
+	 */
 	public int nextBlock(){
 		
 		// Need to consider directional component for allowable iterations to NEXT, 
@@ -335,6 +362,6 @@ public class TrackIterator{
 		} // End all track cases 
 
 		// return next;
-		return nextID; // place holder
+		return nextID;
 	}
 }
