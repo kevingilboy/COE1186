@@ -953,7 +953,7 @@ public class CtcGui {
 		
 		JLabel lblStatus = new JLabel("STATUS");
 		stylizeInfoLabel_Small(lblStatus);
-		lblStatus.setBounds(584, 654, 52, 33);
+		lblStatus.setBounds(584, 654, 58, 33);
 		frame.getContentPane().add(lblStatus);
 		
 		selectedBlockStatusIndicator = new JLabel();
@@ -1074,7 +1074,7 @@ public class CtcGui {
 		});
 		chckbxRmanual.setForeground(Color.WHITE);
 		chckbxRmanual.setBackground(new Color(20, 20, 20));
-		chckbxRmanual.setBounds(1066, 674, 93, 18);
+		chckbxRmanual.setBounds(1066, 674, 98, 18);
 		frame.getContentPane().add(chckbxRmanual);
 		
 		JCheckBox chckbxGmanual = new JCheckBox("G-MANUAL");
@@ -1088,7 +1088,7 @@ public class CtcGui {
 		});
 		chckbxGmanual.setForeground(Color.WHITE);
 		chckbxGmanual.setBackground(new Color(20, 20, 20));
-		chckbxGmanual.setBounds(1066, 704, 93, 18);
+		chckbxGmanual.setBounds(1066, 704, 98, 18);
 		frame.getContentPane().add(chckbxGmanual);
 		
 		rdbtnFixedBlockMode = new JRadioButton("Fixed Block Mode");
