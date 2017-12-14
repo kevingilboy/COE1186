@@ -6,6 +6,16 @@
 
 package Modules.TrainController;
 
+/**
+ * COE 1186
+ * PIController.java
+ *
+ * Purpose: PI controller to calculate power for a single train
+ *
+ * @author Michael Kotcher
+ * @version 1.0 12/14/2017
+ */
+
 public class PIController {
 	private double P;
 	private double I;	

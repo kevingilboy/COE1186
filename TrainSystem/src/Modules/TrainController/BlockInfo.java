@@ -3,6 +3,16 @@
 
 package Modules.TrainController;
 
+/**
+ * COE 1186
+ * BlockInfo.java
+ *
+ * Purpose: Holds information relevant to the train controller module for one track block
+ *
+ * @author Michael Kotcher
+ * @version 1.0 12/14/2017
+ */
+
 public class BlockInfo
 {
 	private double speedLimit;				//m/s

@@ -38,6 +38,16 @@ import javax.swing.UIManager;
 import javax.swing.SwingConstants;
 /*----------------------------------------------*/
 
+/**
+ * COE 1186
+ * TrainControllerGUI.java
+ *
+ * Purpose: GUI for the whole module
+ *
+ * @author Michael Kotcher
+ * @version 1.0 12/14/2017
+ */
+
 public class TrainControllerGUI {
 
 	private int yCount;
