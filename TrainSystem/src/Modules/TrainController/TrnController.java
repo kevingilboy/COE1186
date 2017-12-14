@@ -422,6 +422,7 @@ public class TrnController {
 			}
 			else if (beacon == 0) {
 				passed = true;
+				announceEnRoute();
 			}
 		}
 	}
