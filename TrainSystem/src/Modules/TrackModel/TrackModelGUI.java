@@ -1,3 +1,14 @@
+/**
+ * COE 1186
+ * TrackModelGUI.java
+ * 
+ * Primary graphical user interface for
+ * the Track Model module.
+ *
+ * @author Kevin Le
+ * @version 1.0 12/14/2017
+ */
+
 package Modules.TrackModel;
 
 import java.awt.EventQueue;
@@ -39,7 +50,9 @@ import java.awt.event.ItemListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-/*--- REQUIRED LIBRARIES FOR HSS DARK THEME ----*/
+/**
+ * Libraries required for system theme.
+ */
 import java.awt.GraphicsEnvironment;
 import java.awt.EventQueue;
 import java.awt.event.*;
@@ -49,29 +62,22 @@ import java.awt.FontFormatException;
 import javax.swing.JComboBox;
 import javax.swing.UIManager;
 import javax.swing.SwingConstants;
-/*----------------------------------------------*/
 
 import java.util.*;
 
 @SuppressWarnings("unchecked")
 public class TrackModelGUI{
 	
-	/**
-	 * CONVERSION FACTORS FOR DISPLAY
-	 */
+	// Conversion factors for displaying values
 	private final double METERS_TO_YARDS_FACTOR = 1.09361;
 	private final double KPH_TO_MPH_FACTOR = 0.621371;
 
-	/**
-	 * TRACK MODEL REFERENCES
-	 */
+	// References to the track model
 	private TrackModel trackModel;
 	private ArrayList<Block> trackSelected;
 	public Block blockSelected;
 
-	/**
-	 * GUI COMPONENTS
-	 */
+	// GUI components
 	private JFrame frame_tmGUI;
 	private JPanel panel_dynamicRender;
 	JComboBox comboBox_selectTrack;
@@ -102,16 +108,12 @@ public class TrackModelGUI{
 
 	int shift = 180;
 
-	/**
-	 * DYNAMIC DISPLAY GUI REFERENCES
-	 */
-	public DynamicDisplay greenLineDisplay; // = new DynamicDisplay(greenLineBlocks);
+	// References to the embedded dynamic track display
+	// for each line
+	public DynamicDisplay greenLineDisplay;
 	public DynamicDisplay redLineDisplay;
 	public DynamicDisplay currentDisplay;
 
-	/**
-	 * GUI CONSTRUCTOR
-	 */
 	public TrackModelGUI(TrackModel trackModel){
 		this.trackModel = trackModel;
 		setLookAndFeel();

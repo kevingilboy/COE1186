@@ -1,28 +1,40 @@
+/**
+ * COE 1186
+ * Switch.java
+ * 
+ * Model of a Switch.
+ *
+ * @author Kevin Le
+ * @version 1.0 12/14/2017
+ */
+
 package Modules.TrackModel;
 
 public class Switch{
 
+	// Switch state and status variables
 	public static boolean STATE_NORMAL = true;
 	public static boolean STATE_ALTERNATE = false;
 	public static boolean STATUS_WORKING = true;
 	public static boolean STATUS_NOT_WORKING = false;
+
+	private boolean state;
+	private boolean status;
+
+	// Switch port variables
 	public static boolean EDGE_TYPE_HEAD = true;
 	public static boolean EDGE_TYPE_TAIL = false;
 	public static boolean TAIL_TYPE_NORMAL = true;
 	public static boolean TAIL_TYPE_ALTERNATE = false;
 	
-	private boolean state;
-	private boolean status;
 	private boolean edge;
 	private int portNormal;
 	private int portAlternate;
 	private Switch switchNormal;
 	private Switch switchAlternate;
-
 	private boolean tailType;
 
 	public Switch(){
-		// Default state, status, edge, and ports
 		state = STATE_NORMAL;
 		status = STATUS_WORKING;
 		edge = EDGE_TYPE_HEAD;
@@ -33,6 +45,10 @@ public class Switch{
 		tailType = TAIL_TYPE_NORMAL;
 	}
 
+	/**
+	 * Getters and setters.
+	 */
+	
 	public boolean getState(){
 		return state;
 	}
