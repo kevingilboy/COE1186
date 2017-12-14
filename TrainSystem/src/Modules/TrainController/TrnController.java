@@ -8,6 +8,16 @@ import Shared.SimTime;
 
 import java.util.ArrayList;
 
+/**
+ * COE 1186
+ * TrnController.java
+ *
+ * Purpose: Controller for a single train
+ *
+ * @author Michael Kotcher
+ * @version 1.0 12/14/2017
+ */
+
 public class TrnController {
 	private String trainID;
 	private String line;

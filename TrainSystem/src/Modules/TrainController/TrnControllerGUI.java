@@ -33,6 +33,16 @@ import javax.swing.SwingConstants;
 import java.awt.Color;
 /*----------------------------------------------*/
 
+/**
+ * COE 1186
+ * TrnControllerGUI.java
+ *
+ * Purpose: GUI for a single train
+ *
+ * @author Michael Kotcher
+ * @version 1.0 12/14/2017
+ */
+
 public class TrnControllerGUI {
 
 	private JFrame frame;

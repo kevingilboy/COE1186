@@ -16,6 +16,16 @@ import Modules.TrainModel.Position;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * COE 1186
+ * TrainController.java
+ *
+ * Purpose: Controller for the whole module
+ *
+ * @author Michael Kotcher
+ * @version 1.0 12/14/2017
+ */
+
 public class TrainController implements Module {
 	private HashMap<String, TrnController> controlList;		//stores individual controller objects for each train
 	private TrainControllerGUI mainGUI;						//reference to main GUI
