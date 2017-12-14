@@ -145,10 +145,10 @@ public class TrnController {
 		}
 		else {											//if manual
 			if (inStation) {
-				if (setpointSpeed > 0) {		//driver chooses when to leave station by setting a non-zero setpoint speed
+				calcPowerOutput();
+				if (actualSpeed > 0 && power > 0) {		//driver chooses when to leave station by setting a non-zero setpoint speed
 					inStation = false;
 					announceDeparting(currentStation);
-					calcPowerOutput();
 				}
 			}
 			else if (brakingCheck()) {
